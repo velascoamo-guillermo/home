@@ -6,7 +6,8 @@ enum KeychainService {
     static let claudeApiKeyAccount = "claude_api_key"
     private static let service = Bundle.main.bundleIdentifier ?? "com.home.app"
 
-    static func save(key: String, account: String) {
+    @discardableResult
+    static func save(key: String, account: String) -> Bool {
         let data = Data(key.utf8)
         let query: [CFString: Any] = [
             kSecClass: kSecClassGenericPassword,
@@ -16,7 +17,8 @@ enum KeychainService {
         SecItemDelete(query as CFDictionary)
         var attrs = query
         attrs[kSecValueData] = data
-        SecItemAdd(attrs as CFDictionary, nil)
+        attrs[kSecAttrAccessible] = kSecAttrAccessibleWhenUnlocked
+        return SecItemAdd(attrs as CFDictionary, nil) == errSecSuccess
     }
 
     static func load(account: String) -> String? {

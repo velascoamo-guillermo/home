@@ -63,6 +63,9 @@ private struct ApiKeySheet: View {
     @Environment(\.dismiss) private var dismiss
     @State private var key: String = ""
     @State private var isSecure: Bool = true
+    @State private var existingKeyIsStored: Bool = false
+
+    private var trimmedKey: String { key.trimmingCharacters(in: .whitespacesAndNewlines) }
 
     var body: some View {
         NavigationStack {
@@ -74,20 +77,23 @@ private struct ApiKeySheet: View {
                         } else {
                             TextField("sk-ant-...", text: $key)
                         }
-                        Button { isSecure.toggle() } label: {
-                            Image(systemName: isSecure ? "eye" : "eye.slash")
-                                .foregroundStyle(.secondary)
+                        Button(isSecure ? "Show key" : "Hide key",
+                               systemImage: isSecure ? "eye" : "eye.slash") {
+                            isSecure.toggle()
                         }
+                        .labelStyle(.iconOnly)
+                        .foregroundStyle(.secondary)
                     }
                 } header: {
                     Text("Claude API Key")
                 } footer: {
                     Text("Used to extract information from vet documents. Stored securely in Keychain.")
                 }
-                if KeychainService.load(account: KeychainService.claudeApiKeyAccount) != nil {
+                if existingKeyIsStored {
                     Section {
                         Button("Remove Key", role: .destructive) {
                             KeychainService.delete(account: KeychainService.claudeApiKeyAccount)
+                            existingKeyIsStored = false
                             dismiss()
                         }
                     }
@@ -99,15 +105,16 @@ private struct ApiKeySheet: View {
                 ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
-                        KeychainService.save(key: key.trimmingCharacters(in: .whitespaces),
+                        KeychainService.save(key: trimmedKey,
                                             account: KeychainService.claudeApiKeyAccount)
                         dismiss()
                     }
-                    .disabled(key.trimmingCharacters(in: .whitespaces).isEmpty)
+                    .disabled(trimmedKey.isEmpty)
                 }
             }
             .onAppear {
                 key = KeychainService.load(account: KeychainService.claudeApiKeyAccount) ?? ""
+                existingKeyIsStored = !key.isEmpty
             }
         }
     }
