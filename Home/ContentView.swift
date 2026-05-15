@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var authManager = AuthManager()
+    @State private var dataStore = DataStore()
 
     var body: some View {
         Group {
@@ -12,6 +13,7 @@ struct ContentView: View {
             }
         }
         .environment(authManager)
+        .environment(dataStore)
     }
 }
 

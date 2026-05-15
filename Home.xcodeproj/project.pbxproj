@@ -17,6 +17,14 @@
 		81D685B707C9582581ADFB87 /* PetsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61235AB3CE535474EAE6415F /* PetsView.swift */; };
 		9B44E1E4D8E57A4A982A2B1A /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690FD04B109B326FBB7C1BB5 /* SettingsView.swift */; };
 		BE50151A59558186C1FD92D1 /* PetRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FD0EC17349AAB28CC54A5CB /* PetRow.swift */; };
+		2E8A213C94094E6A8AA1A4F2 /* AppData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC495CC222B942E7A8EE22C9 /* AppData.swift */; };
+		CCB801F61C2F4EB8B290091A /* DataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BB9EF2CC684E3799ABE139 /* DataStore.swift */; };
+		86FAEA64D9AE43EBB5CE9ED1 /* Appointment.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBE699B39D6D42F2BA958119 /* Appointment.swift */; };
+		8A93AD27062449ECBE2D8C71 /* ClinicalEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0894A58F3E0471E870AA5A4 /* ClinicalEntry.swift */; };
+		AD28BC8FE3FF44A7A23C3ABE /* PetEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64A61C82CA7D4580AEE3FD8F /* PetEvent.swift */; };
+		F0E66C11605B468E99213400 /* PetFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = D337BEEFF45641A7A41446D8 /* PetFile.swift */; };
+		1DBC79FB65E14D45B82A6C9C /* Veterinarian.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6856914DFD42828E88B77E /* Veterinarian.swift */; };
+		C1A823780AE3489A95BE163E /* PetDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55D97A7920684FC9B46E5FCE /* PetDetailView.swift */; };
 		C5FC049B579BEC4CBF8EC041 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1794F5A736E951E42FC707 /* ContentView.swift */; };
 		CD57016D61746F8775546D4B /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06C806DCF5034FAB66D7D2B8 /* HomeView.swift */; };
 		E2EC81F2A4FA6DC413810AFC /* Product.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECBBAB7C0182E30253E98F35 /* Product.swift */; };
@@ -36,6 +44,14 @@
 		61235AB3CE535474EAE6415F /* PetsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PetsView.swift; path = PetsView.swift; sourceTree = "<group>"; };
 		690FD04B109B326FBB7C1BB5 /* SettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SettingsView.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		73C53F1CBE01F7F807567F82 /* Pet.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Pet.swift; path = Pet.swift; sourceTree = "<group>"; };
+		FC495CC222B942E7A8EE22C9 /* AppData.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AppData.swift; path = AppData.swift; sourceTree = "<group>"; };
+		94BB9EF2CC684E3799ABE139 /* DataStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DataStore.swift; path = DataStore.swift; sourceTree = "<group>"; };
+		DBE699B39D6D42F2BA958119 /* Appointment.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Appointment.swift; path = Appointment.swift; sourceTree = "<group>"; };
+		D0894A58F3E0471E870AA5A4 /* ClinicalEntry.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ClinicalEntry.swift; path = ClinicalEntry.swift; sourceTree = "<group>"; };
+		64A61C82CA7D4580AEE3FD8F /* PetEvent.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PetEvent.swift; path = PetEvent.swift; sourceTree = "<group>"; };
+		D337BEEFF45641A7A41446D8 /* PetFile.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PetFile.swift; path = PetFile.swift; sourceTree = "<group>"; };
+		2C6856914DFD42828E88B77E /* Veterinarian.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Veterinarian.swift; path = Veterinarian.swift; sourceTree = "<group>"; };
+		55D97A7920684FC9B46E5FCE /* PetDetailView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PetDetailView.swift; path = PetDetailView.swift; sourceTree = "<group>"; };
 		9583A57C90DCAB3DC119342E /* ProductCard.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ProductCard.swift; path = ProductCard.swift; sourceTree = "<group>"; };
 		A4CDCB58B9C74EE5C806160F /* HomeApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HomeApp.swift; path = HomeApp.swift; sourceTree = "<group>"; };
 		B69A10084EFE887518B77FB0 /* FeatureCard.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FeatureCard.swift; path = FeatureCard.swift; sourceTree = "<group>"; };
@@ -59,9 +75,44 @@
 			children = (
 				73C53F1CBE01F7F807567F82 /* Pet.swift */,
 				61235AB3CE535474EAE6415F /* PetsView.swift */,
+				A1B2C3D4E5F6A7B8C9D0E1F2 /* Detail */,
+				B2C3D4E5F6A7B8C9D0E1F2A3 /* Models */,
+				C3D4E5F6A7B8C9D0E1F2A3B4 /* Store */,
 			);
 			name = Pets;
 			path = Pets;
+			sourceTree = "<group>";
+		};
+		A1B2C3D4E5F6A7B8C9D0E1F2 /* Detail */ = {
+			isa = PBXGroup;
+			children = (
+				55D97A7920684FC9B46E5FCE /* PetDetailView.swift */,
+			);
+			name = Detail;
+			path = Detail;
+			sourceTree = "<group>";
+		};
+		B2C3D4E5F6A7B8C9D0E1F2A3 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				DBE699B39D6D42F2BA958119 /* Appointment.swift */,
+				D0894A58F3E0471E870AA5A4 /* ClinicalEntry.swift */,
+				64A61C82CA7D4580AEE3FD8F /* PetEvent.swift */,
+				D337BEEFF45641A7A41446D8 /* PetFile.swift */,
+				2C6856914DFD42828E88B77E /* Veterinarian.swift */,
+			);
+			name = Models;
+			path = Models;
+			sourceTree = "<group>";
+		};
+		C3D4E5F6A7B8C9D0E1F2A3B4 /* Store */ = {
+			isa = PBXGroup;
+			children = (
+				FC495CC222B942E7A8EE22C9 /* AppData.swift */,
+				94BB9EF2CC684E3799ABE139 /* DataStore.swift */,
+			);
+			name = Store;
+			path = Store;
 			sourceTree = "<group>";
 		};
 		248845B37ACBAB618358A586 /* Home */ = {
@@ -249,6 +300,14 @@
 				7A87923C429A89F547409ED7 /* ShopView.swift in Sources */,
 				C5FC049B579BEC4CBF8EC041 /* ContentView.swift in Sources */,
 				68AEAB43A2107550172A58AE /* HomeApp.swift in Sources */,
+				2E8A213C94094E6A8AA1A4F2 /* AppData.swift in Sources */,
+				CCB801F61C2F4EB8B290091A /* DataStore.swift in Sources */,
+				86FAEA64D9AE43EBB5CE9ED1 /* Appointment.swift in Sources */,
+				8A93AD27062449ECBE2D8C71 /* ClinicalEntry.swift in Sources */,
+				AD28BC8FE3FF44A7A23C3ABE /* PetEvent.swift in Sources */,
+				F0E66C11605B468E99213400 /* PetFile.swift in Sources */,
+				1DBC79FB65E14D45B82A6C9C /* Veterinarian.swift in Sources */,
+				C1A823780AE3489A95BE163E /* PetDetailView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

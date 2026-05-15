@@ -22,6 +22,13 @@ final class DataStore {
         } else {
             self.data = AppData()
         }
+        if self.data.pets.isEmpty {
+            self.data.pets = [
+                Pet(name: "Luna", type: "Dog", breed: "Golden Retriever"),
+                Pet(name: "Whiskers", type: "Cat", breed: "Persian"),
+                Pet(name: "Buddy", type: "Dog", breed: "Labrador")
+            ]
+        }
         try? FileManager.default.createDirectory(at: filesDir, withIntermediateDirectories: true)
     }
 
