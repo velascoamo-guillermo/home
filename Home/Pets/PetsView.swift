@@ -14,11 +14,9 @@ struct PetsView: View {
             }
             .navigationTitle("My Pets")
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Add Pet", systemImage: "plus") {
                         // placeholder
-                    } label: {
-                        Image(systemName: "plus")
                     }
                 }
             }

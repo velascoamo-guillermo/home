@@ -1,10 +1,10 @@
 import SwiftUI
-import Combine
 
 @MainActor
-final class AuthManager: ObservableObject {
-    @Published var isAuthenticated = false
-    @Published var isLoading = false
+@Observable
+final class AuthManager {
+    var isAuthenticated = false
+    var isLoading = false
 
     func signIn(email: String, password: String) async {
         isLoading = true

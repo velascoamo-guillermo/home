@@ -17,7 +17,7 @@ struct ProductCard: View {
 
             Text(product.price)
                 .font(.title3)
-                .fontWeight(.bold)
+                .bold()
                 .foregroundStyle(.tint)
         }
         .padding()

@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct LoginView: View {
-    @EnvironmentObject var authManager: AuthManager
+    @Environment(AuthManager.self) private var authManager
     @State private var email = ""
     @State private var password = ""
 
@@ -25,10 +25,11 @@ struct LoginView: View {
                         .font(.system(size: 90))
                         .foregroundStyle(.white)
                         .shadow(color: .black.opacity(0.25), radius: 14, y: 6)
+                        .accessibilityHidden(true)
 
                     Text("Pet Home")
                         .font(.largeTitle)
-                        .fontWeight(.bold)
+                        .bold()
                         .foregroundStyle(.white)
 
                     Text("Welcome back!")
@@ -101,5 +102,5 @@ struct LoginView: View {
 
 #Preview {
     LoginView()
-        .environmentObject(AuthManager())
+        .environment(AuthManager())
 }

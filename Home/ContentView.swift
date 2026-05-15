@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject private var authManager = AuthManager()
+    @State private var authManager = AuthManager()
 
     var body: some View {
         Group {
@@ -11,7 +11,7 @@ struct ContentView: View {
                 LoginView()
             }
         }
-        .environmentObject(authManager)
+        .environment(authManager)
     }
 }
 
