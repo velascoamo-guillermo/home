@@ -25,6 +25,11 @@
 		F0E66C11605B468E99213400 /* PetFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = D337BEEFF45641A7A41446D8 /* PetFile.swift */; };
 		1DBC79FB65E14D45B82A6C9C /* Veterinarian.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6856914DFD42828E88B77E /* Veterinarian.swift */; };
 		C1A823780AE3489A95BE163E /* PetDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55D97A7920684FC9B46E5FCE /* PetDetailView.swift */; };
+		AA11BB22CC33DD44EE55FF66 /* VetTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA11BB22CC33DD44EE55FF01 /* VetTabView.swift */; };
+		BB22CC33DD44EE55FF6600AA /* AppointmentsTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB22CC33DD44EE55FF6600A1 /* AppointmentsTabView.swift */; };
+		CC33DD44EE55FF6600AABB22 /* ClinicalHistoryTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC33DD44EE55FF6600AABB11 /* ClinicalHistoryTabView.swift */; };
+		DD44EE55FF6600AABB22CC33 /* EventsTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD44EE55FF6600AABB22CC01 /* EventsTabView.swift */; };
+		EE55FF6600AABB22CC33DD44 /* FilesTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE55FF6600AABB22CC33DD01 /* FilesTabView.swift */; };
 		C5FC049B579BEC4CBF8EC041 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1794F5A736E951E42FC707 /* ContentView.swift */; };
 		CD57016D61746F8775546D4B /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06C806DCF5034FAB66D7D2B8 /* HomeView.swift */; };
 		E2EC81F2A4FA6DC413810AFC /* Product.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECBBAB7C0182E30253E98F35 /* Product.swift */; };
@@ -52,6 +57,11 @@
 		D337BEEFF45641A7A41446D8 /* PetFile.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PetFile.swift; path = PetFile.swift; sourceTree = "<group>"; };
 		2C6856914DFD42828E88B77E /* Veterinarian.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Veterinarian.swift; path = Veterinarian.swift; sourceTree = "<group>"; };
 		55D97A7920684FC9B46E5FCE /* PetDetailView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PetDetailView.swift; path = PetDetailView.swift; sourceTree = "<group>"; };
+		AA11BB22CC33DD44EE55FF01 /* VetTabView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = VetTabView.swift; path = VetTabView.swift; sourceTree = "<group>"; };
+		BB22CC33DD44EE55FF6600A1 /* AppointmentsTabView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AppointmentsTabView.swift; path = AppointmentsTabView.swift; sourceTree = "<group>"; };
+		CC33DD44EE55FF6600AABB11 /* ClinicalHistoryTabView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ClinicalHistoryTabView.swift; path = ClinicalHistoryTabView.swift; sourceTree = "<group>"; };
+		DD44EE55FF6600AABB22CC01 /* EventsTabView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = EventsTabView.swift; path = EventsTabView.swift; sourceTree = "<group>"; };
+		EE55FF6600AABB22CC33DD01 /* FilesTabView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FilesTabView.swift; path = FilesTabView.swift; sourceTree = "<group>"; };
 		9583A57C90DCAB3DC119342E /* ProductCard.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ProductCard.swift; path = ProductCard.swift; sourceTree = "<group>"; };
 		A4CDCB58B9C74EE5C806160F /* HomeApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HomeApp.swift; path = HomeApp.swift; sourceTree = "<group>"; };
 		B69A10084EFE887518B77FB0 /* FeatureCard.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FeatureCard.swift; path = FeatureCard.swift; sourceTree = "<group>"; };
@@ -87,9 +97,23 @@
 			isa = PBXGroup;
 			children = (
 				55D97A7920684FC9B46E5FCE /* PetDetailView.swift */,
+				FF00AA11BB22CC33DD44EE55 /* Tabs */,
 			);
 			name = Detail;
 			path = Detail;
+			sourceTree = "<group>";
+		};
+		FF00AA11BB22CC33DD44EE55 /* Tabs */ = {
+			isa = PBXGroup;
+			children = (
+				AA11BB22CC33DD44EE55FF01 /* VetTabView.swift */,
+				BB22CC33DD44EE55FF6600A1 /* AppointmentsTabView.swift */,
+				CC33DD44EE55FF6600AABB11 /* ClinicalHistoryTabView.swift */,
+				DD44EE55FF6600AABB22CC01 /* EventsTabView.swift */,
+				EE55FF6600AABB22CC33DD01 /* FilesTabView.swift */,
+			);
+			name = Tabs;
+			path = Tabs;
 			sourceTree = "<group>";
 		};
 		B2C3D4E5F6A7B8C9D0E1F2A3 /* Models */ = {
@@ -308,6 +332,11 @@
 				F0E66C11605B468E99213400 /* PetFile.swift in Sources */,
 				1DBC79FB65E14D45B82A6C9C /* Veterinarian.swift in Sources */,
 				C1A823780AE3489A95BE163E /* PetDetailView.swift in Sources */,
+				AA11BB22CC33DD44EE55FF66 /* VetTabView.swift in Sources */,
+				BB22CC33DD44EE55FF6600AA /* AppointmentsTabView.swift in Sources */,
+				CC33DD44EE55FF6600AABB22 /* ClinicalHistoryTabView.swift in Sources */,
+				DD44EE55FF6600AABB22CC33 /* EventsTabView.swift in Sources */,
+				EE55FF6600AABB22CC33DD44 /* FilesTabView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
