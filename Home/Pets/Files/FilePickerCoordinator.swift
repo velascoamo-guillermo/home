@@ -83,6 +83,10 @@ struct CameraPicker: UIViewControllerRepresentable {
             if let image = info[.originalImage] as? UIImage { onCapture(image) }
             picker.dismiss(animated: true)
         }
+
+        func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+            picker.dismiss(animated: true)
+        }
     }
 }
 
@@ -106,10 +110,10 @@ struct DocumentPicker: UIViewControllerRepresentable {
         init(onPick: @escaping (Data) -> Void) { self.onPick = onPick }
 
         func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-            guard let url = urls.first,
-                  url.startAccessingSecurityScopedResource(),
-                  let data = try? Data(contentsOf: url) else { return }
-            url.stopAccessingSecurityScopedResource()
+            guard let url = urls.first else { return }
+            guard url.startAccessingSecurityScopedResource() else { return }
+            defer { url.stopAccessingSecurityScopedResource() }
+            guard let data = try? Data(contentsOf: url) else { return }
             onPick(data)
         }
     }
