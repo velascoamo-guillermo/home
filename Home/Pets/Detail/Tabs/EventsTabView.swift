@@ -1,8 +1,9 @@
+// Home/Pets/Detail/Tabs/EventsTabView.swift
 import SwiftUI
 
 struct EventsTabView: View {
     let pet: Pet
-    @Environment(DataStore.self) private var store
+    @Environment(SupabaseStore.self) private var store
     @State private var showAdd = false
     @State private var selectedEvent: PetEvent? = nil
 
@@ -18,7 +19,11 @@ struct EventsTabView: View {
             ForEach(events) { event in
                 Button { selectedEvent = event } label: { EventRow(event: event) }
                     .buttonStyle(.plain)
-                    .swipeActions { Button("Delete", role: .destructive) { delete(event) } }
+                    .swipeActions {
+                        Button("Delete", role: .destructive) {
+                            Task { try? await store.deleteEvent(event) }
+                        }
+                    }
             }
         }
         .toolbar {
@@ -28,11 +33,5 @@ struct EventsTabView: View {
         }
         .sheet(isPresented: $showAdd) { AddEventSheet(petId: pet.id) }
         .sheet(item: $selectedEvent) { event in EventDetailView(event: event, pet: pet) }
-    }
-
-    private func delete(_ event: PetEvent) {
-        store.files(for: pet.id, linkedTo: .event(event.id)).forEach { store.deleteFile($0) }
-        store.data.events.removeAll { $0.id == event.id }
-        store.save()
     }
 }

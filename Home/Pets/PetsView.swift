@@ -2,17 +2,19 @@
 import SwiftUI
 
 struct PetsView: View {
-    @Environment(DataStore.self) private var store
+    @Environment(SupabaseStore.self) private var store
     @State private var showAddPet = false
 
     var body: some View {
         NavigationStack {
-            List(store.data.pets) { pet in
+            List(store.pets) { pet in
                 NavigationLink(value: pet) {
                     PetRow(pet: pet)
                 }
                 .swipeActions(edge: .trailing) {
-                    Button("Delete", role: .destructive) { delete(pet) }
+                    Button("Delete", role: .destructive) {
+                        Task { try? await store.deletePet(pet) }
+                    }
                 }
             }
             .navigationTitle("My Pets")
@@ -21,29 +23,16 @@ struct PetsView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Add Pet", systemImage: "plus") {
-                        showAddPet = true
-                    }
+                    Button("Add Pet", systemImage: "plus") { showAddPet = true }
                 }
             }
-            .sheet(isPresented: $showAddPet) {
-                AddPetSheet()
-            }
+            .sheet(isPresented: $showAddPet) { AddPetSheet() }
         }
-    }
-
-    private func delete(_ pet: Pet) {
-        store.files(for: pet.id).forEach { store.deleteFile($0) }
-        store.data.appointments.removeAll { $0.petId == pet.id }
-        store.data.clinicalEntries.removeAll { $0.petId == pet.id }
-        store.data.events.removeAll { $0.petId == pet.id }
-        store.data.pets.removeAll { $0.id == pet.id }
-        store.save()
     }
 }
 
 private struct AddPetSheet: View {
-    @Environment(DataStore.self) private var store
+    @Environment(SupabaseStore.self) private var store
     @Environment(\.dismiss) private var dismiss
     @State private var name = ""
     @State private var type = "Dog"
@@ -66,9 +55,11 @@ private struct AddPetSheet: View {
                 ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Add") {
-                        store.data.pets.append(Pet(name: name, type: type, breed: breed))
-                        store.save()
-                        dismiss()
+                        let pet = Pet(name: name, type: type, breed: breed)
+                        Task {
+                            try? await store.addPet(pet)
+                            dismiss()
+                        }
                     }
                     .disabled(name.isEmpty || breed.isEmpty)
                 }
@@ -78,6 +69,5 @@ private struct AddPetSheet: View {
 }
 
 #Preview {
-    PetsView()
-        .environment(DataStore())
+    PetsView().environment(SupabaseStore())
 }

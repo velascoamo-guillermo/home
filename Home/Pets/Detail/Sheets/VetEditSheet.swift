@@ -1,8 +1,9 @@
+// Home/Pets/Detail/Sheets/VetEditSheet.swift
 import SwiftUI
 
 struct VetEditSheet: View {
     let existing: Veterinarian?
-    @Environment(DataStore.self) private var store
+    @Environment(SupabaseStore.self) private var store
     @Environment(\.dismiss) private var dismiss
 
     @State private var name: String = ""
@@ -19,24 +20,30 @@ struct VetEditSheet: View {
                     TextField("Clinic", text: $clinicName)
                 }
                 Section("Contact") {
-                    TextField("Phone", text: $phone)
-                        .keyboardType(.phonePad)
+                    TextField("Phone", text: $phone).keyboardType(.phonePad)
                     TextField("Address", text: $address)
                 }
                 Section("Notes") {
-                    TextField("Specialty, hours...", text: $notes, axis: .vertical)
-                        .lineLimit(3...6)
+                    TextField("Specialty, hours...", text: $notes, axis: .vertical).lineLimit(3...6)
                 }
             }
             .navigationTitle(existing == nil ? "Add Vet" : "Edit Vet")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") { dismiss() }
-                }
+                ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Save") { save() }
-                        .disabled(name.isEmpty || clinicName.isEmpty)
+                    Button("Save") {
+                        let vet = Veterinarian(
+                            id: existing?.id ?? UUID(),
+                            name: name, clinicName: clinicName,
+                            phone: phone, address: address, notes: notes
+                        )
+                        Task {
+                            try? await store.upsertVet(vet)
+                            dismiss()
+                        }
+                    }
+                    .disabled(name.isEmpty || clinicName.isEmpty)
                 }
             }
             .onAppear {
@@ -46,16 +53,5 @@ struct VetEditSheet: View {
                 }
             }
         }
-    }
-
-    private func save() {
-        let vet = Veterinarian(
-            id: existing?.id ?? UUID(),
-            name: name, clinicName: clinicName,
-            phone: phone, address: address, notes: notes
-        )
-        store.data.veterinarian = vet
-        store.save()
-        dismiss()
     }
 }

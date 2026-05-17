@@ -1,8 +1,9 @@
+// Home/Pets/Detail/Sheets/AddAppointmentSheet.swift
 import SwiftUI
 
 struct AddAppointmentSheet: View {
     let petId: UUID
-    @Environment(DataStore.self) private var store
+    @Environment(SupabaseStore.self) private var store
     @Environment(\.dismiss) private var dismiss
 
     @State private var date: Date = .now
@@ -15,8 +16,7 @@ struct AddAppointmentSheet: View {
                 DatePicker("Date & Time", selection: $date)
                 Section("Details") {
                     TextField("Reason for visit", text: $reason)
-                    TextField("Notes (optional)", text: $notes, axis: .vertical)
-                        .lineLimit(2...4)
+                    TextField("Notes (optional)", text: $notes, axis: .vertical).lineLimit(2...4)
                 }
             }
             .navigationTitle("New Appointment")
@@ -24,16 +24,16 @@ struct AddAppointmentSheet: View {
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Add") { save() }.disabled(reason.isEmpty)
+                    Button("Add") {
+                        let appt = Appointment(petId: petId, date: date, reason: reason, notes: notes, status: .upcoming)
+                        Task {
+                            try? await store.addAppointment(appt)
+                            dismiss()
+                        }
+                    }
+                    .disabled(reason.isEmpty)
                 }
             }
         }
-    }
-
-    private func save() {
-        let appt = Appointment(petId: petId, date: date, reason: reason, notes: notes, status: .upcoming)
-        store.data.appointments.append(appt)
-        store.save()
-        dismiss()
     }
 }

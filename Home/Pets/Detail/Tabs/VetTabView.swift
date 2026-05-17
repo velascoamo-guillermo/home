@@ -1,15 +1,15 @@
+// Home/Pets/Detail/Tabs/VetTabView.swift
 import SwiftUI
 
 struct VetTabView: View {
     let pet: Pet
-    @Environment(DataStore.self) private var store
+    @Environment(SupabaseStore.self) private var store
     @State private var showEdit = false
 
     var body: some View {
         ScrollView {
-            if let vet = store.data.veterinarian {
-                VetCard(vet: vet)
-                    .padding()
+            if let vet = store.veterinarian {
+                VetCard(vet: vet).padding()
             } else {
                 ContentUnavailableView(
                     "No Veterinarian",
@@ -21,27 +21,22 @@ struct VetTabView: View {
         }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button(store.data.veterinarian == nil ? "Add Vet" : "Edit") {
-                    showEdit = true
-                }
+                Button(store.veterinarian == nil ? "Add Vet" : "Edit") { showEdit = true }
             }
         }
         .sheet(isPresented: $showEdit) {
-            VetEditSheet(existing: store.data.veterinarian)
+            VetEditSheet(existing: store.veterinarian)
         }
     }
 }
 
 private struct VetCard: View {
     let vet: Veterinarian
-
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Label(vet.name, systemImage: "person.fill")
-                .font(.headline)
+            Label(vet.name, systemImage: "person.fill").font(.headline)
             Label(vet.clinicName, systemImage: "building.2.fill")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .font(.subheadline).foregroundStyle(.secondary)
             Divider()
             if !vet.phone.isEmpty {
                 Link(destination: URL(string: "tel:\(vet.phone.replacingOccurrences(of: " ", with: ""))")!) {
@@ -55,9 +50,7 @@ private struct VetCard: View {
             }
             if !vet.notes.isEmpty {
                 Divider()
-                Text(vet.notes)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                Text(vet.notes).font(.caption).foregroundStyle(.secondary)
             }
         }
         .padding()

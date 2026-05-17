@@ -1,8 +1,9 @@
+// Home/Pets/Detail/Tabs/AppointmentsTabView.swift
 import SwiftUI
 
 struct AppointmentsTabView: View {
     let pet: Pet
-    @Environment(DataStore.self) private var store
+    @Environment(SupabaseStore.self) private var store
     @State private var showAdd = false
 
     private var upcoming: [Appointment] {
@@ -24,8 +25,12 @@ struct AppointmentsTabView: View {
                     ForEach(upcoming) { appt in
                         AppointmentRow(appointment: appt)
                             .swipeActions(edge: .trailing) {
-                                Button("Cancel", role: .destructive) { setStatus(appt, .cancelled) }
-                                Button("Done") { setStatus(appt, .done) }.tint(.green)
+                                Button("Cancel", role: .destructive) {
+                                    Task { try? await store.updateAppointmentStatus(appt, status: .cancelled) }
+                                }
+                                Button("Done") {
+                                    Task { try? await store.updateAppointmentStatus(appt, status: .done) }
+                                }.tint(.green)
                             }
                     }
                 }
@@ -34,7 +39,11 @@ struct AppointmentsTabView: View {
                 Section("Past") {
                     ForEach(past) { appt in
                         AppointmentRow(appointment: appt)
-                            .swipeActions { Button("Delete", role: .destructive) { delete(appt) } }
+                            .swipeActions {
+                                Button("Delete", role: .destructive) {
+                                    Task { try? await store.deleteAppointment(appt) }
+                                }
+                            }
                     }
                 }
             }
@@ -44,20 +53,7 @@ struct AppointmentsTabView: View {
                 Button("Add", systemImage: "plus") { showAdd = true }
             }
         }
-        .sheet(isPresented: $showAdd) {
-            AddAppointmentSheet(petId: pet.id)
-        }
-    }
-
-    private func setStatus(_ appt: Appointment, _ status: AppointmentStatus) {
-        guard let i = store.data.appointments.firstIndex(where: { $0.id == appt.id }) else { return }
-        store.data.appointments[i].status = status
-        store.save()
-    }
-
-    private func delete(_ appt: Appointment) {
-        store.data.appointments.removeAll { $0.id == appt.id }
-        store.save()
+        .sheet(isPresented: $showAdd) { AddAppointmentSheet(petId: pet.id) }
     }
 }
 
@@ -66,9 +62,9 @@ private struct AppointmentRow: View {
 
     private var statusColor: Color {
         switch appointment.status {
-        case .upcoming:   return .blue
-        case .done:       return .green
-        case .cancelled:  return .red
+        case .upcoming:  return .blue
+        case .done:      return .green
+        case .cancelled: return .red
         }
     }
 
