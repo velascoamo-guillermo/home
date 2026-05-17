@@ -19,11 +19,6 @@ struct PetRow: View {
             }
 
             Spacer()
-
-            Image(systemName: "chevron.right")
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .accessibilityHidden(true)
         }
     }
 }
