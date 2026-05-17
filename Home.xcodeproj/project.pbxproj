@@ -51,6 +51,7 @@
 		E2EC81F2A4FA6DC413810AFC /* Product.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECBBAB7C0182E30253E98F35 /* Product.swift */; };
 		F17684685F480FFE091A4FC9 /* SettingsRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099296661BA18AD804A8176A /* SettingsRow.swift */; };
 		F590EDE5C7BE12EF7ED81623 /* Pet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73C53F1CBE01F7F807567F82 /* Pet.swift */; };
+		96A6927DAC9046738B759A900327673D /* SupabaseConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEE741125AA949498F90211C36D7FA12 /* SupabaseConfig.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -99,6 +100,7 @@
 		B69A10084EFE887518B77FB0 /* FeatureCard.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FeatureCard.swift; path = FeatureCard.swift; sourceTree = "<group>"; };
 		DD1794F5A736E951E42FC707 /* ContentView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ContentView.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		ECBBAB7C0182E30253E98F35 /* Product.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Product.swift; path = Product.swift; sourceTree = "<group>"; };
+		BEE741125AA949498F90211C36D7FA12 /* SupabaseConfig.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SupabaseConfig.swift; path = SupabaseConfig.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -295,6 +297,7 @@
 		C3A0C9BB44FA55E4B6F33F57 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				EB200FEAFF6E42B5A383E3590D2BA321 /* Config */,
 				F10DE071B6D97759A20373C7 /* Components */,
 				FF55AA66BB77CC88DD99EE10 /* Services */,
 			);
@@ -331,6 +334,15 @@
 			);
 			name = Components;
 			path = Components;
+			sourceTree = "<group>";
+		};
+		EB200FEAFF6E42B5A383E3590D2BA321 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				BEE741125AA949498F90211C36D7FA12 /* SupabaseConfig.swift */,
+			);
+			name = Config;
+			path = Config;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -506,7 +518,8 @@
 				CA00BB11CC22DD33EE44FF05 /* ExtractionResultSheet.swift in Sources */,
 				CA00BB11CC22DD33EE44FF06 /* ExtractionService.swift in Sources */,
 				FF55AA66BB77CC88DD99EE01 /* KeychainService.swift in Sources */,
-			);
+				96A6927DAC9046738B759A900327673D /* SupabaseConfig.swift in Sources */,
+);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
