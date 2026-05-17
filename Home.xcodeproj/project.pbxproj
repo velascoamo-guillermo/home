@@ -43,8 +43,10 @@
 		CA00BB11CC22DD33EE44FF05 /* ExtractionResultSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA00BB11CC22DD33EE44FF15 /* ExtractionResultSheet.swift */; };
 		CA00BB11CC22DD33EE44FF06 /* ExtractionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA00BB11CC22DD33EE44FF16 /* ExtractionService.swift */; };
 		FF55AA66BB77CC88DD99EE01 /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF55AA66BB77CC88DD99EE00 /* KeychainService.swift */; };
+		SS00AA11BB22CC33DD44EE01 /* SupabaseStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = SS00AA11BB22CC33DD44EE00 /* SupabaseStore.swift */; };
 		HT00AA11BB22CC33DD44EE01 /* DataStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = HT00AA11BB22CC33DD44EE11 /* DataStoreTests.swift */; };
 		HT00AA11BB22CC33DD44EE02 /* ExtractionServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = HT00AA11BB22CC33DD44EE12 /* ExtractionServiceTests.swift */; };
+		HT00AA11BB22CC33DD44EE04 /* SupabaseStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = HT00AA11BB22CC33DD44EE14 /* SupabaseStoreTests.swift */; };
 		HT00AA11BB22CC33DD44EE03 /* Home.app in Frameworks */ = {isa = PBXBuildFile; fileRef = 50F3CD802FB7714C00238D41 /* Home.app */; };
 		C5FC049B579BEC4CBF8EC041 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1794F5A736E951E42FC707 /* ContentView.swift */; };
 		CD57016D61746F8775546D4B /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06C806DCF5034FAB66D7D2B8 /* HomeView.swift */; };
@@ -92,8 +94,10 @@
 		CA00BB11CC22DD33EE44FF15 /* ExtractionResultSheet.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExtractionResultSheet.swift; path = ExtractionResultSheet.swift; sourceTree = "<group>"; };
 		CA00BB11CC22DD33EE44FF16 /* ExtractionService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExtractionService.swift; path = ExtractionService.swift; sourceTree = "<group>"; };
 		FF55AA66BB77CC88DD99EE00 /* KeychainService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = KeychainService.swift; path = KeychainService.swift; sourceTree = "<group>"; };
+		SS00AA11BB22CC33DD44EE00 /* SupabaseStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SupabaseStore.swift; path = SupabaseStore.swift; sourceTree = "<group>"; };
 		HT00AA11BB22CC33DD44EE11 /* DataStoreTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DataStoreTests.swift; path = DataStoreTests.swift; sourceTree = "<group>"; };
 		HT00AA11BB22CC33DD44EE12 /* ExtractionServiceTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExtractionServiceTests.swift; path = ExtractionServiceTests.swift; sourceTree = "<group>"; };
+		HT00AA11BB22CC33DD44EE14 /* SupabaseStoreTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SupabaseStoreTests.swift; path = SupabaseStoreTests.swift; sourceTree = "<group>"; };
 		HT00AA11BB22CC33DD44EE13 /* HomeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HomeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9583A57C90DCAB3DC119342E /* ProductCard.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ProductCard.swift; path = ProductCard.swift; sourceTree = "<group>"; };
 		A4CDCB58B9C74EE5C806160F /* HomeApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HomeApp.swift; path = HomeApp.swift; sourceTree = "<group>"; };
@@ -144,6 +148,7 @@
 			children = (
 				HT00AA11BB22CC33DD44EE11 /* DataStoreTests.swift */,
 				HT00AA11BB22CC33DD44EE12 /* ExtractionServiceTests.swift */,
+				HT00AA11BB22CC33DD44EE14 /* SupabaseStoreTests.swift */,
 			);
 			name = HomeTests;
 			path = HomeTests;
@@ -309,6 +314,7 @@
 			isa = PBXGroup;
 			children = (
 				FF55AA66BB77CC88DD99EE00 /* KeychainService.swift */,
+				SS00AA11BB22CC33DD44EE00 /* SupabaseStore.swift */,
 			);
 			name = Services;
 			path = Services;
@@ -446,6 +452,7 @@
 			files = (
 				HT00AA11BB22CC33DD44EE01 /* DataStoreTests.swift in Sources */,
 				HT00AA11BB22CC33DD44EE02 /* ExtractionServiceTests.swift in Sources */,
+				HT00AA11BB22CC33DD44EE04 /* SupabaseStoreTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -519,6 +526,7 @@
 				CA00BB11CC22DD33EE44FF06 /* ExtractionService.swift in Sources */,
 				FF55AA66BB77CC88DD99EE01 /* KeychainService.swift in Sources */,
 				96A6927DAC9046738B759A900327673D /* SupabaseConfig.swift in Sources */,
+				SS00AA11BB22CC33DD44EE01 /* SupabaseStore.swift in Sources */,
 );
 			runOnlyForDeploymentPostprocessing = 0;
 		};
