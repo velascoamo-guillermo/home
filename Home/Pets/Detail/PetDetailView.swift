@@ -21,6 +21,7 @@ enum PetDetailTab: String, CaseIterable {
 struct PetDetailView: View {
     let pet: Pet
     @State private var selectedTab: PetDetailTab = .vet
+    @Namespace private var tabIndicator
 
     var body: some View {
         VStack(spacing: 0) {
@@ -47,35 +48,40 @@ struct PetDetailView: View {
     }
 
     private var tabPicker: some View {
-        HStack(spacing: 0) {
-            ForEach(PetDetailTab.allCases, id: \.self) { tab in
-                let selected = selectedTab == tab
-                Button {
-                    selectedTab = tab
-                } label: {
-                    VStack(spacing: 5) {
-                        Image(systemName: tab.icon)
-                            .font(.system(size: 15, weight: selected ? .semibold : .regular))
-                        Text(tab.rawValue)
-                            .font(.caption2)
-                            .fontWeight(selected ? .semibold : .regular)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 10)
-                    .foregroundStyle(selected ? Color.accentColor : Color.secondary)
-                }
-                .overlay(alignment: .bottom) {
-                    if selected {
-                        Rectangle()
-                            .frame(height: 2)
-                            .foregroundStyle(.tint)
+        GlassEffectContainer {
+            HStack(spacing: 0) {
+                ForEach(PetDetailTab.allCases, id: \.self) { (tab: PetDetailTab) in
+                    let selected = selectedTab == tab
+                    Button {
+                        withAnimation(.spring(duration: 0.3, bounce: 0.2)) {
+                            selectedTab = tab
+                        }
+                    } label: {
+                        VStack(spacing: 5) {
+                            Image(systemName: tab.icon)
+                                .font(.system(size: 15, weight: selected ? .semibold : .regular))
+                            Text(tab.rawValue)
+                                .font(.caption2)
+                                .fontWeight(selected ? .semibold : .regular)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 9)
+                        .foregroundStyle(selected ? Color.primary : Color.secondary)
+                        .background {
+                            if selected {
+                                Capsule()
+                                    .glassEffect(.regular, in: Capsule())
+                                    .matchedGeometryEffect(id: "tab", in: tabIndicator)
+                            }
+                        }
                     }
                 }
             }
+            .padding(.horizontal, 8)
+            .padding(.vertical, 6)
         }
-        .background(.bar)
         .overlay(alignment: .bottom) {
-            Divider()
+            Divider().opacity(0.3)
         }
     }
 
