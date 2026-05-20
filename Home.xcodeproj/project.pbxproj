@@ -43,6 +43,7 @@
 		HM00AA11BB22CC33DD44EE11 /* HomeItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = HM00AA11BB22CC33DD44EE01 /* HomeItem.swift */; };
 		HM00AA11BB22CC33DD44EE12 /* HouseholdTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = HM00AA11BB22CC33DD44EE02 /* HouseholdTask.swift */; };
 		HM00AA11BB22CC33DD44EE13 /* HomeItemRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = HM00AA11BB22CC33DD44EE03 /* HomeItemRow.swift */; };
+		HM00AA11BB22CC33DD44EE14 /* HouseholdTaskSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = HM00AA11BB22CC33DD44EE04 /* HouseholdTaskSheet.swift */; };
 		DD44EE55FF6600AABB22CC33 /* EventsTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD44EE55FF6600AABB22CC01 /* EventsTabView.swift */; };
 		E2EC81F2A4FA6DC413810AFC /* Product.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECBBAB7C0182E30253E98F35 /* Product.swift */; };
 		EE55FF6600AABB22CC33DD44 /* FilesTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE55FF6600AABB22CC33DD01 /* FilesTabView.swift */; };
@@ -72,6 +73,7 @@
 
 /* Begin PBXFileReference section */
 		06C806DCF5034FAB66D7D2B8 /* HomeView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		HM00AA11BB22CC33DD44EE04 /* HouseholdTaskSheet.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HouseholdTaskSheet.swift; sourceTree = "<group>"; };
 		HM00AA11BB22CC33DD44EE01 /* HomeItem.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HomeItem.swift; sourceTree = "<group>"; };
 		HM00AA11BB22CC33DD44EE02 /* HouseholdTask.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HouseholdTask.swift; sourceTree = "<group>"; };
 		HM00AA11BB22CC33DD44EE03 /* HomeItemRow.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HomeItemRow.swift; sourceTree = "<group>"; };
@@ -167,6 +169,7 @@
 				HM00AA11BB22CC33DD44EE01 /* HomeItem.swift */,
 				HM00AA11BB22CC33DD44EE02 /* HouseholdTask.swift */,
 				HM00AA11BB22CC33DD44EE03 /* HomeItemRow.swift */,
+				HM00AA11BB22CC33DD44EE04 /* HouseholdTaskSheet.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -459,6 +462,7 @@
 				HM00AA11BB22CC33DD44EE11 /* HomeItem.swift in Sources */,
 				HM00AA11BB22CC33DD44EE12 /* HouseholdTask.swift in Sources */,
 				HM00AA11BB22CC33DD44EE13 /* HomeItemRow.swift in Sources */,
+				HM00AA11BB22CC33DD44EE14 /* HouseholdTaskSheet.swift in Sources */,
 				5B333B1BDEF4E93AC16D9136 /* MainTabView.swift in Sources */,
 				F590EDE5C7BE12EF7ED81623 /* Pet.swift in Sources */,
 				81D685B707C9582581ADFB87 /* PetsView.swift in Sources */,
