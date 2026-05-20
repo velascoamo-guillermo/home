@@ -51,4 +51,22 @@ enum CalendarService {
             return false
         }
     }
+
+    @discardableResult
+    static func addHouseholdTask(_ task: HouseholdTask) async -> Bool {
+        guard await requestAccess() else { return false }
+        let event = EKEvent(eventStore: store)
+        event.title = task.title
+        event.startDate = task.nextDueDate
+        event.endDate = task.nextDueDate
+        event.isAllDay = true
+        event.notes = task.notes.isEmpty ? nil : task.notes
+        event.calendar = store.defaultCalendarForNewEvents
+        do {
+            try store.save(event, span: .thisEvent)
+            return true
+        } catch {
+            return false
+        }
+    }
 }
