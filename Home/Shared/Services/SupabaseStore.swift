@@ -14,6 +14,7 @@ final class SupabaseStore {
     var events: [PetEvent] = []
     var files: [PetFile] = []
     var householdTasks: [HouseholdTask] = []
+    var customSections: [TaskSection] = []
     var isLoading = false
     var loadError: String? = nil
 
@@ -38,6 +39,7 @@ final class SupabaseStore {
             async let pe: [PetEvent] = client.from("pet_events").select().execute().value
             async let pf: [PetFile] = client.from("pet_files").select().execute().value
             async let ht: [HouseholdTask] = client.from("household_tasks").select().execute().value
+            async let cs: [TaskSection]   = client.from("task_sections").select().execute().value
 
             pets = try await p
             veterinarians = try await v
@@ -46,6 +48,7 @@ final class SupabaseStore {
             events = try await pe
             files = try await pf
             householdTasks = try await ht
+            customSections = try await cs
         } catch {
             loadError = error.localizedDescription
         }
@@ -221,6 +224,21 @@ final class SupabaseStore {
             if let type = linkedToType, f.linkedToType != type { return false }
             if let id = linkedToId, f.linkedToId != id { return false }
             return true
+        }
+    }
+
+    // MARK: - Custom Sections
+
+    func addCustomSection(_ section: TaskSection) async throws {
+        try await client.from("task_sections").insert(section).execute()
+        customSections.append(section)
+    }
+
+    func deleteCustomSection(_ section: TaskSection) async throws {
+        try await client.from("task_sections").delete().eq("id", value: section.id).execute()
+        customSections.removeAll { $0.id == section.id }
+        for i in householdTasks.indices where householdTasks[i].sectionId == section.id {
+            householdTasks[i].sectionId = nil
         }
     }
 

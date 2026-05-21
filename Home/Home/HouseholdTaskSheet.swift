@@ -8,10 +8,12 @@ struct HouseholdTaskSheet: View {
 
     @State private var title = ""
     @State private var icon = "wrench"
+    @State private var sectionId: UUID? = nil
     @State private var intervalValue = 1
     @State private var intervalUnit  = IntervalUnit.months
     @State private var nextDueDate   = Date.now
     @State private var notes = ""
+    @State private var showSectionPicker = false
 
     private var isEditing: Bool { existing != nil }
 
@@ -20,6 +22,7 @@ struct HouseholdTaskSheet: View {
         if let t = existing {
             _title         = State(initialValue: t.title)
             _icon          = State(initialValue: t.icon)
+            _sectionId     = State(initialValue: t.sectionId)
             _nextDueDate   = State(initialValue: t.nextDueDate)
             _notes         = State(initialValue: t.notes)
             let (val, unit) = IntervalUnit.decompose(days: t.intervalDays)
@@ -33,9 +36,21 @@ struct HouseholdTaskSheet: View {
             Form {
                 Section("Task") {
                     TextField("Name", text: $title)
-                    Picker("Icon", selection: $icon) {
-                        ForEach(Self.iconOptions, id: \.self) { sym in
-                            Label(sym, systemImage: sym).tag(sym)
+
+                    Button {
+                        showSectionPicker = true
+                    } label: {
+                        HStack {
+                            Text("Section")
+                                .foregroundStyle(.primary)
+                            Spacer()
+                            Image(systemName: icon)
+                                .foregroundStyle(.accent)
+                            Text(sectionLabel)
+                                .foregroundStyle(.secondary)
+                            Image(systemName: "chevron.right")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
                         }
                     }
                 }
@@ -72,13 +87,26 @@ struct HouseholdTaskSheet: View {
                         .disabled(title.trimmingCharacters(in: .whitespaces).isEmpty)
                 }
             }
+            .sheet(isPresented: $showSectionPicker) {
+                TaskSectionPicker(selectedIcon: $icon, selectedSectionId: $sectionId)
+            }
         }
+    }
+
+    private var sectionLabel: String {
+        if let id = sectionId,
+           let custom = store.customSections.first(where: { $0.id == id }) {
+            return custom.name
+        }
+        return TaskSection.Predefined.allCases
+            .first(where: { $0.icon == icon })?.name ?? icon
     }
 
     private func save() {
         var task = existing ?? HouseholdTask(title: "", icon: icon, intervalDays: 1, nextDueDate: nextDueDate)
         task.title        = title.trimmingCharacters(in: .whitespaces)
         task.icon         = icon
+        task.sectionId    = sectionId
         task.intervalDays = intervalUnit.toDays(intervalValue)
         task.nextDueDate  = nextDueDate
         task.notes        = notes.trimmingCharacters(in: .whitespaces)
@@ -92,11 +120,6 @@ struct HouseholdTaskSheet: View {
             dismiss()
         }
     }
-
-    static let iconOptions: [String] = [
-        "wrench", "drop", "flame", "fan", "lightbulb",
-        "trash", "shippingbox", "hammer", "leaf", "air.purifier"
-    ]
 }
 
 // MARK: - IntervalUnit
