@@ -62,6 +62,8 @@
 		HT00AA11BB22CC33DD44EE03 /* Home.app in Frameworks */ = {isa = PBXBuildFile; fileRef = 50F3CD802FB7714C00238D41 /* Home.app */; };
 		HT00AA11BB22CC33DD44EE04 /* SupabaseStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = HT00AA11BB22CC33DD44EE14 /* SupabaseStoreTests.swift */; };
 		SS00AA11BB22CC33DD44EE01 /* SupabaseStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = SS00AA11BB22CC33DD44EE00 /* SupabaseStore.swift */; };
+		UR00AA11BB22CC33DD44EE01 /* UIImage+Resize.swift in Sources */ = {isa = PBXBuildFile; fileRef = UR00AA11BB22CC33DD44EE00 /* UIImage+Resize.swift */; };
+		UR00AA11BB22CC33DD44EE02 /* UIImageResizeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = UR00AA11BB22CC33DD44EE10 /* UIImageResizeTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -128,6 +130,8 @@
 		HT00AA11BB22CC33DD44EE13 /* HomeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HomeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		HT00AA11BB22CC33DD44EE14 /* SupabaseStoreTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SupabaseStoreTests.swift; sourceTree = "<group>"; };
 		SS00AA11BB22CC33DD44EE00 /* SupabaseStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SupabaseStore.swift; sourceTree = "<group>"; };
+		UR00AA11BB22CC33DD44EE00 /* UIImage+Resize.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIImage+Resize.swift"; sourceTree = "<group>"; };
+		UR00AA11BB22CC33DD44EE10 /* UIImageResizeTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UIImageResizeTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -279,8 +283,17 @@
 				EB200FEAFF6E42B5A383E3590D2BA321 /* Config */,
 				F10DE071B6D97759A20373C7 /* Components */,
 				FF55AA66BB77CC88DD99EE10 /* Services */,
+				UR00AA11BB22CC33DD44EF00 /* Extensions */,
 			);
 			path = Shared;
+			sourceTree = "<group>";
+		};
+		UR00AA11BB22CC33DD44EF00 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				UR00AA11BB22CC33DD44EE00 /* UIImage+Resize.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		C3D4E5F6A7B8C9D0E1F2A3B4 /* Store */ = {
@@ -369,6 +382,7 @@
 			children = (
 				HT00AA11BB22CC33DD44EE12 /* ExtractionServiceTests.swift */,
 				HT00AA11BB22CC33DD44EE14 /* SupabaseStoreTests.swift */,
+				UR00AA11BB22CC33DD44EE10 /* UIImageResizeTests.swift */,
 			);
 			path = HomeTests;
 			sourceTree = "<group>";
@@ -514,6 +528,7 @@
 				FF55AA66BB77CC88DD99EE01 /* KeychainService.swift in Sources */,
 				96A6927DAC9046738B759A900327673D /* SupabaseConfig.swift in Sources */,
 				SS00AA11BB22CC33DD44EE01 /* SupabaseStore.swift in Sources */,
+				UR00AA11BB22CC33DD44EE01 /* UIImage+Resize.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -523,6 +538,7 @@
 			files = (
 				HT00AA11BB22CC33DD44EE02 /* ExtractionServiceTests.swift in Sources */,
 				HT00AA11BB22CC33DD44EE04 /* SupabaseStoreTests.swift in Sources */,
+				UR00AA11BB22CC33DD44EE02 /* UIImageResizeTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
