@@ -78,7 +78,7 @@ final class SupabaseStore {
         )
         let photoUrl = try client.storage.from("pet-files").getPublicURL(path: storagePath)
         var updated = pet
-        updated.photoUrl = photoUrl.absoluteString
+        updated.photoUrl = "\(photoUrl.absoluteString)?t=\(Int(Date().timeIntervalSince1970))"
         do {
             try await updatePet(updated)
         } catch {
