@@ -73,10 +73,15 @@ final class SupabaseStore {
         let storagePath = "\(pet.id)/photo.jpg"
         try? await client.storage.from("pet-files").remove(paths: [storagePath])
         try await client.storage.from("pet-files").upload(storagePath, data: imageData)
-        let photoUrl = try! client.storage.from("pet-files").getPublicURL(path: storagePath)
+        let photoUrl = try client.storage.from("pet-files").getPublicURL(path: storagePath)
         var updated = pet
         updated.photoUrl = photoUrl.absoluteString
-        try await updatePet(updated)
+        do {
+            try await updatePet(updated)
+        } catch {
+            try? await client.storage.from("pet-files").remove(paths: [storagePath])
+            throw error
+        }
     }
 
     func deletePet(_ pet: Pet) async throws {
