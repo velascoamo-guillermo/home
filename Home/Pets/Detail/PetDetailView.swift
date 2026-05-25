@@ -48,13 +48,24 @@ struct PetDetailView: View {
                     photoPickerItem = nil
                 }
                 do {
-                    guard let data = try? await item.loadTransferable(type: Data.self),
-                          let uiImage = UIImage(data: data),
-                          let compressed = uiImage.resized(maxDimension: 512).jpegData(compressionQuality: 0.8)
-                    else {
+                    guard let data = try await item.loadTransferable(type: Data.self) else {
                         uploadError = "Could not read the selected photo."
                         return
                     }
+
+                    // Resize and encode off the main actor — UIGraphicsImageRenderer is thread-safe since iOS 10
+                    let compressResult = await Task.detached(priority: .userInitiated) {
+                        guard let uiImage = UIImage(data: data),
+                              let compressed = uiImage.resized(maxDimension: 512).jpegData(compressionQuality: 0.8)
+                        else { return Data?.none }
+                        return compressed
+                    }.value
+
+                    guard let compressed = compressResult else {
+                        uploadError = "Could not process the selected photo."
+                        return
+                    }
+
                     try await store.updatePetPhoto(currentPet, imageData: compressed)
                 } catch {
                     uploadError = error.localizedDescription

@@ -1,7 +1,8 @@
 import UIKit
 
 extension UIImage {
-    func resized(maxDimension: CGFloat) -> UIImage {
+    // nonisolated: UIGraphicsImageRenderer and UIImage drawing are thread-safe since iOS 10
+    nonisolated func resized(maxDimension: CGFloat) -> UIImage {
         let longest = max(size.width, size.height)
         guard longest > maxDimension else { return self }
         let scale = maxDimension / longest
