@@ -35,7 +35,7 @@ struct PetDetailView: View {
             VStack(spacing: 12) {
                 Spacer()
                 petNameHeader
-                if ageString != nil || currentPet.birthday != nil {
+                if currentPet.birthday != nil {
                     statsRow
                 }
                 sectionGrid
@@ -54,9 +54,9 @@ struct PetDetailView: View {
                 case .files:        FilesTabView(pet: currentPet)
                 }
             }
+            .navigationTitle(section.title)
         }
         .navigationBarBackButtonHidden(true)
-        .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(.hidden, for: .navigationBar)
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
@@ -87,6 +87,7 @@ struct PetDetailView: View {
                         uploadError = "Could not read the selected photo."
                         return
                     }
+                    // Resize and encode off the main actor — UIGraphicsImageRenderer is thread-safe since iOS 10
                     let compressResult = await Task.detached(priority: .userInitiated) {
                         guard let uiImage = UIImage(data: data),
                               let compressed = uiImage.resized(maxDimension: 512).jpegData(compressionQuality: 0.8)
