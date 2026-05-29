@@ -23,26 +23,28 @@ struct PetDetailView: View {
     }
 
     var body: some View {
-        ZStack {
-            petBackground
-            LinearGradient(
-                colors: [.clear, .black.opacity(0.6)],
-                startPoint: .top,
-                endPoint: .bottom
-            )
-            .ignoresSafeArea()
-
-            VStack(spacing: 12) {
-                Spacer()
+        VStack(spacing: 0) {
+            Spacer()
+            VStack(spacing: 16) {
                 petNameHeader
                 if currentPet.birthday != nil {
                     statsRow
                 }
                 sectionGrid
-                    .padding(.bottom, 8)
             }
-            .padding(.horizontal, 16)
-            .padding(.bottom, 16)
+            .padding(.horizontal, 20)
+            .padding(.bottom, 24)
+        }
+        .background {
+            ZStack {
+                petBackground
+                LinearGradient(
+                    colors: [.clear, .black.opacity(0.65)],
+                    startPoint: .center,
+                    endPoint: .bottom
+                )
+            }
+            .ignoresSafeArea()
         }
         .sheet(item: $selectedSection) { section in
             NavigationStack {
@@ -169,8 +171,8 @@ struct PetDetailView: View {
     }
 
     private var sectionGrid: some View {
-        VStack(spacing: 12) {
-            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
+        VStack(spacing: 14) {
+            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 14) {
                 PetSectionCard(section: .vet)          { selectedSection = .vet }
                 PetSectionCard(section: .appointments) { selectedSection = .appointments }
                 PetSectionCard(section: .history)      { selectedSection = .history }
@@ -220,11 +222,10 @@ private struct PetSectionCard: View {
                     .font(.subheadline)
             }
             .frame(maxWidth: .infinity)
-            .padding(.vertical, 16)
-            .background(.regularMaterial)
-            .clipShape(.rect(cornerRadius: 14))
+            .padding(.vertical, 20)
         }
         .buttonStyle(.plain)
+        .glassEffect(in: RoundedRectangle(cornerRadius: 16))
         .accessibilityLabel(section.title)
     }
 }
@@ -244,8 +245,7 @@ private struct StatPill: View {
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 10)
-        .background(.regularMaterial)
-        .clipShape(.rect(cornerRadius: 10))
+        .glassEffect(in: RoundedRectangle(cornerRadius: 10))
     }
 }
 
