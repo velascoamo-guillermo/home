@@ -2,8 +2,8 @@
 import Anthropic from "npm:@anthropic-ai/sdk@0.39.0";
 
 type AnalyzeRequest = {
-  fileUrl: string;
-  mediaType: string; // "application/pdf" | "image/jpeg" | "image/png"
+  storagePath: string; // relative path in pet-files bucket, e.g. "<petId>/<fileId>.pdf"
+  mediaType: string;   // "application/pdf" | "image/jpeg" | "image/png"
   petName: string;
 };
 
@@ -55,15 +55,19 @@ Deno.serve(async (req) => {
       });
     }
 
-    const { fileUrl, mediaType, petName }: AnalyzeRequest = await req.json();
+    const { storagePath, mediaType, petName }: AnalyzeRequest = await req.json();
 
-    // Issue 2: validate required fields before using them
-    if (!fileUrl || !mediaType || !petName) {
-      return new Response(JSON.stringify({ success: false, error: "Missing required fields: fileUrl, mediaType, petName" }), {
+    // Validate required fields before using them
+    if (!storagePath || !mediaType || !petName) {
+      return new Response(JSON.stringify({ success: false, error: "Missing required fields: storagePath, mediaType, petName" }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+
+    // Construct file URL server-side — never accept a URL from the client (SSRF)
+    const supabaseUrl = Deno.env.get("SUPABASE_URL") ?? "";
+    const fileUrl = `${supabaseUrl}/storage/v1/object/public/pet-files/${storagePath}`;
 
     // Fetch file and convert to base64
     const fileResponse = await fetch(fileUrl);

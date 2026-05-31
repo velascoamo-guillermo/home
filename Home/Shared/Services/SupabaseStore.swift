@@ -214,12 +214,11 @@ final class SupabaseStore {
     }
 
     func analyzeFile(file: PetFile, petName: String) async throws -> ExtractionResult {
-        let fileURL = fileUrl(for: file)
         let ext = (file.storagePath as NSString).pathExtension.lowercased()
         let mediaType = ext == "pdf" ? "application/pdf" : "image/jpeg"
 
         struct RequestBody: Encodable {
-            let fileUrl: String
+            let storagePath: String
             let mediaType: String
             let petName: String
         }
@@ -234,7 +233,7 @@ final class SupabaseStore {
             let error: String?
         }
 
-        let body = RequestBody(fileUrl: fileURL.absoluteString, mediaType: mediaType, petName: petName)
+        let body = RequestBody(storagePath: file.storagePath, mediaType: mediaType, petName: petName)
 
         do {
             let response: ResponseBody = try await client.functions
