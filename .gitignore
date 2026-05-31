@@ -1,3 +1,5 @@
 *.xcconfig
 .superpowers/
 docs/superpowers/
+fastlane/test_output/
+Config.xcconfig

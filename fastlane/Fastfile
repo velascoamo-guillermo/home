@@ -1,0 +1,24 @@
+default_platform :ios
+
+platform :ios do
+
+  desc "Run all unit tests"
+  lane :test do
+    xcconfig_content = <<~XCCONFIG
+      SUPABASE_URL = #{ENV.fetch("SUPABASE_URL")}
+      SUPABASE_ANON_KEY = #{ENV.fetch("SUPABASE_ANON_KEY")}
+    XCCONFIG
+    File.write("Config.xcconfig", xcconfig_content)
+
+    run_tests(
+      project: ENV["PROJECT"],
+      scheme: ENV["SCHEME"],
+      destination: ENV["DESTINATION"],
+      clean: true,
+      code_coverage: true,
+      output_directory: "fastlane/test_output",
+      output_types: "junit"
+    )
+  end
+
+end
