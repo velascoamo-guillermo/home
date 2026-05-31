@@ -16,6 +16,8 @@ final class SupabaseStore {
     var householdTasks: [HouseholdTask] = []
     var customSections: [TaskSection] = []
     var stockProducts: [StockProduct] = []
+    var meals: [Meal] = []
+    var mealProducts: [MealProduct] = []
     var isLoading = false
     var loadError: String? = nil
 
@@ -42,6 +44,8 @@ final class SupabaseStore {
             async let ht: [HouseholdTask] = client.from("household_tasks").select().execute().value
             async let cs: [TaskSection]   = client.from("task_sections").select().execute().value
             async let sp: [StockProduct]  = client.from("stock_products").select().execute().value
+            async let ml: [Meal]          = client.from("meals").select().execute().value
+            async let mpr: [MealProduct]  = client.from("meal_products").select().execute().value
 
             pets = try await p
             veterinarians = try await v
@@ -52,6 +56,8 @@ final class SupabaseStore {
             householdTasks = try await ht
             customSections = try await cs
             stockProducts = try await sp
+            meals = try await ml
+            mealProducts = try await mpr
         } catch {
             loadError = error.localizedDescription
         }
