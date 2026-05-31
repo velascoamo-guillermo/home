@@ -62,6 +62,9 @@
 		HT00AA11BB22CC33DD44EE02 /* ExtractionServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = HT00AA11BB22CC33DD44EE12 /* ExtractionServiceTests.swift */; };
 		HT00AA11BB22CC33DD44EE03 /* Home.app in Frameworks */ = {isa = PBXBuildFile; fileRef = 50F3CD802FB7714C00238D41 /* Home.app */; };
 		HT00AA11BB22CC33DD44EE04 /* SupabaseStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = HT00AA11BB22CC33DD44EE14 /* SupabaseStoreTests.swift */; };
+		HT00AA11BB22CC33DD44EE06 /* HomeItemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = HT00AA11BB22CC33DD44EE16 /* HomeItemTests.swift */; };
+		HT00AA11BB22CC33DD44EE07 /* PetModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = HT00AA11BB22CC33DD44EE17 /* PetModelTests.swift */; };
+		HT00AA11BB22CC33DD44EE08 /* SupabaseStoreFilterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = HT00AA11BB22CC33DD44EE18 /* SupabaseStoreFilterTests.swift */; };
 		SS00AA11BB22CC33DD44EE01 /* SupabaseStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = SS00AA11BB22CC33DD44EE00 /* SupabaseStore.swift */; };
 		UR00AA11BB22CC33DD44EE01 /* UIImage+Resize.swift in Sources */ = {isa = PBXBuildFile; fileRef = UR00AA11BB22CC33DD44EE00 /* UIImage+Resize.swift */; };
 		UR00AA11BB22CC33DD44EE02 /* UIImageResizeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = UR00AA11BB22CC33DD44EE10 /* UIImageResizeTests.swift */; };
@@ -131,6 +134,9 @@
 		HT00AA11BB22CC33DD44EE12 /* ExtractionServiceTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ExtractionServiceTests.swift; sourceTree = "<group>"; };
 		HT00AA11BB22CC33DD44EE13 /* HomeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HomeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		HT00AA11BB22CC33DD44EE14 /* SupabaseStoreTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SupabaseStoreTests.swift; sourceTree = "<group>"; };
+		HT00AA11BB22CC33DD44EE16 /* HomeItemTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HomeItemTests.swift; sourceTree = "<group>"; };
+		HT00AA11BB22CC33DD44EE17 /* PetModelTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PetModelTests.swift; sourceTree = "<group>"; };
+		HT00AA11BB22CC33DD44EE18 /* SupabaseStoreFilterTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SupabaseStoreFilterTests.swift; sourceTree = "<group>"; };
 		SS00AA11BB22CC33DD44EE00 /* SupabaseStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SupabaseStore.swift; sourceTree = "<group>"; };
 		UR00AA11BB22CC33DD44EE00 /* UIImage+Resize.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIImage+Resize.swift"; sourceTree = "<group>"; };
 		UR00AA11BB22CC33DD44EE10 /* UIImageResizeTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UIImageResizeTests.swift; sourceTree = "<group>"; };
@@ -385,6 +391,9 @@
 			children = (
 				HT00AA11BB22CC33DD44EE12 /* ExtractionServiceTests.swift */,
 				HT00AA11BB22CC33DD44EE14 /* SupabaseStoreTests.swift */,
+				HT00AA11BB22CC33DD44EE16 /* HomeItemTests.swift */,
+				HT00AA11BB22CC33DD44EE17 /* PetModelTests.swift */,
+				HT00AA11BB22CC33DD44EE18 /* SupabaseStoreFilterTests.swift */,
 				UR00AA11BB22CC33DD44EE10 /* UIImageResizeTests.swift */,
 			);
 			path = HomeTests;
@@ -542,6 +551,9 @@
 			files = (
 				HT00AA11BB22CC33DD44EE02 /* ExtractionServiceTests.swift in Sources */,
 				HT00AA11BB22CC33DD44EE04 /* SupabaseStoreTests.swift in Sources */,
+				HT00AA11BB22CC33DD44EE06 /* HomeItemTests.swift in Sources */,
+				HT00AA11BB22CC33DD44EE07 /* PetModelTests.swift in Sources */,
+				HT00AA11BB22CC33DD44EE08 /* SupabaseStoreFilterTests.swift in Sources */,
 				UR00AA11BB22CC33DD44EE02 /* UIImageResizeTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
