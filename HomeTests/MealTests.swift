@@ -64,3 +64,19 @@ extension MealTests {
         XCTAssertEqual(Weekday(rawValue: 7)?.displayName, "Domingo")
     }
 }
+
+extension MealTests {
+    func testMealProductDecodesSnakeCase() throws {
+        let json = """
+        {
+          "id": "00000000-0000-0000-0000-0000000000aa",
+          "meal_id": "00000000-0000-0000-0000-000000000001",
+          "product_id": "00000000-0000-0000-0000-0000000000bb",
+          "quantity": 3
+        }
+        """.data(using: .utf8)!
+        let mp = try JSONDecoder().decode(MealProduct.self, from: json)
+        XCTAssertEqual(mp.quantity, 3)
+        XCTAssertEqual(mp.mealId.uuidString.lowercased(), "00000000-0000-0000-0000-000000000001")
+    }
+}
