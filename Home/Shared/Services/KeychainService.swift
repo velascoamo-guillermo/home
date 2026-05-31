@@ -3,7 +3,6 @@ import Foundation
 import Security
 
 enum KeychainService {
-    static let claudeApiKeyAccount = "claude_api_key"
     private static let service = Bundle.main.bundleIdentifier ?? "com.home.app"
 
     @discardableResult
