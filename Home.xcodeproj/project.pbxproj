@@ -70,6 +70,7 @@
 		UR00AA11BB22CC33DD44EE02 /* UIImageResizeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = UR00AA11BB22CC33DD44EE10 /* UIImageResizeTests.swift */; };
 		ST00AA11BB22CC33DD44EE01 /* StockProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = ST00AA11BB22CC33DD44EE00 /* StockProduct.swift */; };
 		ST00AA11BB22CC33DD44EE03 /* StockProductTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ST00AA11BB22CC33DD44EE02 /* StockProductTests.swift */; };
+		SC00AA11BB22CC33DD44EE03 /* StockCompletionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = SC00AA11BB22CC33DD44EE02 /* StockCompletionTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -144,6 +145,7 @@
 		UR00AA11BB22CC33DD44EE10 /* UIImageResizeTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UIImageResizeTests.swift; sourceTree = "<group>"; };
 		ST00AA11BB22CC33DD44EE00 /* StockProduct.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StockProduct.swift; sourceTree = "<group>"; };
 		ST00AA11BB22CC33DD44EE02 /* StockProductTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StockProductTests.swift; sourceTree = "<group>"; };
+		SC00AA11BB22CC33DD44EE02 /* StockCompletionTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StockCompletionTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -409,6 +411,7 @@
 				HT00AA11BB22CC33DD44EE18 /* SupabaseStoreFilterTests.swift */,
 				UR00AA11BB22CC33DD44EE10 /* UIImageResizeTests.swift */,
 				ST00AA11BB22CC33DD44EE02 /* StockProductTests.swift */,
+				SC00AA11BB22CC33DD44EE02 /* StockCompletionTests.swift */,
 			);
 			path = HomeTests;
 			sourceTree = "<group>";
@@ -571,6 +574,7 @@
 				HT00AA11BB22CC33DD44EE08 /* SupabaseStoreFilterTests.swift in Sources */,
 				UR00AA11BB22CC33DD44EE02 /* UIImageResizeTests.swift in Sources */,
 				ST00AA11BB22CC33DD44EE03 /* StockProductTests.swift in Sources */,
+				SC00AA11BB22CC33DD44EE03 /* StockCompletionTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
