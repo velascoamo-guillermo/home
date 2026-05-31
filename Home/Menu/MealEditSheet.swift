@@ -54,7 +54,7 @@ struct MealEditSheet: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Guardar") { Task { await save() } }
                 }
-                ToolbarItem(placement: .cancelAction) {
+                ToolbarItem(placement: .cancellationAction) {
                     Button("Cancelar") { dismiss() }
                 }
             }
