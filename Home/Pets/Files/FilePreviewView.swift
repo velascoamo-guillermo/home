@@ -42,7 +42,7 @@ struct FilePreviewView: View {
                 }
             }
             .sheet(isPresented: $showExtraction) {
-                ExtractionResultSheet(fileURL: fileURL, file: file, pet: pet)
+                ExtractionResultSheet(file: file, pet: pet)
             }
         }
     }
