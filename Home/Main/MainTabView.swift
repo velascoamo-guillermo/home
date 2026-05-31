@@ -12,6 +12,9 @@ struct MainTabView: View {
             Tab("Stock", systemImage: "shippingbox.fill") {
                 StockView()
             }
+            Tab("Menu", systemImage: "fork.knife") {
+                MenuView()
+            }
             Tab("Settings", systemImage: "gearshape.fill") {
                 SettingsView()
             }
