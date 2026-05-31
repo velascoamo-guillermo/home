@@ -15,6 +15,7 @@ final class SupabaseStore {
     var files: [PetFile] = []
     var householdTasks: [HouseholdTask] = []
     var customSections: [TaskSection] = []
+    var stockProducts: [StockProduct] = []
     var isLoading = false
     var loadError: String? = nil
 
@@ -40,6 +41,7 @@ final class SupabaseStore {
             async let pf: [PetFile] = client.from("pet_files").select().execute().value
             async let ht: [HouseholdTask] = client.from("household_tasks").select().execute().value
             async let cs: [TaskSection]   = client.from("task_sections").select().execute().value
+            async let sp: [StockProduct]  = client.from("stock_products").select().execute().value
 
             pets = try await p
             veterinarians = try await v
@@ -49,6 +51,7 @@ final class SupabaseStore {
             files = try await pf
             householdTasks = try await ht
             customSections = try await cs
+            stockProducts = try await sp
         } catch {
             loadError = error.localizedDescription
         }
@@ -342,5 +345,72 @@ final class SupabaseStore {
     func deleteTask(_ task: HouseholdTask) async throws {
         try await client.from("household_tasks").delete().eq("id", value: task.id).execute()
         householdTasks.removeAll { $0.id == task.id }
+    }
+
+    // MARK: - Stock
+
+    enum CompletionResult: Equatable {
+        case consumed
+        case outOfStock(StockProduct)
+        case noProduct
+    }
+
+    struct CompletionPlan {
+        var updatedTask: HouseholdTask
+        var updatedProduct: StockProduct?
+        var result: CompletionResult
+    }
+
+    func completionPlan(for task: HouseholdTask) -> CompletionPlan {
+        var updatedTask = task
+        updatedTask.nextDueDate = Calendar.current.date(
+            byAdding: .day, value: task.intervalDays, to: .now
+        ) ?? .now
+
+        guard let productId = task.productId,
+              let product = stockProducts.first(where: { $0.id == productId }) else {
+            return CompletionPlan(updatedTask: updatedTask, updatedProduct: nil, result: .noProduct)
+        }
+
+        guard let consumed = product.consuming(units: task.quantityPerCompletion) else {
+            return CompletionPlan(updatedTask: updatedTask, updatedProduct: nil,
+                                  result: .outOfStock(product))
+        }
+
+        return CompletionPlan(updatedTask: updatedTask, updatedProduct: consumed, result: .consumed)
+    }
+
+    @discardableResult
+    func completeTask(_ task: HouseholdTask) async throws -> CompletionResult {
+        let plan = completionPlan(for: task)
+        try await updateTask(plan.updatedTask)
+        if let product = plan.updatedProduct {
+            try await updateProduct(product)
+        }
+        return plan.result
+    }
+
+    func addProduct(_ product: StockProduct) async throws {
+        try await client.from("stock_products").insert(product).execute()
+        stockProducts.append(product)
+    }
+
+    func updateProduct(_ product: StockProduct) async throws {
+        try await client.from("stock_products").update(product).eq("id", value: product.id).execute()
+        if let i = stockProducts.firstIndex(where: { $0.id == product.id }) {
+            stockProducts[i] = product
+        }
+    }
+
+    func replenish(_ product: StockProduct) async throws {
+        try await updateProduct(product.replenished())
+    }
+
+    func deleteProduct(_ product: StockProduct) async throws {
+        try await client.from("stock_products").delete().eq("id", value: product.id).execute()
+        stockProducts.removeAll { $0.id == product.id }
+        for i in householdTasks.indices where householdTasks[i].productId == product.id {
+            householdTasks[i].productId = nil
+        }
     }
 }

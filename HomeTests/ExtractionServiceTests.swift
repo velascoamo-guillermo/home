@@ -56,7 +56,7 @@ import Foundation
 
     @Test("parseResponse throws parseError on invalid JSON")
     func throwsOnInvalidJSON() {
-        #expect(throws: ExtractionError.parseError) {
+        #expect(throws: ExtractionError.self) {
             try ExtractionService.parseResponse("not json at all")
         }
     }

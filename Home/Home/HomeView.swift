@@ -4,6 +4,13 @@ struct HomeView: View {
     @Environment(SupabaseStore.self) private var store
     @State private var showAdd = false
     @State private var editingTask: HouseholdTask? = nil
+    @State private var outOfStock: OutOfStockInfo? = nil
+
+    private struct OutOfStockInfo: Identifiable {
+        let id = UUID()
+        let product: StockProduct
+        let needed: Int
+    }
 
     var body: some View {
         NavigationStack {
@@ -70,6 +77,16 @@ struct HomeView: View {
             .sheet(item: $editingTask) { task in
                 HouseholdTaskSheet(existing: task)
             }
+            .alert("Out of stock",
+                   isPresented: Binding(
+                       get: { outOfStock != nil },
+                       set: { if !$0 { outOfStock = nil } }
+                   ),
+                   presenting: outOfStock) { _ in
+                Button("OK", role: .cancel) { }
+            } message: { info in
+                Text("Needs \(info.needed), only \(info.product.totalUnits) left. Restock \(info.product.name) — the task was marked done anyway.")
+            }
         }
     }
 
@@ -78,11 +95,12 @@ struct HomeView: View {
     }
 
     private func markDone(_ task: HouseholdTask) {
-        var updated = task
-        updated.nextDueDate = Calendar.current.date(
-            byAdding: .day, value: task.intervalDays, to: .now
-        ) ?? .now
-        Task { try? await store.updateTask(updated) }
+        Task {
+            let result = try? await store.completeTask(task)
+            if case .outOfStock(let product)? = result {
+                outOfStock = OutOfStockInfo(product: product, needed: task.quantityPerCompletion)
+            }
+        }
     }
 
     private func snooze(_ task: HouseholdTask) {

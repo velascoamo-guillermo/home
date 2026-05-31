@@ -9,8 +9,8 @@ struct MainTabView: View {
             Tab("Pets", systemImage: "pawprint.fill") {
                 PetsView()
             }
-            Tab("Shop", systemImage: "cart.fill") {
-                ShopView()
+            Tab("Stock", systemImage: "shippingbox.fill") {
+                StockView()
             }
             Tab("Settings", systemImage: "gearshape.fill") {
                 SettingsView()

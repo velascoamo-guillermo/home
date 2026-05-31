@@ -2,6 +2,7 @@ import SwiftUI
 
 struct HomeItemRow: View {
     let item: HomeItem
+    @Environment(SupabaseStore.self) private var store
 
     private var isOverdue: Bool {
         item.dueDate < .now
@@ -76,8 +77,17 @@ struct HomeItemRow: View {
 
     private var subtitle: String {
         switch item {
-        case .appointment(_, let p): return p.name
-        case .task(let t):           return t.notes.isEmpty ? item.dueDate.formatted(date: .abbreviated, time: .omitted) : t.notes
+        case .appointment(_, let p):
+            return p.name
+        case .task(let t):
+            let base = t.notes.isEmpty
+                ? item.dueDate.formatted(date: .abbreviated, time: .omitted)
+                : t.notes
+            if let id = t.productId,
+               let product = store.stockProducts.first(where: { $0.id == id }) {
+                return "\(base) · \(product.name) × \(t.quantityPerCompletion)"
+            }
+            return base
         }
     }
 }
