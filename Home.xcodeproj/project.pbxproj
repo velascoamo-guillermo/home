@@ -69,6 +69,9 @@
 		UR00AA11BB22CC33DD44EE01 /* UIImage+Resize.swift in Sources */ = {isa = PBXBuildFile; fileRef = UR00AA11BB22CC33DD44EE00 /* UIImage+Resize.swift */; };
 		UR00AA11BB22CC33DD44EE02 /* UIImageResizeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = UR00AA11BB22CC33DD44EE10 /* UIImageResizeTests.swift */; };
 		ST00AA11BB22CC33DD44EE01 /* StockProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = ST00AA11BB22CC33DD44EE00 /* StockProduct.swift */; };
+		ST00AA11BB22CC33DD44EE05 /* StockProductRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = ST00AA11BB22CC33DD44EE04 /* StockProductRow.swift */; };
+		ST00AA11BB22CC33DD44EE07 /* AddStockProductSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = ST00AA11BB22CC33DD44EE06 /* AddStockProductSheet.swift */; };
+		ST00AA11BB22CC33DD44EE09 /* StockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ST00AA11BB22CC33DD44EE08 /* StockView.swift */; };
 		ST00AA11BB22CC33DD44EE03 /* StockProductTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ST00AA11BB22CC33DD44EE02 /* StockProductTests.swift */; };
 		SC00AA11BB22CC33DD44EE03 /* StockCompletionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = SC00AA11BB22CC33DD44EE02 /* StockCompletionTests.swift */; };
 /* End PBXBuildFile section */
@@ -144,6 +147,9 @@
 		UR00AA11BB22CC33DD44EE00 /* UIImage+Resize.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIImage+Resize.swift"; sourceTree = "<group>"; };
 		UR00AA11BB22CC33DD44EE10 /* UIImageResizeTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UIImageResizeTests.swift; sourceTree = "<group>"; };
 		ST00AA11BB22CC33DD44EE00 /* StockProduct.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StockProduct.swift; sourceTree = "<group>"; };
+		ST00AA11BB22CC33DD44EE04 /* StockProductRow.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StockProductRow.swift; sourceTree = "<group>"; };
+		ST00AA11BB22CC33DD44EE06 /* AddStockProductSheet.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AddStockProductSheet.swift; sourceTree = "<group>"; };
+		ST00AA11BB22CC33DD44EE08 /* StockView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StockView.swift; sourceTree = "<group>"; };
 		ST00AA11BB22CC33DD44EE02 /* StockProductTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StockProductTests.swift; sourceTree = "<group>"; };
 		SC00AA11BB22CC33DD44EE02 /* StockCompletionTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StockCompletionTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -230,6 +236,9 @@
 			isa = PBXGroup;
 			children = (
 				ST00AA11BB22CC33DD44EE00 /* StockProduct.swift */,
+				ST00AA11BB22CC33DD44EE04 /* StockProductRow.swift */,
+				ST00AA11BB22CC33DD44EE06 /* AddStockProductSheet.swift */,
+				ST00AA11BB22CC33DD44EE08 /* StockView.swift */,
 			);
 			path = Stock;
 			sourceTree = "<group>";
@@ -560,6 +569,9 @@
 				SS00AA11BB22CC33DD44EE01 /* SupabaseStore.swift in Sources */,
 				UR00AA11BB22CC33DD44EE01 /* UIImage+Resize.swift in Sources */,
 				ST00AA11BB22CC33DD44EE01 /* StockProduct.swift in Sources */,
+				ST00AA11BB22CC33DD44EE05 /* StockProductRow.swift in Sources */,
+				ST00AA11BB22CC33DD44EE07 /* AddStockProductSheet.swift in Sources */,
+				ST00AA11BB22CC33DD44EE09 /* StockView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
