@@ -68,6 +68,8 @@
 		SS00AA11BB22CC33DD44EE01 /* SupabaseStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = SS00AA11BB22CC33DD44EE00 /* SupabaseStore.swift */; };
 		UR00AA11BB22CC33DD44EE01 /* UIImage+Resize.swift in Sources */ = {isa = PBXBuildFile; fileRef = UR00AA11BB22CC33DD44EE00 /* UIImage+Resize.swift */; };
 		UR00AA11BB22CC33DD44EE02 /* UIImageResizeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = UR00AA11BB22CC33DD44EE10 /* UIImageResizeTests.swift */; };
+		ST00AA11BB22CC33DD44EE01 /* StockProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = ST00AA11BB22CC33DD44EE00 /* StockProduct.swift */; };
+		ST00AA11BB22CC33DD44EE03 /* StockProductTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ST00AA11BB22CC33DD44EE02 /* StockProductTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -140,6 +142,8 @@
 		SS00AA11BB22CC33DD44EE00 /* SupabaseStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SupabaseStore.swift; sourceTree = "<group>"; };
 		UR00AA11BB22CC33DD44EE00 /* UIImage+Resize.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIImage+Resize.swift"; sourceTree = "<group>"; };
 		UR00AA11BB22CC33DD44EE10 /* UIImageResizeTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UIImageResizeTests.swift; sourceTree = "<group>"; };
+		ST00AA11BB22CC33DD44EE00 /* StockProduct.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StockProduct.swift; sourceTree = "<group>"; };
+		ST00AA11BB22CC33DD44EE02 /* StockProductTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StockProductTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -213,10 +217,19 @@
 				70B26604F602263820A5663D /* Settings */,
 				C3A0C9BB44FA55E4B6F33F57 /* Shared */,
 				F05A8C9DDBAFD9451881FDEC /* Shop */,
+				ST00AA11BB22CC33DD44EE10 /* Stock */,
 				DD1794F5A736E951E42FC707 /* ContentView.swift */,
 				A4CDCB58B9C74EE5C806160F /* HomeApp.swift */,
 			);
 			path = Home;
+			sourceTree = "<group>";
+		};
+		ST00AA11BB22CC33DD44EE10 /* Stock */ = {
+			isa = PBXGroup;
+			children = (
+				ST00AA11BB22CC33DD44EE00 /* StockProduct.swift */,
+			);
+			path = Stock;
 			sourceTree = "<group>";
 		};
 		50F3CD772FB7714C00238D41 = {
@@ -395,6 +408,7 @@
 				HT00AA11BB22CC33DD44EE17 /* PetModelTests.swift */,
 				HT00AA11BB22CC33DD44EE18 /* SupabaseStoreFilterTests.swift */,
 				UR00AA11BB22CC33DD44EE10 /* UIImageResizeTests.swift */,
+				ST00AA11BB22CC33DD44EE02 /* StockProductTests.swift */,
 			);
 			path = HomeTests;
 			sourceTree = "<group>";
@@ -542,6 +556,7 @@
 				96A6927DAC9046738B759A900327673D /* SupabaseConfig.swift in Sources */,
 				SS00AA11BB22CC33DD44EE01 /* SupabaseStore.swift in Sources */,
 				UR00AA11BB22CC33DD44EE01 /* UIImage+Resize.swift in Sources */,
+				ST00AA11BB22CC33DD44EE01 /* StockProduct.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -555,6 +570,7 @@
 				HT00AA11BB22CC33DD44EE07 /* PetModelTests.swift in Sources */,
 				HT00AA11BB22CC33DD44EE08 /* SupabaseStoreFilterTests.swift in Sources */,
 				UR00AA11BB22CC33DD44EE02 /* UIImageResizeTests.swift in Sources */,
+				ST00AA11BB22CC33DD44EE03 /* StockProductTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
