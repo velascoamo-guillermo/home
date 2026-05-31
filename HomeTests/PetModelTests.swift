@@ -5,7 +5,7 @@ import Foundation
 
 // MARK: - Pet Codable
 
-@Suite("Pet Codable") struct PetCodableTests {
+@Suite("Pet Codable") @MainActor struct PetCodableTests {
 
     private let encoder: JSONEncoder = {
         let e = JSONEncoder()
@@ -68,7 +68,7 @@ import Foundation
 
 // MARK: - PetFile.displayName
 
-@Suite("PetFile.displayName") struct PetFileDisplayNameTests {
+@Suite("PetFile.displayName") @MainActor struct PetFileDisplayNameTests {
 
     @Test("returns last path component from storagePath")
     func lastComponent() {
@@ -91,7 +91,7 @@ import Foundation
 
 // MARK: - EventCategory
 
-@Suite("EventCategory") struct EventCategoryTests {
+@Suite("EventCategory") @MainActor struct EventCategoryTests {
 
     @Test("icon matches category", arguments: [
         (EventCategory.vaccine,    "syringe"),
