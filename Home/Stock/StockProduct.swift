@@ -11,17 +11,23 @@ struct StockProduct: Codable, Identifiable, Hashable {
 
     var totalUnits: Int { packages * unitsPerPackage + looseUnits }
 
-    func consumingOneUnit() -> StockProduct? {
-        guard totalUnits > 0 else { return nil }
+    func consuming(units n: Int) -> StockProduct? {
+        guard n >= 1, totalUnits >= n else { return nil }
         var copy = self
-        if copy.looseUnits > 0 {
-            copy.looseUnits -= 1
-        } else {
-            copy.packages -= 1
-            copy.looseUnits = unitsPerPackage - 1
+        var remaining = n
+        while remaining > 0 {
+            if copy.looseUnits > 0 {
+                copy.looseUnits -= 1
+            } else {
+                copy.packages -= 1
+                copy.looseUnits = copy.unitsPerPackage - 1
+            }
+            remaining -= 1
         }
         return copy
     }
+
+    func consumingOneUnit() -> StockProduct? { consuming(units: 1) }
 
     func replenished() -> StockProduct {
         var copy = self

@@ -65,4 +65,42 @@ import Foundation
         #expect(result.packages == 2)
         #expect(result.looseUnits == 2)
     }
+
+    @Test("consuming(units:) decrements N loose units")
+    func consumeNLoose() {
+        let result = make(packages: 1, loose: 5, perPackage: 6).consuming(units: 3)
+        #expect(result?.packages == 1)
+        #expect(result?.looseUnits == 2)
+    }
+
+    @Test("consuming(units:) spans a package boundary")
+    func consumeAcrossPackage() {
+        let result = make(packages: 1, loose: 2, perPackage: 6).consuming(units: 4)
+        #expect(result?.packages == 0)
+        #expect(result?.looseUnits == 4)
+    }
+
+    @Test("consuming(units:) consuming a full package exactly")
+    func consumeFullPackage() {
+        let result = make(packages: 1, loose: 0, perPackage: 6).consuming(units: 6)
+        #expect(result?.packages == 0)
+        #expect(result?.looseUnits == 0)
+    }
+
+    @Test("consuming(units:) returns nil when totalUnits < n")
+    func consumeTooMany() {
+        #expect(make(packages: 1, loose: 0, perPackage: 6).consuming(units: 8) == nil)
+    }
+
+    @Test("consuming(units: 0) returns nil")
+    func consumeZero() {
+        #expect(make(packages: 1, loose: 2, perPackage: 6).consuming(units: 0) == nil)
+    }
+
+    @Test("consumingOneUnit still consumes exactly one unit")
+    func consumeOneDelegate() {
+        let result = make(packages: 1, loose: 2, perPackage: 6).consumingOneUnit()
+        #expect(result?.looseUnits == 1)
+        #expect(result?.packages == 1)
+    }
 }
