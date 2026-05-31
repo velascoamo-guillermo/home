@@ -1,3 +1,4 @@
 *.xcconfig
 .superpowers/
 docs/superpowers/
+.claude/worktrees/
