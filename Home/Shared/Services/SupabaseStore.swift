@@ -213,7 +213,8 @@ final class SupabaseStore {
         }
     }
 
-    func analyzeFile(fileURL: URL, file: PetFile, petName: String) async throws -> ExtractionResult {
+    func analyzeFile(file: PetFile, petName: String) async throws -> ExtractionResult {
+        let fileURL = fileUrl(for: file)
         let ext = (file.storagePath as NSString).pathExtension.lowercased()
         let mediaType = ext == "pdf" ? "application/pdf" : "image/jpeg"
 
@@ -244,6 +245,8 @@ final class SupabaseStore {
             }
 
             let dateFormatter = DateFormatter()
+            dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+            dateFormatter.timeZone = TimeZone(identifier: "UTC")
             dateFormatter.dateFormat = "yyyy-MM-dd"
             var visitDate: Date? = nil
             if let dateStr = response.visitDate { visitDate = dateFormatter.date(from: dateStr) }

@@ -83,8 +83,7 @@ struct ExtractionResultSheet: View {
     private func extract() async {
         isLoading = true
         do {
-            let fileURL = store.fileUrl(for: file)
-            result = try await store.analyzeFile(fileURL: fileURL, file: file, petName: pet.name)
+            result = try await store.analyzeFile(file: file, petName: pet.name)
         } catch {
             self.error = error.localizedDescription
         }
