@@ -5,7 +5,7 @@ import Supabase
 
 @Observable
 final class SupabaseStore {
-    private let client: SupabaseClient
+    let client: SupabaseClient
 
     var pets: [Pet] = []
     var veterinarians: [Veterinarian] = []
