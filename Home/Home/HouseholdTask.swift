@@ -8,11 +8,13 @@ struct HouseholdTask: Codable, Identifiable, Hashable {
     var nextDueDate: Date
     var notes: String = ""
     var sectionId: UUID? = nil
+    var productId: UUID? = nil
 
     enum CodingKeys: String, CodingKey {
         case id, title, icon, notes
         case intervalDays = "interval_days"
         case nextDueDate  = "next_due_date"
         case sectionId    = "section_id"
+        case productId    = "product_id"
     }
 }
