@@ -55,4 +55,34 @@ extension SupabaseStore {
             try await updateProduct(consumed)
         }
     }
+
+    func suggestMeal(day: Int, slot: MealSlot) async throws -> MealSuggestion {
+        struct StockItem: Encodable { let name: String; let totalUnits: Int }
+        struct RequestBody: Encodable {
+            let stock: [StockItem]
+            let slot: String
+            let plannedTitles: [String]
+        }
+
+        let body = RequestBody(
+            stock: stockProducts.map { StockItem(name: $0.name, totalUnits: $0.totalUnits) },
+            slot: slot.rawValue,
+            plannedTitles: meals.map(\.title).filter { !$0.isEmpty }
+        )
+
+        do {
+            let response: MealSuggestion = try await client.functions
+                .invoke("suggest-meal", options: FunctionInvokeOptions(body: body))
+            return response
+        } catch let fnError as FunctionsError {
+            switch fnError {
+            case .httpError(let code, _): throw SuggestionError.invalidResponse(code)
+            case .relayError:             throw SuggestionError.networkError(fnError)
+            }
+        } catch let e as SuggestionError {
+            throw e
+        } catch {
+            throw SuggestionError.networkError(error)
+        }
+    }
 }
