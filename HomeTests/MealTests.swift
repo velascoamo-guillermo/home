@@ -56,3 +56,11 @@ final class MealTests: XCTestCase {
         XCTAssertFalse(meal.nutrition.hasAnyValue)
     }
 }
+
+extension MealTests {
+    func testWeekdayOrderingAndNames() {
+        XCTAssertEqual(Weekday.allCases.map(\.rawValue), [1, 2, 3, 4, 5, 6, 7])
+        XCTAssertEqual(Weekday(rawValue: 1)?.displayName, "Lunes")
+        XCTAssertEqual(Weekday(rawValue: 7)?.displayName, "Domingo")
+    }
+}

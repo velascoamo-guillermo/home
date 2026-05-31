@@ -49,6 +49,7 @@
 		F0E66C11605B468E99213400 /* PetFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = D337BEEFF45641A7A41446D8 /* PetFile.swift */; };
 		F17684685F480FFE091A4FC9 /* SettingsRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099296661BA18AD804A8176A /* SettingsRow.swift */; };
 		F590EDE5C7BE12EF7ED81623 /* Pet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73C53F1CBE01F7F807567F82 /* Pet.swift */; };
+		F6CB90A89DEF180C6DEF7A95 /* Weekday.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32930F19D9DF1811CABFFA3 /* Weekday.swift */; };
 		FF11AA22BB33CC44DD55EE77 /* VetEditSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF11AA22BB33CC44DD55EE01 /* VetEditSheet.swift */; };
 		FF55AA66BB77CC88DD99EE01 /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF55AA66BB77CC88DD99EE00 /* KeychainService.swift */; };
 		HM00AA11BB22CC33DD44EE11 /* HomeItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = HM00AA11BB22CC33DD44EE01 /* HomeItem.swift */; };
@@ -122,6 +123,7 @@
 		DBE699B39D6D42F2BA958119 /* Appointment.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Appointment.swift; sourceTree = "<group>"; };
 		DD1794F5A736E951E42FC707 /* ContentView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		DD44EE55FF6600AABB22CC01 /* EventsTabView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EventsTabView.swift; sourceTree = "<group>"; };
+		E32930F19D9DF1811CABFFA3 /* Weekday.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Weekday.swift; sourceTree = "<group>"; };
 		EE55FF6600AABB22CC33DD01 /* FilesTabView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FilesTabView.swift; sourceTree = "<group>"; };
 		EE66FF7700BBCC33DD44EE15 /* AddEventSheet.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AddEventSheet.swift; sourceTree = "<group>"; };
 		EE77FF8811CCDD44EE55FF16 /* EventDetailView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EventDetailView.swift; sourceTree = "<group>"; };
@@ -253,6 +255,7 @@
 			isa = PBXGroup;
 			children = (
 				BD71C92C5B049383A7F07FC2 /* Meal.swift */,
+				E32930F19D9DF1811CABFFA3 /* Weekday.swift */,
 			);
 			name = Menu;
 			path = Menu;
@@ -568,6 +571,7 @@
 				ST00AA11BB22CC33DD44EE07 /* AddStockProductSheet.swift in Sources */,
 				ST00AA11BB22CC33DD44EE09 /* StockView.swift in Sources */,
 				1EE7584B5E8B2CD828D65E1F /* Meal.swift in Sources */,
+				F6CB90A89DEF180C6DEF7A95 /* Weekday.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
