@@ -21,4 +21,41 @@ platform :ios do
     )
   end
 
+  desc "Build and upload to TestFlight"
+  lane :beta do
+    xcconfig_content = <<~XCCONFIG
+      SUPABASE_URL = #{ENV.fetch("SUPABASE_URL")}
+      SUPABASE_ANON_KEY = #{ENV.fetch("SUPABASE_ANON_KEY")}
+    XCCONFIG
+    File.write("Config.xcconfig", xcconfig_content)
+
+    app_store_connect_api_key(
+      key_id: ENV.fetch("APP_STORE_CONNECT_API_KEY_ID"),
+      issuer_id: ENV.fetch("APP_STORE_CONNECT_API_ISSUER_ID"),
+      key_content: ENV.fetch("APP_STORE_CONNECT_API_KEY_CONTENT"),
+      is_key_content_base64: true
+    )
+
+    sync_code_signing(
+      type: "appstore",
+      readonly: true
+    )
+
+    increment_build_number(
+      build_number: Time.now.strftime("%Y%m%d%H%M")
+    )
+
+    build_app(
+      project: ENV["PROJECT"],
+      scheme: ENV["SCHEME"],
+      export_method: "app-store",
+      output_directory: "fastlane/build_output",
+      output_name: "Home.ipa"
+    )
+
+    upload_to_testflight(
+      skip_waiting_for_build_processing: true
+    )
+  end
+
 end

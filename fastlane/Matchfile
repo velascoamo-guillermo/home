@@ -1,0 +1,6 @@
+git_url "https://github.com/guillermovelasco/ios-certificates.git"
+storage_mode "git"
+type "appstore"
+app_identifier "com.guille.Home"
+username "velascoamo.guillermo@gmail.com"
+readonly true

@@ -3,3 +3,4 @@
 docs/superpowers/
 fastlane/test_output/
 Config.xcconfig
+fastlane/build_output/
