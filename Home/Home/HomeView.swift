@@ -4,7 +4,13 @@ struct HomeView: View {
     @Environment(SupabaseStore.self) private var store
     @State private var showAdd = false
     @State private var editingTask: HouseholdTask? = nil
-    @State private var outOfStockProduct: StockProduct? = nil
+    @State private var outOfStock: OutOfStockInfo? = nil
+
+    private struct OutOfStockInfo: Identifiable {
+        let id = UUID()
+        let product: StockProduct
+        let needed: Int
+    }
 
     var body: some View {
         NavigationStack {
@@ -73,13 +79,13 @@ struct HomeView: View {
             }
             .alert("Out of stock",
                    isPresented: Binding(
-                       get: { outOfStockProduct != nil },
-                       set: { if !$0 { outOfStockProduct = nil } }
+                       get: { outOfStock != nil },
+                       set: { if !$0 { outOfStock = nil } }
                    ),
-                   presenting: outOfStockProduct) { _ in
+                   presenting: outOfStock) { _ in
                 Button("OK", role: .cancel) { }
-            } message: { product in
-                Text("Restock \(product.name) — the task was marked done anyway.")
+            } message: { info in
+                Text("Needs \(info.needed), only \(info.product.totalUnits) left. Restock \(info.product.name) — the task was marked done anyway.")
             }
         }
     }
@@ -92,7 +98,7 @@ struct HomeView: View {
         Task {
             let result = try? await store.completeTask(task)
             if case .outOfStock(let product)? = result {
-                outOfStockProduct = product
+                outOfStock = OutOfStockInfo(product: product, needed: task.quantityPerCompletion)
             }
         }
     }
