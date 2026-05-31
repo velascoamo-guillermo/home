@@ -24,6 +24,11 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type",
 };
 
+// Issue 4: instantiate once at module scope rather than per-request
+const anthropic = new Anthropic({
+  apiKey: Deno.env.get("CLAUDE_API_KEY") ?? "",
+});
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
@@ -35,13 +40,30 @@ Deno.serve(async (req) => {
     const anonKey = Deno.env.get("SUPABASE_ANON_KEY") ?? "";
     const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
     if (apiKey !== anonKey && apiKey !== serviceKey) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      // Issue 5: include success: false so Swift ResponseBody decoding succeeds
+      return new Response(JSON.stringify({ success: false, error: "Unauthorized" }), {
         status: 401,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
+    // Issue 1: guard against missing CLAUDE_API_KEY before doing any work
+    if (!Deno.env.get("CLAUDE_API_KEY")) {
+      return new Response(JSON.stringify({ success: false, error: "CLAUDE_API_KEY not configured" }), {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const { fileUrl, mediaType, petName }: AnalyzeRequest = await req.json();
+
+    // Issue 2: validate required fields before using them
+    if (!fileUrl || !mediaType || !petName) {
+      return new Response(JSON.stringify({ success: false, error: "Missing required fields: fileUrl, mediaType, petName" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
 
     // Fetch file and convert to base64
     const fileResponse = await fetch(fileUrl);
@@ -90,10 +112,6 @@ Deno.serve(async (req) => {
 }
 
 If a field is not present in the document, use null for dates and empty string/array for others.`;
-
-    const anthropic = new Anthropic({
-      apiKey: Deno.env.get("CLAUDE_API_KEY")!,
-    });
 
     const message = await anthropic.messages.create({
       model: "claude-sonnet-4-6",
