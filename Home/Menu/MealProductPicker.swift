@@ -9,7 +9,7 @@ struct MealProductPicker: View {
             let index = links.firstIndex { $0.product.id == product.id }
             HStack {
                 Image(systemName: index != nil ? "checkmark.circle.fill" : "circle")
-                    .foregroundStyle(index != nil ? .tint : .secondary)
+                    .foregroundStyle(index != nil ? AnyShapeStyle(.tint) : AnyShapeStyle(.secondary))
                 Text(product.name)
                 Spacer()
                 if let index {
