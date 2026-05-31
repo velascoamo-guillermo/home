@@ -35,19 +35,10 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const apiKey =
-      req.headers.get("apikey") ?? req.headers.get("x-api-key") ?? "";
-    const anonKey = Deno.env.get("SUPABASE_ANON_KEY") ?? "";
-    const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
-    if (apiKey !== anonKey && apiKey !== serviceKey) {
-      // Issue 5: include success: false so Swift ResponseBody decoding succeeds
-      return new Response(JSON.stringify({ success: false, error: "Unauthorized" }), {
-        status: 401,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
+    // Auth handled by Supabase JWT verification layer before function runs.
+    // Swift SDK sends Authorization: Bearer <anon-key> which Supabase validates.
 
-    // Issue 1: guard against missing CLAUDE_API_KEY before doing any work
+    // Guard against missing CLAUDE_API_KEY before doing any work
     if (!Deno.env.get("CLAUDE_API_KEY")) {
       return new Response(JSON.stringify({ success: false, error: "CLAUDE_API_KEY not configured" }), {
         status: 500,
