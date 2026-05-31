@@ -10,16 +10,14 @@ struct ExtractionResult {
 }
 
 enum ExtractionError: LocalizedError {
-    case noApiKey
     case networkError(Error)
     case invalidResponse(Int)
     case parseError
 
     var errorDescription: String? {
         switch self {
-        case .noApiKey:               return "No Claude API key configured. Add one in Settings."
         case .networkError(let e):    return "Network error: \(e.localizedDescription)"
-        case .invalidResponse(let c): return "API error (status \(c)). Check your API key."
+        case .invalidResponse(let c): return "Extraction failed (status \(c))."
         case .parseError:             return "Could not parse the document. Try a clearer scan."
         }
     }
@@ -59,64 +57,5 @@ enum ExtractionService {
         return ExtractionResult(visitDate: visitDate, diagnosis: diagnosis,
                                 testResults: testResults, medications: medications,
                                 recommendations: recommendations)
-    }
-
-    static func extract(fileURL: URL, petName: String) async throws -> ExtractionResult {
-        guard let apiKey = KeychainService.load(account: KeychainService.claudeApiKeyAccount),
-              !apiKey.isEmpty else { throw ExtractionError.noApiKey }
-
-        let fileData = try Data(contentsOf: fileURL)
-        let base64 = fileData.base64EncodedString()
-        let ext = fileURL.pathExtension.lowercased()
-        let mediaType = ext == "pdf" ? "application/pdf" : "image/jpeg"
-        let contentType = ext == "pdf" ? "document" : "image"
-
-        let contentBlock: [String: Any] = [
-            "type": contentType,
-            "source": [
-                "type": "base64",
-                "media_type": mediaType,
-                "data": base64
-            ]
-        ]
-
-        let body: [String: Any] = [
-            "model": "claude-sonnet-4-6",
-            "max_tokens": 1024,
-            "messages": [[
-                "role": "user",
-                "content": [
-                    contentBlock,
-                    ["type": "text", "text": buildPrompt(petName: petName)]
-                ]
-            ]]
-        ]
-
-        var request = URLRequest(url: URL(string: "https://api.anthropic.com/v1/messages")!)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue(apiKey, forHTTPHeaderField: "x-api-key")
-        request.setValue("2023-06-01", forHTTPHeaderField: "anthropic-version")
-        request.httpBody = try JSONSerialization.data(withJSONObject: body)
-
-        let (data, response): (Data, URLResponse)
-        do {
-            (data, response) = try await URLSession.shared.data(for: request)
-        } catch {
-            throw ExtractionError.networkError(error)
-        }
-
-        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
-            let code = (response as? HTTPURLResponse)?.statusCode ?? 0
-            throw ExtractionError.invalidResponse(code)
-        }
-
-        guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-              let content = (json["content"] as? [[String: Any]])?.first,
-              let text = content["text"] as? String else {
-            throw ExtractionError.parseError
-        }
-
-        return try parseResponse(text)
     }
 }
