@@ -2,7 +2,6 @@
 import SwiftUI
 
 struct ExtractionResultSheet: View {
-    let fileURL: URL
     let file: PetFile
     let pet: Pet
     @Environment(SupabaseStore.self) private var store
@@ -84,7 +83,8 @@ struct ExtractionResultSheet: View {
     private func extract() async {
         isLoading = true
         do {
-            result = try await ExtractionService.extract(fileURL: fileURL, petName: pet.name)
+            let fileURL = store.fileUrl(for: file)
+            result = try await store.analyzeFile(fileURL: fileURL, file: file, petName: pet.name)
         } catch {
             self.error = error.localizedDescription
         }
