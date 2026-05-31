@@ -74,10 +74,10 @@ struct Meal: Codable, Identifiable, Hashable {
         try c.encode(dayOfWeek, forKey: .dayOfWeek)
         try c.encode(slot, forKey: .slot)
         try c.encode(title, forKey: .title)
-        try c.encode(servings, forKey: .servings)
-        try c.encode(nutrition.calories, forKey: .calories)
-        try c.encode(nutrition.proteinG, forKey: .proteinG)
-        try c.encode(nutrition.carbsG, forKey: .carbsG)
-        try c.encode(nutrition.fatG, forKey: .fatG)
+        try c.encodeIfPresent(servings, forKey: .servings)
+        try c.encodeIfPresent(nutrition.calories, forKey: .calories)
+        try c.encodeIfPresent(nutrition.proteinG, forKey: .proteinG)
+        try c.encodeIfPresent(nutrition.carbsG, forKey: .carbsG)
+        try c.encodeIfPresent(nutrition.fatG, forKey: .fatG)
     }
 }
