@@ -213,6 +213,62 @@ final class SupabaseStore {
         }
     }
 
+    func analyzeFile(fileURL: URL, file: PetFile, petName: String) async throws -> ExtractionResult {
+        let ext = (file.storagePath as NSString).pathExtension.lowercased()
+        let mediaType = ext == "pdf" ? "application/pdf" : "image/jpeg"
+
+        struct RequestBody: Encodable {
+            let fileUrl: String
+            let mediaType: String
+            let petName: String
+        }
+
+        struct ResponseBody: Decodable {
+            let success: Bool
+            let visitDate: String?
+            let diagnosis: String?
+            let testResults: [String: String]?
+            let medications: [String]?
+            let recommendations: String?
+            let error: String?
+        }
+
+        let body = RequestBody(fileUrl: fileURL.absoluteString, mediaType: mediaType, petName: petName)
+
+        do {
+            let response: ResponseBody = try await client.functions
+                .invoke("analyze-pet-file", options: FunctionInvokeOptions(body: body))
+
+            guard response.success else {
+                throw ExtractionError.invalidResponse(0)
+            }
+
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+            var visitDate: Date? = nil
+            if let dateStr = response.visitDate { visitDate = dateFormatter.date(from: dateStr) }
+
+            return ExtractionResult(
+                visitDate: visitDate,
+                diagnosis: response.diagnosis ?? "",
+                testResults: response.testResults ?? [:],
+                medications: response.medications ?? [],
+                recommendations: response.recommendations ?? ""
+            )
+        } catch let fnError as FunctionsError {
+            switch fnError {
+            case .httpError(let code, _):
+                throw ExtractionError.invalidResponse(code)
+            case .relayError:
+                throw ExtractionError.networkError(fnError)
+            }
+        } catch let extractionError as ExtractionError {
+            throw extractionError
+        } catch {
+            throw ExtractionError.networkError(error)
+        }
+    }
+
     func fileUrl(for file: PetFile) -> URL {
         // storagePath is always a valid path we constructed — getPublicURL only throws on malformed input
         try! client.storage.from("pet-files").getPublicURL(path: file.storagePath)
