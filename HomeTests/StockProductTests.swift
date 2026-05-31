@@ -38,6 +38,25 @@ import Foundation
     func consumeLastUnit() {
         let result = make(packages: 0, loose: 1, perPackage: 6).consumingOneUnit()
         #expect(result?.totalUnits == 0)
+        #expect(result?.packages == 0)
+        #expect(result?.looseUnits == 0)
+    }
+
+    @Test("Codable round-trip preserves snake_case keys and field values")
+    func codableRoundTrip() throws {
+        let product = make(packages: 2, loose: 3, perPackage: 6)
+        let encoder = JSONEncoder()
+        let data = try encoder.encode(product)
+        let json = try #require(try JSONSerialization.jsonObject(with: data) as? [String: Any])
+        #expect(json["loose_units"] as? Int == 3)
+        #expect(json["units_per_package"] as? Int == 6)
+        #expect(json["created_at"] == nil)
+        let decoder = JSONDecoder()
+        let decoded = try decoder.decode(StockProduct.self, from: data)
+        #expect(decoded.packages == product.packages)
+        #expect(decoded.looseUnits == product.looseUnits)
+        #expect(decoded.unitsPerPackage == product.unitsPerPackage)
+        #expect(decoded.name == product.name)
     }
 
     @Test("replenished adds one full package")

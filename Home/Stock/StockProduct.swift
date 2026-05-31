@@ -29,10 +29,21 @@ struct StockProduct: Codable, Identifiable, Hashable {
         return copy
     }
 
+    init(id: UUID = UUID(), name: String, icon: String, packages: Int,
+         looseUnits: Int, unitsPerPackage: Int, createdAt: Date = .now) {
+        precondition(unitsPerPackage >= 1, "unitsPerPackage must be >= 1")
+        self.id = id
+        self.name = name
+        self.icon = icon
+        self.packages = packages
+        self.looseUnits = looseUnits
+        self.unitsPerPackage = unitsPerPackage
+        self.createdAt = createdAt
+    }
+
     enum CodingKeys: String, CodingKey {
         case id, name, icon, packages
         case looseUnits = "loose_units"
         case unitsPerPackage = "units_per_package"
-        case createdAt = "created_at"
     }
 }
