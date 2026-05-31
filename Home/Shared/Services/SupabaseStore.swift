@@ -372,7 +372,7 @@ final class SupabaseStore {
             return CompletionPlan(updatedTask: updatedTask, updatedProduct: nil, result: .noProduct)
         }
 
-        guard let consumed = product.consumingOneUnit() else {
+        guard let consumed = product.consuming(units: task.quantityPerCompletion) else {
             return CompletionPlan(updatedTask: updatedTask, updatedProduct: nil,
                                   result: .outOfStock(product))
         }
