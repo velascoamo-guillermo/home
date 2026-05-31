@@ -65,6 +65,15 @@ Deno.serve(async (req) => {
       });
     }
 
+    // Validate storagePath is UUID/UUID.ext before interpolating — prevents path traversal
+    const pathPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\.(pdf|jpg|jpeg|png)$/i;
+    if (!pathPattern.test(storagePath)) {
+      return new Response(JSON.stringify({ success: false, error: "Invalid storagePath" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     // Construct file URL server-side — never accept a URL from the client (SSRF)
     const supabaseUrl = Deno.env.get("SUPABASE_URL") ?? "";
     const fileUrl = `${supabaseUrl}/storage/v1/object/public/pet-files/${storagePath}`;
