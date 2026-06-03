@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ShoppingView: View {
     @Environment(SupabaseStore.self) private var store
+    @State private var replenishError: Error?
 
     private struct MarketGroup: Identifiable {
         let id: String
@@ -38,11 +39,18 @@ struct ShoppingView: View {
                             Section(group.title) {
                                 ForEach(group.products) { product in
                                     Button {
-                                        Task { try? await store.replenish(product) }
+                                        Task {
+                                            do {
+                                                try await store.replenish(product)
+                                            } catch {
+                                                replenishError = error
+                                            }
+                                        }
                                     } label: {
                                         HStack(spacing: 12) {
                                             Image(systemName: "circle")
                                                 .foregroundStyle(.secondary)
+                                                .accessibilityHidden(true)
                                             Image(systemName: product.icon)
                                                 .foregroundStyle(.tint)
                                                 .frame(width: 28)
@@ -58,6 +66,7 @@ struct ShoppingView: View {
                                         .contentShape(.rect)
                                     }
                                     .buttonStyle(.plain)
+                                    .accessibilityLabel(product.name)
                                     .accessibilityHint("Marks as bought and replenishes stock")
                                 }
                             }
@@ -67,6 +76,12 @@ struct ShoppingView: View {
                 }
             }
             .navigationTitle("Shopping")
+            .alert("Could Not Update", isPresented: Binding(
+                get: { replenishError != nil },
+                set: { if !$0 { replenishError = nil } }
+            )) {
+                Button("OK") { replenishError = nil }
+            }
         }
     }
 }

@@ -54,7 +54,8 @@ struct StockProduct: Codable, Identifiable, Hashable {
 
     enum CodingKeys: String, CodingKey {
         case id, name, icon, packages, supermarket, category
-        case looseUnits = "loose_units"
+        case looseUnits      = "loose_units"
         case unitsPerPackage = "units_per_package"
+        case createdAt       = "created_at"
     }
 }

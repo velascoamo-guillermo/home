@@ -50,7 +50,7 @@ import Foundation
         let json = try #require(try JSONSerialization.jsonObject(with: data) as? [String: Any])
         #expect(json["loose_units"] as? Int == 3)
         #expect(json["units_per_package"] as? Int == 6)
-        #expect(json["created_at"] == nil)
+        #expect(json["created_at"] != nil)
         let decoder = JSONDecoder()
         let decoded = try decoder.decode(StockProduct.self, from: data)
         #expect(decoded.packages == product.packages)
