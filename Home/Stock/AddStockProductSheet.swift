@@ -11,6 +11,8 @@ struct AddStockProductSheet: View {
     @State private var unitsPerPackage = 1
     @State private var packages = 0
     @State private var looseUnits = 0
+    @State private var supermarket: Supermarket?
+    @State private var category: ProductCategory?
     @State private var showSymbolPicker = false
 
     private var isEditing: Bool { existing != nil }
@@ -23,6 +25,8 @@ struct AddStockProductSheet: View {
             _unitsPerPackage = State(initialValue: p.unitsPerPackage)
             _packages        = State(initialValue: p.packages)
             _looseUnits      = State(initialValue: p.looseUnits)
+            _supermarket     = State(initialValue: p.supermarket)
+            _category        = State(initialValue: p.category)
         }
     }
 
@@ -40,6 +44,19 @@ struct AddStockProductSheet: View {
                             Image(systemName: icon).foregroundStyle(.tint)
                             Image(systemName: "chevron.right")
                                 .font(.caption).foregroundStyle(.secondary)
+                        }
+                    }
+                    Picker("Supermarket", selection: $supermarket) {
+                        Text("None").tag(Supermarket?.none)
+                        ForEach(Supermarket.allCases) { market in
+                            Text(market.displayName).tag(Supermarket?.some(market))
+                        }
+                    }
+                    Picker("Category", selection: $category) {
+                        Text("None").tag(ProductCategory?.none)
+                        ForEach(ProductCategory.allCases) { cat in
+                            Label(cat.displayName, systemImage: cat.icon)
+                                .tag(ProductCategory?.some(cat))
                         }
                     }
                 }
@@ -75,6 +92,8 @@ struct AddStockProductSheet: View {
         product.unitsPerPackage = unitsPerPackage
         product.packages        = packages
         product.looseUnits      = looseUnits
+        product.supermarket = supermarket
+        product.category    = category
 
         Task {
             if isEditing {
