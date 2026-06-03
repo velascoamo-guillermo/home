@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		00B2E6DC3F934773A9D00249 /* PetAvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7176104FF64E3885D42B3C /* PetAvatarView.swift */; };
+		0D4B7552A2AE6EDECF7ABCCB /* ProductCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41FE432DDA91EAABD7776413 /* ProductCategory.swift */; };
 		13BC5B2F5A754F9C9C0364F2 /* SupabaseStore+Meals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54D020C3C3350CD92309BE0A /* SupabaseStore+Meals.swift */; };
 		1DBC79FB65E14D45B82A6C9C /* Veterinarian.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6856914DFD42828E88B77E /* Veterinarian.swift */; };
 		1EE7584B5E8B2CD828D65E1F /* Meal.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD71C92C5B049383A7F07FC2 /* Meal.swift */; };
@@ -30,6 +31,7 @@
 		81D685B707C9582581ADFB87 /* PetsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61235AB3CE535474EAE6415F /* PetsView.swift */; };
 		86FAEA64D9AE43EBB5CE9ED1 /* Appointment.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBE699B39D6D42F2BA958119 /* Appointment.swift */; };
 		8A93AD27062449ECBE2D8C71 /* ClinicalEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0894A58F3E0471E870AA5A4 /* ClinicalEntry.swift */; };
+		933BA309D7D1C551B6B392D5 /* SupermarketTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0A7B5E764753BED9E8D27EC /* SupermarketTests.swift */; };
 		93672456092DE1FF2A6392C5 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52F12A83C676197BA7862B03 /* MenuView.swift */; };
 		96A6927DAC9046738B759A900327673D /* SupabaseConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEE741125AA949498F90211C36D7FA12 /* SupabaseConfig.swift */; };
 		9B44E1E4D8E57A4A982A2B1A /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690FD04B109B326FBB7C1BB5 /* SettingsView.swift */; };
@@ -40,6 +42,8 @@
 		AB33CD44EF55AB66CD77EF03 /* FilePickerCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB33CD44EF55AB66CD77EF13 /* FilePickerCoordinator.swift */; };
 		AB44CD55EF66AB77CD88EF04 /* FilePreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB44CD55EF66AB77CD88EF14 /* FilePreviewView.swift */; };
 		AD28BC8FE3FF44A7A23C3ABE /* PetEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64A61C82CA7D4580AEE3FD8F /* PetEvent.swift */; };
+		B611D6F8A81DCC192451C3BF /* Supermarket.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD721BF9855C09D131A9116 /* Supermarket.swift */; };
+		B767693EAE3C3E0144D52B3E /* ProductCategoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7992BC0AD8B24DC8437E5EFF /* ProductCategoryTests.swift */; };
 		BB22CC33DD44EE55FF6600AA /* AppointmentsTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB22CC33DD44EE55FF6600A1 /* AppointmentsTabView.swift */; };
 		BD3751E8C32A05906722913A /* MealSlotRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4A3A21671ACE388CBA0BFD /* MealSlotRow.swift */; };
 		BE50151A59558186C1FD92D1 /* PetRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FD0EC17349AAB28CC54A5CB /* PetRow.swift */; };
@@ -108,6 +112,7 @@
 		2C2D908018579E74C4F6DE3F /* MainTabView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
 		2C6856914DFD42828E88B77E /* Veterinarian.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Veterinarian.swift; sourceTree = "<group>"; };
 		2FD0EC17349AAB28CC54A5CB /* PetRow.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PetRow.swift; sourceTree = "<group>"; };
+		41FE432DDA91EAABD7776413 /* ProductCategory.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ProductCategory.swift; sourceTree = "<group>"; };
 		50734A7F2FD0A83E00553B07 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		507823C42FBCF3AF0042E71E /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		507823C52FBCF4BD0042E71E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -122,6 +127,7 @@
 		690FD04B109B326FBB7C1BB5 /* SettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		69881983A539D6462A7613E0 /* MealTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MealTests.swift; sourceTree = "<group>"; };
 		73C53F1CBE01F7F807567F82 /* Pet.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Pet.swift; sourceTree = "<group>"; };
+		7992BC0AD8B24DC8437E5EFF /* ProductCategoryTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ProductCategoryTests.swift; sourceTree = "<group>"; };
 		932AAC9315EAFE3741709AE7 /* MealProductPicker.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MealProductPicker.swift; sourceTree = "<group>"; };
 		934BB72A2A2516A2E5E46923 /* SupabaseStoreMealTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SupabaseStoreMealTests.swift; sourceTree = "<group>"; };
 		A4CDCB58B9C74EE5C806160F /* HomeApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HomeApp.swift; sourceTree = "<group>"; };
@@ -136,6 +142,7 @@
 		BB22CC33DD44EE55FF6600A1 /* AppointmentsTabView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppointmentsTabView.swift; sourceTree = "<group>"; };
 		BD71C92C5B049383A7F07FC2 /* Meal.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Meal.swift; sourceTree = "<group>"; };
 		BEE741125AA949498F90211C36D7FA12 /* SupabaseConfig.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SupabaseConfig.swift; sourceTree = "<group>"; };
+		BFD721BF9855C09D131A9116 /* Supermarket.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Supermarket.swift; sourceTree = "<group>"; };
 		CA00BB11CC22DD33EE44FF15 /* ExtractionResultSheet.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ExtractionResultSheet.swift; sourceTree = "<group>"; };
 		CA00BB11CC22DD33EE44FF16 /* ExtractionService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ExtractionService.swift; sourceTree = "<group>"; };
 		CA11BB22CC33DD44EE55FF00 /* CalendarService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CalendarService.swift; sourceTree = "<group>"; };
@@ -147,6 +154,7 @@
 		DD1794F5A736E951E42FC707 /* ContentView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		DD44EE55FF6600AABB22CC01 /* EventsTabView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EventsTabView.swift; sourceTree = "<group>"; };
 		DD5A137BF574ECD289B8183D /* MealEntry.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MealEntry.swift; sourceTree = "<group>"; };
+		E0A7B5E764753BED9E8D27EC /* SupermarketTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SupermarketTests.swift; sourceTree = "<group>"; };
 		E32930F19D9DF1811CABFFA3 /* Weekday.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Weekday.swift; sourceTree = "<group>"; };
 		EE55FF6600AABB22CC33DD01 /* FilesTabView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FilesTabView.swift; sourceTree = "<group>"; };
 		EE66FF7700BBCC33DD44EE15 /* AddEventSheet.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AddEventSheet.swift; sourceTree = "<group>"; };
@@ -422,6 +430,8 @@
 				52052EE4A2810E6E1E457AA5 /* MealEntryTests.swift */,
 				293F0243ED37D3F7F866C341 /* MealSuggestionTests.swift */,
 				934BB72A2A2516A2E5E46923 /* SupabaseStoreMealTests.swift */,
+				E0A7B5E764753BED9E8D27EC /* SupermarketTests.swift */,
+				7992BC0AD8B24DC8437E5EFF /* ProductCategoryTests.swift */,
 			);
 			path = HomeTests;
 			sourceTree = "<group>";
@@ -433,6 +443,8 @@
 				ST00AA11BB22CC33DD44EE04 /* StockProductRow.swift */,
 				ST00AA11BB22CC33DD44EE06 /* AddStockProductSheet.swift */,
 				ST00AA11BB22CC33DD44EE08 /* StockView.swift */,
+				BFD721BF9855C09D131A9116 /* Supermarket.swift */,
+				41FE432DDA91EAABD7776413 /* ProductCategory.swift */,
 			);
 			path = Stock;
 			sourceTree = "<group>";
@@ -600,6 +612,8 @@
 				4D1D0499AA48304EB0FA2FF4 /* MealProductPicker.swift in Sources */,
 				3518BC31BAA6CAAADB8D441A /* MealEditSheet.swift in Sources */,
 				93672456092DE1FF2A6392C5 /* MenuView.swift in Sources */,
+				B611D6F8A81DCC192451C3BF /* Supermarket.swift in Sources */,
+				0D4B7552A2AE6EDECF7ABCCB /* ProductCategory.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -619,6 +633,8 @@
 				CA9DE06184F63452D58A9A8A /* MealEntryTests.swift in Sources */,
 				487BFB610D56E7AC892FF345 /* MealSuggestionTests.swift in Sources */,
 				432CC1C59252275CCB99215B /* SupabaseStoreMealTests.swift in Sources */,
+				933BA309D7D1C551B6B392D5 /* SupermarketTests.swift in Sources */,
+				B767693EAE3C3E0144D52B3E /* ProductCategoryTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
