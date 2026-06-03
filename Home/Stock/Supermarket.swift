@@ -1,5 +1,3 @@
-import Foundation
-
 enum Supermarket: String, Codable, CaseIterable, Identifiable, Hashable {
     case carrefour
     case mercadona

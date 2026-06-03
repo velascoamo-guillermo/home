@@ -1,5 +1,3 @@
-import Foundation
-
 enum ProductCategory: String, Codable, CaseIterable, Identifiable, Hashable {
     case food
     case cleaning
