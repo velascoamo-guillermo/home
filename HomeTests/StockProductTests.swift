@@ -134,4 +134,16 @@ import Foundation
         #expect(decoded.supermarket == nil)
         #expect(decoded.category == nil)
     }
+
+    @Test("decodes null JSON values for supermarket and category as nil")
+    func codableDecodesNullMetadata() throws {
+        let json = """
+        {"id":"\(UUID().uuidString)","name":"Milk","icon":"x",
+         "packages":1,"loose_units":0,"units_per_package":6,
+         "supermarket":null,"category":null}
+        """.data(using: .utf8)!
+        let decoded = try JSONDecoder().decode(StockProduct.self, from: json)
+        #expect(decoded.supermarket == nil)
+        #expect(decoded.category == nil)
+    }
 }
