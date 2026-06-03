@@ -36,7 +36,6 @@
 		933BA309D7D1C551B6B392D5 /* SupermarketTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0A7B5E764753BED9E8D27EC /* SupermarketTests.swift */; };
 		93672456092DE1FF2A6392C5 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52F12A83C676197BA7862B03 /* MenuView.swift */; };
 		96A6927DAC9046738B759A900327673D /* SupabaseConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEE741125AA949498F90211C36D7FA12 /* SupabaseConfig.swift */; };
-		9B44E1E4D8E57A4A982A2B1A /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690FD04B109B326FBB7C1BB5 /* SettingsView.swift */; };
 		AA11BB22CC33DD44EE55FF66 /* VetTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA11BB22CC33DD44EE55FF01 /* VetTabView.swift */; };
 		AA22BB33CC44DD55EE6600BB /* AddAppointmentSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA22BB33CC44DD55EE6600A2 /* AddAppointmentSheet.swift */; };
 		AB11CD22EF33AB44CD55EF01 /* AddClinicalEntrySheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB11CD22EF33AB44CD55EF11 /* AddClinicalEntrySheet.swift */; };
@@ -65,7 +64,6 @@
 		EE77FF8811CCDD44EE55FF06 /* EventDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE77FF8811CCDD44EE55FF16 /* EventDetailView.swift */; };
 		EE88FF9922DDEE55FF6600B7 /* EventRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE88FF9922DDEE55FF6600A7 /* EventRow.swift */; };
 		F0E66C11605B468E99213400 /* PetFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = D337BEEFF45641A7A41446D8 /* PetFile.swift */; };
-		F17684685F480FFE091A4FC9 /* SettingsRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099296661BA18AD804A8176A /* SettingsRow.swift */; };
 		F590EDE5C7BE12EF7ED81623 /* Pet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73C53F1CBE01F7F807567F82 /* Pet.swift */; };
 		F6CB90A89DEF180C6DEF7A95 /* Weekday.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32930F19D9DF1811CABFFA3 /* Weekday.swift */; };
 		FF11AA22BB33CC44DD55EE77 /* VetEditSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF11AA22BB33CC44DD55EE01 /* VetEditSheet.swift */; };
@@ -107,7 +105,6 @@
 /* Begin PBXFileReference section */
 		006B3D99E6B0E67C823B73FD /* ShoppingView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShoppingView.swift; sourceTree = "<group>"; };
 		06C806DCF5034FAB66D7D2B8 /* HomeView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
-		099296661BA18AD804A8176A /* SettingsRow.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SettingsRow.swift; sourceTree = "<group>"; };
 		0DF0650AAC8C151554C098B6 /* MealProduct.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MealProduct.swift; sourceTree = "<group>"; };
 		1E4A3A21671ACE388CBA0BFD /* MealSlotRow.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MealSlotRow.swift; sourceTree = "<group>"; };
 		293F0243ED37D3F7F866C341 /* MealSuggestionTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MealSuggestionTests.swift; sourceTree = "<group>"; };
@@ -127,7 +124,6 @@
 		5AD66EDD532381FB799F4208 /* MealEditSheet.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MealEditSheet.swift; sourceTree = "<group>"; };
 		61235AB3CE535474EAE6415F /* PetsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PetsView.swift; sourceTree = "<group>"; };
 		64A61C82CA7D4580AEE3FD8F /* PetEvent.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PetEvent.swift; sourceTree = "<group>"; };
-		690FD04B109B326FBB7C1BB5 /* SettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		69881983A539D6462A7613E0 /* MealTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MealTests.swift; sourceTree = "<group>"; };
 		73C53F1CBE01F7F807567F82 /* Pet.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Pet.swift; sourceTree = "<group>"; };
 		7992BC0AD8B24DC8437E5EFF /* ProductCategoryTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ProductCategoryTests.swift; sourceTree = "<group>"; };
@@ -307,7 +303,6 @@
 		70B26604F602263820A5663D /* Settings */ = {
 			isa = PBXGroup;
 			children = (
-				690FD04B109B326FBB7C1BB5 /* SettingsView.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -377,7 +372,6 @@
 				B69A10084EFE887518B77FB0 /* FeatureCard.swift */,
 				AB7176104FF64E3885D42B3C /* PetAvatarView.swift */,
 				2FD0EC17349AAB28CC54A5CB /* PetRow.swift */,
-				099296661BA18AD804A8176A /* SettingsRow.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -578,11 +572,9 @@
 				5B333B1BDEF4E93AC16D9136 /* MainTabView.swift in Sources */,
 				F590EDE5C7BE12EF7ED81623 /* Pet.swift in Sources */,
 				81D685B707C9582581ADFB87 /* PetsView.swift in Sources */,
-				9B44E1E4D8E57A4A982A2B1A /* SettingsView.swift in Sources */,
 				2B49E3B0A73264B5D0EED88A /* FeatureCard.swift in Sources */,
 				00B2E6DC3F934773A9D00249 /* PetAvatarView.swift in Sources */,
 				BE50151A59558186C1FD92D1 /* PetRow.swift in Sources */,
-				F17684685F480FFE091A4FC9 /* SettingsRow.swift in Sources */,
 				C5FC049B579BEC4CBF8EC041 /* ContentView.swift in Sources */,
 				68AEAB43A2107550172A58AE /* HomeApp.swift in Sources */,
 				86FAEA64D9AE43EBB5CE9ED1 /* Appointment.swift in Sources */,
