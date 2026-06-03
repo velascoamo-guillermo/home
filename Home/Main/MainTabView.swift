@@ -15,8 +15,8 @@ struct MainTabView: View {
             Tab("Menu", systemImage: "fork.knife") {
                 MenuView()
             }
-            Tab("Settings", systemImage: "gearshape.fill") {
-                SettingsView()
+            Tab("Shopping", systemImage: "cart.fill") {
+                ShoppingView()
             }
         }
         .tint(Color(red: 1.0, green: 0.45, blue: 0.2))
