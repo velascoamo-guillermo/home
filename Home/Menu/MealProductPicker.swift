@@ -5,7 +5,7 @@ struct MealProductPicker: View {
     @Binding var links: [MealEntry.Link]
 
     var body: some View {
-        ForEach(store.stockProducts) { product in
+        ForEach(store.stockProducts.filter { $0.category == .food }) { product in
             let index = links.firstIndex { $0.product.id == product.id }
             HStack {
                 Image(systemName: index != nil ? "checkmark.circle.fill" : "circle")
