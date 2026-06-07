@@ -36,6 +36,15 @@ extension SupabaseStore {
         mealProducts.removeAll { $0.mealId == meal.id }
     }
 
+    /// Deletes every meal (and its product links) for a weekday.
+    func clearDay(_ day: Int) async throws {
+        let ids = meals.filter { $0.dayOfWeek == day }.map(\.id)
+        guard !ids.isEmpty else { return }
+        try await client.from("meals").delete().in("id", values: ids).execute()
+        meals.removeAll { ids.contains($0.id) }
+        mealProducts.removeAll { ids.contains($0.mealId) }
+    }
+
     func setMealProducts(for meal: Meal, links: [MealEntry.Link]) async throws {
         try await client.from("meal_products").delete().eq("meal_id", value: meal.id).execute()
         mealProducts.removeAll { $0.mealId == meal.id }
@@ -57,24 +66,46 @@ extension SupabaseStore {
         }
     }
 
-    func suggestMeal(day: Int, slot: MealSlot) async throws -> MealSuggestion {
+    /// Empty (day, slot) combinations across the whole week.
+    var emptyMealSlots: [(day: Int, slot: MealSlot)] {
+        Weekday.allCases.flatMap { weekday in
+            MealSlot.allCases.compactMap { slot in
+                mealEntry(day: weekday.rawValue, slot: slot) == nil
+                    ? (day: weekday.rawValue, slot: slot)
+                    : nil
+            }
+        }
+    }
+
+    /// Asks the model to plan every empty slot of the week in a single call,
+    /// then auto-saves the suggestions as meals with their product links.
+    func suggestWeek() async throws {
         struct StockItem: Encodable { let name: String; let totalUnits: Int }
+        struct SlotRef: Encodable { let day: Int; let slot: String }
+        struct PlannedRef: Encodable { let day: Int; let slot: String; let title: String }
         struct RequestBody: Encodable {
             let stock: [StockItem]
-            let slot: String
-            let plannedTitles: [String]
+            let slots: [SlotRef]
+            let planned: [PlannedRef]
         }
+
+        let slots = emptyMealSlots
+        guard !slots.isEmpty else { return }
+
+        let planned: [PlannedRef] = meals
+            .filter { !$0.title.isEmpty }
+            .map { PlannedRef(day: $0.dayOfWeek, slot: $0.slot.rawValue, title: $0.title) }
 
         let body = RequestBody(
             stock: stockProducts.map { StockItem(name: $0.name, totalUnits: $0.totalUnits) },
-            slot: slot.rawValue,
-            plannedTitles: meals.map(\.title).filter { !$0.isEmpty }
+            slots: slots.map { SlotRef(day: $0.day, slot: $0.slot.rawValue) },
+            planned: planned
         )
 
+        let suggestions: [WeekMealSuggestion]
         do {
-            let response: MealSuggestion = try await client.functions
+            suggestions = try await client.functions
                 .invoke("suggest-meal", options: FunctionInvokeOptions(body: body))
-            return response
         } catch let fnError as FunctionsError {
             switch fnError {
             case .httpError(let code, _): throw SuggestionError.invalidResponse(code)
@@ -84,6 +115,23 @@ extension SupabaseStore {
             throw e
         } catch {
             throw SuggestionError.networkError(error)
+        }
+
+        for suggestion in suggestions {
+            // Skip slots that are no longer empty (model may echo extras).
+            guard mealEntry(day: suggestion.day, slot: suggestion.slot) == nil else { continue }
+            let meal = Meal(
+                dayOfWeek: suggestion.day,
+                slot: suggestion.slot,
+                title: suggestion.title,
+                servings: suggestion.servings,
+                nutrition: suggestion.nutrition
+            )
+            try await addMeal(meal)
+            let links = suggestion.resolveLinks(against: stockProducts)
+            if !links.isEmpty {
+                try await setMealProducts(for: meal, links: links)
+            }
         }
     }
 }

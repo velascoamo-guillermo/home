@@ -12,7 +12,7 @@ struct MealSuggestion: Decodable {
             self.quantity = quantity
         }
 
-        init(from decoder: Decoder) throws {
+        nonisolated init(from decoder: Decoder) throws {
             let c = try decoder.container(keyedBy: CodingKeys.self)
             name = try c.decodeIfPresent(String.self, forKey: .name) ?? ""
             quantity = max(1, try c.decodeIfPresent(Int.self, forKey: .quantity) ?? 1)
@@ -38,7 +38,7 @@ struct MealSuggestion: Decodable {
         self.nutrition = nutrition
     }
 
-    init(from decoder: Decoder) throws {
+    nonisolated init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         title = try c.decodeIfPresent(String.self, forKey: .title) ?? ""
         let raw = try c.decodeIfPresent([ProductRef].self, forKey: .products) ?? []
