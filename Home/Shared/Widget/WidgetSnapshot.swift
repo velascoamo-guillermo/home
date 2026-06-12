@@ -1,5 +1,7 @@
 import Foundation
 
+// nonisolated: these types cross the app/widget process boundary via JSON;
+// they must not be bound to any actor isolation.
 nonisolated struct WidgetSnapshot: Codable, Sendable {
     var generatedAt: Date
     var events: [WidgetEvent]
