@@ -3,7 +3,6 @@ import SwiftUI
 struct MealSlotRow: View {
     let slot: MealSlot
     let entry: MealEntry?
-    let onSuggest: () -> Void
     let onCook: () -> Void
 
     var body: some View {
@@ -41,11 +40,7 @@ struct MealSlotRow: View {
             HStack {
                 Text(slot.displayName).font(.caption).foregroundStyle(.secondary)
                 Spacer()
-                Button { onSuggest() } label: {
-                    Label("Sugerir", systemImage: "sparkles").font(.caption)
-                }
-                .buttonStyle(.borderless)
-                .accessibilityLabel("Sugerir \(slot.displayName)")
+                Text("Añadir").font(.caption).foregroundStyle(.tint)
             }
             .padding(.vertical, 4)
         }

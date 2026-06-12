@@ -50,7 +50,7 @@ import Foundation
         let json = try #require(try JSONSerialization.jsonObject(with: data) as? [String: Any])
         #expect(json["loose_units"] as? Int == 3)
         #expect(json["units_per_package"] as? Int == 6)
-        #expect(json["created_at"] == nil)
+        #expect(json["created_at"] != nil)
         let decoder = JSONDecoder()
         let decoded = try decoder.decode(StockProduct.self, from: data)
         #expect(decoded.packages == product.packages)
@@ -102,5 +102,48 @@ import Foundation
         let result = make(packages: 1, loose: 2, perPackage: 6).consumingOneUnit()
         #expect(result?.looseUnits == 1)
         #expect(result?.packages == 1)
+    }
+
+    @Test("supermarket and category default to nil")
+    func metadataDefaultsNil() {
+        let p = StockProduct(name: "Milk", icon: "x", packages: 1,
+                             looseUnits: 0, unitsPerPackage: 6)
+        #expect(p.supermarket == nil)
+        #expect(p.category == nil)
+    }
+
+    @Test("Codable round-trip preserves supermarket and category")
+    func codableRoundTripWithMetadata() throws {
+        var p = StockProduct(name: "Milk", icon: "x", packages: 1,
+                             looseUnits: 0, unitsPerPackage: 6)
+        p.supermarket = .mercadona
+        p.category = .food
+        let data = try JSONEncoder().encode(p)
+        let decoded = try JSONDecoder().decode(StockProduct.self, from: data)
+        #expect(decoded.supermarket == .mercadona)
+        #expect(decoded.category == .food)
+    }
+
+    @Test("decodes when supermarket and category keys are absent")
+    func codableDecodesWithoutMetadata() throws {
+        let json = """
+        {"id":"\(UUID().uuidString)","name":"Milk","icon":"x",
+         "packages":1,"loose_units":0,"units_per_package":6}
+        """.data(using: .utf8)!
+        let decoded = try JSONDecoder().decode(StockProduct.self, from: json)
+        #expect(decoded.supermarket == nil)
+        #expect(decoded.category == nil)
+    }
+
+    @Test("decodes null JSON values for supermarket and category as nil")
+    func codableDecodesNullMetadata() throws {
+        let json = """
+        {"id":"\(UUID().uuidString)","name":"Milk","icon":"x",
+         "packages":1,"loose_units":0,"units_per_package":6,
+         "supermarket":null,"category":null}
+        """.data(using: .utf8)!
+        let decoded = try JSONDecoder().decode(StockProduct.self, from: json)
+        #expect(decoded.supermarket == nil)
+        #expect(decoded.category == nil)
     }
 }

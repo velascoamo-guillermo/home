@@ -16,6 +16,11 @@ final class SupabaseStore {
     var householdTasks: [HouseholdTask] = []
     var customSections: [TaskSection] = []
     var stockProducts: [StockProduct] = []
+
+    var shoppingList: [StockProduct] {
+        stockProducts.filter { $0.totalUnits == 0 }
+    }
+
     var meals: [Meal] = []
     var mealProducts: [MealProduct] = []
     var isLoading = false

@@ -12,7 +12,7 @@ enum MealSlot: String, Codable, CaseIterable, Hashable {
     }
 }
 
-struct Nutrition: Hashable {
+nonisolated struct Nutrition: Hashable {
     var calories: Int?
     var proteinG: Int?
     var carbsG: Int?

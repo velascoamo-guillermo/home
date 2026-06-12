@@ -8,6 +8,8 @@ struct StockProduct: Codable, Identifiable, Hashable {
     var looseUnits: Int
     var unitsPerPackage: Int
     var createdAt: Date = .now
+    var supermarket: Supermarket?
+    var category: ProductCategory?
 
     var totalUnits: Int { packages * unitsPerPackage + looseUnits }
 
@@ -36,7 +38,8 @@ struct StockProduct: Codable, Identifiable, Hashable {
     }
 
     init(id: UUID = UUID(), name: String, icon: String, packages: Int,
-         looseUnits: Int, unitsPerPackage: Int, createdAt: Date = .now) {
+         looseUnits: Int, unitsPerPackage: Int, createdAt: Date = .now,
+         supermarket: Supermarket? = nil, category: ProductCategory? = nil) {
         precondition(unitsPerPackage >= 1, "unitsPerPackage must be >= 1")
         self.id = id
         self.name = name
@@ -45,11 +48,14 @@ struct StockProduct: Codable, Identifiable, Hashable {
         self.looseUnits = looseUnits
         self.unitsPerPackage = unitsPerPackage
         self.createdAt = createdAt
+        self.supermarket = supermarket
+        self.category = category
     }
 
     enum CodingKeys: String, CodingKey {
-        case id, name, icon, packages
-        case looseUnits = "loose_units"
+        case id, name, icon, packages, supermarket, category
+        case looseUnits      = "loose_units"
         case unitsPerPackage = "units_per_package"
+        case createdAt       = "created_at"
     }
 }
