@@ -4,8 +4,6 @@ import WidgetKit
 struct MediumWidgetView: View {
     let snapshot: WidgetSnapshot
 
-    private let accent = Color(red: 1.0, green: 0.45, blue: 0.2)
-
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
             eventsColumn
@@ -36,8 +34,8 @@ struct MediumWidgetView: View {
     private var mealsColumn: some View {
         Link(destination: URL(string: "home://menu")!) {
             VStack(alignment: .leading, spacing: 8) {
-                MealTitleView(meal: snapshot.lunch, accent: accent)
-                MealTitleView(meal: snapshot.dinner, accent: accent)
+                MealTitleView(meal: snapshot.lunch)
+                MealTitleView(meal: snapshot.dinner)
                 Spacer(minLength: 0)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -74,7 +72,8 @@ struct EventRowView: View {
 
 struct MealTitleView: View {
     let meal: WidgetMeal
-    let accent: Color
+
+    private let widgetAccent = Color(red: 1.0, green: 0.45, blue: 0.2)
 
     var body: some View {
         VStack(alignment: .leading, spacing: 1) {
@@ -89,6 +88,7 @@ struct MealTitleView: View {
                 Text(meal.title)
                     .font(.caption)
                     .fontWeight(.medium)
+                    .foregroundStyle(widgetAccent)
                     .lineLimit(2)
             }
         }
