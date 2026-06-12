@@ -16,6 +16,7 @@
 		1EE7584B5E8B2CD828D65E1F /* Meal.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD71C92C5B049383A7F07FC2 /* Meal.swift */; };
 		2387E1C24DF4C8261A442AE7 /* MealEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD5A137BF574ECD289B8183D /* MealEntry.swift */; };
 		2B49E3B0A73264B5D0EED88A /* FeatureCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B69A10084EFE887518B77FB0 /* FeatureCard.swift */; };
+		3135C078C41093AD8A6FE83A /* AppTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF21E00DCCBEF18421A267A3 /* AppTab.swift */; };
 		33DDF8ADC1BB63F2E738876D /* WidgetSnapshotWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167B044780DEF36B6D746BFB /* WidgetSnapshotWriter.swift */; };
 		3518BC31BAA6CAAADB8D441A /* MealEditSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD66EDD532381FB799F4208 /* MealEditSheet.swift */; };
 		432CC1C59252275CCB99215B /* SupabaseStoreMealTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934BB72A2A2516A2E5E46923 /* SupabaseStoreMealTests.swift */; };
@@ -160,6 +161,7 @@
 		CA11BB22CC33DD44EE55FF00 /* CalendarService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CalendarService.swift; sourceTree = "<group>"; };
 		CC33DD44EE55FF6600AABB11 /* ClinicalHistoryTabView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ClinicalHistoryTabView.swift; sourceTree = "<group>"; };
 		CC44DD55EE55FF6600AABB22 /* ClinicalEntryRow.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ClinicalEntryRow.swift; sourceTree = "<group>"; };
+		CF21E00DCCBEF18421A267A3 /* AppTab.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppTab.swift; sourceTree = "<group>"; };
 		D0894A58F3E0471E870AA5A4 /* ClinicalEntry.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ClinicalEntry.swift; sourceTree = "<group>"; };
 		D337BEEFF45641A7A41446D8 /* PetFile.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PetFile.swift; sourceTree = "<group>"; };
 		DBE699B39D6D42F2BA958119 /* Appointment.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Appointment.swift; sourceTree = "<group>"; };
@@ -370,8 +372,18 @@
 				FF55AA66BB77CC88DD99EE10 /* Services */,
 				UR00AA11BB22CC33DD44EF00 /* Extensions */,
 				4A196361B5940DD7C7851A10 /* Widget */,
+				C53E003DA7F794B62AF5BDFE /* Navigation */,
 			);
 			path = Shared;
+			sourceTree = "<group>";
+		};
+		C53E003DA7F794B62AF5BDFE /* Navigation */ = {
+			isa = PBXGroup;
+			children = (
+				CF21E00DCCBEF18421A267A3 /* AppTab.swift */,
+			);
+			name = Navigation;
+			path = Navigation;
 			sourceTree = "<group>";
 		};
 		C549EB0C1F92ABE09A8B1E9C /* Widget */ = {
@@ -662,6 +674,7 @@
 				4D32D7A557A0ABDFFC790F89 /* WidgetSnapshot.swift in Sources */,
 				D2BB3997470BE93B225FCE78 /* WidgetStore.swift in Sources */,
 				33DDF8ADC1BB63F2E738876D /* WidgetSnapshotWriter.swift in Sources */,
+				3135C078C41093AD8A6FE83A /* AppTab.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

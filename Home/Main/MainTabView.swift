@@ -1,21 +1,23 @@
 import SwiftUI
 
 struct MainTabView: View {
+    @Binding var selectedTab: AppTab
+
     var body: some View {
-        TabView {
-            Tab("Home", systemImage: "house.fill") {
+        TabView(selection: $selectedTab) {
+            Tab("Home", systemImage: "house.fill", value: AppTab.home) {
                 HomeView()
             }
-            Tab("Pets", systemImage: "pawprint.fill") {
+            Tab("Pets", systemImage: "pawprint.fill", value: AppTab.pets) {
                 PetsView()
             }
-            Tab("Stock", systemImage: "shippingbox.fill") {
+            Tab("Stock", systemImage: "shippingbox.fill", value: AppTab.stock) {
                 StockView()
             }
-            Tab("Menu", systemImage: "fork.knife") {
+            Tab("Menu", systemImage: "fork.knife", value: AppTab.menu) {
                 MenuView()
             }
-            Tab("Shopping", systemImage: "cart.fill") {
+            Tab("Shopping", systemImage: "cart.fill", value: AppTab.shopping) {
                 ShoppingView()
             }
         }
@@ -24,6 +26,6 @@ struct MainTabView: View {
 }
 
 #Preview {
-    MainTabView()
+    MainTabView(selectedTab: .constant(.home))
         .environment(SupabaseStore())
 }

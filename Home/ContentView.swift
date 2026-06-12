@@ -1,8 +1,8 @@
-// Home/ContentView.swift
 import SwiftUI
 
 struct ContentView: View {
     @State private var store = SupabaseStore()
+    @State private var selectedTab: AppTab = .home
     @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
@@ -21,11 +21,14 @@ struct ContentView: View {
                     }
                 }
             } else {
-                MainTabView()
+                MainTabView(selectedTab: $selectedTab)
             }
         }
         .environment(store)
         .task { await store.loadAll() }
+        .onOpenURL { url in
+            selectedTab = AppTab(host: url.host) ?? .home
+        }
         .onChange(of: scenePhase) { _, new in
             if new == .background && store.loadError == nil && !store.isLoading {
                 WidgetSnapshotWriter.write(from: store)
