@@ -3,6 +3,7 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var store = SupabaseStore()
+    @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
         Group {
@@ -25,6 +26,11 @@ struct ContentView: View {
         }
         .environment(store)
         .task { await store.loadAll() }
+        .onChange(of: scenePhase) { _, new in
+            if new == .background && store.loadError == nil && !store.isLoading {
+                WidgetSnapshotWriter.write(from: store)
+            }
+        }
     }
 }
 

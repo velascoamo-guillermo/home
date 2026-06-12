@@ -67,6 +67,9 @@ final class SupabaseStore {
             loadError = error.localizedDescription
         }
         isLoading = false
+        if loadError == nil {
+            WidgetSnapshotWriter.write(from: self)
+        }
     }
 
     // MARK: - Pets
