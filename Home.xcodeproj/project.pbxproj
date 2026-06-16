@@ -113,6 +113,7 @@
 		PE00AA11BB22CC33DD44EE02 /* SyncableEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = PE00AA11BB22CC33DD44EE01 /* SyncableEntity.swift */; };
 		PE00AA11BB22CC33DD44EE12 /* SyncableEntityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = PE00AA11BB22CC33DD44EE11 /* SyncableEntityTests.swift */; };
 		BEE238195A1B46EE981FCC44 /* SQLiteDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = D89EF1C5AC494C239A04F4CE /* SQLiteDatabase.swift */; };
+		C36BA13D0DDE4CF899B20C99 /* Outbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7E9C6C5EAB74373BF8B9164 /* Outbox.swift */; };
 		8F50FD8808DB44268042FDF0 /* SQLiteDatabaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A84F21C10222426D94D76641 /* SQLiteDatabaseTests.swift */; };
 		6F04CFCA46074BC79B8FA9E0 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = A74D898413054708A6AED52C /* libsqlite3.tbd */; };
 /* End PBXBuildFile section */
@@ -247,6 +248,7 @@
 		PE00AA11BB22CC33DD44EE01 /* SyncableEntity.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SyncableEntity.swift; sourceTree = "<group>"; };
 		PE00AA11BB22CC33DD44EE11 /* SyncableEntityTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SyncableEntityTests.swift; sourceTree = "<group>"; };
 		D89EF1C5AC494C239A04F4CE /* SQLiteDatabase.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SQLiteDatabase.swift; sourceTree = "<group>"; };
+		E7E9C6C5EAB74373BF8B9164 /* Outbox.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Outbox.swift; sourceTree = "<group>"; };
 		A84F21C10222426D94D76641 /* SQLiteDatabaseTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SQLiteDatabaseTests.swift; sourceTree = "<group>"; };
 		A74D898413054708A6AED52C /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -617,6 +619,7 @@
 			children = (
 				PE00AA11BB22CC33DD44EE01 /* SyncableEntity.swift */,
 				D89EF1C5AC494C239A04F4CE /* SQLiteDatabase.swift */,
+				E7E9C6C5EAB74373BF8B9164 /* Outbox.swift */,
 			);
 			path = Persistence;
 			sourceTree = "<group>";
@@ -819,6 +822,7 @@
 				3135C078C41093AD8A6FE83A /* AppTab.swift in Sources */,
 				PE00AA11BB22CC33DD44EE02 /* SyncableEntity.swift in Sources */,
 				BEE238195A1B46EE981FCC44 /* SQLiteDatabase.swift in Sources */,
+				C36BA13D0DDE4CF899B20C99 /* Outbox.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
