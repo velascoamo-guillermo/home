@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		08083B39452744F1B9C446E5 /* RemoteGateway.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17C0B2AFA89C4121A7973BB3 /* RemoteGateway.swift */; };
 		18B0322D2A7D492983EF706F /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B13C3455F594B0BA7525ADD /* Reachability.swift */; };
 		00B2E6DC3F934773A9D00249 /* PetAvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7176104FF64E3885D42B3C /* PetAvatarView.swift */; };
 		00B6247F0DCA581DD2769CE0 /* .appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = C50C7DD5D3AD5D0A4D7AF3C4 /* HomeWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -147,6 +148,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		17C0B2AFA89C4121A7973BB3 /* RemoteGateway.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RemoteGateway.swift; sourceTree = "<group>"; };
 		7B13C3455F594B0BA7525ADD /* Reachability.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		006B3D99E6B0E67C823B73FD /* ShoppingView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShoppingView.swift; sourceTree = "<group>"; };
 		06C806DCF5034FAB66D7D2B8 /* HomeView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
@@ -476,6 +478,7 @@
 			isa = PBXGroup;
 			children = (
 				7B13C3455F594B0BA7525ADD /* Reachability.swift */,
+				17C0B2AFA89C4121A7973BB3 /* RemoteGateway.swift */,
 			);
 			path = Sync;
 			sourceTree = "<group>";
@@ -845,6 +848,7 @@
 				C36BA13D0DDE4CF899B20C99 /* Outbox.swift in Sources */,
 				LS00AA11BB22CC33DD44EE02 /* LocalStore.swift in Sources */,
 				18B0322D2A7D492983EF706F /* Reachability.swift in Sources */,
+				08083B39452744F1B9C446E5 /* RemoteGateway.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
