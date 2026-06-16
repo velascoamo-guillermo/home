@@ -80,7 +80,7 @@ actor SQLiteDatabase {
                 case .text(let v):   sqlite3_bind_text(stmt, pos, v, -1, SQLITE_TRANSIENT)
                 case .int(let v):    sqlite3_bind_int64(stmt, pos, Int64(v))
                 case .double(let v): sqlite3_bind_double(stmt, pos, v)
-                case .blob(let v):   v.withUnsafeBytes { sqlite3_bind_blob(stmt, pos, $0.baseAddress, Int32(v.count), SQLITE_TRANSIENT) }
+                case .blob(let v):   _ = v.withUnsafeBytes { sqlite3_bind_blob(stmt, pos, $0.baseAddress, Int32(v.count), SQLITE_TRANSIENT) }
                 case .null:          sqlite3_bind_null(stmt, pos)
                 }
             }
