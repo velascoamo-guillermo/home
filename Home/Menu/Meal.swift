@@ -31,6 +31,8 @@ struct Meal: Codable, Identifiable, Hashable {
     var servings: Int?
     var nutrition: Nutrition = Nutrition()
     var createdAt: Date = .now
+    var updatedAt: Date = .now
+    var deletedAt: Date? = nil
 
     enum CodingKeys: String, CodingKey {
         case id, slot, title, servings, calories
@@ -39,10 +41,13 @@ struct Meal: Codable, Identifiable, Hashable {
         case carbsG    = "carbs_g"
         case fatG      = "fat_g"
         case createdAt = "created_at"
+        case updatedAt = "updated_at"
+        case deletedAt = "deleted_at"
     }
 
     init(id: UUID = UUID(), dayOfWeek: Int, slot: MealSlot, title: String = "",
-         servings: Int? = nil, nutrition: Nutrition = Nutrition(), createdAt: Date = .now) {
+         servings: Int? = nil, nutrition: Nutrition = Nutrition(), createdAt: Date = .now,
+         updatedAt: Date = .now, deletedAt: Date? = nil) {
         self.id = id
         self.dayOfWeek = dayOfWeek
         self.slot = slot
@@ -50,6 +55,8 @@ struct Meal: Codable, Identifiable, Hashable {
         self.servings = servings
         self.nutrition = nutrition
         self.createdAt = createdAt
+        self.updatedAt = updatedAt
+        self.deletedAt = deletedAt
     }
 
     init(from decoder: Decoder) throws {
@@ -66,6 +73,8 @@ struct Meal: Codable, Identifiable, Hashable {
             fatG:     try c.decodeIfPresent(Int.self, forKey: .fatG)
         )
         createdAt = (try? c.decode(Date.self, forKey: .createdAt)) ?? .now
+        updatedAt = (try? c.decode(Date.self, forKey: .updatedAt)) ?? .now
+        deletedAt = try? c.decodeIfPresent(Date.self, forKey: .deletedAt)
     }
 
     func encode(to encoder: Encoder) throws {
@@ -79,5 +88,11 @@ struct Meal: Codable, Identifiable, Hashable {
         try c.encodeIfPresent(nutrition.proteinG, forKey: .proteinG)
         try c.encodeIfPresent(nutrition.carbsG, forKey: .carbsG)
         try c.encodeIfPresent(nutrition.fatG, forKey: .fatG)
+        try c.encode(updatedAt, forKey: .updatedAt)
+        try c.encodeIfPresent(deletedAt, forKey: .deletedAt)
     }
+}
+
+extension Meal: SyncableEntity {
+    static let tableName = "meals"
 }

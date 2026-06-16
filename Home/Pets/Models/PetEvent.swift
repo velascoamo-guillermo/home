@@ -23,9 +23,17 @@ struct PetEvent: Codable, Identifiable, Hashable {
     var category: EventCategory
     var notes: String
     var value: String?
+    var updatedAt: Date = .now
+    var deletedAt: Date? = nil
 
     enum CodingKeys: String, CodingKey {
         case id, date, title, category, notes, value
-        case petId = "pet_id"
+        case petId     = "pet_id"
+        case updatedAt = "updated_at"
+        case deletedAt = "deleted_at"
     }
+}
+
+extension PetEvent: SyncableEntity {
+    static let tableName = "pet_events"
 }

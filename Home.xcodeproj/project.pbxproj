@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		00B2E6DC3F934773A9D00249 /* PetAvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7176104FF64E3885D42B3C /* PetAvatarView.swift */; };
-		00B6247F0DCA581DD2769CE0 /* HomeWidget.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = C50C7DD5D3AD5D0A4D7AF3C4 /* HomeWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		00B6247F0DCA581DD2769CE0 /* .appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = C50C7DD5D3AD5D0A4D7AF3C4 /* HomeWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		070528CC45C34BAD6FF65C7B /* WeekMealSuggestion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BE4B16BBD41F6D1B7859D55 /* WeekMealSuggestion.swift */; };
 		0D4B7552A2AE6EDECF7ABCCB /* ProductCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41FE432DDA91EAABD7776413 /* ProductCategory.swift */; };
 		0E0AA7C4CA938121B253413C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E5129084F7E0223D3775A5E /* Foundation.framework */; };
@@ -110,6 +110,8 @@
 		ST00AA11BB22CC33DD44EE09 /* StockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ST00AA11BB22CC33DD44EE08 /* StockView.swift */; };
 		UR00AA11BB22CC33DD44EE01 /* UIImage+Resize.swift in Sources */ = {isa = PBXBuildFile; fileRef = UR00AA11BB22CC33DD44EE00 /* UIImage+Resize.swift */; };
 		UR00AA11BB22CC33DD44EE02 /* UIImageResizeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = UR00AA11BB22CC33DD44EE10 /* UIImageResizeTests.swift */; };
+		PE00AA11BB22CC33DD44EE02 /* SyncableEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = PE00AA11BB22CC33DD44EE01 /* SyncableEntity.swift */; };
+		PE00AA11BB22CC33DD44EE12 /* SyncableEntityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = PE00AA11BB22CC33DD44EE11 /* SyncableEntityTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -129,7 +131,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				00B6247F0DCA581DD2769CE0 /* HomeWidget.appex in Embed App Extensions */,
+				00B6247F0DCA581DD2769CE0 /* .appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -153,6 +155,9 @@
 		3D0CE6DF7B2B78D682B30375 /* WidgetSnapshotCodableTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetSnapshotCodableTests.swift; sourceTree = "<group>"; };
 		41FE432DDA91EAABD7776413 /* ProductCategory.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ProductCategory.swift; sourceTree = "<group>"; };
 		4E5129084F7E0223D3775A5E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		500C940D2FDC9EBB0094E872 /* Home.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Home.entitlements; sourceTree = "<group>"; };
+		500C940E2FDCA0530094E872 /* HomeWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HomeWidget.entitlements; sourceTree = "<group>"; };
+		AA11BB22CC33DD44EE55FF77 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		50734A7F2FD0A83E00553B07 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		507823C42FBCF3AF0042E71E /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		507823C52FBCF4BD0042E71E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -236,6 +241,8 @@
 		ST00AA11BB22CC33DD44EE08 /* StockView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StockView.swift; sourceTree = "<group>"; };
 		UR00AA11BB22CC33DD44EE00 /* UIImage+Resize.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIImage+Resize.swift"; sourceTree = "<group>"; };
 		UR00AA11BB22CC33DD44EE10 /* UIImageResizeTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UIImageResizeTests.swift; sourceTree = "<group>"; };
+		PE00AA11BB22CC33DD44EE01 /* SyncableEntity.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SyncableEntity.swift; sourceTree = "<group>"; };
+		PE00AA11BB22CC33DD44EE11 /* SyncableEntityTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SyncableEntityTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -303,6 +310,7 @@
 		40827EA68B6B3F6846C702EA /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				500C940D2FDC9EBB0094E872 /* Home.entitlements */,
 				507823C52FBCF4BD0042E71E /* Info.plist */,
 				248845B37ACBAB618358A586 /* Home */,
 				617B4C1C9E4E620806F0BD4A /* Main */,
@@ -325,7 +333,6 @@
 				6EFD07EB72B922B3B688CC2A /* WidgetStore.swift */,
 				167B044780DEF36B6D746BFB /* WidgetSnapshotWriter.swift */,
 			);
-			name = Widget;
 			path = Widget;
 			sourceTree = "<group>";
 		};
@@ -442,6 +449,7 @@
 				UR00AA11BB22CC33DD44EF00 /* Extensions */,
 				4A196361B5940DD7C7851A10 /* Widget */,
 				C53E003DA7F794B62AF5BDFE /* Navigation */,
+				PE00AA11BB22CC33DD44EE20 /* Persistence */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -451,7 +459,6 @@
 			children = (
 				CF21E00DCCBEF18421A267A3 /* AppTab.swift */,
 			);
-			name = Navigation;
 			path = Navigation;
 			sourceTree = "<group>";
 		};
@@ -461,7 +468,6 @@
 				3D0CE6DF7B2B78D682B30375 /* WidgetSnapshotCodableTests.swift */,
 				2A42C7D06A49055F588C8624 /* WidgetSnapshotWriterTests.swift */,
 			);
-			name = Widget;
 			path = Widget;
 			sourceTree = "<group>";
 		};
@@ -477,6 +483,8 @@
 		CE634C6620B43C1C046C59DE /* HomeWidget */ = {
 			isa = PBXGroup;
 			children = (
+				AA11BB22CC33DD44EE55FF77 /* Info.plist */,
+				500C940E2FDCA0530094E872 /* HomeWidget.entitlements */,
 				97BF39A8D0642A279A151CCE /* HomeWidget.swift */,
 				E65927107DA46DF3718B9ABD /* HomeWidgetBundle.swift */,
 				23DBDF147B2AFB6506292479 /* HomeWidgetEntry.swift */,
@@ -485,7 +493,6 @@
 				62E8B3CDB204A775210A283F /* MediumWidgetView.swift */,
 				7F9CB2CE20CE66F8C0E3C736 /* LargeWidgetView.swift */,
 			);
-			name = HomeWidget;
 			path = HomeWidget;
 			sourceTree = "<group>";
 		};
@@ -512,7 +519,6 @@
 			children = (
 				006B3D99E6B0E67C823B73FD /* ShoppingView.swift */,
 			);
-			name = Shopping;
 			path = Shopping;
 			sourceTree = "<group>";
 		};
@@ -573,6 +579,7 @@
 				7992BC0AD8B24DC8437E5EFF /* ProductCategoryTests.swift */,
 				8E48459EB4143A86114B4178 /* ShoppingListTests.swift */,
 				C549EB0C1F92ABE09A8B1E9C /* Widget */,
+				PE00AA11BB22CC33DD44EE21 /* Persistence */,
 			);
 			path = HomeTests;
 			sourceTree = "<group>";
@@ -596,6 +603,22 @@
 				UR00AA11BB22CC33DD44EE00 /* UIImage+Resize.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		PE00AA11BB22CC33DD44EE20 /* Persistence */ = {
+			isa = PBXGroup;
+			children = (
+				PE00AA11BB22CC33DD44EE01 /* SyncableEntity.swift */,
+			);
+			path = Persistence;
+			sourceTree = "<group>";
+		};
+		PE00AA11BB22CC33DD44EE21 /* Persistence */ = {
+			isa = PBXGroup;
+			children = (
+				PE00AA11BB22CC33DD44EE11 /* SyncableEntityTests.swift */,
+			);
+			path = Persistence;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -785,6 +808,7 @@
 				D2BB3997470BE93B225FCE78 /* WidgetStore.swift in Sources */,
 				33DDF8ADC1BB63F2E738876D /* WidgetSnapshotWriter.swift in Sources */,
 				3135C078C41093AD8A6FE83A /* AppTab.swift in Sources */,
+				PE00AA11BB22CC33DD44EE02 /* SyncableEntity.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -825,6 +849,7 @@
 				7B3F134A6198452D02FFBF45 /* ShoppingListTests.swift in Sources */,
 				F348325491D17DF22118F67E /* WidgetSnapshotCodableTests.swift in Sources */,
 				4BECF8486986D50EB0657A69 /* WidgetSnapshotWriterTests.swift in Sources */,
+				PE00AA11BB22CC33DD44EE12 /* SyncableEntityTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -843,15 +868,17 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = HomeWidget/HomeWidget.entitlements;
 				DEVELOPMENT_TEAM = 523MDDHYGD;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSExtension_NSExtensionPointIdentifier = "com.apple.widgetkit-extension";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = HomeWidget/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../../Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.guille.Home.HomeWidget;
+				PRODUCT_NAME = HomeWidget;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 6.0;
@@ -988,6 +1015,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Home/Home.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 523MDDHYGD;
@@ -1023,6 +1051,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Home/Home.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 523MDDHYGD;
@@ -1056,15 +1085,17 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = HomeWidget/HomeWidget.entitlements;
 				DEVELOPMENT_TEAM = 523MDDHYGD;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSExtension_NSExtensionPointIdentifier = "com.apple.widgetkit-extension";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = HomeWidget/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../../Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.guille.Home.HomeWidget;
+				PRODUCT_NAME = HomeWidget;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 6.0;

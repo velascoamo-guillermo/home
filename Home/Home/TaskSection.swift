@@ -4,10 +4,18 @@ struct TaskSection: Codable, Identifiable, Hashable {
     var id: UUID
     var name: String
     var icon: String
+    var updatedAt: Date = .now
+    var deletedAt: Date? = nil
 
     enum CodingKeys: String, CodingKey {
         case id, name, icon
+        case updatedAt = "updated_at"
+        case deletedAt = "deleted_at"
     }
+}
+
+extension TaskSection: SyncableEntity {
+    static let tableName = "task_sections"
 }
 
 // MARK: - Predefined

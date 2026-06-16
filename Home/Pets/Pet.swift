@@ -7,20 +7,27 @@ struct Pet: Identifiable, Codable, Hashable {
     var breed: String
     var birthday: Date? = nil
     var photoUrl: String? = nil
+    var updatedAt: Date = .now
+    var deletedAt: Date? = nil
 
     enum CodingKeys: String, CodingKey {
         case id, name, type, breed, birthday
-        case photoUrl = "photo_url"
+        case photoUrl   = "photo_url"
+        case updatedAt  = "updated_at"
+        case deletedAt  = "deleted_at"
     }
 
     init(id: UUID = UUID(), name: String, type: String, breed: String,
-         birthday: Date? = nil, photoUrl: String? = nil) {
+         birthday: Date? = nil, photoUrl: String? = nil,
+         updatedAt: Date = .now, deletedAt: Date? = nil) {
         self.id = id
         self.name = name
         self.type = type
         self.breed = breed
         self.birthday = birthday
         self.photoUrl = photoUrl
+        self.updatedAt = updatedAt
+        self.deletedAt = deletedAt
     }
 
     init(from decoder: Decoder) throws {
@@ -33,6 +40,8 @@ struct Pet: Identifiable, Codable, Hashable {
         if let raw = try c.decodeIfPresent(String.self, forKey: .birthday) {
             birthday = Self.dateFormatter.date(from: raw)
         }
+        updatedAt = (try? c.decode(Date.self, forKey: .updatedAt)) ?? .now
+        deletedAt = try? c.decodeIfPresent(Date.self, forKey: .deletedAt)
     }
 
     func encode(to encoder: Encoder) throws {
@@ -47,6 +56,8 @@ struct Pet: Identifiable, Codable, Hashable {
         } else {
             try c.encodeNil(forKey: .birthday)
         }
+        try c.encode(updatedAt, forKey: .updatedAt)
+        try c.encodeIfPresent(deletedAt, forKey: .deletedAt)
     }
 
     private static let dateFormatter: DateFormatter = {
@@ -56,4 +67,8 @@ struct Pet: Identifiable, Codable, Hashable {
         f.timeZone = TimeZone(identifier: "UTC")
         return f
     }()
+}
+
+extension Pet: SyncableEntity {
+    static let tableName = "pets"
 }
