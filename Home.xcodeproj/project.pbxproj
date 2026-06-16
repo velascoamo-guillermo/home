@@ -121,6 +121,8 @@
 		LS00AA11BB22CC33DD44EE12 /* LocalStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = LS00AA11BB22CC33DD44EE11 /* LocalStoreTests.swift */; };
 		24DFBB553F6F4BA1A438222B /* OutboxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB819B41D43A4B60B67EFC22 /* OutboxTests.swift */; };
 		6F04CFCA46074BC79B8FA9E0 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = A74D898413054708A6AED52C /* libsqlite3.tbd */; };
+		68E6FB0FE1A44696B6615646 /* SyncEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5BAB79A911B4FD3860DCA75 /* SyncEngine.swift */; };
+		0D3EA5825F054834AA2B255F /* SyncEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F076DD376D0245EFBD1E48BB /* SyncEngineTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -261,6 +263,8 @@
 		LS00AA11BB22CC33DD44EE11 /* LocalStoreTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LocalStoreTests.swift; sourceTree = "<group>"; };
 		EB819B41D43A4B60B67EFC22 /* OutboxTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OutboxTests.swift; sourceTree = "<group>"; };
 		A74D898413054708A6AED52C /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
+		F5BAB79A911B4FD3860DCA75 /* SyncEngine.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SyncEngine.swift; sourceTree = "<group>"; };
+		F076DD376D0245EFBD1E48BB /* SyncEngineTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SyncEngineTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -479,6 +483,7 @@
 			children = (
 				7B13C3455F594B0BA7525ADD /* Reachability.swift */,
 				17C0B2AFA89C4121A7973BB3 /* RemoteGateway.swift */,
+				F5BAB79A911B4FD3860DCA75 /* SyncEngine.swift */,
 			);
 			path = Sync;
 			sourceTree = "<group>";
@@ -609,8 +614,17 @@
 				8E48459EB4143A86114B4178 /* ShoppingListTests.swift */,
 				C549EB0C1F92ABE09A8B1E9C /* Widget */,
 				PE00AA11BB22CC33DD44EE21 /* Persistence */,
+				08B5ECA32EF048C79732919D /* Sync */,
 			);
 			path = HomeTests;
+			sourceTree = "<group>";
+		};
+		08B5ECA32EF048C79732919D /* Sync */ = {
+			isa = PBXGroup;
+			children = (
+				F076DD376D0245EFBD1E48BB /* SyncEngineTests.swift */,
+			);
+			path = Sync;
 			sourceTree = "<group>";
 		};
 		ST00AA11BB22CC33DD44EE10 /* Stock */ = {
@@ -849,6 +863,7 @@
 				LS00AA11BB22CC33DD44EE02 /* LocalStore.swift in Sources */,
 				18B0322D2A7D492983EF706F /* Reachability.swift in Sources */,
 				08083B39452744F1B9C446E5 /* RemoteGateway.swift in Sources */,
+				68E6FB0FE1A44696B6615646 /* SyncEngine.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -893,6 +908,7 @@
 				8F50FD8808DB44268042FDF0 /* SQLiteDatabaseTests.swift in Sources */,
 				LS00AA11BB22CC33DD44EE12 /* LocalStoreTests.swift in Sources */,
 				24DFBB553F6F4BA1A438222B /* OutboxTests.swift in Sources */,
+				0D3EA5825F054834AA2B255F /* SyncEngineTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
