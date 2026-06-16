@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		18B0322D2A7D492983EF706F /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B13C3455F594B0BA7525ADD /* Reachability.swift */; };
 		00B2E6DC3F934773A9D00249 /* PetAvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7176104FF64E3885D42B3C /* PetAvatarView.swift */; };
 		00B6247F0DCA581DD2769CE0 /* .appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = C50C7DD5D3AD5D0A4D7AF3C4 /* HomeWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		070528CC45C34BAD6FF65C7B /* WeekMealSuggestion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BE4B16BBD41F6D1B7859D55 /* WeekMealSuggestion.swift */; };
@@ -143,6 +144,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		7B13C3455F594B0BA7525ADD /* Reachability.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		006B3D99E6B0E67C823B73FD /* ShoppingView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShoppingView.swift; sourceTree = "<group>"; };
 		06C806DCF5034FAB66D7D2B8 /* HomeView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		0DF0650AAC8C151554C098B6 /* MealProduct.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MealProduct.swift; sourceTree = "<group>"; };
@@ -459,8 +461,17 @@
 				4A196361B5940DD7C7851A10 /* Widget */,
 				C53E003DA7F794B62AF5BDFE /* Navigation */,
 				PE00AA11BB22CC33DD44EE20 /* Persistence */,
+				027374AA1F6D47B6B92504B1 /* Sync */,
 			);
 			path = Shared;
+			sourceTree = "<group>";
+		};
+		027374AA1F6D47B6B92504B1 /* Sync */ = {
+			isa = PBXGroup;
+			children = (
+				7B13C3455F594B0BA7525ADD /* Reachability.swift */,
+			);
+			path = Sync;
 			sourceTree = "<group>";
 		};
 		C53E003DA7F794B62AF5BDFE /* Navigation */ = {
@@ -823,6 +834,7 @@
 				PE00AA11BB22CC33DD44EE02 /* SyncableEntity.swift in Sources */,
 				BEE238195A1B46EE981FCC44 /* SQLiteDatabase.swift in Sources */,
 				C36BA13D0DDE4CF899B20C99 /* Outbox.swift in Sources */,
+				18B0322D2A7D492983EF706F /* Reachability.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
