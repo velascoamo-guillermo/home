@@ -34,8 +34,10 @@ actor SyncEngine {
     }
 
     static let syncedTables: [String] = [
-        "pets", "veterinarian", "appointments", "clinical_entries", "pet_events",
-        "task_sections", "household_tasks", "stock_products", "meals", "meal_products"
+        Pet.tableName, Veterinarian.tableName, Appointment.tableName,
+        ClinicalEntry.tableName, PetEvent.tableName, TaskSection.tableName,
+        HouseholdTask.tableName, StockProduct.tableName, Meal.tableName,
+        MealProduct.tableName
     ]
 
     func pull(table: String) async throws {
@@ -58,7 +60,9 @@ actor SyncEngine {
         case "stock_products":   return try await reconcileTyped(StockProduct.self, blobs)
         case "meals":            return try await reconcileTyped(Meal.self, blobs)
         case "meal_products":    return try await reconcileTyped(MealProduct.self, blobs)
-        default:                 return nil
+        default:
+            assertionFailure("reconcile: unhandled table '\(table)'")
+            return nil
         }
     }
 

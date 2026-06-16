@@ -5,16 +5,16 @@ import Foundation
 actor FakeGateway: RemoteGateway {
     private var pushed: [(OutboxOpKind, String)] = []
     private var failTables: Set<String> = []
-    var pullReturns: [String: [Data]] = [:]
+    private var pullReturns: [String: [Data]] = [:]
 
     func push(kind: OutboxOpKind, table: String, payload: Data) async throws {
         if failTables.contains(table) { throw NSError(domain: "net", code: 1) }
         pushed.append((kind, table))
     }
     func pull(table: String, since: Date?) async throws -> [Data] { pullReturns[table] ?? [] }
-    func setFail(_ t: String) { failTables.insert(t) }
-    func pushedCount() -> Int { pushed.count }
-    func setPull(_ t: String, _ data: [Data]) { pullReturns[t] = data }
+    func setFail(_ t: String) async { failTables.insert(t) }
+    func pushedCount() async -> Int { pushed.count }
+    func setPull(_ t: String, _ data: [Data]) async { pullReturns[t] = data }
 }
 
 @Suite("SyncEngine push") struct SyncEnginePushTests {
@@ -102,5 +102,28 @@ actor FakeGateway: RemoteGateway {
                                    deletedAt: .now.addingTimeInterval(60))])
         try await engine.pull(table: "stock_products")
         #expect(try await store.fetchAll(StockProduct.self).isEmpty)
+    }
+
+    @Test("equal updatedAt: remote wins (tie goes to server)")
+    func equalTimestampRemoteWins() async throws {
+        let (engine, store, gw) = try await make()
+        let id = UUID()
+        let ts = Date.now
+        let local = StockProduct(id: id, name: "Local", icon: "i", packages: 1,
+                                 looseUnits: 0, unitsPerPackage: 6, updatedAt: ts)
+        try await store.upsert([local], enqueue: false)
+        await gw.setPull("stock_products", [try blob(id: id, name: "Remote", updatedAt: ts)])
+        try await engine.pull(table: "stock_products")
+        #expect(try await store.fetchAll(StockProduct.self).map(\.name) == ["Remote"])
+    }
+
+    @Test("cursor is advanced after pull")
+    func cursorAdvanced() async throws {
+        let (engine, store, gw) = try await make()
+        let ts = Date.now
+        await gw.setPull("stock_products", [try blob(id: UUID(), name: "Milk", updatedAt: ts)])
+        try await engine.pull(table: "stock_products")
+        let cursor = try await store.cursor(for: "stock_products")
+        #expect(cursor != nil)
     }
 }
