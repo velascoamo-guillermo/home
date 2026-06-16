@@ -4,7 +4,7 @@ import Foundation
 /// Implemented by structs whose primary key is a client-generated UUID.
 protocol SyncableEntity: Codable, Identifiable, Sendable where ID == UUID {
     static var tableName: String { get }
-    var id: UUID { get }
+    nonisolated var id: UUID { get }
     var updatedAt: Date { get set }
     var deletedAt: Date? { get set }
 }
