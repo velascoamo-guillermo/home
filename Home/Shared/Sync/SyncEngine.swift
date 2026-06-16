@@ -1,5 +1,10 @@
 import Foundation
 
+enum SyncError: LocalizedError {
+    case requiresConnection
+    var errorDescription: String? { "This action requires an internet connection." }
+}
+
 /// Orchestrates push (drain outbox) and pull (reconcile) between LocalStore and Supabase.
 actor SyncEngine {
     private let local: LocalStore

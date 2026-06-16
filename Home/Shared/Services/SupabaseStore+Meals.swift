@@ -19,42 +19,57 @@ extension SupabaseStore {
     }
 
     func addMeal(_ meal: Meal) async throws {
-        try await client.from("meals").insert(meal).execute()
-        meals.append(meal)
+        var m = meal; m.updatedAt = .now
+        try await _local?.upsert([m], enqueue: true)
+        meals.append(m)
+        await _sync?.sync(tables: [Meal.tableName])
     }
 
     func updateMeal(_ meal: Meal) async throws {
-        try await client.from("meals").update(meal).eq("id", value: meal.id).execute()
-        if let i = meals.firstIndex(where: { $0.id == meal.id }) {
-            meals[i] = meal
-        }
+        var m = meal; m.updatedAt = .now
+        try await _local?.upsert([m], enqueue: true)
+        if let i = meals.firstIndex(where: { $0.id == m.id }) { meals[i] = m }
+        await _sync?.sync(tables: [Meal.tableName])
     }
 
     func deleteMeal(_ meal: Meal) async throws {
-        try await client.from("meals").delete().eq("id", value: meal.id).execute()
+        try await _local?.softDelete(meal, enqueue: true)
         meals.removeAll { $0.id == meal.id }
+        // MealProducts are child rows — soft-delete them too so they sync
+        let childProducts = mealProducts.filter { $0.mealId == meal.id }
+        for mp in childProducts { try await _local?.softDelete(mp, enqueue: true) }
         mealProducts.removeAll { $0.mealId == meal.id }
+        await _sync?.sync(tables: [Meal.tableName, MealProduct.tableName])
     }
 
     /// Deletes every meal (and its product links) for a weekday.
     func clearDay(_ day: Int) async throws {
-        let ids = meals.filter { $0.dayOfWeek == day }.map(\.id)
-        guard !ids.isEmpty else { return }
-        try await client.from("meals").delete().in("id", values: ids).execute()
+        let toDelete = meals.filter { $0.dayOfWeek == day }
+        guard !toDelete.isEmpty else { return }
+        let ids = toDelete.map(\.id)
+        for m in toDelete { try await _local?.softDelete(m, enqueue: true) }
+        let childProducts = mealProducts.filter { ids.contains($0.mealId) }
+        for mp in childProducts { try await _local?.softDelete(mp, enqueue: true) }
         meals.removeAll { ids.contains($0.id) }
         mealProducts.removeAll { ids.contains($0.mealId) }
+        await _sync?.sync(tables: [Meal.tableName, MealProduct.tableName])
     }
 
     func setMealProducts(for meal: Meal, links: [MealEntry.Link]) async throws {
-        try await client.from("meal_products").delete().eq("meal_id", value: meal.id).execute()
+        // Soft-delete existing products for this meal
+        let existing = mealProducts.filter { $0.mealId == meal.id }
+        for mp in existing { try await _local?.softDelete(mp, enqueue: true) }
         mealProducts.removeAll { $0.mealId == meal.id }
+        // Insert the new ones
         let rows = links.map {
             MealProduct(mealId: meal.id, productId: $0.product.id, quantity: $0.quantity)
         }
         if !rows.isEmpty {
-            try await client.from("meal_products").insert(rows).execute()
-            mealProducts.append(contentsOf: rows)
+            let stamped = rows.map { mp -> MealProduct in var m = mp; m.updatedAt = .now; return m }
+            try await _local?.upsert(stamped, enqueue: true)
+            mealProducts.append(contentsOf: stamped)
         }
+        await _sync?.sync(tables: [MealProduct.tableName])
     }
 
     func cookMeal(_ entry: MealEntry) async throws {
@@ -80,6 +95,7 @@ extension SupabaseStore {
     /// Asks the model to plan every empty slot of the week in a single call,
     /// then auto-saves the suggestions as meals with their product links.
     func suggestWeek() async throws {
+        guard reachability.isOnline else { throw SyncError.requiresConnection }
         struct StockItem: Encodable { let name: String; let totalUnits: Int }
         struct SlotRef: Encodable { let day: Int; let slot: String }
         struct PlannedRef: Encodable { let day: Int; let slot: String; let title: String }
