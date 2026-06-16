@@ -12,7 +12,6 @@ protocol RemoteGateway: Sendable {
 
 struct SupabaseGateway: RemoteGateway {
     let client: SupabaseClient
-    private let iso = ISO8601DateFormatter()
 
     func push(kind: OutboxOpKind, table: String, payload: Data) async throws {
         let object = try JSONDecoder().decode(JSONObject.self, from: payload)
@@ -22,6 +21,7 @@ struct SupabaseGateway: RemoteGateway {
     func pull(table: String, since: Date?) async throws -> [Data] {
         var query = client.from(table).select()
         if let since {
+            let iso = ISO8601DateFormatter()
             query = query.gt("updated_at", value: iso.string(from: since))
         }
         let response = try await query.execute()
