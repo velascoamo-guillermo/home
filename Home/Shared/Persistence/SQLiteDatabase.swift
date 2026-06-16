@@ -32,7 +32,8 @@ private let SQLITE_TRANSIENT = unsafeBitCast(-1, to: sqlite3_destructor_type.sel
 actor SQLiteDatabase {
     /// Synchronous connection facade passed into `transaction` closures.
     /// Only ever lives inside the actor's isolation — never escapes.
-    final class Connection {
+    // Only accessed through SQLiteDatabase's actor isolation — never stored or called outside a transaction body running on the actor.
+    final class Connection: @unchecked Sendable {
         fileprivate let handle: OpaquePointer
         fileprivate init(_ h: OpaquePointer) { handle = h }
 
@@ -40,7 +41,7 @@ actor SQLiteDatabase {
             let stmt = try prepare(sql, params)
             defer { sqlite3_finalize(stmt) }
             let rc = sqlite3_step(stmt)
-            guard rc == SQLITE_DONE || rc == SQLITE_ROW else {
+            guard rc == SQLITE_DONE else {
                 throw SQLiteError.step(rc, String(cString: sqlite3_errmsg(handle)))
             }
         }
@@ -60,7 +61,7 @@ actor SQLiteDatabase {
                     case SQLITE_BLOB:
                         if let p = sqlite3_column_blob(stmt, i) {
                             row[name] = .blob(Data(bytes: p, count: Int(sqlite3_column_bytes(stmt, i))))
-                        } else { row[name] = .blob(Data()) }
+                        } else { row[name] = .null }
                     default: row[name] = .null
                     }
                 }
@@ -106,16 +107,19 @@ actor SQLiteDatabase {
         try conn.query(sql, params)
     }
 
-    /// Runs `body` inside BEGIN/COMMIT; ROLLBACK on any thrown error.
     func transaction<T>(_ body: (Connection) throws -> T) throws -> T {
         try conn.execute("BEGIN")
         do {
             let result = try body(conn)
             try conn.execute("COMMIT")
             return result
-        } catch {
-            try? conn.execute("ROLLBACK")
-            throw error
+        } catch let commitError {
+            do {
+                try conn.execute("ROLLBACK")
+            } catch {
+                throw error  // ROLLBACK failed — unrecoverable
+            }
+            throw commitError
         }
     }
 
