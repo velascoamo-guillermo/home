@@ -118,6 +118,7 @@
 		8F50FD8808DB44268042FDF0 /* SQLiteDatabaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A84F21C10222426D94D76641 /* SQLiteDatabaseTests.swift */; };
 		LS00AA11BB22CC33DD44EE02 /* LocalStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = LS00AA11BB22CC33DD44EE01 /* LocalStore.swift */; };
 		LS00AA11BB22CC33DD44EE12 /* LocalStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = LS00AA11BB22CC33DD44EE11 /* LocalStoreTests.swift */; };
+		24DFBB553F6F4BA1A438222B /* OutboxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB819B41D43A4B60B67EFC22 /* OutboxTests.swift */; };
 		6F04CFCA46074BC79B8FA9E0 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = A74D898413054708A6AED52C /* libsqlite3.tbd */; };
 /* End PBXBuildFile section */
 
@@ -256,6 +257,7 @@
 		A84F21C10222426D94D76641 /* SQLiteDatabaseTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SQLiteDatabaseTests.swift; sourceTree = "<group>"; };
 		LS00AA11BB22CC33DD44EE01 /* LocalStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LocalStore.swift; sourceTree = "<group>"; };
 		LS00AA11BB22CC33DD44EE11 /* LocalStoreTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LocalStoreTests.swift; sourceTree = "<group>"; };
+		EB819B41D43A4B60B67EFC22 /* OutboxTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OutboxTests.swift; sourceTree = "<group>"; };
 		A74D898413054708A6AED52C /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -646,6 +648,7 @@
 				PE00AA11BB22CC33DD44EE11 /* SyncableEntityTests.swift */,
 				A84F21C10222426D94D76641 /* SQLiteDatabaseTests.swift */,
 				LS00AA11BB22CC33DD44EE11 /* LocalStoreTests.swift */,
+				EB819B41D43A4B60B67EFC22 /* OutboxTests.swift */,
 			);
 			path = Persistence;
 			sourceTree = "<group>";
@@ -885,6 +888,7 @@
 				PE00AA11BB22CC33DD44EE12 /* SyncableEntityTests.swift in Sources */,
 				8F50FD8808DB44268042FDF0 /* SQLiteDatabaseTests.swift in Sources */,
 				LS00AA11BB22CC33DD44EE12 /* LocalStoreTests.swift in Sources */,
+				24DFBB553F6F4BA1A438222B /* OutboxTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
