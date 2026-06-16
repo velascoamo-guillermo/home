@@ -84,6 +84,7 @@ final class SupabaseStore {
     }
 
     private func startReconnectObserver() {
+        reconnectTask?.cancel()
         reconnectTask = Task { @MainActor [weak self] in
             guard let stream = self?.reachability.changes else { return }
             for await online in stream where online {
