@@ -5,7 +5,7 @@ import Foundation
 // (which may not set that). nonisolated makes it identical in both and
 // callable from the widget's nonisolated TimelineProvider methods.
 nonisolated enum WidgetStore {
-    static let appGroupIdentifier = "group.com.guille.Home"
+    static let appGroupIdentifier = "group.com.guille.home"
 
     private static var snapshotURL: URL? {
         FileManager.default
