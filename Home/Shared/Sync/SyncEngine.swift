@@ -33,6 +33,48 @@ actor SyncEngine {
         }
     }
 
-    /// Stub — replaced in Task 10.
-    func pull(table: String) async throws {}
+    static let syncedTables: [String] = [
+        "pets", "veterinarian", "appointments", "clinical_entries", "pet_events",
+        "task_sections", "household_tasks", "stock_products", "meals", "meal_products"
+    ]
+
+    func pull(table: String) async throws {
+        let since = try await local.cursor(for: table)
+        let blobs = try await gateway.pull(table: table, since: since)
+        guard !blobs.isEmpty else { return }
+        let maxUpdated = try await reconcile(table: table, blobs: blobs)
+        if let maxUpdated { try await local.setCursor(maxUpdated, for: table) }
+    }
+
+    private func reconcile(table: String, blobs: [Data]) async throws -> Date? {
+        switch table {
+        case "pets":             return try await reconcileTyped(Pet.self, blobs)
+        case "veterinarian":     return try await reconcileTyped(Veterinarian.self, blobs)
+        case "appointments":     return try await reconcileTyped(Appointment.self, blobs)
+        case "clinical_entries": return try await reconcileTyped(ClinicalEntry.self, blobs)
+        case "pet_events":       return try await reconcileTyped(PetEvent.self, blobs)
+        case "task_sections":    return try await reconcileTyped(TaskSection.self, blobs)
+        case "household_tasks":  return try await reconcileTyped(HouseholdTask.self, blobs)
+        case "stock_products":   return try await reconcileTyped(StockProduct.self, blobs)
+        case "meals":            return try await reconcileTyped(Meal.self, blobs)
+        case "meal_products":    return try await reconcileTyped(MealProduct.self, blobs)
+        default:                 return nil
+        }
+    }
+
+    private func reconcileTyped<T: SyncableEntity>(_ type: T.Type, _ blobs: [Data]) async throws -> Date? {
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        var maxUpdated: Date?
+        let localById = try await local.indexByID(T.self)
+        var toUpsert: [T] = []
+        for blob in blobs {
+            let remote = try decoder.decode(T.self, from: blob)
+            maxUpdated = maxUpdated.map { max($0, remote.updatedAt) } ?? remote.updatedAt
+            if let localUpdated = localById[remote.id], localUpdated > remote.updatedAt { continue }
+            toUpsert.append(remote)
+        }
+        if !toUpsert.isEmpty { try await local.upsert(toUpsert, enqueue: false) }
+        return maxUpdated
+    }
 }
