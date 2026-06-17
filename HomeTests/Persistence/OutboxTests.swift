@@ -2,7 +2,7 @@ import Testing
 import Foundation
 @testable import Home
 
-@Suite("Outbox behavior") struct OutboxTests {
+@Suite("Outbox behavior") @MainActor struct OutboxTests {
     private func make() async throws -> LocalStore {
         let url = URL(fileURLWithPath: NSTemporaryDirectory())
             .appendingPathComponent("ob-\(UUID().uuidString).sqlite")

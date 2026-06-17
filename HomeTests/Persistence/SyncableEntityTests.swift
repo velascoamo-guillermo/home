@@ -2,7 +2,7 @@ import Testing
 import Foundation
 @testable import Home
 
-@Suite("SyncableEntity") struct SyncableEntityTests {
+@Suite("SyncableEntity") @MainActor struct SyncableEntityTests {
     @Test("StockProduct exposes table name and sync timestamps")
     func conformance() {
         var p = StockProduct(name: "Milk", icon: "i", packages: 1, looseUnits: 0, unitsPerPackage: 6)

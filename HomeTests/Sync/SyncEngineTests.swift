@@ -17,7 +17,7 @@ actor FakeGateway: RemoteGateway {
     func setPull(_ t: String, _ data: [Data]) async { pullReturns[t] = data }
 }
 
-@Suite("SyncEngine push") struct SyncEnginePushTests {
+@Suite("SyncEngine push") @MainActor struct SyncEnginePushTests {
     private func make() async throws -> (SyncEngine, LocalStore, FakeGateway) {
         let url = URL(fileURLWithPath: NSTemporaryDirectory())
             .appendingPathComponent("se-\(UUID().uuidString).sqlite")
@@ -51,7 +51,7 @@ actor FakeGateway: RemoteGateway {
     }
 }
 
-@Suite("SyncEngine pull") struct SyncEnginePullTests {
+@Suite("SyncEngine pull") @MainActor struct SyncEnginePullTests {
     private func make() async throws -> (SyncEngine, LocalStore, FakeGateway) {
         let url = URL(fileURLWithPath: NSTemporaryDirectory())
             .appendingPathComponent("sp-\(UUID().uuidString).sqlite")
