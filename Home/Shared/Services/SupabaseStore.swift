@@ -26,6 +26,18 @@ final class SupabaseStore {
     var isLoading = false
     var loadError: String? = nil
 
+    private var localURL: URL {
+        FileManager.default
+            .containerURL(forSecurityApplicationGroupIdentifier: "group.com.guille.home")?
+            .appendingPathComponent("home.sqlite")
+            ?? FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+                .appendingPathComponent("home.sqlite")
+    }
+    var _local: LocalStore?
+    var _sync: SyncEngine?
+    private var reconnectTask: Task<Void, Never>?
+    let reachability = Reachability()
+
     init() {
         self.client = SupabaseClient(
             supabaseURL: SupabaseConfig.url,
@@ -40,50 +52,67 @@ final class SupabaseStore {
         isLoading = true
         loadError = nil
         do {
-            async let p: [Pet] = client.from("pets").select().execute().value
-            async let v: [Veterinarian] = client.from("veterinarian").select().execute().value
-            async let a: [Appointment] = client.from("appointments").select().execute().value
-            async let ce: [ClinicalEntry] = client.from("clinical_entries").select().execute().value
-            async let pe: [PetEvent] = client.from("pet_events").select().execute().value
-            async let pf: [PetFile] = client.from("pet_files").select().execute().value
-            async let ht: [HouseholdTask] = client.from("household_tasks").select().execute().value
-            async let cs: [TaskSection]   = client.from("task_sections").select().execute().value
-            async let sp: [StockProduct]  = client.from("stock_products").select().execute().value
-            async let ml: [Meal]          = client.from("meals").select().execute().value
-            async let mpr: [MealProduct]  = client.from("meal_products").select().execute().value
-
-            pets = try await p
-            veterinarians = try await v
-            appointments = try await a
-            clinicalEntries = try await ce
-            events = try await pe
-            files = try await pf
-            householdTasks = try await ht
-            customSections = try await cs
-            stockProducts = try await sp
-            meals = try await ml
-            mealProducts = try await mpr
+            if _local == nil {
+                let store = try await LocalStore(url: localURL)
+                _sync = SyncEngine(local: store, gateway: SupabaseGateway(client: client))
+                _local = store
+                startReconnectObserver()
+            }
+            try await hydrate()
+            isLoading = false
+            await _sync?.sync(tables: SyncEngine.syncedTables)
+            try? await hydrate()
+            if loadError == nil { WidgetSnapshotWriter.write(from: self) }
         } catch {
             loadError = error.localizedDescription
+            isLoading = false
         }
-        isLoading = false
+    }
+
+    private func hydrate() async throws {
+        guard let local = _local else { return }
+        pets            = try await local.fetchAll(Pet.self)
+        veterinarians   = try await local.fetchAll(Veterinarian.self)
+        appointments    = try await local.fetchAll(Appointment.self)
+        clinicalEntries = try await local.fetchAll(ClinicalEntry.self)
+        events          = try await local.fetchAll(PetEvent.self)
+        householdTasks  = try await local.fetchAll(HouseholdTask.self)
+        customSections  = try await local.fetchAll(TaskSection.self)
+        stockProducts   = try await local.fetchAll(StockProduct.self)
+        meals           = try await local.fetchAll(Meal.self)
+        mealProducts    = try await local.fetchAll(MealProduct.self)
+    }
+
+    private func startReconnectObserver() {
+        reconnectTask?.cancel()
+        reconnectTask = Task { @MainActor [weak self] in
+            guard let stream = self?.reachability.changes else { return }
+            for await online in stream where online {
+                guard let self else { return }
+                await self._sync?.sync(tables: SyncEngine.syncedTables)
+                try? await self.hydrate()
+            }
+        }
     }
 
     // MARK: - Pets
 
     func addPet(_ pet: Pet) async throws {
-        try await client.from("pets").insert(pet).execute()
-        pets.append(pet)
+        var p = pet; p.updatedAt = .now
+        try await _local?.upsert([p], enqueue: true)
+        pets.append(p)
+        await _sync?.sync(tables: [Pet.tableName])
     }
 
     func updatePet(_ pet: Pet) async throws {
-        try await client.from("pets").update(pet).eq("id", value: pet.id).execute()
-        if let i = pets.firstIndex(where: { $0.id == pet.id }) {
-            pets[i] = pet
-        }
+        var p = pet; p.updatedAt = .now
+        try await _local?.upsert([p], enqueue: true)
+        if let i = pets.firstIndex(where: { $0.id == p.id }) { pets[i] = p }
+        await _sync?.sync(tables: [Pet.tableName])
     }
 
     func updatePetPhoto(_ pet: Pet, imageData: Data) async throws {
+        guard reachability.isOnline else { throw SyncError.requiresConnection }
         let storagePath = "\(pet.id)/photo.jpg"
         try await client.storage.from("pet-files").upload(
             storagePath,
@@ -104,97 +133,114 @@ final class SupabaseStore {
     func deletePet(_ pet: Pet) async throws {
         let petFiles = files(for: pet.id)
         if !petFiles.isEmpty {
+            guard reachability.isOnline else { throw SyncError.requiresConnection }
             let paths = petFiles.map(\.storagePath)
             try await client.storage.from("pet-files").remove(paths: paths)
         }
-        try await client.from("pets").delete().eq("id", value: pet.id).execute()
+        for appt in appointments(for: pet.id) { try await _local?.softDelete(appt, enqueue: true) }
+        for ce in clinicalEntries(for: pet.id) { try await _local?.softDelete(ce, enqueue: true) }
+        for ev in events(for: pet.id) { try await _local?.softDelete(ev, enqueue: true) }
+        try await _local?.softDelete(pet, enqueue: true)
         pets.removeAll { $0.id == pet.id }
         appointments.removeAll { $0.petId == pet.id }
         clinicalEntries.removeAll { $0.petId == pet.id }
         events.removeAll { $0.petId == pet.id }
         files.removeAll { $0.petId == pet.id }
+        await _sync?.sync(tables: [Pet.tableName, Appointment.tableName, ClinicalEntry.tableName, PetEvent.tableName])
     }
 
     // MARK: - Vet
 
     func addVet(_ vet: Veterinarian) async throws {
-        try await client.from("veterinarian").insert(vet).execute()
-        veterinarians.append(vet)
+        var v = vet; v.updatedAt = .now
+        try await _local?.upsert([v], enqueue: true)
+        veterinarians.append(v)
+        await _sync?.sync(tables: [Veterinarian.tableName])
     }
 
     func updateVet(_ vet: Veterinarian) async throws {
-        try await client.from("veterinarian").update(vet).eq("id", value: vet.id).execute()
-        if let i = veterinarians.firstIndex(where: { $0.id == vet.id }) {
-            veterinarians[i] = vet
-        }
+        var v = vet; v.updatedAt = .now
+        try await _local?.upsert([v], enqueue: true)
+        if let i = veterinarians.firstIndex(where: { $0.id == v.id }) { veterinarians[i] = v }
+        await _sync?.sync(tables: [Veterinarian.tableName])
     }
 
     func deleteVet(_ vet: Veterinarian) async throws {
-        try await client.from("veterinarian").delete().eq("id", value: vet.id).execute()
+        try await _local?.softDelete(vet, enqueue: true)
         veterinarians.removeAll { $0.id == vet.id }
+        await _sync?.sync(tables: [Veterinarian.tableName])
     }
 
     // MARK: - Appointments
 
     func addAppointment(_ appt: Appointment) async throws {
-        try await client.from("appointments").insert(appt).execute()
-        appointments.append(appt)
+        var a = appt; a.updatedAt = .now
+        try await _local?.upsert([a], enqueue: true)
+        appointments.append(a)
+        await _sync?.sync(tables: [Appointment.tableName])
     }
 
     func updateAppointmentStatus(_ appt: Appointment, status: AppointmentStatus) async throws {
-        try await client.from("appointments")
-            .update(["status": status.rawValue])
-            .eq("id", value: appt.id)
-            .execute()
-        if let i = appointments.firstIndex(where: { $0.id == appt.id }) {
-            appointments[i].status = status
-        }
+        var a = appt; a.status = status; a.updatedAt = .now
+        try await _local?.upsert([a], enqueue: true)
+        if let i = appointments.firstIndex(where: { $0.id == a.id }) { appointments[i] = a }
+        await _sync?.sync(tables: [Appointment.tableName])
     }
 
     func deleteAppointment(_ appt: Appointment) async throws {
-        try await client.from("appointments").delete().eq("id", value: appt.id).execute()
+        try await _local?.softDelete(appt, enqueue: true)
         appointments.removeAll { $0.id == appt.id }
+        await _sync?.sync(tables: [Appointment.tableName])
     }
 
     // MARK: - Clinical Entries
 
     func addClinicalEntry(_ entry: ClinicalEntry) async throws {
-        try await client.from("clinical_entries").insert(entry).execute()
-        clinicalEntries.append(entry)
+        var e = entry; e.updatedAt = .now
+        try await _local?.upsert([e], enqueue: true)
+        clinicalEntries.append(e)
+        await _sync?.sync(tables: [ClinicalEntry.tableName])
     }
 
     func deleteClinicalEntry(_ entry: ClinicalEntry) async throws {
         let linked = files(for: entry.petId, linkedToType: "clinicalEntry", linkedToId: entry.id)
         if !linked.isEmpty {
+            guard reachability.isOnline else { throw SyncError.requiresConnection }
             try await client.storage.from("pet-files").remove(paths: linked.map(\.storagePath))
         }
-        try await client.from("clinical_entries").delete().eq("id", value: entry.id).execute()
+        try await _local?.softDelete(entry, enqueue: true)
         clinicalEntries.removeAll { $0.id == entry.id }
         files.removeAll { $0.linkedToId == entry.id && $0.linkedToType == "clinicalEntry" }
+        await _sync?.sync(tables: [ClinicalEntry.tableName])
     }
 
     // MARK: - Events
 
     func addEvent(_ event: PetEvent) async throws {
-        try await client.from("pet_events").insert(event).execute()
-        events.append(event)
+        var e = event; e.updatedAt = .now
+        try await _local?.upsert([e], enqueue: true)
+        events.append(e)
+        await _sync?.sync(tables: [PetEvent.tableName])
     }
 
     func deleteEvent(_ event: PetEvent) async throws {
         let linked = files(for: event.petId, linkedToType: "event", linkedToId: event.id)
         if !linked.isEmpty {
+            guard reachability.isOnline else { throw SyncError.requiresConnection }
             try await client.storage.from("pet-files").remove(paths: linked.map(\.storagePath))
         }
-        try await client.from("pet_events").delete().eq("id", value: event.id).execute()
+        try await _local?.softDelete(event, enqueue: true)
         events.removeAll { $0.id == event.id }
         files.removeAll { $0.linkedToId == event.id && $0.linkedToType == "event" }
+        await _sync?.sync(tables: [PetEvent.tableName])
     }
 
-    // MARK: - Files
+    // MARK: - Files (online-only)
 
     @discardableResult
     func uploadFile(data: Data, ext: String, petId: UUID,
                     linkedToType: String, linkedToId: UUID?) async throws -> PetFile {
+        guard reachability.isOnline else { throw SyncError.requiresConnection }
         let fileId = UUID()
         let storagePath = "\(petId)/\(fileId).\(ext)"
         let sourceType: FileSourceType = ext == "pdf" ? .document : .photo
@@ -212,12 +258,14 @@ final class SupabaseStore {
     }
 
     func deleteFile(_ file: PetFile) async throws {
+        guard reachability.isOnline else { throw SyncError.requiresConnection }
         try await client.storage.from("pet-files").remove(paths: [file.storagePath])
         try await client.from("pet_files").delete().eq("id", value: file.id).execute()
         files.removeAll { $0.id == file.id }
     }
 
     func updateFileLink(_ file: PetFile) async throws {
+        guard reachability.isOnline else { throw SyncError.requiresConnection }
         try await client.from("pet_files")
             .update(["linked_to_type": file.linkedToType, "linked_to_id": file.linkedToId?.uuidString])
             .eq("id", value: file.id)
@@ -228,6 +276,7 @@ final class SupabaseStore {
     }
 
     func analyzeFile(file: PetFile, petName: String) async throws -> ExtractionResult {
+        guard reachability.isOnline else { throw SyncError.requiresConnection }
         let ext = (file.storagePath as NSString).pathExtension.lowercased()
         let mediaType = ext == "pdf" ? "application/pdf" : "image/jpeg"
 
@@ -293,6 +342,7 @@ final class SupabaseStore {
     // MARK: - In-memory filters
 
     var homeTimeline: [HomeItem] {
+        let today = Calendar.current.startOfDay(for: .now)
         let appts = appointments
             .filter { $0.status == .upcoming }
             .compactMap { appt -> HomeItem? in
@@ -300,7 +350,13 @@ final class SupabaseStore {
                 return .appointment(appt, pet)
             }
         let tasks = householdTasks.map { HomeItem.task($0) }
-        return (appts + tasks).sorted { $0.dueDate < $1.dueDate }
+        let petEvents = events
+            .filter { $0.date >= today }
+            .compactMap { event -> HomeItem? in
+                guard let pet = pets.first(where: { $0.id == event.petId }) else { return nil }
+                return .event(event, pet)
+            }
+        return (appts + tasks + petEvents).sorted { $0.dueDate < $1.dueDate }
     }
 
     func appointments(for petId: UUID) -> [Appointment] {
@@ -327,35 +383,41 @@ final class SupabaseStore {
     // MARK: - Custom Sections
 
     func addCustomSection(_ section: TaskSection) async throws {
-        try await client.from("task_sections").insert(section).execute()
-        customSections.append(section)
+        var s = section; s.updatedAt = .now
+        try await _local?.upsert([s], enqueue: true)
+        customSections.append(s)
+        await _sync?.sync(tables: [TaskSection.tableName])
     }
 
     func deleteCustomSection(_ section: TaskSection) async throws {
-        try await client.from("task_sections").delete().eq("id", value: section.id).execute()
+        try await _local?.softDelete(section, enqueue: true)
         customSections.removeAll { $0.id == section.id }
         for i in householdTasks.indices where householdTasks[i].sectionId == section.id {
             householdTasks[i].sectionId = nil
         }
+        await _sync?.sync(tables: [TaskSection.tableName])
     }
 
     // MARK: - Household Tasks
 
     func addTask(_ task: HouseholdTask) async throws {
-        try await client.from("household_tasks").insert(task).execute()
-        householdTasks.append(task)
+        var t = task; t.updatedAt = .now
+        try await _local?.upsert([t], enqueue: true)
+        householdTasks.append(t)
+        await _sync?.sync(tables: [HouseholdTask.tableName])
     }
 
     func updateTask(_ task: HouseholdTask) async throws {
-        try await client.from("household_tasks").update(task).eq("id", value: task.id).execute()
-        if let i = householdTasks.firstIndex(where: { $0.id == task.id }) {
-            householdTasks[i] = task
-        }
+        var t = task; t.updatedAt = .now
+        try await _local?.upsert([t], enqueue: true)
+        if let i = householdTasks.firstIndex(where: { $0.id == t.id }) { householdTasks[i] = t }
+        await _sync?.sync(tables: [HouseholdTask.tableName])
     }
 
     func deleteTask(_ task: HouseholdTask) async throws {
-        try await client.from("household_tasks").delete().eq("id", value: task.id).execute()
+        try await _local?.softDelete(task, enqueue: true)
         householdTasks.removeAll { $0.id == task.id }
+        await _sync?.sync(tables: [HouseholdTask.tableName])
     }
 
     // MARK: - Stock
@@ -402,15 +464,17 @@ final class SupabaseStore {
     }
 
     func addProduct(_ product: StockProduct) async throws {
-        try await client.from("stock_products").insert(product).execute()
-        stockProducts.append(product)
+        var p = product; p.updatedAt = .now
+        try await _local?.upsert([p], enqueue: true)
+        stockProducts.append(p)
+        await _sync?.sync(tables: [StockProduct.tableName])
     }
 
     func updateProduct(_ product: StockProduct) async throws {
-        try await client.from("stock_products").update(product).eq("id", value: product.id).execute()
-        if let i = stockProducts.firstIndex(where: { $0.id == product.id }) {
-            stockProducts[i] = product
-        }
+        var p = product; p.updatedAt = .now
+        try await _local?.upsert([p], enqueue: true)
+        if let i = stockProducts.firstIndex(where: { $0.id == p.id }) { stockProducts[i] = p }
+        await _sync?.sync(tables: [StockProduct.tableName])
     }
 
     func replenish(_ product: StockProduct) async throws {
@@ -418,10 +482,11 @@ final class SupabaseStore {
     }
 
     func deleteProduct(_ product: StockProduct) async throws {
-        try await client.from("stock_products").delete().eq("id", value: product.id).execute()
+        try await _local?.softDelete(product, enqueue: true)
         stockProducts.removeAll { $0.id == product.id }
         for i in householdTasks.indices where householdTasks[i].productId == product.id {
             householdTasks[i].productId = nil
         }
+        await _sync?.sync(tables: [StockProduct.tableName])
     }
 }

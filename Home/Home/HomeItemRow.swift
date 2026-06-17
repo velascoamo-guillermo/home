@@ -56,8 +56,9 @@ struct HomeItemRow: View {
 
     private var iconName: String {
         switch item {
-        case .appointment:  return "calendar"
-        case .task(let t):  return t.icon
+        case .appointment:       return "calendar"
+        case .task(let t):       return t.icon
+        case .event(let e, _):   return e.category.icon
         }
     }
 
@@ -65,6 +66,7 @@ struct HomeItemRow: View {
         switch item {
         case .appointment:  return .blue
         case .task:         return isOverdue ? .red : .orange
+        case .event:        return .purple
         }
     }
 
@@ -72,6 +74,7 @@ struct HomeItemRow: View {
         switch item {
         case .appointment(let a, _): return a.reason
         case .task(let t):           return t.title
+        case .event(let e, _):       return e.title
         }
     }
 
@@ -88,6 +91,10 @@ struct HomeItemRow: View {
                 return "\(base) · \(product.name) × \(t.quantityPerCompletion)"
             }
             return base
+        case .event(let e, let p):
+            var parts = [p.name, e.category.label]
+            if let v = e.value { parts.append(v) }
+            return parts.joined(separator: " · ")
         }
     }
 }
