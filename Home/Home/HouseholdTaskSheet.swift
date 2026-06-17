@@ -13,6 +13,8 @@ struct HouseholdTaskSheet: View {
     @State private var intervalUnit  = IntervalUnit.months
     @State private var nextDueDate   = Date.now
     @State private var notes = ""
+    @State private var productId: UUID? = nil
+    @State private var quantityPerCompletion = 1
     @State private var showSectionPicker = false
 
     private var isEditing: Bool { existing != nil }
@@ -28,6 +30,8 @@ struct HouseholdTaskSheet: View {
             let (val, unit) = IntervalUnit.decompose(days: t.intervalDays)
             _intervalValue = State(initialValue: val)
             _intervalUnit  = State(initialValue: unit)
+            _productId     = State(initialValue: t.productId)
+            _quantityPerCompletion = State(initialValue: t.quantityPerCompletion)
         }
     }
 
@@ -71,6 +75,19 @@ struct HouseholdTaskSheet: View {
                     }
                 }
 
+                Section("Linked product") {
+                    Picker("Product", selection: $productId) {
+                        Text("None").tag(UUID?.none)
+                        ForEach(store.stockProducts) { product in
+                            Text(product.name).tag(UUID?.some(product.id))
+                        }
+                    }
+                    if productId != nil {
+                        Stepper("Units per completion: \(quantityPerCompletion)",
+                                value: $quantityPerCompletion, in: 1...99)
+                    }
+                }
+
                 Section("Notes") {
                     TextField("Optional", text: $notes, axis: .vertical)
                         .lineLimit(3, reservesSpace: true)
@@ -110,6 +127,8 @@ struct HouseholdTaskSheet: View {
         task.intervalDays = intervalUnit.toDays(intervalValue)
         task.nextDueDate  = nextDueDate
         task.notes        = notes.trimmingCharacters(in: .whitespaces)
+        task.productId    = productId
+        task.quantityPerCompletion = quantityPerCompletion
 
         Task {
             if isEditing {

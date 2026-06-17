@@ -1,19 +1,24 @@
 import SwiftUI
 
 struct MainTabView: View {
+    @Binding var selectedTab: AppTab
+
     var body: some View {
-        TabView {
-            Tab("Home", systemImage: "house.fill") {
+        TabView(selection: $selectedTab) {
+            Tab("Home", systemImage: "house.fill", value: AppTab.home) {
                 HomeView()
             }
-            Tab("Pets", systemImage: "pawprint.fill") {
+            Tab("Pets", systemImage: "pawprint.fill", value: AppTab.pets) {
                 PetsView()
             }
-            Tab("Shop", systemImage: "cart.fill") {
-                ShopView()
+            Tab("Stock", systemImage: "shippingbox.fill", value: AppTab.stock) {
+                StockView()
             }
-            Tab("Settings", systemImage: "gearshape.fill") {
-                SettingsView()
+            Tab("Menu", systemImage: "fork.knife", value: AppTab.menu) {
+                MenuView()
+            }
+            Tab("Shopping", systemImage: "cart.fill", value: AppTab.shopping) {
+                ShoppingView()
             }
         }
         .tint(Color(red: 1.0, green: 0.45, blue: 0.2))
@@ -21,6 +26,6 @@ struct MainTabView: View {
 }
 
 #Preview {
-    MainTabView()
+    MainTabView(selectedTab: .constant(.home))
         .environment(SupabaseStore())
 }

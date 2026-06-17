@@ -4,3 +4,5 @@ docs/superpowers/
 fastlane/test_output/
 Config.xcconfig
 fastlane/build_output/
+.claude/worktrees/
+supabase/.temp/
