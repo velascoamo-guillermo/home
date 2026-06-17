@@ -17,7 +17,7 @@ enum SQLValue: Sendable, Equatable {
 }
 
 /// Literals usable as bind parameters.
-protocol SQLBindable { nonisolated var sqlValue: SQLValue { get } }
+protocol SQLBindable: Sendable { nonisolated var sqlValue: SQLValue { get } }
 extension String: SQLBindable { nonisolated var sqlValue: SQLValue { .text(self) } }
 extension Int:    SQLBindable { nonisolated var sqlValue: SQLValue { .int(self) } }
 extension Double: SQLBindable { nonisolated var sqlValue: SQLValue { .double(self) } }
