@@ -117,6 +117,22 @@ actor FakeGateway: RemoteGateway {
         #expect(try await store.fetchAll(StockProduct.self).map(\.name) == ["Remote"])
     }
 
+    @Test("pull decodes Postgres timestamps with fractional seconds")
+    func pullFractionalSeconds() async throws {
+        let (engine, store, gw) = try await make()
+        let id = UUID()
+        let json: [String: Any] = [
+            "id": id.uuidString, "name": "Milk", "icon": "i",
+            "packages": 1, "loose_units": 0, "units_per_package": 6,
+            "created_at": "2024-06-01T12:00:00.123456+00:00",
+            "updated_at": "2024-06-01T12:00:00.654321+00:00"
+        ]
+        let data = try JSONSerialization.data(withJSONObject: json)
+        await gw.setPull("stock_products", [data])
+        try await engine.pull(table: "stock_products")
+        #expect(try await store.fetchAll(StockProduct.self).map(\.name) == ["Milk"])
+    }
+
     @Test("cursor is advanced after pull")
     func cursorAdvanced() async throws {
         let (engine, store, gw) = try await make()

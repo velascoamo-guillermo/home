@@ -11,7 +11,7 @@ struct MealEntry: Identifiable, Hashable {
 
     var id: UUID { meal.id }
 
-    var isShort: Bool {
+    nonisolated var isShort: Bool {
         links.contains { $0.product.totalUnits < $0.quantity }
     }
 }

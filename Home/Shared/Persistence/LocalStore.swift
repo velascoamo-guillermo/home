@@ -12,8 +12,7 @@ actor LocalStore {
         db = try SQLiteDatabase(url: url)
         encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .iso8601
-        decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .iso8601
+        decoder = SyncDateCoding.makeDecoder()
         try await Self.migrate(db)
     }
 
@@ -44,19 +43,22 @@ actor LocalStore {
     /// Insert/replace `items`. When `enqueue` is true, append an `update` outbox
     /// op per item in the SAME transaction (optimistic mutation path).
     func upsert<T: SyncableEntity>(_ items: [T], enqueue: Bool) async throws {
-        let rows = try items.map { item -> (T, Data) in (item, try encoder.encode(item)) }
+        let rows = try items.map { item -> (T, Data, String, String?) in
+            (item, try encoder.encode(item),
+             iso.string(from: item.updatedAt),
+             item.deletedAt.map { iso.string(from: $0) })
+        }
         try await db.transaction { conn in
-            for (item, blob) in rows {
+            for (item, blob, updatedAtS, deletedAtS) in rows {
                 try conn.execute("""
                     INSERT INTO entities (table_name, id, updated_at, deleted_at, payload)
                     VALUES (?, ?, ?, ?, ?)
                     ON CONFLICT(table_name, id) DO UPDATE SET
                       updated_at=excluded.updated_at, deleted_at=excluded.deleted_at, payload=excluded.payload;
-                    """, [T.tableName, item.id.uuidString, iso.string(from: item.updatedAt),
-                          item.deletedAt.map { iso.string(from: $0) }, blob])
+                    """, [T.tableName, item.id.uuidString, updatedAtS, deletedAtS, blob])
                 if enqueue {
                     try Self.appendOp(conn, kind: .update, table: T.tableName,
-                                      id: item.id, payload: blob, updatedAt: item.updatedAt, iso: iso)
+                                      id: item.id, payload: blob, updatedAtS: updatedAtS)
                 }
             }
         }
@@ -70,13 +72,15 @@ actor LocalStore {
         let blob = try encoder.encode(tomb)
         let tableName = T.tableName
         let idString = item.id.uuidString
+        let itemId = item.id
+        let nowS = iso.string(from: now)
         try await db.transaction { conn in
             try conn.execute("""
                 UPDATE entities SET updated_at=?, deleted_at=?, payload=? WHERE table_name=? AND id=?;
-                """, [iso.string(from: now), iso.string(from: now), blob, tableName, idString])
+                """, [nowS, nowS, blob, tableName, idString])
             if enqueue {
                 try Self.appendOp(conn, kind: .delete, table: tableName,
-                                  id: item.id, payload: blob, updatedAt: now, iso: iso)
+                                  id: itemId, payload: blob, updatedAtS: nowS)
             }
         }
     }
@@ -158,13 +162,12 @@ actor LocalStore {
     // MARK: Private
 
     private static func appendOp(_ conn: SQLiteDatabase.Connection, kind: OutboxOpKind,
-                                  table: String, id: UUID, payload: Data, updatedAt: Date,
-                                  iso: ISO8601DateFormatter) throws {
+                                  table: String, id: UUID, payload: Data, updatedAtS: String) throws {
         // Coalesce: drop any existing pending op for this entity, keep only the latest.
         try conn.execute("DELETE FROM outbox WHERE table_name=? AND entity_id=?", [table, id.uuidString])
         try conn.execute("""
             INSERT INTO outbox (kind, table_name, entity_id, payload, updated_at)
             VALUES (?, ?, ?, ?, ?);
-            """, [kind.rawValue, table, id.uuidString, payload, iso.string(from: updatedAt)])
+            """, [kind.rawValue, table, id.uuidString, payload, updatedAtS])
     }
 }

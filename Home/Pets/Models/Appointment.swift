@@ -4,7 +4,7 @@ enum AppointmentStatus: String, Codable, CaseIterable, Hashable {
     case upcoming, done, cancelled
 }
 
-struct Appointment: Codable, Identifiable, Hashable {
+nonisolated struct Appointment: Codable, Identifiable, Hashable {
     var id: UUID = UUID()
     var petId: UUID
     var date: Date
@@ -20,8 +20,9 @@ struct Appointment: Codable, Identifiable, Hashable {
         case updatedAt = "updated_at"
         case deletedAt = "deleted_at"
     }
+
 }
 
-extension Appointment: SyncableEntity {
+nonisolated extension Appointment: SyncableEntity {
     static let tableName = "appointments"
 }

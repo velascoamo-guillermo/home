@@ -33,8 +33,8 @@ final class SupabaseStore {
             ?? FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
                 .appendingPathComponent("home.sqlite")
     }
-    private var _local: LocalStore?
-    private var _sync: SyncEngine?
+    var _local: LocalStore?
+    var _sync: SyncEngine?
     private var reconnectTask: Task<Void, Never>?
     let reachability = Reachability()
 

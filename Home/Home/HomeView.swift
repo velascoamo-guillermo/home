@@ -4,6 +4,7 @@ struct HomeView: View {
     @Environment(SupabaseStore.self) private var store
     @State private var showAdd = false
     @State private var editingTask: HouseholdTask? = nil
+    @State private var selectedEvent: PetEvent? = nil
     @State private var outOfStock: OutOfStockInfo? = nil
 
     private struct OutOfStockInfo: Identifiable {
@@ -38,26 +39,33 @@ struct HomeView: View {
                                     }
                                 }
                                 .swipeActions(edge: .trailing) {
-                                    if case .task(let t) = item {
+                                    switch item {
+                                    case .task(let t):
                                         Button(role: .destructive) {
                                             Task { try? await store.deleteTask(t) }
                                         } label: {
                                             Label("Delete", systemImage: "trash")
                                         }
-
                                         Button {
                                             snooze(t)
                                         } label: {
                                             Label("Snooze", systemImage: "clock.arrow.circlepath")
                                         }
                                         .tint(.orange)
-
                                         Button {
                                             Task { await CalendarService.addHouseholdTask(t) }
                                         } label: {
                                             Label("Calendar", systemImage: "calendar.badge.plus")
                                         }
                                         .tint(.blue)
+                                    case .event(let e, _):
+                                        Button(role: .destructive) {
+                                            Task { try? await store.deleteEvent(e) }
+                                        } label: {
+                                            Label("Delete", systemImage: "trash")
+                                        }
+                                    default:
+                                        EmptyView()
                                     }
                                 }
                         }
@@ -77,6 +85,11 @@ struct HomeView: View {
             .sheet(item: $editingTask) { task in
                 HouseholdTaskSheet(existing: task)
             }
+            .sheet(item: $selectedEvent) { event in
+                if let pet = store.pets.first(where: { $0.id == event.petId }) {
+                    EventDetailView(event: event, pet: pet)
+                }
+            }
             .alert("Out of stock",
                    isPresented: Binding(
                        get: { outOfStock != nil },
@@ -91,7 +104,11 @@ struct HomeView: View {
     }
 
     private func handleTap(_ item: HomeItem) {
-        if case .task(let t) = item { editingTask = t }
+        switch item {
+        case .task(let t):     editingTask = t
+        case .event(let e, _): selectedEvent = e
+        default:               break
+        }
     }
 
     private func markDone(_ task: HouseholdTask) {

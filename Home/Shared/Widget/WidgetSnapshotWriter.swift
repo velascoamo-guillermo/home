@@ -76,6 +76,15 @@ enum WidgetSnapshotWriter {
                 kind: .task,
                 systemImage: task.icon
             )
+        case .event(let event, let pet):
+            return WidgetEvent(
+                id: event.id,
+                title: event.title,
+                subtitle: pet.name,
+                date: event.date,
+                kind: .appointment,
+                systemImage: event.category.icon
+            )
         }
     }
 

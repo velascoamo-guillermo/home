@@ -1,6 +1,6 @@
 import Foundation
 
-struct StockProduct: Codable, Identifiable, Hashable {
+nonisolated struct StockProduct: Codable, Identifiable, Hashable {
     var id: UUID = UUID()
     var name: String
     var icon: String
@@ -65,8 +65,9 @@ struct StockProduct: Codable, Identifiable, Hashable {
         case updatedAt       = "updated_at"
         case deletedAt       = "deleted_at"
     }
+
 }
 
-extension StockProduct: SyncableEntity {
+nonisolated extension StockProduct: SyncableEntity {
     static let tableName = "stock_products"
 }

@@ -9,23 +9,21 @@ enum SQLValue: Sendable, Equatable {
     case blob(Data)
     case null
 
-    var text: String?   { if case .text(let v)   = self { return v } else { return nil } }
-    var int: Int?       { if case .int(let v)    = self { return v } else { return nil } }
-    var double: Double? { if case .double(let v) = self { return v } else { return nil } }
-    var blob: Data?     { if case .blob(let v)   = self { return v } else { return nil } }
-    var isNull: Bool    { if case .null = self { return true } else { return false } }
+    nonisolated var text: String?   { if case .text(let v)   = self { return v } else { return nil } }
+    nonisolated var int: Int?       { if case .int(let v)    = self { return v } else { return nil } }
+    nonisolated var double: Double? { if case .double(let v) = self { return v } else { return nil } }
+    nonisolated var blob: Data?     { if case .blob(let v)   = self { return v } else { return nil } }
+    nonisolated var isNull: Bool    { if case .null = self { return true } else { return false } }
 }
 
 /// Literals usable as bind parameters.
-protocol SQLBindable { var sqlValue: SQLValue { get } }
-extension String: SQLBindable { var sqlValue: SQLValue { .text(self) } }
-extension Int:    SQLBindable { var sqlValue: SQLValue { .int(self) } }
-extension Double: SQLBindable { var sqlValue: SQLValue { .double(self) } }
-extension Data:   SQLBindable { var sqlValue: SQLValue { .blob(self) } }
+protocol SQLBindable { nonisolated var sqlValue: SQLValue { get } }
+extension String: SQLBindable { nonisolated var sqlValue: SQLValue { .text(self) } }
+extension Int:    SQLBindable { nonisolated var sqlValue: SQLValue { .int(self) } }
+extension Double: SQLBindable { nonisolated var sqlValue: SQLValue { .double(self) } }
+extension Data:   SQLBindable { nonisolated var sqlValue: SQLValue { .blob(self) } }
 
 enum SQLiteError: Error { case open(Int32), prepare(String), step(Int32, String) }
-
-private let SQLITE_TRANSIENT = unsafeBitCast(-1, to: sqlite3_destructor_type.self)
 
 /// Serializes all access to a single sqlite3 handle. SQLite C types are not
 /// Sendable; actor isolation keeps every call on one executor.
@@ -71,6 +69,7 @@ actor SQLiteDatabase {
         }
 
         private func prepare(_ sql: String, _ params: [SQLBindable?]) throws -> OpaquePointer {
+            let SQLITE_TRANSIENT = unsafeBitCast(-1, to: sqlite3_destructor_type.self)
             var stmt: OpaquePointer?
             guard sqlite3_prepare_v2(handle, sql, -1, &stmt, nil) == SQLITE_OK, let stmt else {
                 throw SQLiteError.prepare(String(cString: sqlite3_errmsg(handle)))

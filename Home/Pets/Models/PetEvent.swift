@@ -3,7 +3,7 @@ import Foundation
 enum EventCategory: String, Codable, CaseIterable, Hashable {
     case vaccine, grooming, medication, weight, other
 
-    var icon: String {
+    nonisolated var icon: String {
         switch self {
         case .vaccine:    return "syringe"
         case .grooming:   return "scissors"
@@ -12,10 +12,10 @@ enum EventCategory: String, Codable, CaseIterable, Hashable {
         case .other:      return "note.text"
         }
     }
-    var label: String { rawValue.capitalized }
+    nonisolated var label: String { rawValue.capitalized }
 }
 
-struct PetEvent: Codable, Identifiable, Hashable {
+nonisolated struct PetEvent: Codable, Identifiable, Hashable {
     var id: UUID = UUID()
     var petId: UUID
     var date: Date
@@ -32,8 +32,9 @@ struct PetEvent: Codable, Identifiable, Hashable {
         case updatedAt = "updated_at"
         case deletedAt = "deleted_at"
     }
+
 }
 
-extension PetEvent: SyncableEntity {
+nonisolated extension PetEvent: SyncableEntity {
     static let tableName = "pet_events"
 }

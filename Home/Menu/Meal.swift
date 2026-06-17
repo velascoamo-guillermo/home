@@ -23,7 +23,7 @@ nonisolated struct Nutrition: Hashable {
     }
 }
 
-struct Meal: Codable, Identifiable, Hashable {
+nonisolated struct Meal: Codable, Identifiable, Hashable {
     var id: UUID = UUID()
     var dayOfWeek: Int
     var slot: MealSlot
@@ -59,7 +59,7 @@ struct Meal: Codable, Identifiable, Hashable {
         self.deletedAt = deletedAt
     }
 
-    init(from decoder: Decoder) throws {
+    init(from decoder: any Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         id = try c.decode(UUID.self, forKey: .id)
         dayOfWeek = try c.decode(Int.self, forKey: .dayOfWeek)
@@ -93,6 +93,6 @@ struct Meal: Codable, Identifiable, Hashable {
     }
 }
 
-extension Meal: SyncableEntity {
+nonisolated extension Meal: SyncableEntity {
     static let tableName = "meals"
 }

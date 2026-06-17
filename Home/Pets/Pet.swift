@@ -1,6 +1,6 @@
 import Foundation
 
-struct Pet: Identifiable, Codable, Hashable {
+nonisolated struct Pet: Identifiable, Codable, Hashable {
     var id: UUID = UUID()
     var name: String
     var type: String
@@ -30,7 +30,7 @@ struct Pet: Identifiable, Codable, Hashable {
         self.deletedAt = deletedAt
     }
 
-    init(from decoder: Decoder) throws {
+    init(from decoder: any Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         id       = try c.decode(UUID.self, forKey: .id)
         name     = try c.decode(String.self, forKey: .name)
@@ -69,6 +69,6 @@ struct Pet: Identifiable, Codable, Hashable {
     }()
 }
 
-extension Pet: SyncableEntity {
+nonisolated extension Pet: SyncableEntity {
     static let tableName = "pets"
 }

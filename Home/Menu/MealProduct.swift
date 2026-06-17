@@ -1,6 +1,6 @@
 import Foundation
 
-struct MealProduct: Codable, Identifiable, Hashable {
+nonisolated struct MealProduct: Codable, Identifiable, Hashable {
     var id: UUID = UUID()
     var mealId: UUID
     var productId: UUID
@@ -15,8 +15,9 @@ struct MealProduct: Codable, Identifiable, Hashable {
         case updatedAt = "updated_at"
         case deletedAt = "deleted_at"
     }
+
 }
 
-extension MealProduct: SyncableEntity {
+nonisolated extension MealProduct: SyncableEntity {
     static let tableName = "meal_products"
 }

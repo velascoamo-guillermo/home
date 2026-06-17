@@ -1,6 +1,6 @@
 import Foundation
 
-struct Veterinarian: Codable, Identifiable, Hashable {
+nonisolated struct Veterinarian: Codable, Identifiable, Hashable {
     var id: UUID = UUID()
     var name: String
     var clinicName: String
@@ -17,8 +17,9 @@ struct Veterinarian: Codable, Identifiable, Hashable {
         case updatedAt  = "updated_at"
         case deletedAt  = "deleted_at"
     }
+
 }
 
-extension Veterinarian: SyncableEntity {
+nonisolated extension Veterinarian: SyncableEntity {
     static let tableName = "veterinarian"
 }

@@ -1,6 +1,6 @@
 import Foundation
 
-struct HouseholdTask: Codable, Identifiable, Hashable {
+nonisolated struct HouseholdTask: Codable, Identifiable, Hashable {
     var id: UUID = UUID()
     var title: String
     var icon: String
@@ -23,8 +23,9 @@ struct HouseholdTask: Codable, Identifiable, Hashable {
         case updatedAt             = "updated_at"
         case deletedAt             = "deleted_at"
     }
+
 }
 
-extension HouseholdTask: SyncableEntity {
+nonisolated extension HouseholdTask: SyncableEntity {
     static let tableName = "household_tasks"
 }

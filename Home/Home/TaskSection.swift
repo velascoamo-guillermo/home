@@ -1,6 +1,6 @@
 import Foundation
 
-struct TaskSection: Codable, Identifiable, Hashable {
+nonisolated struct TaskSection: Codable, Identifiable, Hashable {
     var id: UUID
     var name: String
     var icon: String
@@ -12,9 +12,10 @@ struct TaskSection: Codable, Identifiable, Hashable {
         case updatedAt = "updated_at"
         case deletedAt = "deleted_at"
     }
+
 }
 
-extension TaskSection: SyncableEntity {
+nonisolated extension TaskSection: SyncableEntity {
     static let tableName = "task_sections"
 }
 
