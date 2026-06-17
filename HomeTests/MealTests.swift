@@ -77,7 +77,9 @@ extension MealTests {
           "updated_at": "2026-01-01T00:00:00Z"
         }
         """.data(using: .utf8)!
-        let mp = try JSONDecoder().decode(MealProduct.self, from: json)
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        let mp = try decoder.decode(MealProduct.self, from: json)
         XCTAssertEqual(mp.quantity, 3)
         XCTAssertEqual(mp.mealId.uuidString.lowercased(), "00000000-0000-0000-0000-000000000001")
     }

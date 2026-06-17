@@ -128,7 +128,8 @@ import Foundation
     func codableDecodesWithoutMetadata() throws {
         let json = """
         {"id":"\(UUID().uuidString)","name":"Milk","icon":"x",
-         "packages":1,"loose_units":0,"units_per_package":6}
+         "packages":1,"loose_units":0,"units_per_package":6,
+         "created_at":0,"updated_at":0}
         """.data(using: .utf8)!
         let decoded = try JSONDecoder().decode(StockProduct.self, from: json)
         #expect(decoded.supermarket == nil)
@@ -140,7 +141,8 @@ import Foundation
         let json = """
         {"id":"\(UUID().uuidString)","name":"Milk","icon":"x",
          "packages":1,"loose_units":0,"units_per_package":6,
-         "supermarket":null,"category":null}
+         "supermarket":null,"category":null,
+         "created_at":0,"updated_at":0}
         """.data(using: .utf8)!
         let decoded = try JSONDecoder().decode(StockProduct.self, from: json)
         #expect(decoded.supermarket == nil)
