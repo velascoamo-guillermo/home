@@ -106,7 +106,7 @@ actor SQLiteDatabase {
         try conn.query(sql, params)
     }
 
-    func transaction<T>(_ body: (Connection) throws -> T) throws -> T {
+    func transaction<T>(_ body: sending (Connection) throws -> T) throws -> sending T {
         try conn.execute("BEGIN")
         do {
             let result = try body(conn)
