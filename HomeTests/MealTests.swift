@@ -73,7 +73,8 @@ extension MealTests {
           "id": "00000000-0000-0000-0000-0000000000aa",
           "meal_id": "00000000-0000-0000-0000-000000000001",
           "product_id": "00000000-0000-0000-0000-0000000000bb",
-          "quantity": 3
+          "quantity": 3,
+          "updated_at": "2026-01-01T00:00:00Z"
         }
         """.data(using: .utf8)!
         let mp = try JSONDecoder().decode(MealProduct.self, from: json)
