@@ -31,5 +31,5 @@ jobs:
           APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           APP_STORE_CONNECT_API_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           APP_STORE_CONNECT_API_KEY_CONTENT: ${{ secrets.ASC_PRIVATE_KEY }}
-          GIT_AUTHORIZATION: ${{ secrets.GIT_AUTHORIZATION }}
+          MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.GIT_AUTHORIZATION }}
         run: bundle exec fastlane beta
