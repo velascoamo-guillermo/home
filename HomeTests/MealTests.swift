@@ -1,6 +1,7 @@
 import XCTest
 @testable import Home
 
+@MainActor
 final class MealTests: XCTestCase {
     func testMealDecodesFromSupabaseSnakeCase() throws {
         let json = """
