@@ -28,7 +28,7 @@ final class SupabaseStore {
 
     private var localURL: URL {
         FileManager.default
-            .containerURL(forSecurityApplicationGroupIdentifier: "group.com.guille.home")?
+            .containerURL(forSecurityApplicationGroupIdentifier: "group.com.guillermovelasco.home")?
             .appendingPathComponent("home.sqlite")
             ?? FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
                 .appendingPathComponent("home.sqlite")
