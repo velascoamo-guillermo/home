@@ -46,6 +46,24 @@ final class SupabaseStore {
         )
     }
 
+    /// For unit tests — accepts a pre-built client so tests can inject a
+    /// non-connecting stub without triggering Keychain access.
+    init(client: SupabaseClient) {
+        self.client = client
+    }
+
+    #if DEBUG
+    /// Returns a store backed by a local-only, non-connecting Supabase client.
+    /// Use in tests to avoid Keychain access and network calls.
+    static func makeTest() -> SupabaseStore {
+        SupabaseStore(client: SupabaseClient(
+            supabaseURL: URL(string: "http://127.0.0.1")!,
+            supabaseKey: "test",
+            options: .init(auth: .init(emitLocalSessionAsInitialSession: false, autoRefreshToken: false))
+        ))
+    }
+    #endif
+
     // MARK: - Bootstrap
 
     func loadAll() async {
