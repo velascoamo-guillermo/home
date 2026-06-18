@@ -59,7 +59,7 @@ final class SupabaseStore {
         SupabaseStore(client: SupabaseClient(
             supabaseURL: URL(string: "http://127.0.0.1")!,
             supabaseKey: "test",
-            options: .init(auth: .init(emitLocalSessionAsInitialSession: false, autoRefreshToken: false))
+            options: .init(auth: .init(autoRefreshToken: false, emitLocalSessionAsInitialSession: false))
         ))
     }
     #endif
