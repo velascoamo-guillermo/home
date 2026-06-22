@@ -1,6 +1,7 @@
 import XCTest
 @testable import Home
 
+@MainActor
 final class MealTests: XCTestCase {
     func testMealDecodesFromSupabaseSnakeCase() throws {
         let json = """
@@ -72,10 +73,13 @@ extension MealTests {
           "id": "00000000-0000-0000-0000-0000000000aa",
           "meal_id": "00000000-0000-0000-0000-000000000001",
           "product_id": "00000000-0000-0000-0000-0000000000bb",
-          "quantity": 3
+          "quantity": 3,
+          "updated_at": "2026-01-01T00:00:00Z"
         }
         """.data(using: .utf8)!
-        let mp = try JSONDecoder().decode(MealProduct.self, from: json)
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        let mp = try decoder.decode(MealProduct.self, from: json)
         XCTAssertEqual(mp.quantity, 3)
         XCTAssertEqual(mp.mealId.uuidString.lowercased(), "00000000-0000-0000-0000-000000000001")
     }

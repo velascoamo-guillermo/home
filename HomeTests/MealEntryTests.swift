@@ -1,6 +1,7 @@
 import XCTest
 @testable import Home
 
+@MainActor
 final class MealEntryTests: XCTestCase {
     private func product(units: Int) -> StockProduct {
         StockProduct(name: "Rice", icon: "leaf", packages: 0,

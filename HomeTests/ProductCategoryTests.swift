@@ -2,7 +2,7 @@ import Testing
 import Foundation
 @testable import Home
 
-@Suite("ProductCategory") struct ProductCategoryTests {
+@Suite("ProductCategory") @MainActor struct ProductCategoryTests {
     @Test("raw values are stable lowercase strings")
     func rawValues() {
         #expect(ProductCategory.food.rawValue == "food")

@@ -4,7 +4,7 @@ import XCTest
 @MainActor
 final class SupabaseStoreMealTests: XCTestCase {
     func testMealEntryResolvesLinkedProducts() {
-        let store = SupabaseStore()
+        let store = SupabaseStore.makeTest()
         let rice = StockProduct(name: "Rice", icon: "leaf", packages: 1,
                                 looseUnits: 0, unitsPerPackage: 10)
         let meal = Meal(dayOfWeek: 2, slot: .dinner, title: "Risotto")
@@ -21,12 +21,12 @@ final class SupabaseStoreMealTests: XCTestCase {
     }
 
     func testMealEntryNilForEmptySlot() {
-        let store = SupabaseStore()
+        let store = SupabaseStore.makeTest()
         XCTAssertNil(store.mealEntry(day: 5, slot: .lunch))
     }
 
     func testMealEntrySkipsLinksWithMissingProduct() {
-        let store = SupabaseStore()
+        let store = SupabaseStore.makeTest()
         let meal = Meal(dayOfWeek: 1, slot: .lunch, title: "X")
         store.meals = [meal]
         store.mealProducts = [MealProduct(mealId: meal.id, productId: UUID(), quantity: 1)]

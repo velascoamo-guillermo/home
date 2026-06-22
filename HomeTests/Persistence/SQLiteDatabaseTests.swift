@@ -2,7 +2,7 @@ import Testing
 import Foundation
 @testable import Home
 
-@Suite("SQLiteDatabase") struct SQLiteDatabaseTests {
+@Suite("SQLiteDatabase") @MainActor struct SQLiteDatabaseTests {
     private func tempURL() -> URL {
         URL(fileURLWithPath: NSTemporaryDirectory())
             .appendingPathComponent("sqltest-\(UUID().uuidString).sqlite")

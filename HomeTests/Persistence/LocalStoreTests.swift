@@ -2,7 +2,7 @@ import Testing
 import Foundation
 @testable import Home
 
-@Suite("LocalStore") struct LocalStoreTests {
+@Suite("LocalStore") @MainActor struct LocalStoreTests {
     private func make() async throws -> LocalStore {
         let url = URL(fileURLWithPath: NSTemporaryDirectory())
             .appendingPathComponent("ls-\(UUID().uuidString).sqlite")

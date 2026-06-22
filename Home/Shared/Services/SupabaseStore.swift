@@ -28,7 +28,7 @@ final class SupabaseStore {
 
     private var localURL: URL {
         FileManager.default
-            .containerURL(forSecurityApplicationGroupIdentifier: "group.com.guille.home")?
+            .containerURL(forSecurityApplicationGroupIdentifier: "group.com.guillermovelasco.home")?
             .appendingPathComponent("home.sqlite")
             ?? FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
                 .appendingPathComponent("home.sqlite")
@@ -45,6 +45,32 @@ final class SupabaseStore {
             options: .init(auth: .init(emitLocalSessionAsInitialSession: true))
         )
     }
+
+    /// For unit tests — accepts a pre-built client so tests can inject a
+    /// non-connecting stub without triggering Keychain access.
+    init(client: SupabaseClient) {
+        self.client = client
+    }
+
+    /// Released off the main actor. An isolated (`@MainActor`) deinit routes
+    /// teardown through `swift_task_deinitOnExecutorImpl`, which crashes with a
+    /// libmalloc double-free when stores are created and destroyed rapidly
+    /// (unit tests). All stored properties release safely off-main, so opt out
+    /// of the executor hop. In production the store lives for the app lifetime
+    /// and never deinits.
+    nonisolated deinit {}
+
+    #if DEBUG
+    /// Returns a store backed by a local-only, non-connecting Supabase client.
+    /// Use in tests to avoid Keychain access and network calls.
+    static func makeTest() -> SupabaseStore {
+        SupabaseStore(client: SupabaseClient(
+            supabaseURL: URL(string: "http://127.0.0.1")!,
+            supabaseKey: "test",
+            options: .init(auth: .init(autoRefreshToken: false, emitLocalSessionAsInitialSession: false))
+        ))
+    }
+    #endif
 
     // MARK: - Bootstrap
 

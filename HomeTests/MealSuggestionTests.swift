@@ -1,6 +1,7 @@
 import XCTest
 @testable import Home
 
+@MainActor
 final class MealSuggestionTests: XCTestCase {
     private func decode(_ json: String) throws -> MealSuggestion {
         try JSONDecoder().decode(MealSuggestion.self, from: Data(json.utf8))
