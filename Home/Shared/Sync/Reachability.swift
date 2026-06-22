@@ -27,5 +27,5 @@ final class Reachability {
         monitor.start(queue: queue)
     }
 
-    deinit { monitor.cancel(); continuation.finish() }
+    nonisolated deinit { monitor.cancel(); continuation.finish() }
 }

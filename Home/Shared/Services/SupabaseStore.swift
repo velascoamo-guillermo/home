@@ -52,6 +52,14 @@ final class SupabaseStore {
         self.client = client
     }
 
+    /// Released off the main actor. An isolated (`@MainActor`) deinit routes
+    /// teardown through `swift_task_deinitOnExecutorImpl`, which crashes with a
+    /// libmalloc double-free when stores are created and destroyed rapidly
+    /// (unit tests). All stored properties release safely off-main, so opt out
+    /// of the executor hop. In production the store lives for the app lifetime
+    /// and never deinits.
+    nonisolated deinit {}
+
     #if DEBUG
     /// Returns a store backed by a local-only, non-connecting Supabase client.
     /// Use in tests to avoid Keychain access and network calls.
