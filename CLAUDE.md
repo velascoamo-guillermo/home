@@ -61,14 +61,23 @@ Migrations live in `supabase/migrations/`.
 
 ### Data layer — `SupabaseStore`
 
-`SupabaseStore` (`@Observable`, `final class`) is the single source of truth for all app data. It owns a `SupabaseClient` and exposes typed arrays for every entity:
+`SupabaseStore` (`@Observable`, `final class`) is the in-memory facade the UI binds to. It owns a `SupabaseClient`, a `LocalStore`, and a `SyncEngine`, and exposes typed arrays for every entity:
 
 ```
 pets, veterinarians, appointments, clinicalEntries,
-events, files, householdTasks, customSections
+events, files, householdTasks, customSections,
+stockProducts, meals, mealProducts
 ```
 
-All mutations follow the same two-step pattern: call Supabase, then update the in-memory array. There is no caching layer or local persistence beyond this in-memory state.
+**The app is offline-first. The durable source of truth is on-device SQLite (`LocalStore`), not Supabase.** Supabase is an eventually-consistent replica.
+
+- `SupabaseStore` arrays are **hydrated from `LocalStore`**, not the network. Launch path is network-free.
+- Mutations are **optimistic and transactional**: write the entity row + an outbox op in one `LocalStore` transaction, then update the in-memory array. Do not call Supabase directly from mutations — enqueue to the outbox.
+- `SyncEngine` (`actor`) drains the outbox (push) and pulls changed rows (cursor-based), reconciling **last-write-wins by `updated_at`**. Deletes are **soft** (`deleted_at` tombstones).
+- `Reachability` (`NWPathMonitor`) triggers `SyncEngine.sync` + re-hydrate on reconnect.
+- `RemoteGateway` protocol isolates Supabase so sync is unit-testable offline (`HomeTests/Sync/`, `HomeTests/Persistence/`).
+
+Persistence and sync live in `Home/Shared/Persistence/` and `Home/Shared/Sync/`. SQLite access is confined to the `SQLiteDatabase` / `LocalStore` actors. All ten non-file entities sync; binary files go directly to Supabase Storage.
 
 Binary files are stored in the `pet-files` Supabase Storage bucket. `storagePath` is `<petId>/<fileId>.<ext>`.
 
@@ -79,7 +88,7 @@ Binary files are stored in the `pet-files` Supabase Storage bucket. `storagePath
 ```
 HomeApp → ContentView (creates SupabaseStore, calls loadAll(), injects via .environment)
         → loading/error gate
-        → MainTabView (4 tabs: Home, Pets, Shop, Settings)
+        → MainTabView (5 tabs: Home, Pets, Stock, Menu, Shopping)
 ```
 
 ### Home tab — unified timeline
