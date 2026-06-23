@@ -23,6 +23,8 @@ platform :ios do
 
   desc "Build and upload to TestFlight"
   lane :beta do
+    setup_ci
+
     xcconfig_content = <<~XCCONFIG
       SUPABASE_URL = #{ENV.fetch("SUPABASE_URL")}
       SUPABASE_ANON_KEY = #{ENV.fetch("SUPABASE_ANON_KEY")}
