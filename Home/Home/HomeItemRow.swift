@@ -25,7 +25,7 @@ struct HomeItemRow: View {
         HStack(spacing: 14) {
             Image(systemName: iconName)
                 .font(.title3)
-                .foregroundStyle(iconColor)
+                .foregroundStyle(iconStyle)
                 .frame(width: 28)
 
             VStack(alignment: .leading, spacing: 3) {
@@ -62,12 +62,9 @@ struct HomeItemRow: View {
         }
     }
 
-    private var iconColor: Color {
-        switch item {
-        case .appointment:  return .blue
-        case .task:         return isOverdue ? .red : .orange
-        case .event:        return .purple
-        }
+    private var iconStyle: AnyShapeStyle {
+        if case .task = item, isOverdue { return AnyShapeStyle(.red) }
+        return AnyShapeStyle(.tint)
     }
 
     private var title: String {

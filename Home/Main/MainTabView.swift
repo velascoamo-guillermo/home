@@ -2,7 +2,7 @@ import SwiftUI
 
 struct MainTabView: View {
     @Binding var selectedTab: AppTab
-    @Binding var hubPath: [HubDestination]
+    @Binding var hubPath: NavigationPath
 
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -16,11 +16,10 @@ struct MainTabView: View {
                 SearchView()
             }
         }
-        .tint(Color(red: 1.0, green: 0.45, blue: 0.2))
     }
 }
 
 #Preview {
-    MainTabView(selectedTab: .constant(.home), hubPath: .constant([]))
+    MainTabView(selectedTab: .constant(.home), hubPath: .constant(NavigationPath()))
         .environment(SupabaseStore())
 }

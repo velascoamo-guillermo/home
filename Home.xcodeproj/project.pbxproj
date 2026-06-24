@@ -144,6 +144,14 @@
 		ST00AA11BB22CC33DD44EE09 /* StockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ST00AA11BB22CC33DD44EE08 /* StockView.swift */; };
 		UR00AA11BB22CC33DD44EE01 /* UIImage+Resize.swift in Sources */ = {isa = PBXBuildFile; fileRef = UR00AA11BB22CC33DD44EE00 /* UIImage+Resize.swift */; };
 		UR00AA11BB22CC33DD44EE02 /* UIImageResizeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = UR00AA11BB22CC33DD44EE10 /* UIImageResizeTests.swift */; };
+		4750BD2B32964E23B7398111 /* Color+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7603356EA14FDFA1B64E20 /* Color+Hex.swift */; };
+		065301A1049341A595A68A39 /* AppAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3B777CB62C4ED981C62D2A /* AppAppearance.swift */; };
+		4830CC9362BB4A8B95B0722F /* ThemeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA4D2835E8B247759BE40C5C /* ThemeStore.swift */; };
+		B8C7BBC4A3634B80B24013B7 /* ColorHexTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE725D024BD4C668DC2B46C /* ColorHexTests.swift */; };
+		D89773D11F0D48B8AEC82CDC /* AppAppearanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0299C23DD2754C41B0432E88 /* AppAppearanceTests.swift */; };
+		82DC16690C114789A146F1AE /* ThemeStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD7501ACE90E40C2948EDF5D /* ThemeStoreTests.swift */; };
+		EF7B5CBBD09842A0B22F7404 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E6995C6A3CF4F4BB2E5B277 /* SettingsView.swift */; };
+		EEB58E0C4E2B4DCAB8CA6D8F /* UIImage+AverageColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AB5DDC7887E4C159D5300F7 /* UIImage+AverageColor.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -307,6 +315,14 @@
 		ST00AA11BB22CC33DD44EE08 /* StockView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StockView.swift; sourceTree = "<group>"; };
 		UR00AA11BB22CC33DD44EE00 /* UIImage+Resize.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIImage+Resize.swift"; sourceTree = "<group>"; };
 		UR00AA11BB22CC33DD44EE10 /* UIImageResizeTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UIImageResizeTests.swift; sourceTree = "<group>"; };
+		2C7603356EA14FDFA1B64E20 /* Color+Hex.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Color+Hex.swift"; sourceTree = "<group>"; };
+		ED3B777CB62C4ED981C62D2A /* AppAppearance.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppAppearance.swift; sourceTree = "<group>"; };
+		BA4D2835E8B247759BE40C5C /* ThemeStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ThemeStore.swift; sourceTree = "<group>"; };
+		FAE725D024BD4C668DC2B46C /* ColorHexTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ColorHexTests.swift; sourceTree = "<group>"; };
+		0299C23DD2754C41B0432E88 /* AppAppearanceTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppAppearanceTests.swift; sourceTree = "<group>"; };
+		AD7501ACE90E40C2948EDF5D /* ThemeStoreTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ThemeStoreTests.swift; sourceTree = "<group>"; };
+		2E6995C6A3CF4F4BB2E5B277 /* SettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		6AB5DDC7887E4C159D5300F7 /* UIImage+AverageColor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIImage+AverageColor.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -506,6 +522,7 @@
 		70B26604F602263820A5663D /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				2E6995C6A3CF4F4BB2E5B277 /* SettingsView.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -557,6 +574,7 @@
 		C3A0C9BB44FA55E4B6F33F57 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				F763FB7B00484DCEA4A4BD21 /* Theme */,
 				EB200FEAFF6E42B5A383E3590D2BA321 /* Config */,
 				F10DE071B6D97759A20373C7 /* Components */,
 				FF55AA66BB77CC88DD99EE10 /* Services */,
@@ -679,6 +697,7 @@
 		HT00AA11BB22CC33DD44EE00 /* HomeTests */ = {
 			isa = PBXGroup;
 			children = (
+				EFCDDA85A8D34B57AAC4A0D7 /* Theme */,
 				HT00AA11BB22CC33DD44EE12 /* ExtractionServiceTests.swift */,
 				HT00AA11BB22CC33DD44EE14 /* SupabaseStoreTests.swift */,
 				HT00AA11BB22CC33DD44EE16 /* HomeItemTests.swift */,
@@ -746,9 +765,30 @@
 		UR00AA11BB22CC33DD44EF00 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				6AB5DDC7887E4C159D5300F7 /* UIImage+AverageColor.swift */,
 				UR00AA11BB22CC33DD44EE00 /* UIImage+Resize.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		F763FB7B00484DCEA4A4BD21 /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				BA4D2835E8B247759BE40C5C /* ThemeStore.swift */,
+				ED3B777CB62C4ED981C62D2A /* AppAppearance.swift */,
+				2C7603356EA14FDFA1B64E20 /* Color+Hex.swift */,
+			);
+			path = Theme;
+			sourceTree = "<group>";
+		};
+		EFCDDA85A8D34B57AAC4A0D7 /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				AD7501ACE90E40C2948EDF5D /* ThemeStoreTests.swift */,
+				0299C23DD2754C41B0432E88 /* AppAppearanceTests.swift */,
+				FAE725D024BD4C668DC2B46C /* ColorHexTests.swift */,
+			);
+			path = Theme;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -872,6 +912,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EEB58E0C4E2B4DCAB8CA6D8F /* UIImage+AverageColor.swift in Sources */,
+				EF7B5CBBD09842A0B22F7404 /* SettingsView.swift in Sources */,
+				4830CC9362BB4A8B95B0722F /* ThemeStore.swift in Sources */,
+				065301A1049341A595A68A39 /* AppAppearance.swift in Sources */,
+				4750BD2B32964E23B7398111 /* Color+Hex.swift in Sources */,
 				CD57016D61746F8775546D4B /* HomeView.swift in Sources */,
 				HM00AA11BB22CC33DD44EE11 /* HomeItem.swift in Sources */,
 				HM00AA11BB22CC33DD44EE12 /* HouseholdTask.swift in Sources */,
@@ -982,6 +1027,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				82DC16690C114789A146F1AE /* ThemeStoreTests.swift in Sources */,
+				D89773D11F0D48B8AEC82CDC /* AppAppearanceTests.swift in Sources */,
+				B8C7BBC4A3634B80B24013B7 /* ColorHexTests.swift in Sources */,
 				HT00AA11BB22CC33DD44EE02 /* ExtractionServiceTests.swift in Sources */,
 				HT00AA11BB22CC33DD44EE04 /* SupabaseStoreTests.swift in Sources */,
 				HT00AA11BB22CC33DD44EE06 /* HomeItemTests.swift in Sources */,

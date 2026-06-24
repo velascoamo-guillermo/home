@@ -2,8 +2,9 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var store = SupabaseStore()
+    @State private var theme = ThemeStore()
     @State private var selectedTab: AppTab = .home
-    @State private var hubPath: [HubDestination] = []
+    @State private var hubPath = NavigationPath()
     @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
@@ -26,11 +27,16 @@ struct ContentView: View {
             }
         }
         .environment(store)
+        .environment(theme)
+        .tint(theme.tint)
+        .preferredColorScheme(theme.colorScheme)
         .task { await store.loadAll() }
         .onOpenURL { url in
             let route = AppRouter.route(host: url.host)
             selectedTab = route.tab
-            hubPath = route.hubDestination.map { [$0] } ?? []
+            var path = NavigationPath()
+            if let dest = route.hubDestination { path.append(dest) }
+            hubPath = path
         }
         .onChange(of: scenePhase) { _, new in
             if new == .background && store.loadError == nil && !store.isLoading {

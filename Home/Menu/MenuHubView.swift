@@ -1,13 +1,24 @@
 import SwiftUI
 
 struct MenuHubView: View {
-    @Binding var path: [HubDestination]
+    @Binding var path: NavigationPath
 
     var body: some View {
         NavigationStack(path: $path) {
-            List(HubDestination.allCases) { dest in
-                NavigationLink(value: dest) {
-                    Label(dest.title, systemImage: dest.systemImage)
+            List {
+                Section {
+                    ForEach(HubDestination.allCases) { dest in
+                        NavigationLink(value: dest) {
+                            Label(dest.title, systemImage: dest.systemImage)
+                        }
+                    }
+                }
+                Section {
+                    NavigationLink {
+                        SettingsView()
+                    } label: {
+                        Label("Settings", systemImage: "gearshape.fill")
+                    }
                 }
             }
             .listStyle(.insetGrouped)
@@ -25,6 +36,6 @@ struct MenuHubView: View {
 }
 
 #Preview {
-    MenuHubView(path: .constant([]))
+    MenuHubView(path: .constant(NavigationPath()))
         .environment(SupabaseStore())
 }
