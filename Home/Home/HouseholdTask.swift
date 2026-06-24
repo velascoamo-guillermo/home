@@ -13,6 +13,14 @@ nonisolated struct HouseholdTask: Codable, Identifiable, Hashable {
     var updatedAt: Date = .now
     var deletedAt: Date? = nil
 
+    func snoozedByOneDay() -> HouseholdTask {
+        var copy = self
+        copy.nextDueDate = Calendar.current.date(
+            byAdding: .day, value: 1, to: nextDueDate
+        ) ?? nextDueDate
+        return copy
+    }
+
     enum CodingKeys: String, CodingKey {
         case id, title, icon, notes
         case intervalDays          = "interval_days"
