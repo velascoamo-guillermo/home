@@ -3,6 +3,7 @@ import SwiftUI
 struct ContentView: View {
     @State private var store = SupabaseStore()
     @State private var selectedTab: AppTab = .home
+    @State private var hubPath: [HubDestination] = []
     @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
@@ -21,13 +22,15 @@ struct ContentView: View {
                     }
                 }
             } else {
-                MainTabView(selectedTab: $selectedTab)
+                MainTabView(selectedTab: $selectedTab, hubPath: $hubPath)
             }
         }
         .environment(store)
         .task { await store.loadAll() }
         .onOpenURL { url in
-            selectedTab = AppTab(host: url.host) ?? .home
+            let route = AppRouter.route(host: url.host)
+            selectedTab = route.tab
+            hubPath = route.hubDestination.map { [$0] } ?? []
         }
         .onChange(of: scenePhase) { _, new in
             if new == .background && store.loadError == nil && !store.isLoading {
