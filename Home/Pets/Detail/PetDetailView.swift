@@ -1,5 +1,6 @@
 import SwiftUI
 import PhotosUI
+import UIKit
 
 struct PetDetailView: View {
     let pet: Pet
@@ -9,9 +10,22 @@ struct PetDetailView: View {
     @State private var isUploadingPhoto = false
     @State private var uploadError: String? = nil
     @State private var selectedSection: PetSection?
+    @State private var showAddAppointment = false
+    @State private var showAddEvent = false
+    @State private var heroImage: UIImage?
+    @State private var heroTintColor: Color?
 
     private var currentPet: Pet {
         store.pets.first(where: { $0.id == pet.id }) ?? pet
+    }
+
+    private var heroTint: Color { heroTintColor ?? Color(.systemGray3) }
+
+    /// Foreground color readable on the tinted background.
+    private var onTint: Color {
+        var white: CGFloat = 0
+        UIColor(heroTint).getWhite(&white, alpha: nil)
+        return white > 0.6 ? .black : .white
     }
 
     private var ageString: String? {
@@ -22,30 +36,26 @@ struct PetDetailView: View {
         return nil
     }
 
+    private var metaLine: String? {
+        var parts: [String] = []
+        if let age = ageString { parts.append(age) }
+        if let birthday = currentPet.birthday {
+            parts.append(birthday.formatted(date: .abbreviated, time: .omitted))
+        }
+        return parts.isEmpty ? nil : parts.joined(separator: " · ")
+    }
+
     var body: some View {
-        VStack(spacing: 0) {
-            Spacer()
-            VStack(spacing: 16) {
-                petNameHeader
-                if currentPet.birthday != nil {
-                    statsRow
-                }
-                sectionGrid
+        ScrollView {
+            VStack(spacing: 0) {
+                hero
+                content
             }
-            .padding(.horizontal, 20)
-            .padding(.bottom, 24)
         }
-        .background {
-            ZStack {
-                petBackground
-                LinearGradient(
-                    colors: [.clear, .black.opacity(0.65)],
-                    startPoint: .center,
-                    endPoint: .bottom
-                )
-            }
-            .ignoresSafeArea()
-        }
+        .scrollIndicators(.hidden)
+        .background(heroTint.ignoresSafeArea())
+        .ignoresSafeArea(.container, edges: .top)
+        .task(id: currentPet.photoUrl) { await loadHero() }
         .sheet(item: $selectedSection) { section in
             NavigationStack {
                 switch section {
@@ -58,6 +68,8 @@ struct PetDetailView: View {
             }
             .navigationTitle(section.title)
         }
+        .sheet(isPresented: $showAddAppointment) { AddAppointmentSheet(petId: currentPet.id) }
+        .sheet(isPresented: $showAddEvent) { AddEventSheet(petId: currentPet.id) }
         .navigationBarBackButtonHidden(true)
         .toolbarBackground(.hidden, for: .navigationBar)
         .toolbar {
@@ -65,46 +77,19 @@ struct PetDetailView: View {
                 Button {
                     dismiss()
                 } label: {
-                    HStack(spacing: 6) {
-                        Image(systemName: "chevron.left")
-                            .fontWeight(.semibold)
-                        Text("My Pets")
-                    }
-                    .font(.body)
-                    .foregroundStyle(.white)
-                    .shadow(color: .black.opacity(0.4), radius: 2, y: 1)
+                    Image(systemName: "chevron.left")
+                        .fontWeight(.semibold)
+                        .foregroundStyle(.white)
+                        .padding(10)
+                        .background(.black.opacity(0.35), in: Circle())
                 }
+                .buttonStyle(.plain)
+                .accessibilityLabel("Back to My Pets")
             }
         }
         .onChange(of: photoPickerItem) { _, item in
             guard let item else { return }
-            Task {
-                isUploadingPhoto = true
-                defer {
-                    isUploadingPhoto = false
-                    photoPickerItem = nil
-                }
-                do {
-                    guard let data = try await item.loadTransferable(type: Data.self) else {
-                        uploadError = "Could not read the selected photo."
-                        return
-                    }
-                    // Resize and encode off the main actor — UIGraphicsImageRenderer is thread-safe since iOS 10
-                    let compressResult = await Task.detached(priority: .userInitiated) {
-                        guard let uiImage = UIImage(data: data),
-                              let compressed = uiImage.resized(maxDimension: 512).jpegData(compressionQuality: 0.8)
-                        else { return Data?.none }
-                        return compressed
-                    }.value
-                    guard let compressed = compressResult else {
-                        uploadError = "Could not process the selected photo."
-                        return
-                    }
-                    try await store.updatePetPhoto(currentPet, imageData: compressed)
-                } catch {
-                    uploadError = error.localizedDescription
-                }
-            }
+            Task { await uploadPhoto(item) }
         }
         .alert("Upload Failed", isPresented: Binding(
             get: { uploadError != nil },
@@ -116,74 +101,180 @@ struct PetDetailView: View {
         }
     }
 
-    @ViewBuilder
-    private var petBackground: some View {
-        if let urlStr = currentPet.photoUrl, let url = URL(string: urlStr) {
-            AsyncImage(url: url) { image in
-                image.resizable().scaledToFill()
-            } placeholder: {
-                Rectangle().fill(.quaternary)
-            }
-            .ignoresSafeArea()
-        } else {
-            Rectangle().fill(.quaternary).ignoresSafeArea()
-        }
-    }
+    // MARK: - Hero
 
-    private var petNameHeader: some View {
-        HStack {
-            VStack(alignment: .leading, spacing: 2) {
-                Text(currentPet.name)
-                    .font(.title2.bold())
-                    .foregroundStyle(.white)
-                Text("\(currentPet.breed) · \(currentPet.type)")
-                    .font(.subheadline)
-                    .foregroundStyle(.white.opacity(0.8))
-            }
-            Spacer()
-            PhotosPicker(selection: $photoPickerItem, matching: .images) {
-                ZStack {
-                    if isUploadingPhoto {
-                        ProgressView()
-                            .frame(width: 36, height: 36)
-                    } else {
-                        Image(systemName: "camera")
-                            .font(.body)
-                            .foregroundStyle(.white)
-                            .frame(width: 36, height: 36)
-                    }
+    private var hero: some View {
+        ZStack(alignment: .bottom) {
+            Group {
+                if let img = heroImage {
+                    Image(uiImage: img).resizable().scaledToFill()
+                } else {
+                    Rectangle().fill(.quaternary)
+                        .overlay {
+                            Image(systemName: "pawprint.fill")
+                                .font(.system(size: 64))
+                                .foregroundStyle(.white.opacity(0.5))
+                        }
                 }
             }
-            .accessibilityLabel("Change pet photo")
+            .frame(height: 380)
+            .frame(maxWidth: .infinity)
+            .clipped()
+
+            LinearGradient(colors: [.clear, heroTint], startPoint: .center, endPoint: .bottom)
+                .frame(height: 380)
         }
     }
 
-    private var statsRow: some View {
-        HStack(spacing: 12) {
-            if let age = ageString {
-                StatPill(label: "Age", value: age)
+    // MARK: - Content
+
+    private var content: some View {
+        VStack(spacing: 24) {
+            titleBlock
+            actionRow
+            sectionsList
+        }
+        .padding(.horizontal, 20)
+        .padding(.bottom, 32)
+    }
+
+    private var titleBlock: some View {
+        VStack(spacing: 6) {
+            Text(currentPet.name)
+                .font(.largeTitle.bold())
+                .multilineTextAlignment(.center)
+            Text("\(currentPet.breed) · \(currentPet.type)")
+                .font(.title3)
+                .foregroundStyle(onTint.opacity(0.85))
+            if let meta = metaLine {
+                Text(meta)
+                    .font(.subheadline)
+                    .foregroundStyle(onTint.opacity(0.65))
             }
-            if let birthday = currentPet.birthday {
-                StatPill(label: "Birthday", value: birthday.formatted(date: .abbreviated, time: .omitted))
+        }
+        .foregroundStyle(onTint)
+        .frame(maxWidth: .infinity)
+    }
+
+    private var actionRow: some View {
+        HStack(spacing: 16) {
+            CircleActionButton(systemImage: "calendar.day.timeline.left",
+                               tint: onTint, label: "Add event") {
+                showAddEvent = true
             }
-            Spacer()
+
+            Button {
+                showAddAppointment = true
+            } label: {
+                Label("Add Appointment", systemImage: "calendar.badge.plus")
+                    .font(.headline)
+                    .foregroundStyle(heroTint)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 14)
+                    .background(.white, in: Capsule())
+            }
+
+            if isUploadingPhoto {
+                ProgressView()
+                    .frame(width: 52, height: 52)
+            } else {
+                PhotosPicker(selection: $photoPickerItem, matching: .images) {
+                    Image(systemName: "camera.fill")
+                        .font(.title3)
+                        .foregroundStyle(onTint)
+                        .frame(width: 52, height: 52)
+                        .background(onTint.opacity(0.15), in: Circle())
+                }
+                .accessibilityLabel("Change pet photo")
+            }
         }
     }
 
-    private var sectionGrid: some View {
-        VStack(spacing: 14) {
-            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 14) {
-                PetSectionCard(section: .vet)          { selectedSection = .vet }
-                PetSectionCard(section: .appointments) { selectedSection = .appointments }
-                PetSectionCard(section: .history)      { selectedSection = .history }
-                PetSectionCard(section: .events)       { selectedSection = .events }
+    private var sectionsList: some View {
+        VStack(spacing: 0) {
+            ForEach(PetSection.allCases) { section in
+                Button { selectedSection = section } label: {
+                    HStack(spacing: 14) {
+                        Image(systemName: section.icon)
+                            .font(.body)
+                            .frame(width: 26)
+                        Text(section.title)
+                            .font(.body)
+                        Spacer()
+                        if let count = count(for: section) {
+                            Text("\(count)")
+                                .font(.subheadline)
+                                .foregroundStyle(onTint.opacity(0.6))
+                        }
+                        Image(systemName: "chevron.right")
+                            .font(.caption.bold())
+                            .foregroundStyle(onTint.opacity(0.4))
+                    }
+                    .foregroundStyle(onTint)
+                    .padding(.vertical, 15)
+                }
+                .buttonStyle(.plain)
+
+                if section != PetSection.allCases.last {
+                    Divider().overlay(onTint.opacity(0.2))
+                }
             }
-            PetSectionCard(section: .files) { selectedSection = .files }
+        }
+    }
+
+    private func count(for section: PetSection) -> Int? {
+        switch section {
+        case .vet:          return nil
+        case .appointments: return store.appointments(for: currentPet.id).count
+        case .history:      return store.clinicalEntries(for: currentPet.id).count
+        case .events:       return store.events(for: currentPet.id).count
+        case .files:        return store.files(for: currentPet.id).count
+        }
+    }
+
+    // MARK: - Side effects
+
+    private func loadHero() async {
+        guard let urlStr = currentPet.photoUrl, let url = URL(string: urlStr) else {
+            heroImage = nil
+            heroTintColor = nil
+            return
+        }
+        guard let (data, _) = try? await URLSession.shared.data(from: url),
+              let img = UIImage(data: data) else { return }
+        heroImage = img
+        heroTintColor = img.averageColor
+    }
+
+    private func uploadPhoto(_ item: PhotosPickerItem) async {
+        isUploadingPhoto = true
+        defer {
+            isUploadingPhoto = false
+            photoPickerItem = nil
+        }
+        do {
+            guard let data = try await item.loadTransferable(type: Data.self) else {
+                uploadError = "Could not read the selected photo."
+                return
+            }
+            let compressResult = await Task.detached(priority: .userInitiated) {
+                guard let uiImage = UIImage(data: data),
+                      let compressed = uiImage.resized(maxDimension: 512).jpegData(compressionQuality: 0.8)
+                else { return Data?.none }
+                return compressed
+            }.value
+            guard let compressed = compressResult else {
+                uploadError = "Could not process the selected photo."
+                return
+            }
+            try await store.updatePetPhoto(currentPet, imageData: compressed)
+        } catch {
+            uploadError = error.localizedDescription
         }
     }
 }
 
-private enum PetSection: String, Identifiable {
+private enum PetSection: String, CaseIterable, Identifiable {
     case vet, appointments, history, events, files
     var id: String { rawValue }
 
@@ -208,44 +299,21 @@ private enum PetSection: String, Identifiable {
     }
 }
 
-private struct PetSectionCard: View {
-    let section: PetSection
+private struct CircleActionButton: View {
+    let systemImage: String
+    let tint: Color
+    let label: String
     let action: () -> Void
 
     var body: some View {
         Button(action: action) {
-            VStack(spacing: 8) {
-                Image(systemName: section.icon)
-                    .font(.title2)
-                    .foregroundStyle(.tint)
-                Text(section.title)
-                    .font(.subheadline)
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 20)
+            Image(systemName: systemImage)
+                .font(.title3)
+                .foregroundStyle(tint)
+                .frame(width: 52, height: 52)
+                .background(tint.opacity(0.15), in: Circle())
         }
-        .buttonStyle(.plain)
-        .glassEffect(in: RoundedRectangle(cornerRadius: 16))
-        .accessibilityLabel(section.title)
-    }
-}
-
-private struct StatPill: View {
-    let label: String
-    let value: String
-
-    var body: some View {
-        VStack(spacing: 2) {
-            Text(label)
-                .font(.caption2)
-                .foregroundStyle(.secondary)
-                .textCase(.uppercase)
-            Text(value)
-                .font(.subheadline.bold())
-        }
-        .frame(maxWidth: .infinity)
-        .padding(.vertical, 10)
-        .glassEffect(in: RoundedRectangle(cornerRadius: 10))
+        .accessibilityLabel(label)
     }
 }
 
