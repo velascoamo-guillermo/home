@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct MenuHubView: View {
-    @Binding var path: [HubDestination]
+    @Binding var path: NavigationPath
 
     var body: some View {
         NavigationStack(path: $path) {
@@ -36,6 +36,6 @@ struct MenuHubView: View {
 }
 
 #Preview {
-    MenuHubView(path: .constant([]))
+    MenuHubView(path: .constant(NavigationPath()))
         .environment(SupabaseStore())
 }
