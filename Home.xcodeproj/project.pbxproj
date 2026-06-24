@@ -144,13 +144,13 @@
 		ST00AA11BB22CC33DD44EE09 /* StockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ST00AA11BB22CC33DD44EE08 /* StockView.swift */; };
 		UR00AA11BB22CC33DD44EE01 /* UIImage+Resize.swift in Sources */ = {isa = PBXBuildFile; fileRef = UR00AA11BB22CC33DD44EE00 /* UIImage+Resize.swift */; };
 		UR00AA11BB22CC33DD44EE02 /* UIImageResizeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = UR00AA11BB22CC33DD44EE10 /* UIImageResizeTests.swift */; };
-		83C75D683311427095E940F6 /* Color+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6E70814EC9046C8A1C4DE26 /* Color+Hex.swift */; };
-		6F77C8E4F3B64AF1A72CBC3A /* ColorHexTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DFA2BF8E2344AAFB1B936E7 /* ColorHexTests.swift */; };
-		270B6BF0D569441584E48969 /* AppAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E72A4BF8EF4BF39653A80A /* AppAppearance.swift */; };
-		F72116FED1194215A1CCC70D /* AppAppearanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232A62B45478404BB4BAB285 /* AppAppearanceTests.swift */; };
-		2EE497C2BC5F47C88A8C220B /* ThemeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1D9781F99E6460AAE592D7E /* ThemeStore.swift */; };
-		E4DCC585C1AF4D2F80FEFE54 /* ThemeStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4729AF2AECF451DA52AB152 /* ThemeStoreTests.swift */; };
-		F24809ECA2E64ADA8547A35C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52C8563103C14F9FA2D77F93 /* SettingsView.swift */; };
+		4750BD2B32964E23B7398111 /* Color+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7603356EA14FDFA1B64E20 /* Color+Hex.swift */; };
+		065301A1049341A595A68A39 /* AppAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3B777CB62C4ED981C62D2A /* AppAppearance.swift */; };
+		4830CC9362BB4A8B95B0722F /* ThemeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA4D2835E8B247759BE40C5C /* ThemeStore.swift */; };
+		B8C7BBC4A3634B80B24013B7 /* ColorHexTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE725D024BD4C668DC2B46C /* ColorHexTests.swift */; };
+		D89773D11F0D48B8AEC82CDC /* AppAppearanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0299C23DD2754C41B0432E88 /* AppAppearanceTests.swift */; };
+		82DC16690C114789A146F1AE /* ThemeStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD7501ACE90E40C2948EDF5D /* ThemeStoreTests.swift */; };
+		EF7B5CBBD09842A0B22F7404 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E6995C6A3CF4F4BB2E5B277 /* SettingsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -314,13 +314,13 @@
 		ST00AA11BB22CC33DD44EE08 /* StockView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StockView.swift; sourceTree = "<group>"; };
 		UR00AA11BB22CC33DD44EE00 /* UIImage+Resize.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIImage+Resize.swift"; sourceTree = "<group>"; };
 		UR00AA11BB22CC33DD44EE10 /* UIImageResizeTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UIImageResizeTests.swift; sourceTree = "<group>"; };
-		A6E70814EC9046C8A1C4DE26 /* Color+Hex.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Color+Hex.swift"; sourceTree = "<group>"; };
-		9DFA2BF8E2344AAFB1B936E7 /* ColorHexTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ColorHexTests.swift; sourceTree = "<group>"; };
-		B7E72A4BF8EF4BF39653A80A /* AppAppearance.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppAppearance.swift; sourceTree = "<group>"; };
-		232A62B45478404BB4BAB285 /* AppAppearanceTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppAppearanceTests.swift; sourceTree = "<group>"; };
-		F1D9781F99E6460AAE592D7E /* ThemeStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ThemeStore.swift; sourceTree = "<group>"; };
-		A4729AF2AECF451DA52AB152 /* ThemeStoreTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ThemeStoreTests.swift; sourceTree = "<group>"; };
-		52C8563103C14F9FA2D77F93 /* SettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		2C7603356EA14FDFA1B64E20 /* Color+Hex.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Color+Hex.swift"; sourceTree = "<group>"; };
+		ED3B777CB62C4ED981C62D2A /* AppAppearance.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppAppearance.swift; sourceTree = "<group>"; };
+		BA4D2835E8B247759BE40C5C /* ThemeStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ThemeStore.swift; sourceTree = "<group>"; };
+		FAE725D024BD4C668DC2B46C /* ColorHexTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ColorHexTests.swift; sourceTree = "<group>"; };
+		0299C23DD2754C41B0432E88 /* AppAppearanceTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppAppearanceTests.swift; sourceTree = "<group>"; };
+		AD7501ACE90E40C2948EDF5D /* ThemeStoreTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ThemeStoreTests.swift; sourceTree = "<group>"; };
+		2E6995C6A3CF4F4BB2E5B277 /* SettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -433,8 +433,6 @@
 		4A196361B5940DD7C7851A10 /* Widget */ = {
 			isa = PBXGroup;
 			children = (
-				52C8563103C14F9FA2D77F93 /* SettingsView.swift */,
-				D7D3E1C18A2C4EB6859EA87D /* Theme */,
 				9BB602702653BB94D55F5891 /* WidgetSnapshot.swift */,
 				6EFD07EB72B922B3B688CC2A /* WidgetStore.swift */,
 				167B044780DEF36B6D746BFB /* WidgetSnapshotWriter.swift */,
@@ -445,9 +443,6 @@
 		50CD0F092FE2B37700DAD0CA /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
-				F1D9781F99E6460AAE592D7E /* ThemeStore.swift */,
-				B7E72A4BF8EF4BF39653A80A /* AppAppearance.swift */,
-				A6E70814EC9046C8A1C4DE26 /* Color+Hex.swift */,
 				A74D898413054708A6AED52C /* libsqlite3.tbd */,
 			);
 			name = "Recovered References";
@@ -470,9 +465,6 @@
 		50F3CD812FB7714C00238D41 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E403D72FFCEE44F0B716CCC1 /* Theme */,
-				DE7430BC4C4E4A54BF1FEB39 /* Theme */,
-				19AE31D790AC4F3293739939 /* Theme */,
 				50F3CD802FB7714C00238D41 /* Home.app */,
 				HT00AA11BB22CC33DD44EE13 /* HomeTests.xctest */,
 				C50C7DD5D3AD5D0A4D7AF3C4 /* HomeWidget.appex */,
@@ -483,9 +475,6 @@
 		5B8F677F50DE37E4FDFF9F65 /* Menu */ = {
 			isa = PBXGroup;
 			children = (
-				A4729AF2AECF451DA52AB152 /* ThemeStoreTests.swift */,
-				232A62B45478404BB4BAB285 /* AppAppearanceTests.swift */,
-				9DFA2BF8E2344AAFB1B936E7 /* ColorHexTests.swift */,
 				BD71C92C5B049383A7F07FC2 /* Meal.swift */,
 				E32930F19D9DF1811CABFFA3 /* Weekday.swift */,
 				0DF0650AAC8C151554C098B6 /* MealProduct.swift */,
@@ -531,6 +520,7 @@
 		70B26604F602263820A5663D /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				2E6995C6A3CF4F4BB2E5B277 /* SettingsView.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -582,6 +572,7 @@
 		C3A0C9BB44FA55E4B6F33F57 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				F763FB7B00484DCEA4A4BD21 /* Theme */,
 				EB200FEAFF6E42B5A383E3590D2BA321 /* Config */,
 				F10DE071B6D97759A20373C7 /* Components */,
 				FF55AA66BB77CC88DD99EE10 /* Services */,
@@ -704,6 +695,7 @@
 		HT00AA11BB22CC33DD44EE00 /* HomeTests */ = {
 			isa = PBXGroup;
 			children = (
+				EFCDDA85A8D34B57AAC4A0D7 /* Theme */,
 				HT00AA11BB22CC33DD44EE12 /* ExtractionServiceTests.swift */,
 				HT00AA11BB22CC33DD44EE14 /* SupabaseStoreTests.swift */,
 				HT00AA11BB22CC33DD44EE16 /* HomeItemTests.swift */,
@@ -776,30 +768,22 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
-		D7D3E1C18A2C4EB6859EA87D /* Theme */ = {
+		F763FB7B00484DCEA4A4BD21 /* Theme */ = {
 			isa = PBXGroup;
 			children = (
+				BA4D2835E8B247759BE40C5C /* ThemeStore.swift */,
+				ED3B777CB62C4ED981C62D2A /* AppAppearance.swift */,
+				2C7603356EA14FDFA1B64E20 /* Color+Hex.swift */,
 			);
 			path = Theme;
 			sourceTree = "<group>";
 		};
-		19AE31D790AC4F3293739939 /* Theme */ = {
+		EFCDDA85A8D34B57AAC4A0D7 /* Theme */ = {
 			isa = PBXGroup;
 			children = (
-			);
-			path = Theme;
-			sourceTree = "<group>";
-		};
-		DE7430BC4C4E4A54BF1FEB39 /* Theme */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Theme;
-			sourceTree = "<group>";
-		};
-		E403D72FFCEE44F0B716CCC1 /* Theme */ = {
-			isa = PBXGroup;
-			children = (
+				AD7501ACE90E40C2948EDF5D /* ThemeStoreTests.swift */,
+				0299C23DD2754C41B0432E88 /* AppAppearanceTests.swift */,
+				FAE725D024BD4C668DC2B46C /* ColorHexTests.swift */,
 			);
 			path = Theme;
 			sourceTree = "<group>";
@@ -907,13 +891,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F24809ECA2E64ADA8547A35C /* SettingsView.swift in Sources */,
-				E4DCC585C1AF4D2F80FEFE54 /* ThemeStoreTests.swift in Sources */,
-				2EE497C2BC5F47C88A8C220B /* ThemeStore.swift in Sources */,
-				F72116FED1194215A1CCC70D /* AppAppearanceTests.swift in Sources */,
-				270B6BF0D569441584E48969 /* AppAppearance.swift in Sources */,
-				6F77C8E4F3B64AF1A72CBC3A /* ColorHexTests.swift in Sources */,
-				83C75D683311427095E940F6 /* Color+Hex.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -932,6 +909,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EF7B5CBBD09842A0B22F7404 /* SettingsView.swift in Sources */,
+				4830CC9362BB4A8B95B0722F /* ThemeStore.swift in Sources */,
+				065301A1049341A595A68A39 /* AppAppearance.swift in Sources */,
+				4750BD2B32964E23B7398111 /* Color+Hex.swift in Sources */,
 				CD57016D61746F8775546D4B /* HomeView.swift in Sources */,
 				HM00AA11BB22CC33DD44EE11 /* HomeItem.swift in Sources */,
 				HM00AA11BB22CC33DD44EE12 /* HouseholdTask.swift in Sources */,
@@ -1042,6 +1023,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				82DC16690C114789A146F1AE /* ThemeStoreTests.swift in Sources */,
+				D89773D11F0D48B8AEC82CDC /* AppAppearanceTests.swift in Sources */,
+				B8C7BBC4A3634B80B24013B7 /* ColorHexTests.swift in Sources */,
 				HT00AA11BB22CC33DD44EE02 /* ExtractionServiceTests.swift in Sources */,
 				HT00AA11BB22CC33DD44EE04 /* SupabaseStoreTests.swift in Sources */,
 				HT00AA11BB22CC33DD44EE06 /* HomeItemTests.swift in Sources */,
