@@ -2,6 +2,7 @@ import SwiftUI
 
 struct StockProductRow: View {
     let product: StockProduct
+    var showsIcon: Bool = true
 
     private var breakdown: String {
         if product.totalUnits == 0 { return "Out of stock" }
@@ -14,10 +15,12 @@ struct StockProductRow: View {
 
     var body: some View {
         HStack(spacing: 12) {
-            Image(systemName: product.icon)
-                .font(.title3)
-                .foregroundStyle(.tint)
-                .frame(width: 32)
+            if showsIcon {
+                Image(systemName: product.icon)
+                    .font(.title3)
+                    .foregroundStyle(.tint)
+                    .frame(width: 32)
+            }
             VStack(alignment: .leading, spacing: 2) {
                 Text(product.name).font(.headline)
                 Text(breakdown).font(.caption).foregroundStyle(.secondary)

@@ -23,14 +23,9 @@ struct HomeItemRow: View {
 
     var body: some View {
         HStack(spacing: 14) {
-            Image(systemName: iconName)
-                .font(.title3)
-                .foregroundStyle(iconStyle)
-                .frame(width: 28)
-
             VStack(alignment: .leading, spacing: 3) {
                 Text(title)
-                    .font(.headline)
+                    .font(.subheadline.weight(.medium))
                 Text(subtitle)
                     .font(.caption)
                     .foregroundStyle(.secondary)
@@ -51,20 +46,7 @@ struct HomeItemRow: View {
                 }
             }
         }
-        .padding(.vertical, 2)
-    }
-
-    private var iconName: String {
-        switch item {
-        case .appointment:       return "calendar"
-        case .task(let t):       return t.icon
-        case .event(let e, _):   return e.category.icon
-        }
-    }
-
-    private var iconStyle: AnyShapeStyle {
-        if case .task = item, isOverdue { return AnyShapeStyle(.red) }
-        return AnyShapeStyle(.tint)
+        .padding(.vertical, 4)
     }
 
     private var title: String {
