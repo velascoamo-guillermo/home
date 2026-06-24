@@ -7,7 +7,7 @@ struct MainTabView: View {
     var body: some View {
         TabView(selection: $selectedTab) {
             Tab("Home", systemImage: "house.fill", value: AppTab.home) {
-                HomeView()
+                DashboardView()
             }
             Tab("Menu", systemImage: "square.grid.2x2.fill", value: AppTab.menu) {
                 MenuHubView(path: $hubPath)
