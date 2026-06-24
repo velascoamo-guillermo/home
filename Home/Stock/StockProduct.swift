@@ -39,6 +39,13 @@ nonisolated struct StockProduct: Codable, Identifiable, Hashable {
         return copy
     }
 
+    func emptied() -> StockProduct {
+        var copy = self
+        copy.packages = 0
+        copy.looseUnits = 0
+        return copy
+    }
+
     init(id: UUID = UUID(), name: String, icon: String, packages: Int,
          looseUnits: Int, unitsPerPackage: Int, createdAt: Date = .now,
          supermarket: Supermarket? = nil, category: ProductCategory? = nil,

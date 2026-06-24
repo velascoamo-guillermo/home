@@ -66,6 +66,18 @@ import Foundation
         #expect(result.looseUnits == 2)
     }
 
+    @Test("emptied() zeroes packages and loose units")
+    func emptiedZeroesUnits() {
+        let p = StockProduct(name: "Milk", icon: "x", packages: 2,
+                             looseUnits: 3, unitsPerPackage: 6)
+        let e = p.emptied()
+        #expect(e.packages == 0)
+        #expect(e.looseUnits == 0)
+        #expect(e.totalUnits == 0)
+        #expect(e.id == p.id)
+        #expect(e.name == "Milk")
+    }
+
     @Test("consuming(units:) decrements N loose units")
     func consumeNLoose() {
         let result = make(packages: 1, loose: 5, perPackage: 6).consuming(units: 3)
