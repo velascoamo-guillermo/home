@@ -150,6 +150,7 @@
 		F72116FED1194215A1CCC70D /* AppAppearanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232A62B45478404BB4BAB285 /* AppAppearanceTests.swift */; };
 		2EE497C2BC5F47C88A8C220B /* ThemeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1D9781F99E6460AAE592D7E /* ThemeStore.swift */; };
 		E4DCC585C1AF4D2F80FEFE54 /* ThemeStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4729AF2AECF451DA52AB152 /* ThemeStoreTests.swift */; };
+		F24809ECA2E64ADA8547A35C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52C8563103C14F9FA2D77F93 /* SettingsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -319,6 +320,7 @@
 		232A62B45478404BB4BAB285 /* AppAppearanceTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppAppearanceTests.swift; sourceTree = "<group>"; };
 		F1D9781F99E6460AAE592D7E /* ThemeStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ThemeStore.swift; sourceTree = "<group>"; };
 		A4729AF2AECF451DA52AB152 /* ThemeStoreTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ThemeStoreTests.swift; sourceTree = "<group>"; };
+		52C8563103C14F9FA2D77F93 /* SettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -431,6 +433,7 @@
 		4A196361B5940DD7C7851A10 /* Widget */ = {
 			isa = PBXGroup;
 			children = (
+				52C8563103C14F9FA2D77F93 /* SettingsView.swift */,
 				D7D3E1C18A2C4EB6859EA87D /* Theme */,
 				9BB602702653BB94D55F5891 /* WidgetSnapshot.swift */,
 				6EFD07EB72B922B3B688CC2A /* WidgetStore.swift */,
@@ -904,6 +907,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F24809ECA2E64ADA8547A35C /* SettingsView.swift in Sources */,
 				E4DCC585C1AF4D2F80FEFE54 /* ThemeStoreTests.swift in Sources */,
 				2EE497C2BC5F47C88A8C220B /* ThemeStore.swift in Sources */,
 				F72116FED1194215A1CCC70D /* AppAppearanceTests.swift in Sources */,
