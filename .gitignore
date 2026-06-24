@@ -5,5 +5,7 @@ fastlane/test_output/
 Config.xcconfig
 fastlane/build_output/
 .claude/worktrees/
+.claude/
+.codegraph/
 supabase/.temp/
 *.p8
