@@ -23,6 +23,7 @@
 		177344A93532918662461240 /* ShoppingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 006B3D99E6B0E67C823B73FD /* ShoppingView.swift */; };
 		18B0322D2A7D492983EF706F /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B13C3455F594B0BA7525ADD /* Reachability.swift */; };
 		190E7180FF1D269E09ECAB70 /* WidgetSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB602702653BB94D55F5891 /* WidgetSnapshot.swift */; };
+		1D9BDB8FF1CED8212C0C0FB9 /* DashboardCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF82E76CA99CEC746DDCE636 /* DashboardCardView.swift */; };
 		1DBC79FB65E14D45B82A6C9C /* Veterinarian.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6856914DFD42828E88B77E /* Veterinarian.swift */; };
 		1EE7584B5E8B2CD828D65E1F /* Meal.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD71C92C5B049383A7F07FC2 /* Meal.swift */; };
 		2387E1C24DF4C8261A442AE7 /* MealEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD5A137BF574ECD289B8183D /* MealEntry.swift */; };
@@ -275,6 +276,7 @@
 		F5BAB79A911B4FD3860DCA75 /* SyncEngine.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SyncEngine.swift; sourceTree = "<group>"; };
 		FF11AA22BB33CC44DD55EE01 /* VetEditSheet.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = VetEditSheet.swift; sourceTree = "<group>"; };
 		FF55AA66BB77CC88DD99EE00 /* KeychainService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = KeychainService.swift; sourceTree = "<group>"; };
+		FF82E76CA99CEC746DDCE636 /* DashboardCardView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DashboardCardView.swift; sourceTree = "<group>"; };
 		HM00AA11BB22CC33DD44EE01 /* HomeItem.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HomeItem.swift; sourceTree = "<group>"; };
 		HM00AA11BB22CC33DD44EE02 /* HouseholdTask.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HouseholdTask.swift; sourceTree = "<group>"; };
 		HM00AA11BB22CC33DD44EE03 /* HomeItemRow.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HomeItemRow.swift; sourceTree = "<group>"; };
@@ -383,6 +385,7 @@
 				047A386D6EFDBE5D2EBA6DE0 /* DashboardCard.swift */,
 				7B8909F629B09C536374934D /* DashboardConfigStore.swift */,
 				DC8565D0720CB5FEAE079F58 /* DashboardData.swift */,
+				FF82E76CA99CEC746DDCE636 /* DashboardCardView.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -947,6 +950,7 @@
 				6CED58B38E99AAA9C454EBD3 /* DashboardCard.swift in Sources */,
 				A2CF43A1BB01D911BBF1344E /* DashboardConfigStore.swift in Sources */,
 				B2F26FBCC7213633E7FB83E9 /* DashboardData.swift in Sources */,
+				1D9BDB8FF1CED8212C0C0FB9 /* DashboardCardView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
