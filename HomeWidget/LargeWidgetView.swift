@@ -36,7 +36,7 @@ struct LargeWidgetView: View {
     // MARK: - Meals
 
     private var mealsSection: some View {
-        Link(destination: URL(string: "home://menu")!) {
+        Link(destination: URL(string: "home://meals")!) {
             if snapshot.lunch.isEmpty && snapshot.dinner.isEmpty {
                 Text("Sin comidas")
                     .font(.subheadline)

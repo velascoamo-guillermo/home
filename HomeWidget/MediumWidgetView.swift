@@ -32,7 +32,7 @@ struct MediumWidgetView: View {
     }
 
     private var mealsColumn: some View {
-        Link(destination: URL(string: "home://menu")!) {
+        Link(destination: URL(string: "home://meals")!) {
             VStack(alignment: .leading, spacing: 8) {
                 MealTitleView(meal: snapshot.lunch)
                 MealTitleView(meal: snapshot.dinner)

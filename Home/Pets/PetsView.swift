@@ -6,30 +6,28 @@ struct PetsView: View {
     @Namespace private var heroNamespace
 
     var body: some View {
-        NavigationStack {
-            List(store.pets) { pet in
-                NavigationLink(value: pet) {
-                    PetRow(pet: pet)
-                }
-                .matchedTransitionSource(id: pet.id, in: heroNamespace)
-                .swipeActions(edge: .trailing) {
-                    Button("Delete", role: .destructive) {
-                        Task { try? await store.deletePet(pet) }
-                    }
+        List(store.pets) { pet in
+            NavigationLink(value: pet) {
+                PetRow(pet: pet)
+            }
+            .matchedTransitionSource(id: pet.id, in: heroNamespace)
+            .swipeActions(edge: .trailing) {
+                Button("Delete", role: .destructive) {
+                    Task { try? await store.deletePet(pet) }
                 }
             }
-            .navigationTitle("My Pets")
-            .navigationDestination(for: Pet.self) { pet in
-                PetDetailView(pet: pet)
-                    .navigationTransition(.zoom(sourceID: pet.id, in: heroNamespace))
-            }
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("Add Pet", systemImage: "plus") { showAddPet = true }
-                }
-            }
-            .sheet(isPresented: $showAddPet) { AddPetSheet() }
         }
+        .navigationTitle("My Pets")
+        .navigationDestination(for: Pet.self) { pet in
+            PetDetailView(pet: pet)
+                .navigationTransition(.zoom(sourceID: pet.id, in: heroNamespace))
+        }
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button("Add Pet", systemImage: "plus") { showAddPet = true }
+            }
+        }
+        .sheet(isPresented: $showAddPet) { AddPetSheet() }
     }
 }
 
