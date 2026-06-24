@@ -12,11 +12,11 @@ struct DashboardCardView: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: 12) {
             header
             content
         }
-        .padding(16)
+        .padding(18)
         .background(.background.secondary, in: .rect(cornerRadius: 16))
         .contentShape(.rect(cornerRadius: 16))
         .onTapGesture { navigate() }
@@ -67,7 +67,7 @@ struct DashboardCardView: View {
             if shopping.items.isEmpty {
                 emptyState("Nothing to buy")
             } else {
-                ForEach(shopping.items) { StockProductRow(product: $0) }
+                ForEach(shopping.items) { StockProductRow(product: $0, showsIcon: false) }
             }
 
         case .weekMeals:
@@ -78,7 +78,7 @@ struct DashboardCardView: View {
             if meals.isEmpty {
                 emptyState("No meals planned")
             } else {
-                ForEach(meals) { SearchMealRow(meal: $0) }
+                ForEach(meals) { SearchMealRow(meal: $0, showsIcon: false) }
             }
 
         case .appointments:
