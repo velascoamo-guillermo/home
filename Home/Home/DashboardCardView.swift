@@ -7,6 +7,10 @@ struct DashboardCardView: View {
     @Environment(SupabaseStore.self) private var store
     @Environment(\.openURL) private var openURL
 
+    private var shopping: (items: [StockProduct], total: Int) {
+        DashboardData.shoppingList(stock: store.stockProducts, limit: DashboardData.shoppingLimit)
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             header
@@ -60,11 +64,10 @@ struct DashboardCardView: View {
             }
 
         case .shoppingList:
-            let r = DashboardData.shoppingList(stock: store.stockProducts, limit: DashboardData.shoppingLimit)
-            if r.items.isEmpty {
+            if shopping.items.isEmpty {
                 emptyState("Nothing to buy")
             } else {
-                ForEach(r.items) { StockProductRow(product: $0) }
+                ForEach(shopping.items) { StockProductRow(product: $0) }
             }
 
         case .weekMeals:
@@ -93,7 +96,7 @@ struct DashboardCardView: View {
     private var headerCount: Int? {
         switch card {
         case .shoppingList:
-            DashboardData.shoppingList(stock: store.stockProducts, limit: DashboardData.shoppingLimit).total
+            shopping.total
         default:
             nil
         }

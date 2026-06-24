@@ -31,13 +31,7 @@ enum DashboardData {
 
     static func weekMeals(meals: [Meal], todayWeekday: Int, limit: Int) -> [Meal] {
         let slotOrder: (MealSlot) -> Int = { MealSlot.allCases.firstIndex(of: $0) ?? 0 }
-        let planned = meals
-            .filter { !$0.title.isEmpty }
-            .sorted {
-                $0.dayOfWeek != $1.dayOfWeek
-                    ? $0.dayOfWeek < $1.dayOfWeek
-                    : slotOrder($0.slot) < slotOrder($1.slot)
-            }
+        let planned = meals.filter { !$0.title.isEmpty }
         let rotated = planned.sorted { lhs, rhs in
             let l = (lhs.dayOfWeek - todayWeekday + 7) % 7
             let r = (rhs.dayOfWeek - todayWeekday + 7) % 7
