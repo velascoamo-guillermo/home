@@ -25,63 +25,61 @@ struct ShoppingView: View {
     }
 
     var body: some View {
-        NavigationStack {
-            Group {
-                if store.shoppingList.isEmpty {
-                    ContentUnavailableView(
-                        "Nothing to Buy",
-                        systemImage: "cart",
-                        description: Text("Out-of-stock products show up here.")
-                    )
-                } else {
-                    List {
-                        ForEach(groups) { group in
-                            Section(group.title) {
-                                ForEach(group.products) { product in
-                                    Button {
-                                        Task {
-                                            do {
-                                                try await store.replenish(product)
-                                            } catch {
-                                                replenishError = error
-                                            }
+        Group {
+            if store.shoppingList.isEmpty {
+                ContentUnavailableView(
+                    "Nothing to Buy",
+                    systemImage: "cart",
+                    description: Text("Out-of-stock products show up here.")
+                )
+            } else {
+                List {
+                    ForEach(groups) { group in
+                        Section(group.title) {
+                            ForEach(group.products) { product in
+                                Button {
+                                    Task {
+                                        do {
+                                            try await store.replenish(product)
+                                        } catch {
+                                            replenishError = error
                                         }
-                                    } label: {
-                                        HStack(spacing: 12) {
-                                            Image(systemName: "circle")
-                                                .foregroundStyle(.secondary)
-                                                .accessibilityHidden(true)
-                                            Image(systemName: product.icon)
-                                                .foregroundStyle(.tint)
-                                                .frame(width: 28)
-                                            Text(product.name)
-                                            Spacer()
-                                            if let category = product.category {
-                                                Image(systemName: category.icon)
-                                                    .font(.caption)
-                                                    .foregroundStyle(.secondary)
-                                                    .accessibilityLabel(category.displayName)
-                                            }
-                                        }
-                                        .contentShape(.rect)
                                     }
-                                    .buttonStyle(.plain)
-                                    .accessibilityLabel(product.name)
-                                    .accessibilityHint("Marks as bought and replenishes stock")
+                                } label: {
+                                    HStack(spacing: 12) {
+                                        Image(systemName: "circle")
+                                            .foregroundStyle(.secondary)
+                                            .accessibilityHidden(true)
+                                        Image(systemName: product.icon)
+                                            .foregroundStyle(.tint)
+                                            .frame(width: 28)
+                                        Text(product.name)
+                                        Spacer()
+                                        if let category = product.category {
+                                            Image(systemName: category.icon)
+                                                .font(.caption)
+                                                .foregroundStyle(.secondary)
+                                                .accessibilityLabel(category.displayName)
+                                        }
+                                    }
+                                    .contentShape(.rect)
                                 }
+                                .buttonStyle(.plain)
+                                .accessibilityLabel(product.name)
+                                .accessibilityHint("Marks as bought and replenishes stock")
                             }
                         }
                     }
-                    .listStyle(.insetGrouped)
                 }
+                .listStyle(.insetGrouped)
             }
-            .navigationTitle("Shopping")
-            .alert("Could Not Update", isPresented: Binding(
-                get: { replenishError != nil },
-                set: { if !$0 { replenishError = nil } }
-            )) {
-                Button("OK") { replenishError = nil }
-            }
+        }
+        .navigationTitle("Shopping")
+        .alert("Could Not Update", isPresented: Binding(
+            get: { replenishError != nil },
+            set: { if !$0 { replenishError = nil } }
+        )) {
+            Button("OK") { replenishError = nil }
         }
     }
 }
