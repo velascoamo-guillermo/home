@@ -5,9 +5,20 @@ struct MenuHubView: View {
 
     var body: some View {
         NavigationStack(path: $path) {
-            List(HubDestination.allCases) { dest in
-                NavigationLink(value: dest) {
-                    Label(dest.title, systemImage: dest.systemImage)
+            List {
+                Section {
+                    ForEach(HubDestination.allCases) { dest in
+                        NavigationLink(value: dest) {
+                            Label(dest.title, systemImage: dest.systemImage)
+                        }
+                    }
+                }
+                Section {
+                    NavigationLink {
+                        SettingsView()
+                    } label: {
+                        Label("Settings", systemImage: "gearshape.fill")
+                    }
                 }
             }
             .listStyle(.insetGrouped)

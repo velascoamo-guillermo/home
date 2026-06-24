@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var store = SupabaseStore()
+    @State private var theme = ThemeStore()
     @State private var selectedTab: AppTab = .home
     @State private var hubPath: [HubDestination] = []
     @Environment(\.scenePhase) private var scenePhase
@@ -26,6 +27,9 @@ struct ContentView: View {
             }
         }
         .environment(store)
+        .environment(theme)
+        .tint(theme.tint)
+        .preferredColorScheme(theme.colorScheme)
         .task { await store.loadAll() }
         .onOpenURL { url in
             let route = AppRouter.route(host: url.host)

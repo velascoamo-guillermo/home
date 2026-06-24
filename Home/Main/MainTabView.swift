@@ -16,7 +16,6 @@ struct MainTabView: View {
                 SearchView()
             }
         }
-        .tint(Color(red: 1.0, green: 0.45, blue: 0.2))
     }
 }
 
