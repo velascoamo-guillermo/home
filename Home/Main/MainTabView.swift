@@ -20,6 +20,9 @@ struct MainTabView: View {
             Tab("Shopping", systemImage: "cart.fill", value: AppTab.shopping) {
                 ShoppingView()
             }
+            Tab(value: AppTab.search, role: .search) {
+                SearchView()
+            }
         }
         .tint(Color(red: 1.0, green: 0.45, blue: 0.2))
     }

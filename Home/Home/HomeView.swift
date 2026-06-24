@@ -121,9 +121,7 @@ struct HomeView: View {
     }
 
     private func snooze(_ task: HouseholdTask) {
-        var updated = task
-        updated.nextDueDate = Calendar.current.date(byAdding: .day, value: 1, to: task.nextDueDate) ?? task.nextDueDate
-        Task { try? await store.updateTask(updated) }
+        Task { try? await store.updateTask(task.snoozedByOneDay()) }
     }
 }
 
