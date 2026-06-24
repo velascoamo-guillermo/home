@@ -144,6 +144,8 @@
 		ST00AA11BB22CC33DD44EE09 /* StockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ST00AA11BB22CC33DD44EE08 /* StockView.swift */; };
 		UR00AA11BB22CC33DD44EE01 /* UIImage+Resize.swift in Sources */ = {isa = PBXBuildFile; fileRef = UR00AA11BB22CC33DD44EE00 /* UIImage+Resize.swift */; };
 		UR00AA11BB22CC33DD44EE02 /* UIImageResizeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = UR00AA11BB22CC33DD44EE10 /* UIImageResizeTests.swift */; };
+		83C75D683311427095E940F6 /* Color+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6E70814EC9046C8A1C4DE26 /* Color+Hex.swift */; };
+		6F77C8E4F3B64AF1A72CBC3A /* ColorHexTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DFA2BF8E2344AAFB1B936E7 /* ColorHexTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -307,6 +309,8 @@
 		ST00AA11BB22CC33DD44EE08 /* StockView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StockView.swift; sourceTree = "<group>"; };
 		UR00AA11BB22CC33DD44EE00 /* UIImage+Resize.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIImage+Resize.swift"; sourceTree = "<group>"; };
 		UR00AA11BB22CC33DD44EE10 /* UIImageResizeTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UIImageResizeTests.swift; sourceTree = "<group>"; };
+		A6E70814EC9046C8A1C4DE26 /* Color+Hex.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Color+Hex.swift"; sourceTree = "<group>"; };
+		9DFA2BF8E2344AAFB1B936E7 /* ColorHexTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ColorHexTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -419,6 +423,7 @@
 		4A196361B5940DD7C7851A10 /* Widget */ = {
 			isa = PBXGroup;
 			children = (
+				D7D3E1C18A2C4EB6859EA87D /* Theme */,
 				9BB602702653BB94D55F5891 /* WidgetSnapshot.swift */,
 				6EFD07EB72B922B3B688CC2A /* WidgetStore.swift */,
 				167B044780DEF36B6D746BFB /* WidgetSnapshotWriter.swift */,
@@ -429,6 +434,7 @@
 		50CD0F092FE2B37700DAD0CA /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
+				A6E70814EC9046C8A1C4DE26 /* Color+Hex.swift */,
 				A74D898413054708A6AED52C /* libsqlite3.tbd */,
 			);
 			name = "Recovered References";
@@ -451,6 +457,7 @@
 		50F3CD812FB7714C00238D41 /* Products */ = {
 			isa = PBXGroup;
 			children = (
+				19AE31D790AC4F3293739939 /* Theme */,
 				50F3CD802FB7714C00238D41 /* Home.app */,
 				HT00AA11BB22CC33DD44EE13 /* HomeTests.xctest */,
 				C50C7DD5D3AD5D0A4D7AF3C4 /* HomeWidget.appex */,
@@ -461,6 +468,7 @@
 		5B8F677F50DE37E4FDFF9F65 /* Menu */ = {
 			isa = PBXGroup;
 			children = (
+				9DFA2BF8E2344AAFB1B936E7 /* ColorHexTests.swift */,
 				BD71C92C5B049383A7F07FC2 /* Meal.swift */,
 				E32930F19D9DF1811CABFFA3 /* Weekday.swift */,
 				0DF0650AAC8C151554C098B6 /* MealProduct.swift */,
@@ -751,6 +759,20 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
+		D7D3E1C18A2C4EB6859EA87D /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Theme;
+			sourceTree = "<group>";
+		};
+		19AE31D790AC4F3293739939 /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Theme;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -854,6 +876,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6F77C8E4F3B64AF1A72CBC3A /* ColorHexTests.swift in Sources */,
+				83C75D683311427095E940F6 /* Color+Hex.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
