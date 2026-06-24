@@ -2,6 +2,7 @@ import Testing
 import SwiftUI
 @testable import Home
 
+@MainActor
 struct AppAppearanceTests {
     @Test func mapsToColorScheme() {
         #expect(AppAppearance.system.colorScheme == nil)
