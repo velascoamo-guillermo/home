@@ -9,9 +9,9 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleDisplayName</key>
-	<string>iCasita Widget</string>
+	<string>Casita Home Widget</string>
 	<key>CFBundleName</key>
-	<string>iCasita Widget</string>
+	<string>Casita Home Widget</string>
 	<key>CFBundlePackageType</key>
 	<string>XPC!</string>
 	<key>CFBundleShortVersionString</key>
