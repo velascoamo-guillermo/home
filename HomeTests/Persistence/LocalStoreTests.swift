@@ -1,6 +1,6 @@
 import Testing
 import Foundation
-@testable import Home
+@testable import Casita
 
 @Suite("LocalStore") @MainActor struct LocalStoreTests {
     private func make() async throws -> LocalStore {

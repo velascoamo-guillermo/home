@@ -1,6 +1,6 @@
 import Testing
 import Foundation
-@testable import Home
+@testable import Casita
 
 @Suite("SearchEngine") @MainActor struct SearchEngineTests {
 

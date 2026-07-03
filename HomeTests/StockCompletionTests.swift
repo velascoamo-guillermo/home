@@ -1,6 +1,6 @@
 import Testing
 import Foundation
-@testable import Home
+@testable import Casita
 
 @Suite("SupabaseStore – task completion + stock") @MainActor struct StockCompletionTests {
 

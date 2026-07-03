@@ -1,7 +1,7 @@
 // HomeTests/HomeItemTests.swift
 import Testing
 import Foundation
-@testable import Home
+@testable import Casita
 
 @Suite("HomeItem") @MainActor struct HomeItemTests {
 

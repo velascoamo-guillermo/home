@@ -1,5 +1,5 @@
 import Testing
-@testable import Home
+@testable import Casita
 
 @Suite("AppRouter") @MainActor struct AppRouteTests {
 

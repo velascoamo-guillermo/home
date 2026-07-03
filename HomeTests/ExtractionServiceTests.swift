@@ -1,7 +1,7 @@
 // HomeTests/ExtractionServiceTests.swift
 import Testing
 import Foundation
-@testable import Home
+@testable import Casita
 
 @Suite("ExtractionService") @MainActor struct ExtractionServiceTests {
 

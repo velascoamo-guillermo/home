@@ -1,6 +1,6 @@
 import Testing
 import UIKit
-@testable import Home
+@testable import Casita
 
 @Suite("UIImage+Resize") @MainActor struct UIImageResizeTests {
 

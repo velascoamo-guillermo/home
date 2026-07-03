@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
    LastUpgradeVersion = "2600"
-   version = "1.7">
+   version = "1.8">
    <BuildAction
       parallelizeBuildables = "YES"
       buildImplicitDependencies = "YES">
@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "50F3CD7F2FB7714C00238D41"
-               BuildableName = "Home.app"
+               BuildableName = "Casita.app"
                BlueprintName = "Home"
                ReferencedContainer = "container:Home.xcodeproj">
             </BuildableReference>
@@ -27,8 +27,6 @@
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
-      <TestServiceIdentifiers>
-      </TestServiceIdentifiers>
       <Testables>
          <TestableReference
             skipped = "NO">
@@ -41,6 +39,8 @@
             </BuildableReference>
          </TestableReference>
       </Testables>
+      <TestServiceIdentifiers>
+      </TestServiceIdentifiers>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -57,7 +57,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "50F3CD7F2FB7714C00238D41"
-            BuildableName = "Home.app"
+            BuildableName = "Casita.app"
             BlueprintName = "Home"
             ReferencedContainer = "container:Home.xcodeproj">
          </BuildableReference>
@@ -74,7 +74,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "50F3CD7F2FB7714C00238D41"
-            BuildableName = "Home.app"
+            BuildableName = "Casita.app"
             BlueprintName = "Home"
             ReferencedContainer = "container:Home.xcodeproj">
          </BuildableReference>

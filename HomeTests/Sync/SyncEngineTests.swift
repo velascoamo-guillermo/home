@@ -1,6 +1,6 @@
 import Testing
 import Foundation
-@testable import Home
+@testable import Casita
 
 actor FakeGateway: RemoteGateway {
     private var pushed: [(OutboxOpKind, String)] = []

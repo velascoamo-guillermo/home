@@ -1,6 +1,6 @@
 import Testing
 import Foundation
-@testable import Home
+@testable import Casita
 
 @Suite("Outbox behavior") @MainActor struct OutboxTests {
     private func make() async throws -> LocalStore {

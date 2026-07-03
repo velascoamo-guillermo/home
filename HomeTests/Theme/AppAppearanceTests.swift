@@ -1,6 +1,6 @@
 import Testing
 import SwiftUI
-@testable import Home
+@testable import Casita
 
 @MainActor
 struct AppAppearanceTests {
