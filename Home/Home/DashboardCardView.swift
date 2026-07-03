@@ -12,28 +12,30 @@ struct DashboardCardView: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        PressableGlassCard(onTap: navigate) {
             header
             content
         }
-        .padding(18)
-        .background(.background.secondary, in: .rect(cornerRadius: 16))
-        .contentShape(.rect(cornerRadius: 16))
-        .onTapGesture { navigate() }
     }
 
     private var header: some View {
         HStack(spacing: 10) {
             Image(systemName: card.systemImage)
-                .font(.headline)
-                .foregroundStyle(.tint)
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(card.tint)
+                .frame(width: 32, height: 32)
+                .background(card.tint.opacity(0.15), in: .rect(cornerRadius: 9))
                 .accessibilityHidden(true)
             Text(card.title).font(.headline)
             Spacer()
             if let count = headerCount {
                 Text("\(count)")
-                    .font(.subheadline.weight(.semibold))
+                    .font(.caption.weight(.semibold))
                     .foregroundStyle(.secondary)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 3)
+                    .background(.quaternary, in: .capsule)
+                    .contentTransition(.numericText())
             }
             if card.deepLinkHost != nil {
                 Image(systemName: "chevron.right")
@@ -54,13 +56,17 @@ struct DashboardCardView: View {
             if items.isEmpty {
                 emptyState("Nothing scheduled")
             } else {
-                ForEach(items) { item in
-                    HomeItemRow(item: item)
-                        .contentShape(Rectangle())
-                        .onTapGesture {
-                            if case .task(let t) = item { onSelectTask(t) }
-                        }
+                VStack(spacing: 0) {
+                    ForEach(items) { item in
+                        HomeItemRow(item: item)
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                if case .task(let t) = item { onSelectTask(t) }
+                            }
+                            .transition(.opacity.combined(with: .move(edge: .top)))
+                    }
                 }
+                .animation(.spring(duration: 0.35), value: items.map(\.id))
             }
 
         case .shoppingList:
