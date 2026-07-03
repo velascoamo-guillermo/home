@@ -1,6 +1,6 @@
 import Testing
 import Foundation
-@testable import Home
+@testable import Casita
 
 @Suite("Supermarket") @MainActor struct SupermarketTests {
     @Test("raw values are stable lowercase strings")

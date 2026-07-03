@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		00B2E6DC3F934773A9D00249 /* PetAvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7176104FF64E3885D42B3C /* PetAvatarView.swift */; };
-		00B6247F0DCA581DD2769CE0 /* HomeWidget.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = C50C7DD5D3AD5D0A4D7AF3C4 /* HomeWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		00B6247F0DCA581DD2769CE0 /* CasitaWidget.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = C50C7DD5D3AD5D0A4D7AF3C4 /* CasitaWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		02045C2EE3656925C6AB7845 /* SearchMealRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6484DCD98508EEB88E30F50A /* SearchMealRow.swift */; };
 		020E36B545EDFCBD3A1735E0 /* SearchTaskRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = C15F8CFEEF44FB8979083451 /* SearchTaskRow.swift */; };
 		04E87D69D3EFD3FB77FC3D27 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BC00C1F17D499F74F284100 /* DashboardView.swift */; };
@@ -134,7 +134,7 @@
 		HM00AA11BB22CC33DD44EE16 /* SFSymbolPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = HM00AA11BB22CC33DD44EE06 /* SFSymbolPicker.swift */; };
 		HM00AA11BB22CC33DD44EE17 /* TaskSectionPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = HM00AA11BB22CC33DD44EE07 /* TaskSectionPicker.swift */; };
 		HT00AA11BB22CC33DD44EE02 /* ExtractionServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = HT00AA11BB22CC33DD44EE12 /* ExtractionServiceTests.swift */; };
-		HT00AA11BB22CC33DD44EE03 /* CasitaHome.app in Frameworks */ = {isa = PBXBuildFile; fileRef = 50F3CD802FB7714C00238D41 /* CasitaHome.app */; };
+		HT00AA11BB22CC33DD44EE03 /* Casita.app in Frameworks */ = {isa = PBXBuildFile; fileRef = 50F3CD802FB7714C00238D41 /* Casita.app */; };
 		HT00AA11BB22CC33DD44EE04 /* SupabaseStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = HT00AA11BB22CC33DD44EE14 /* SupabaseStoreTests.swift */; };
 		HT00AA11BB22CC33DD44EE06 /* HomeItemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = HT00AA11BB22CC33DD44EE16 /* HomeItemTests.swift */; };
 		HT00AA11BB22CC33DD44EE07 /* PetModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = HT00AA11BB22CC33DD44EE17 /* PetModelTests.swift */; };
@@ -171,7 +171,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				00B6247F0DCA581DD2769CE0 /* HomeWidget.appex in Embed App Extensions */,
+				00B6247F0DCA581DD2769CE0 /* CasitaWidget.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -209,7 +209,7 @@
 		50734A7F2FD0A83E00553B07 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		507823C42FBCF3AF0042E71E /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		507823C52FBCF4BD0042E71E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		50F3CD802FB7714C00238D41 /* CasitaHome.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CasitaHome.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		50F3CD802FB7714C00238D41 /* Casita.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Casita.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		52052EE4A2810E6E1E457AA5 /* MealEntryTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MealEntryTests.swift; sourceTree = "<group>"; };
 		52F12A83C676197BA7862B03 /* MenuView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		54D020C3C3350CD92309BE0A /* SupabaseStore+Meals.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "SupabaseStore+Meals.swift"; sourceTree = "<group>"; };
@@ -260,7 +260,7 @@
 		BEE741125AA949498F90211C36D7FA12 /* SupabaseConfig.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SupabaseConfig.swift; sourceTree = "<group>"; };
 		BFD721BF9855C09D131A9116 /* Supermarket.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Supermarket.swift; sourceTree = "<group>"; };
 		C15F8CFEEF44FB8979083451 /* SearchTaskRow.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SearchTaskRow.swift; sourceTree = "<group>"; };
-		C50C7DD5D3AD5D0A4D7AF3C4 /* HomeWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = HomeWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		C50C7DD5D3AD5D0A4D7AF3C4 /* CasitaWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CasitaWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		CA00BB11CC22DD33EE44FF15 /* ExtractionResultSheet.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ExtractionResultSheet.swift; sourceTree = "<group>"; };
 		CA00BB11CC22DD33EE44FF16 /* ExtractionService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ExtractionService.swift; sourceTree = "<group>"; };
 		CA11BB22CC33DD44EE55FF00 /* CalendarService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CalendarService.swift; sourceTree = "<group>"; };
@@ -353,7 +353,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				HT00AA11BB22CC33DD44EE03 /* CasitaHome.app in Frameworks */,
+				HT00AA11BB22CC33DD44EE03 /* Casita.app in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -467,9 +467,9 @@
 		50F3CD812FB7714C00238D41 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				50F3CD802FB7714C00238D41 /* CasitaHome.app */,
+				50F3CD802FB7714C00238D41 /* Casita.app */,
 				HT00AA11BB22CC33DD44EE13 /* HomeTests.xctest */,
-				C50C7DD5D3AD5D0A4D7AF3C4 /* HomeWidget.appex */,
+				C50C7DD5D3AD5D0A4D7AF3C4 /* CasitaWidget.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -807,7 +807,7 @@
 			);
 			name = HomeWidget;
 			productName = HomeWidget;
-			productReference = C50C7DD5D3AD5D0A4D7AF3C4 /* HomeWidget.appex */;
+			productReference = C50C7DD5D3AD5D0A4D7AF3C4 /* CasitaWidget.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
 		50F3CD7F2FB7714C00238D41 /* Home */ = {
@@ -825,7 +825,7 @@
 			);
 			name = Home;
 			productName = Home;
-			productReference = 50F3CD802FB7714C00238D41 /* CasitaHome.app */;
+			productReference = 50F3CD802FB7714C00238D41 /* Casita.app */;
 			productType = "com.apple.product-type.application";
 		};
 		HT00AA11BB22CC33DD44EE20 /* HomeTests */ = {
@@ -1086,7 +1086,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.guillermovelasco.managedhome.HomeWidget;
-				PRODUCT_NAME = HomeWidget;
+				PRODUCT_NAME = CasitaWidget;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 6.0;
@@ -1230,8 +1230,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Home/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Casita Home";
-				INFOPLIST_KEY_CFBundleName = "Casita Home";
+				INFOPLIST_KEY_CFBundleDisplayName = "$(PRODUCT_NAME)";
+				INFOPLIST_KEY_CFBundleName = "$(PRODUCT_NAME)";
 				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "Add appointments to the calendar";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -1244,8 +1244,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.guillermovelasco.managedhome;
-				PRODUCT_MODULE_NAME = Home;
-				PRODUCT_NAME = CasitaHome;
+				PRODUCT_NAME = Casita;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
@@ -1269,8 +1268,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Home/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Casita Home";
-				INFOPLIST_KEY_CFBundleName = "Casita Home";
+				INFOPLIST_KEY_CFBundleDisplayName = "$(PRODUCT_NAME)";
+				INFOPLIST_KEY_CFBundleName = "$(PRODUCT_NAME)";
 				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "Add appointments to the calendar";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -1283,8 +1282,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.guillermovelasco.managedhome;
-				PRODUCT_MODULE_NAME = Home;
-				PRODUCT_NAME = CasitaHome;
+				PRODUCT_NAME = Casita;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
@@ -1309,7 +1307,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.guillermovelasco.managedhome.HomeWidget;
-				PRODUCT_NAME = HomeWidget;
+				PRODUCT_NAME = CasitaWidget;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 6.0;
@@ -1331,7 +1329,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 6.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CasitaHome.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/CasitaHome";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Casita.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Casita";
 			};
 			name = Debug;
 		};
@@ -1348,7 +1346,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 6.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CasitaHome.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/CasitaHome";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Casita.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Casita";
 			};
 			name = Release;
 		};

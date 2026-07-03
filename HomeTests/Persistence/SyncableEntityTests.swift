@@ -1,6 +1,6 @@
 import Testing
 import Foundation
-@testable import Home
+@testable import Casita
 
 @Suite("SyncableEntity") @MainActor struct SyncableEntityTests {
     @Test("StockProduct exposes table name and sync timestamps")

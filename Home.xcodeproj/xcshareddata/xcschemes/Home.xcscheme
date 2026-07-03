@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "50F3CD7F2FB7714C00238D41"
-               BuildableName = "CasitaHome.app"
+               BuildableName = "Casita.app"
                BlueprintName = "Home"
                ReferencedContainer = "container:Home.xcodeproj">
             </BuildableReference>
@@ -57,7 +57,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "50F3CD7F2FB7714C00238D41"
-            BuildableName = "CasitaHome.app"
+            BuildableName = "Casita.app"
             BlueprintName = "Home"
             ReferencedContainer = "container:Home.xcodeproj">
          </BuildableReference>
@@ -74,7 +74,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "50F3CD7F2FB7714C00238D41"
-            BuildableName = "CasitaHome.app"
+            BuildableName = "Casita.app"
             BlueprintName = "Home"
             ReferencedContainer = "container:Home.xcodeproj">
          </BuildableReference>

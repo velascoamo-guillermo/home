@@ -1,7 +1,7 @@
 // HomeTests/PetModelTests.swift
 import Testing
 import Foundation
-@testable import Home
+@testable import Casita
 
 // MARK: - Pet Codable
 

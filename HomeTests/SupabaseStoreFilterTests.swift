@@ -1,7 +1,7 @@
 // HomeTests/SupabaseStoreFilterTests.swift
 import Testing
 import Foundation
-@testable import Home
+@testable import Casita
 
 @Suite("SupabaseStore – additional filters") @MainActor struct SupabaseStoreFilterTests {
 

@@ -1,5 +1,5 @@
 import XCTest
-@testable import Home
+@testable import Casita
 
 @MainActor
 final class MealEntryTests: XCTestCase {
