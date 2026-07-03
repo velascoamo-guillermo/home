@@ -27,6 +27,15 @@ nonisolated enum DashboardCard: String, CaseIterable, Codable, Identifiable, Sen
         }
     }
 
+    var tint: Color {
+        switch self {
+        case .upcomingTasks: .blue
+        case .shoppingList:  .green
+        case .weekMeals:     .orange
+        case .appointments:  .pink
+        }
+    }
+
     // home:// host this card opens on tap. nil = the card acts in-place on Home
     // (Upcoming Tasks rows open the task sheet instead of navigating away).
     var deepLinkHost: String? {
