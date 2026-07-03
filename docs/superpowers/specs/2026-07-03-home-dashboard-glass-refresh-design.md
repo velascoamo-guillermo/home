@@ -77,9 +77,10 @@ Add a computed accent color per case — the only place color enters the design:
   in `.rect(cornerRadius: 9)`. Marked `.accessibilityHidden(true)` (title conveys it).
 - Header count pill: number in `.caption.weight(.semibold)`, horizontal padding,
   `Capsule().fill(.quaternary)` background. Apply `.contentTransition(.numericText())`.
-- Content rows (tasks/appointments/shopping/meals): wrap the `ForEach` result so
-  inserts/removals animate — `.animation(.spring, value:)` keyed on the item ids,
-  with `.transition(.opacity.combined(with: .move(edge: .top)))` on rows.
+- Task rows (the one branch that mutates in place via mark-done/snooze): wrap the
+  `ForEach` so inserts/removals animate — `.animation(.spring, value:)` keyed on
+  the item ids, with `.transition(.opacity.combined(with: .move(edge: .top)))` on
+  rows. Other branches change only via full-store refresh and stay as-is.
 
 ### 4. `DashboardHeaderView` (new)
 
