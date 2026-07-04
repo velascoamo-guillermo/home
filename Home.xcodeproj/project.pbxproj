@@ -1093,9 +1093,12 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_ENTITLEMENTS = HomeWidget/HomeWidget.entitlements;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 523MDDHYGD;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = HomeWidget/Info.plist;
+				MARKETING_VERSION = 1.1;
+				VERSIONING_SYSTEM = "apple-generic";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1258,7 +1261,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.guillermovelasco.managedhome;
 				PRODUCT_NAME = Casita;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -1296,7 +1299,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.guillermovelasco.managedhome;
 				PRODUCT_NAME = Casita;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -1314,9 +1317,12 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_ENTITLEMENTS = HomeWidget/HomeWidget.entitlements;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 523MDDHYGD;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = HomeWidget/Info.plist;
+				MARKETING_VERSION = 1.1;
+				VERSIONING_SYSTEM = "apple-generic";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

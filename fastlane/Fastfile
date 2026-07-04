@@ -61,8 +61,13 @@ platform :ios do
       profile_name: "match AppStore com.guillermovelasco.managedhome.HomeWidget"
     )
 
+    version = get_version_number(target: "Home")
+    latest = latest_testflight_build_number(
+      version: version,
+      initial_build_number: 0
+    )
     increment_build_number(
-      build_number: Time.now.strftime("%Y%m%d%H%M")
+      build_number: latest + 1
     )
 
     build_app(
