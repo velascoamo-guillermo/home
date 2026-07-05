@@ -26,25 +26,27 @@ struct IconChip: View {
 }
 
 extension View {
-    /// Inset-grouped list with a hidden system background so glass rows read as
-    /// floating cards over the app backdrop.
+    /// Inset-grouped list with a hidden system background and inter-row spacing
+    /// so glass rows read as separate floating cards over the app backdrop.
     func glassListStyle() -> some View {
         self
             .listStyle(.insetGrouped)
             .scrollContentBackground(.hidden)
+            .listRowSpacing(10)
     }
 
     /// Glass material backing for a list row, matching the dashboard card look.
     func glassRow() -> some View {
-        self.listRowBackground(
-            RoundedRectangle(cornerRadius: 16)
-                .fill(.regularMaterial)
-                .overlay {
-                    RoundedRectangle(cornerRadius: 16)
-                        .strokeBorder(.white.opacity(0.08), lineWidth: 0.5)
-                }
-                .padding(.vertical, 2)
-        )
+        self
+            .listRowSeparator(.hidden)
+            .listRowBackground(
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(.regularMaterial)
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 16)
+                            .strokeBorder(.white.opacity(0.08), lineWidth: 0.5)
+                    }
+            )
     }
 }
 
