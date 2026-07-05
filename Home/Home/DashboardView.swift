@@ -13,25 +13,35 @@ struct DashboardView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                if config.cards.isEmpty {
-                    ContentUnavailableView(
-                        "No cards",
-                        systemImage: "square.grid.2x2",
-                        description: Text("Tap Edit to add dashboard cards.")
+                LazyVStack(spacing: 14) {
+                    DashboardHeaderView(
+                        tasksDueToday: tasksDueToday,
+                        itemsToBuy: itemsToBuy
                     )
-                    .padding(.top, 80)
-                } else {
-                    LazyVStack(spacing: 14) {
+                    .padding(.bottom, 6)
+
+                    if config.cards.isEmpty {
+                        ContentUnavailableView(
+                            "No cards",
+                            systemImage: "square.grid.2x2",
+                            description: Text("Tap Edit to add dashboard cards.")
+                        )
+                        .padding(.top, 60)
+                    } else {
                         ForEach(config.cards) { card in
                             DashboardCardView(card: card) { task in
                                 editingTask = task
                             }
                         }
                     }
-                    .padding(16)
                 }
+                .padding(16)
+                .animation(.spring(duration: 0.35), value: config.cards)
+                .animation(.spring(duration: 0.35), value: tasksDueToday)
+                .animation(.spring(duration: 0.35), value: itemsToBuy)
             }
             .navigationTitle("Home")
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button("Edit", systemImage: "slider.horizontal.3") { showEdit = true }
@@ -47,6 +57,20 @@ struct DashboardView: View {
             }
         }
         .onAppear { config = configStore.load() }
+    }
+
+    private var tasksDueToday: Int {
+        let today = Calendar.current.startOfDay(for: .now)
+        return store.householdTasks
+            .filter { Calendar.current.startOfDay(for: $0.nextDueDate) <= today }
+            .count
+    }
+
+    private var itemsToBuy: Int {
+        DashboardData.shoppingList(
+            stock: store.stockProducts,
+            limit: DashboardData.shoppingLimit
+        ).total
     }
 }
 
