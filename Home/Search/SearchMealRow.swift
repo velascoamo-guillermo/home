@@ -7,11 +7,7 @@ struct SearchMealRow: View {
     var body: some View {
         HStack(spacing: 12) {
             if showsIcon {
-                Image(systemName: "fork.knife")
-                    .font(.title3)
-                    .foregroundStyle(.tint)
-                    .frame(width: 32)
-                    .accessibilityHidden(true)
+                IconChip(systemImage: "fork.knife")
             }
             VStack(alignment: .leading, spacing: 2) {
                 Text(meal.title.isEmpty ? "Untitled meal" : meal.title).font(.headline)

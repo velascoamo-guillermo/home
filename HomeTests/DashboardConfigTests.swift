@@ -41,9 +41,9 @@ import Foundation
         #expect(back == c)
     }
 
-    @Test("deepLinkHost: tasks stay on Home, others route")
+    @Test("deepLinkHost: every card routes to its section")
     func deepLinkHosts() {
-        #expect(DashboardCard.upcomingTasks.deepLinkHost == nil)
+        #expect(DashboardCard.upcomingTasks.deepLinkHost == "tasks")
         #expect(DashboardCard.shoppingList.deepLinkHost == "shopping")
         #expect(DashboardCard.weekMeals.deepLinkHost == "meals")
         #expect(DashboardCard.appointments.deepLinkHost == "pets")

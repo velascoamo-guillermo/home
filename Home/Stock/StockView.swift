@@ -20,6 +20,7 @@ struct StockView: View {
                             StockProductRow(product: product)
                         }
                         .buttonStyle(.plain)
+                        .glassRow()
                         .swipeActions(edge: .leading) {
                             Button {
                                 Task { try? await store.replenish(product) }
@@ -37,7 +38,7 @@ struct StockView: View {
                         }
                     }
                 }
-                .listStyle(.plain)
+                .glassListStyle()
             }
         }
         .navigationTitle("Stock")

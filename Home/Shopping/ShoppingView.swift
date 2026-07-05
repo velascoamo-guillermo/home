@@ -50,9 +50,7 @@ struct ShoppingView: View {
                                         Image(systemName: "circle")
                                             .foregroundStyle(.secondary)
                                             .accessibilityHidden(true)
-                                        Image(systemName: product.icon)
-                                            .foregroundStyle(.tint)
-                                            .frame(width: 28)
+                                        IconChip(systemImage: product.icon)
                                         Text(product.name)
                                         Spacer()
                                         if let category = product.category {
@@ -65,13 +63,14 @@ struct ShoppingView: View {
                                     .contentShape(.rect)
                                 }
                                 .buttonStyle(.plain)
+                                .glassRow()
                                 .accessibilityLabel(product.name)
                                 .accessibilityHint("Marks as bought and replenishes stock")
                             }
                         }
                     }
                 }
-                .listStyle(.insetGrouped)
+                .glassListStyle()
             }
         }
         .navigationTitle("Shopping")

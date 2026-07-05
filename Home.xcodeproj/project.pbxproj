@@ -91,6 +91,7 @@
 		BB22CC33DD44EE55FF6600AA /* AppointmentsTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB22CC33DD44EE55FF6600A1 /* AppointmentsTabView.swift */; };
 		BD3751E8C32A05906722913A /* MealSlotRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4A3A21671ACE388CBA0BFD /* MealSlotRow.swift */; };
 		BE50151A59558186C1FD92D1 /* PetRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FD0EC17349AAB28CC54A5CB /* PetRow.swift */; };
+		A1B2C3D4E5F600112233A002 /* IconChip.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F600112233A001 /* IconChip.swift */; };
 		BEE238195A1B46EE981FCC44 /* SQLiteDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = D89EF1C5AC494C239A04F4CE /* SQLiteDatabase.swift */; };
 		C1A823780AE3489A95BE163E /* PetDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55D97A7920684FC9B46E5FCE /* PetDetailView.swift */; };
 		C36BA13D0DDE4CF899B20C99 /* Outbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7E9C6C5EAB74373BF8B9164 /* Outbox.swift */; };
@@ -105,7 +106,7 @@
 		CAABA9DD63BA25A9E9AF26FF /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9125CD47912497347744376 /* SwiftUI.framework */; };
 		CC33DD44EE55FF6600AABB22 /* ClinicalHistoryTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC33DD44EE55FF6600AABB11 /* ClinicalHistoryTabView.swift */; };
 		CC44DD55EE55FF6600AABB33 /* ClinicalEntryRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC44DD55EE55FF6600AABB22 /* ClinicalEntryRow.swift */; };
-		CD57016D61746F8775546D4B /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06C806DCF5034FAB66D7D2B8 /* HomeView.swift */; };
+		CD57016D61746F8775546D4B /* TasksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06C806DCF5034FAB66D7D2B8 /* TasksView.swift */; };
 		D1C6AFF8131FA3F7022D0D79 /* AppRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E74FFE725D990117ACBBE36 /* AppRoute.swift */; };
 		D2BB3997470BE93B225FCE78 /* WidgetStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFD07EB72B922B3B688CC2A /* WidgetStore.swift */; };
 		D89773D11F0D48B8AEC82CDC /* AppAppearanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0299C23DD2754C41B0432E88 /* AppAppearanceTests.swift */; };
@@ -186,7 +187,7 @@
 		006B3D99E6B0E67C823B73FD /* ShoppingView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShoppingView.swift; sourceTree = "<group>"; };
 		0299C23DD2754C41B0432E88 /* AppAppearanceTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppAppearanceTests.swift; sourceTree = "<group>"; };
 		047A386D6EFDBE5D2EBA6DE0 /* DashboardCard.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DashboardCard.swift; sourceTree = "<group>"; };
-		06C806DCF5034FAB66D7D2B8 /* HomeView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		06C806DCF5034FAB66D7D2B8 /* TasksView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TasksView.swift; sourceTree = "<group>"; };
 		0DF0650AAC8C151554C098B6 /* MealProduct.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MealProduct.swift; sourceTree = "<group>"; };
 		0F20A5B0DF81C9A817739CAB /* SearchSelection.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SearchSelection.swift; sourceTree = "<group>"; };
 		13D3CEF61028E26D5BFB642E /* DashboardDataTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DashboardDataTests.swift; sourceTree = "<group>"; };
@@ -205,6 +206,7 @@
 		2E6995C6A3CF4F4BB2E5B277 /* SettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		2E74FFE725D990117ACBBE36 /* AppRoute.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppRoute.swift; sourceTree = "<group>"; };
 		2FD0EC17349AAB28CC54A5CB /* PetRow.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PetRow.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F600112233A001 /* IconChip.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = IconChip.swift; sourceTree = "<group>"; };
 		38EF62C71B523FCC7B9727A2 /* Provider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Provider.swift; sourceTree = "<group>"; };
 		3D0CE6DF7B2B78D682B30375 /* WidgetSnapshotCodableTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetSnapshotCodableTests.swift; sourceTree = "<group>"; };
 		3EB926FE133B87EA61FCC016 /* PressableGlassCard.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PressableGlassCard.swift; sourceTree = "<group>"; };
@@ -402,7 +404,7 @@
 		248845B37ACBAB618358A586 /* Home */ = {
 			isa = PBXGroup;
 			children = (
-				06C806DCF5034FAB66D7D2B8 /* HomeView.swift */,
+				06C806DCF5034FAB66D7D2B8 /* TasksView.swift */,
 				HM00AA11BB22CC33DD44EE01 /* HomeItem.swift */,
 				HM00AA11BB22CC33DD44EE02 /* HouseholdTask.swift */,
 				HM00AA11BB22CC33DD44EE03 /* HomeItemRow.swift */,
@@ -663,6 +665,7 @@
 				B69A10084EFE887518B77FB0 /* FeatureCard.swift */,
 				AB7176104FF64E3885D42B3C /* PetAvatarView.swift */,
 				2FD0EC17349AAB28CC54A5CB /* PetRow.swift */,
+				A1B2C3D4E5F600112233A001 /* IconChip.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -928,7 +931,7 @@
 				4830CC9362BB4A8B95B0722F /* ThemeStore.swift in Sources */,
 				065301A1049341A595A68A39 /* AppAppearance.swift in Sources */,
 				4750BD2B32964E23B7398111 /* Color+Hex.swift in Sources */,
-				CD57016D61746F8775546D4B /* HomeView.swift in Sources */,
+				CD57016D61746F8775546D4B /* TasksView.swift in Sources */,
 				HM00AA11BB22CC33DD44EE11 /* HomeItem.swift in Sources */,
 				HM00AA11BB22CC33DD44EE12 /* HouseholdTask.swift in Sources */,
 				HM00AA11BB22CC33DD44EE13 /* HomeItemRow.swift in Sources */,
@@ -942,6 +945,7 @@
 				2B49E3B0A73264B5D0EED88A /* FeatureCard.swift in Sources */,
 				00B2E6DC3F934773A9D00249 /* PetAvatarView.swift in Sources */,
 				BE50151A59558186C1FD92D1 /* PetRow.swift in Sources */,
+				A1B2C3D4E5F600112233A002 /* IconChip.swift in Sources */,
 				C5FC049B579BEC4CBF8EC041 /* ContentView.swift in Sources */,
 				68AEAB43A2107550172A58AE /* HomeApp.swift in Sources */,
 				86FAEA64D9AE43EBB5CE9ED1 /* Appointment.swift in Sources */,

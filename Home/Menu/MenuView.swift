@@ -34,6 +34,7 @@ struct MenuView: View {
                             )
                         }
                         .buttonStyle(.plain)
+                        .glassRow()
                     }
                 } header: {
                     HStack {
@@ -52,6 +53,7 @@ struct MenuView: View {
                 }
             }
         }
+        .glassListStyle()
         .navigationTitle("Menu")
         .toolbar {
             ToolbarItem(placement: .primaryAction) {

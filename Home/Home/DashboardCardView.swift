@@ -20,23 +20,9 @@ struct DashboardCardView: View {
 
     private var header: some View {
         HStack(spacing: 10) {
-            Image(systemName: card.systemImage)
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(card.tint)
-                .frame(width: 32, height: 32)
-                .background(card.tint.opacity(0.15), in: .rect(cornerRadius: 9))
-                .accessibilityHidden(true)
+            IconChip(systemImage: card.systemImage, tint: card.tint)
             Text(card.title).font(.headline)
             Spacer()
-            if let count = headerCount {
-                Text("\(count)")
-                    .font(.caption.weight(.semibold))
-                    .foregroundStyle(.secondary)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 3)
-                    .background(.quaternary, in: .capsule)
-                    .contentTransition(.numericText())
-            }
             if card.deepLinkHost != nil {
                 Image(systemName: "chevron.right")
                     .font(.caption.bold())
@@ -50,14 +36,14 @@ struct DashboardCardView: View {
     private var content: some View {
         switch card {
         case .upcomingTasks:
-            let items = DashboardData.upcomingTasks(
+            let result = DashboardData.upcomingTasks(
                 tasks: store.householdTasks, events: store.events, pets: store.pets,
                 today: .now, limit: DashboardData.taskLimit)
-            if items.isEmpty {
+            if result.items.isEmpty {
                 emptyState("Nothing scheduled")
             } else {
                 VStack(spacing: 0) {
-                    ForEach(items) { item in
+                    ForEach(result.items) { item in
                         HomeItemRow(item: item)
                             .contentShape(Rectangle())
                             .onTapGesture {
@@ -66,7 +52,8 @@ struct DashboardCardView: View {
                             .transition(.opacity.combined(with: .move(edge: .top)))
                     }
                 }
-                .animation(.spring(duration: 0.35), value: items.map(\.id))
+                .animation(.spring(duration: 0.35), value: result.items.map(\.id))
+                overflowFooter(shown: result.items.count, total: result.total)
             }
 
         case .shoppingList:
@@ -74,37 +61,43 @@ struct DashboardCardView: View {
                 emptyState("Nothing to buy")
             } else {
                 ForEach(shopping.items) { StockProductRow(product: $0, showsIcon: false) }
+                overflowFooter(shown: shopping.items.count, total: shopping.total)
             }
 
         case .weekMeals:
-            let meals = DashboardData.weekMeals(
+            let result = DashboardData.weekMeals(
                 meals: store.meals,
                 todayWeekday: Self.currentWeekday(),
                 limit: DashboardData.mealLimit)
-            if meals.isEmpty {
+            if result.items.isEmpty {
                 emptyState("No meals planned")
             } else {
-                ForEach(meals) { SearchMealRow(meal: $0, showsIcon: false) }
+                ForEach(result.items) { SearchMealRow(meal: $0, showsIcon: false) }
+                overflowFooter(shown: result.items.count, total: result.total)
             }
 
         case .appointments:
-            let items = DashboardData.upcomingAppointments(
+            let result = DashboardData.upcomingAppointments(
                 appointments: store.appointments, pets: store.pets,
                 limit: DashboardData.appointmentLimit)
-            if items.isEmpty {
+            if result.items.isEmpty {
                 emptyState("No upcoming appointments")
             } else {
-                ForEach(items) { HomeItemRow(item: $0) }
+                ForEach(result.items) { HomeItemRow(item: $0) }
+                overflowFooter(shown: result.items.count, total: result.total)
             }
         }
     }
 
-    private var headerCount: Int? {
-        switch card {
-        case .shoppingList:
-            shopping.total
-        default:
-            nil
+    @ViewBuilder
+    private func overflowFooter(shown: Int, total: Int) -> some View {
+        if total > shown {
+            Text("+\(total - shown) more")
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.top, 4)
+                .contentTransition(.numericText())
         }
     }
 
