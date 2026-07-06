@@ -1,8 +1,8 @@
 import Testing
 import Foundation
-@testable import Home
+@testable import Casita
 
-@Suite struct CalendarReminderTests {
+@Suite @MainActor struct CalendarReminderTests {
     @Test func offsetSecondsPerCase() {
         #expect(CalendarService.ReminderOffset.atTime.relativeOffset == 0)
         #expect(CalendarService.ReminderOffset.oneHourBefore.relativeOffset == -3600)
