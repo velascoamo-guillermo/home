@@ -63,6 +63,7 @@ struct PetDetailView: View {
                 case .appointments: AppointmentsTabView(pet: currentPet)
                 case .history:      ClinicalHistoryTabView(pet: currentPet)
                 case .events:       EventsTabView(pet: currentPet)
+                case .weight:       WeightTabView(pet: currentPet)
                 case .files:        FilesTabView(pet: currentPet)
                 }
             }
@@ -228,6 +229,7 @@ struct PetDetailView: View {
         case .appointments: return store.appointments(for: currentPet.id).count
         case .history:      return store.clinicalEntries(for: currentPet.id).count
         case .events:       return store.events(for: currentPet.id).count
+        case .weight:       return store.weightEntries(for: currentPet.id).count
         case .files:        return store.files(for: currentPet.id).count
         }
     }
@@ -275,7 +277,7 @@ struct PetDetailView: View {
 }
 
 private enum PetSection: String, CaseIterable, Identifiable {
-    case vet, appointments, history, events, files
+    case vet, appointments, history, events, weight, files
     var id: String { rawValue }
 
     var icon: String {
@@ -284,6 +286,7 @@ private enum PetSection: String, CaseIterable, Identifiable {
         case .appointments: return "calendar"
         case .history:      return "clock.arrow.circlepath"
         case .events:       return "list.bullet"
+        case .weight:       return "scalemass"
         case .files:        return "folder"
         }
     }
@@ -294,6 +297,7 @@ private enum PetSection: String, CaseIterable, Identifiable {
         case .appointments: return "Appointments"
         case .history:      return "History"
         case .events:       return "Events"
+        case .weight:       return "Weight"
         case .files:        return "Files"
         }
     }
