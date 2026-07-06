@@ -25,20 +25,8 @@ struct AppointmentsTabView: View {
                 Section("Upcoming") {
                     ForEach(upcoming) { appt in
                         AppointmentRow(appointment: appt)
-                            .swipeActions(edge: .leading) {
-                                Button {
-                                    Task { await CalendarService.addAppointment(appt, petName: pet.name) }
-                                } label: {
-                                    Label("Calendar", systemImage: "calendar.badge.plus")
-                                }.tint(.blue)
-                            }
-                            .swipeActions(edge: .trailing) {
-                                Button("Cancel", role: .destructive) {
-                                    Task { try? await store.updateAppointmentStatus(appt, status: .cancelled) }
-                                }
-                                Button("Done") {
-                                    Task { try? await store.updateAppointmentStatus(appt, status: .done) }
-                                }.tint(.green)
+                            .contextMenu {
+                                AppointmentContextMenu(appointment: appt, petName: pet.name)
                             }
                     }
                 }
@@ -47,10 +35,8 @@ struct AppointmentsTabView: View {
                 Section("Past") {
                     ForEach(past) { appt in
                         AppointmentRow(appointment: appt)
-                            .swipeActions {
-                                Button("Delete", role: .destructive) {
-                                    Task { try? await store.deleteAppointment(appt) }
-                                }
+                            .contextMenu {
+                                AppointmentContextMenu(appointment: appt, petName: pet.name)
                             }
                     }
                 }
