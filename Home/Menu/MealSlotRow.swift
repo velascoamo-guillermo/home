@@ -30,11 +30,10 @@ struct MealSlotRow: View {
                 }
             }
             .padding(.vertical, 4)
-            .swipeActions(edge: .leading) {
+            .contextMenu {
                 Button { onCook() } label: {
                     Label("Cocinado", systemImage: "flame.fill")
                 }
-                .tint(.green)
             }
         } else {
             HStack {

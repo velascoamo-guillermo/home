@@ -35,7 +35,7 @@ struct SearchView: View {
                                         StockProductRow(product: product)
                                     }
                                     .buttonStyle(.plain)
-                                    .contextMenu { stockMenu(product) }
+                                    .contextMenu { StockContextMenu(product: product) }
                                 }
                             }
                         }
@@ -46,7 +46,7 @@ struct SearchView: View {
                                         SearchTaskRow(task: task)
                                     }
                                     .buttonStyle(.plain)
-                                    .contextMenu { taskMenu(task) }
+                                    .contextMenu { TaskContextMenu(task: task) }
                                 }
                             }
                         }
@@ -93,40 +93,6 @@ struct SearchView: View {
             }
             .searchable(text: $searchText, prompt: "Search stock, tasks, meals, pets")
         }
-    }
-
-    @ViewBuilder
-    private func stockMenu(_ product: StockProduct) -> some View {
-        Button {
-            Task { try? await store.updateProduct(product.emptied()) }
-        } label: { Label("Empty", systemImage: "trash.slash") }
-        Button {
-            Task { try? await store.replenish(product) }
-        } label: { Label("Replenish", systemImage: "plus.square.on.square") }
-        if let consumed = product.consumingOneUnit() {
-            Button {
-                Task { try? await store.updateProduct(consumed) }
-            } label: { Label("Consume 1", systemImage: "minus.circle") }
-        }
-        Button(role: .destructive) {
-            Task { try? await store.deleteProduct(product) }
-        } label: { Label("Delete", systemImage: "trash") }
-    }
-
-    @ViewBuilder
-    private func taskMenu(_ task: HouseholdTask) -> some View {
-        Button {
-            Task { try? await store.completeTask(task) }
-        } label: { Label("Mark done", systemImage: "checkmark") }
-        Button {
-            Task { try? await store.updateTask(task.snoozedByOneDay()) }
-        } label: { Label("Snooze", systemImage: "clock.arrow.circlepath") }
-        Button {
-            Task { await CalendarService.addHouseholdTask(task) }
-        } label: { Label("Add to calendar", systemImage: "calendar.badge.plus") }
-        Button(role: .destructive) {
-            Task { try? await store.deleteTask(task) }
-        } label: { Label("Delete", systemImage: "trash") }
     }
 
     @ViewBuilder

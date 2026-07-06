@@ -16,10 +16,7 @@ struct StockProductRow: View {
     var body: some View {
         HStack(spacing: 12) {
             if showsIcon {
-                Image(systemName: product.icon)
-                    .font(.title3)
-                    .foregroundStyle(.tint)
-                    .frame(width: 32)
+                IconChip(systemImage: product.icon)
             }
             VStack(alignment: .leading, spacing: 2) {
                 Text(product.name).font(.headline)

@@ -20,18 +20,7 @@ struct EventsTabView: View {
             ForEach(events) { event in
                 Button { selectedEvent = event } label: { EventRow(event: event) }
                     .buttonStyle(.plain)
-                    .swipeActions(edge: .leading) {
-                        Button {
-                            Task { await CalendarService.addPetEvent(event, petName: pet.name) }
-                        } label: {
-                            Label("Calendar", systemImage: "calendar.badge.plus")
-                        }.tint(.blue)
-                    }
-                    .swipeActions(edge: .trailing) {
-                        Button("Delete", role: .destructive) {
-                            Task { try? await store.deleteEvent(event) }
-                        }
-                    }
+                    .contextMenu { EventContextMenu(event: event, petName: pet.name) }
             }
         }
         .toolbar {

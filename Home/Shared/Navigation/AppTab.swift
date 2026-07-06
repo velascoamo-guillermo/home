@@ -1,11 +1,12 @@
 import Foundation
 
 enum AppTab: String, Hashable {
-    case home, pets, stock, meals, shopping, search, menu
+    case home, tasks, pets, stock, meals, shopping, search, menu
 
     init?(host: String?) {
         switch host {
         case "home":     self = .home
+        case "tasks":    self = .tasks
         case "pets":     self = .pets
         case "stock":    self = .stock
         case "meals":    self = .meals

@@ -9,22 +9,31 @@ struct MenuHubView: View {
                 Section {
                     ForEach(HubDestination.allCases) { dest in
                         NavigationLink(value: dest) {
-                            Label(dest.title, systemImage: dest.systemImage)
+                            HStack(spacing: 12) {
+                                IconChip(systemImage: dest.systemImage, tint: dest.tint)
+                                Text(dest.title)
+                            }
                         }
+                        .glassRow()
                     }
                 }
                 Section {
                     NavigationLink {
                         SettingsView()
                     } label: {
-                        Label("Settings", systemImage: "gearshape.fill")
+                        HStack(spacing: 12) {
+                            IconChip(systemImage: "gearshape.fill", tint: .gray)
+                            Text("Settings")
+                        }
                     }
+                    .glassRow()
                 }
             }
-            .listStyle(.insetGrouped)
+            .glassListStyle()
             .navigationTitle("Menu")
             .navigationDestination(for: HubDestination.self) { dest in
                 switch dest {
+                case .tasks:    TasksView()
                 case .pets:     PetsView()
                 case .stock:    StockView()
                 case .meals:    MenuView()

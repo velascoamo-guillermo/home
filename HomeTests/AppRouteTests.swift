@@ -5,6 +5,7 @@ import Testing
 
     @Test("section hosts select the Menu hub and push the section")
     func sections() {
+        #expect(AppRouter.route(host: "tasks") == AppRoute(tab: .menu, hubDestination: .tasks))
         #expect(AppRouter.route(host: "meals") == AppRoute(tab: .menu, hubDestination: .meals))
         #expect(AppRouter.route(host: "pets") == AppRoute(tab: .menu, hubDestination: .pets))
         #expect(AppRouter.route(host: "stock") == AppRoute(tab: .menu, hubDestination: .stock))

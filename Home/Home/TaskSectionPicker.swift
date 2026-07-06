@@ -36,7 +36,7 @@ struct TaskSectionPicker: View {
                             selectedSectionId = section.id
                             dismiss()
                         }
-                        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                        .contextMenu {
                             Button(role: .destructive) {
                                 Task { try? await store.deleteCustomSection(section) }
                             } label: {

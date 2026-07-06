@@ -36,11 +36,10 @@ nonisolated enum DashboardCard: String, CaseIterable, Codable, Identifiable, Sen
         }
     }
 
-    // home:// host this card opens on tap. nil = the card acts in-place on Home
-    // (Upcoming Tasks rows open the task sheet instead of navigating away).
+    // home:// host this card opens on tap.
     var deepLinkHost: String? {
         switch self {
-        case .upcomingTasks: nil
+        case .upcomingTasks: "tasks"
         case .shoppingList:  "shopping"
         case .weekMeals:     "meals"
         case .appointments:  "pets"
