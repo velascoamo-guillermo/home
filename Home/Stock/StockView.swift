@@ -21,21 +21,7 @@ struct StockView: View {
                         }
                         .buttonStyle(.plain)
                         .glassRow()
-                        .swipeActions(edge: .leading) {
-                            Button {
-                                Task { try? await store.replenish(product) }
-                            } label: {
-                                Label("Replenish", systemImage: "plus.square.on.square")
-                            }
-                            .tint(.green)
-                        }
-                        .swipeActions(edge: .trailing) {
-                            Button(role: .destructive) {
-                                Task { try? await store.deleteProduct(product) }
-                            } label: {
-                                Label("Delete", systemImage: "trash")
-                            }
-                        }
+                        .contextMenu { StockContextMenu(product: product) }
                     }
                 }
                 .glassListStyle()
