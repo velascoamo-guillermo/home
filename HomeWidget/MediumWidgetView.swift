@@ -10,61 +10,84 @@ struct MediumWidgetView: View {
             Divider()
             mealsColumn
         }
-        .padding(12)
+        .padding(14)
     }
 
     private var eventsColumn: some View {
         Link(destination: URL(string: "home://home")!) {
-            VStack(alignment: .leading, spacing: 6) {
+            VStack(alignment: .leading, spacing: 8) {
+                WidgetSectionHeader(systemImage: "checklist", title: "Hoy", tint: .blue)
                 if snapshot.events.isEmpty {
                     Text("Nada para hoy")
                         .font(.caption)
                         .foregroundStyle(.secondary)
+                    Spacer(minLength: 0)
                 } else {
-                    ForEach(snapshot.events) { event in
-                        EventRowView(event: event, showSubtitle: false)
+                    VStack(alignment: .leading, spacing: 0) {
+                        ForEach(snapshot.events) { event in
+                            EventRowView(event: event)
+                                .frame(maxHeight: .infinity, alignment: .leading)
+                        }
                     }
+                    .frame(maxHeight: .infinity)
                 }
-                Spacer(minLength: 0)
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
         }
     }
 
     private var mealsColumn: some View {
         Link(destination: URL(string: "home://meals")!) {
             VStack(alignment: .leading, spacing: 8) {
-                MealTitleView(meal: snapshot.lunch)
-                MealTitleView(meal: snapshot.dinner)
-                Spacer(minLength: 0)
+                WidgetSectionHeader(systemImage: "fork.knife", title: "Menú", tint: .orange)
+                VStack(alignment: .leading, spacing: 0) {
+                    MealTitleView(meal: snapshot.lunch)
+                        .frame(maxHeight: .infinity, alignment: .leading)
+                    MealTitleView(meal: snapshot.dinner)
+                        .frame(maxHeight: .infinity, alignment: .leading)
+                }
+                .frame(maxHeight: .infinity)
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
         }
     }
 }
 
 // MARK: - Shared sub-views (used by both Medium and Large)
 
+struct WidgetSectionHeader: View {
+    let systemImage: String
+    let title: String
+    let tint: Color
+
+    var body: some View {
+        HStack(spacing: 6) {
+            Image(systemName: systemImage)
+                .font(.caption2.weight(.semibold))
+                .foregroundStyle(tint)
+                .frame(width: 20, height: 20)
+                .background(tint.opacity(0.15), in: .rect(cornerRadius: 6))
+                .accessibilityHidden(true)
+            Text(title)
+                .font(.caption.weight(.semibold))
+        }
+    }
+}
+
 struct EventRowView: View {
     let event: WidgetEvent
     var showSubtitle: Bool = false
 
     var body: some View {
-        HStack(spacing: 4) {
-            Image(systemName: event.systemImage)
-                .font(.caption2)
-                .foregroundStyle(.secondary)
-                .frame(width: 14)
-            VStack(alignment: .leading, spacing: 0) {
-                Text(event.title)
-                    .font(.caption)
+        VStack(alignment: .leading, spacing: 0) {
+            Text(event.title)
+                .font(.caption.weight(.medium))
+                .lineLimit(1)
+            if showSubtitle {
+                Text(event.subtitle)
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
                     .lineLimit(1)
-                if showSubtitle {
-                    Text(event.subtitle)
-                        .font(.caption2)
-                        .foregroundStyle(.secondary)
-                        .lineLimit(1)
-                }
             }
         }
     }
@@ -72,8 +95,6 @@ struct EventRowView: View {
 
 struct MealTitleView: View {
     let meal: WidgetMeal
-
-    private let widgetAccent = Color(red: 1.0, green: 0.45, blue: 0.2)
 
     var body: some View {
         VStack(alignment: .leading, spacing: 1) {
@@ -86,9 +107,8 @@ struct MealTitleView: View {
                     .foregroundStyle(.tertiary)
             } else {
                 Text(meal.title)
-                    .font(.caption)
-                    .fontWeight(.medium)
-                    .foregroundStyle(widgetAccent)
+                    .font(.caption.weight(.medium))
+                    .foregroundStyle(.orange)
                     .lineLimit(2)
             }
         }
