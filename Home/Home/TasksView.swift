@@ -28,44 +28,21 @@ struct TasksView: View {
                             .contentShape(Rectangle())
                             .onTapGesture { handleTap(item) }
                             .glassRow()
-                            .swipeActions(edge: .leading) {
-                                if case .task(let t) = item {
-                                    Button {
-                                        markDone(t)
-                                    } label: {
-                                        Label("Done", systemImage: "checkmark")
-                                    }
-                                    .tint(.green)
-                                }
-                            }
-                            .swipeActions(edge: .trailing) {
+                            .contextMenu {
                                 switch item {
                                 case .task(let t):
-                                    Button(role: .destructive) {
-                                        Task { try? await store.deleteTask(t) }
-                                    } label: {
-                                        Label("Delete", systemImage: "trash")
+                                    TaskContextMenu(task: t) { result in
+                                        if case .outOfStock(let product) = result {
+                                            outOfStock = OutOfStockInfo(
+                                                product: product,
+                                                needed: t.quantityPerCompletion
+                                            )
+                                        }
                                     }
-                                    Button {
-                                        snooze(t)
-                                    } label: {
-                                        Label("Snooze", systemImage: "clock.arrow.circlepath")
-                                    }
-                                    .tint(.orange)
-                                    Button {
-                                        Task { await CalendarService.addHouseholdTask(t) }
-                                    } label: {
-                                        Label("Calendar", systemImage: "calendar.badge.plus")
-                                    }
-                                    .tint(.blue)
-                                case .event(let e, _):
-                                    Button(role: .destructive) {
-                                        Task { try? await store.deleteEvent(e) }
-                                    } label: {
-                                        Label("Delete", systemImage: "trash")
-                                    }
-                                default:
-                                    EmptyView()
+                                case .event(let e, let pet):
+                                    EventContextMenu(event: e, petName: pet.name)
+                                case .appointment(let a, let pet):
+                                    AppointmentContextMenu(appointment: a, petName: pet.name)
                                 }
                             }
                     }
@@ -110,18 +87,6 @@ struct TasksView: View {
         }
     }
 
-    private func markDone(_ task: HouseholdTask) {
-        Task {
-            let result = try? await store.completeTask(task)
-            if case .outOfStock(let product)? = result {
-                outOfStock = OutOfStockInfo(product: product, needed: task.quantityPerCompletion)
-            }
-        }
-    }
-
-    private func snooze(_ task: HouseholdTask) {
-        Task { try? await store.updateTask(task.snoozedByOneDay()) }
-    }
 }
 
 #Preview {
