@@ -65,7 +65,7 @@ Create `HomeTests/CalendarReminderTests.swift`:
 ```swift
 import Testing
 import Foundation
-@testable import Home
+@testable import Casita
 
 @Suite struct CalendarReminderTests {
     @Test func offsetSecondsPerCase() {
@@ -180,7 +180,7 @@ Create `HomeTests/HouseholdTaskSnoozeTests.swift`:
 ```swift
 import Testing
 import Foundation
-@testable import Home
+@testable import Casita
 
 @Suite struct HouseholdTaskSnoozeTests {
     private func makeTask(due: Date) -> HouseholdTask {
