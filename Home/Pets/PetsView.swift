@@ -11,10 +11,10 @@ struct PetsView: View {
                 PetRow(pet: pet)
             }
             .matchedTransitionSource(id: pet.id, in: heroNamespace)
-            .swipeActions(edge: .trailing) {
-                Button("Delete", role: .destructive) {
+            .contextMenu {
+                Button(role: .destructive) {
                     Task { try? await store.deletePet(pet) }
-                }
+                } label: { Label("Delete", systemImage: "trash") }
             }
         }
         .navigationTitle("My Pets")

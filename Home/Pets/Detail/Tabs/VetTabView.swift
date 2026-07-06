@@ -20,10 +20,10 @@ struct VetTabView: View {
             ForEach(store.veterinarians) { vet in
                 VetRow(vet: vet)
                     .onTapGesture { editingVet = vet }
-                    .swipeActions(edge: .trailing) {
-                        Button("Delete", role: .destructive) {
+                    .contextMenu {
+                        Button(role: .destructive) {
                             Task { try? await store.deleteVet(vet) }
-                        }
+                        } label: { Label("Delete", systemImage: "trash") }
                     }
             }
         }

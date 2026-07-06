@@ -22,10 +22,10 @@ struct ClinicalHistoryTabView: View {
                     ClinicalEntryRow(entry: entry, fileCount: fileCount)
                 }
                 .buttonStyle(.plain)
-                .swipeActions {
-                    Button("Delete", role: .destructive) {
+                .contextMenu {
+                    Button(role: .destructive) {
                         Task { try? await store.deleteClinicalEntry(entry) }
-                    }
+                    } label: { Label("Delete", systemImage: "trash") }
                 }
             }
         }
