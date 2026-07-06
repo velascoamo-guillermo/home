@@ -27,10 +27,10 @@ struct EventDetailView: View {
                             Label(file.displayName,
                                   systemImage: file.sourceType == .document ? "doc.fill" : "photo.fill")
                         }
-                        .swipeActions {
-                            Button("Delete", role: .destructive) {
+                        .contextMenu {
+                            Button(role: .destructive) {
                                 Task { try? await store.deleteFile(file) }
-                            }
+                            } label: { Label("Delete", systemImage: "trash") }
                         }
                     }
                     Button { showFilePicker = true } label: {
