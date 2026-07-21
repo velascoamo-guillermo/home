@@ -66,6 +66,19 @@ import Foundation
         #expect(r.total == 3)
     }
 
+    @Test("weekMeals collapses duplicate (day, slot) entries, keeping the newest updatedAt")
+    func mealsCollapsesDuplicateSlot() {
+        let now = Date(timeIntervalSince1970: 1_000_000)
+        let meal = Meal(title: "Mon lunch")
+        let older = MenuEntry(dayOfWeek: 1, slot: .lunch, mealId: meal.id, updatedAt: now)
+        let newer = MenuEntry(dayOfWeek: 1, slot: .lunch, mealId: meal.id, updatedAt: now + day)
+        let r = DashboardData.weekMeals(entries: [older, newer], meals: [meal],
+                                        todayWeekday: 1, limit: 5)
+        #expect(r.items.count == 1)
+        #expect(r.items.first?.entry.id == newer.id)
+        #expect(r.total == 1)
+    }
+
     @Test("weekMeals reports total beyond limit")
     func mealsOverflow() {
         let pairs = [planned(day: 1, slot: .lunch, title: "A"),

@@ -33,11 +33,24 @@ enum DashboardData {
         var id: UUID { entry.id }
     }
 
+    private struct SlotPosition: Hashable {
+        let dayOfWeek: Int
+        let slot: MealSlot
+    }
+
     static func weekMeals(
         entries: [MenuEntry], meals: [Meal], todayWeekday: Int, limit: Int
     ) -> (items: [WeekMeal], total: Int) {
         let slotOrder: (MealSlot) -> Int = { MealSlot.allCases.firstIndex(of: $0) ?? 0 }
-        let planned = entries.compactMap { entry -> WeekMeal? in
+        var latestByPosition: [SlotPosition: MenuEntry] = [:]
+        for entry in entries {
+            let position = SlotPosition(dayOfWeek: entry.dayOfWeek, slot: entry.slot)
+            if let existing = latestByPosition[position], existing.updatedAt >= entry.updatedAt {
+                continue
+            }
+            latestByPosition[position] = entry
+        }
+        let planned = latestByPosition.values.compactMap { entry -> WeekMeal? in
             guard let meal = meals.first(where: { $0.id == entry.mealId }),
                   !meal.title.isEmpty else { return nil }
             return WeekMeal(entry: entry, meal: meal)
