@@ -17,34 +17,38 @@ struct MealsListView: View {
     }
 
     var body: some View {
-        List {
-            if catalog.isEmpty {
+        Group {
+            if store.meals.isEmpty {
                 ContentUnavailableView(
                     "Sin meals",
                     systemImage: "fork.knife",
                     description: Text("Crea meals para armar el menú semanal.")
                 )
-                .listRowBackground(Color.clear)
-            }
-            ForEach(catalog) { meal in
-                Button { editingMeal = meal } label: {
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(meal.title.isEmpty ? "Sin título" : meal.title)
-                        if let cals = meal.nutrition.calories {
-                            Text("\(cals) kcal").font(.caption).foregroundStyle(.secondary)
+            } else if catalog.isEmpty {
+                ContentUnavailableView.search(text: searchText)
+            } else {
+                List {
+                    ForEach(catalog) { meal in
+                        Button { editingMeal = meal } label: {
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(meal.title.isEmpty ? "Sin título" : meal.title)
+                                if let cals = meal.nutrition.calories {
+                                    Text("\(cals) kcal").font(.caption).foregroundStyle(.secondary)
+                                }
+                            }
+                        }
+                        .buttonStyle(.plain)
+                        .glassRow()
+                        .swipeActions(edge: .trailing) {
+                            Button(role: .destructive) { mealToDelete = meal } label: {
+                                Label("Eliminar", systemImage: "trash")
+                            }
                         }
                     }
                 }
-                .buttonStyle(.plain)
-                .glassRow()
-                .swipeActions(edge: .trailing) {
-                    Button(role: .destructive) { mealToDelete = meal } label: {
-                        Label("Eliminar", systemImage: "trash")
-                    }
-                }
+                .glassListStyle()
             }
         }
-        .glassListStyle()
         .searchable(text: $searchText, prompt: "Buscar meal")
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
