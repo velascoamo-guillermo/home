@@ -51,6 +51,7 @@ Reglas:
 - Evita repetir la misma comida en varios huecos; si hay menos comidas que huecos, reparte las repeticiones lo máximo posible.
 - Varía a lo largo de la semana y respecto a lo ya planificado.
 - Devuelve un objeto por cada hueco solicitado, con su day y slot exactos.
+- Copia exactamente el título de cada comida tal como aparece en el catálogo (sin paráfrasis, sin reescrituras, sin cambios de capitalización).
 
 Responde SOLO con JSON válido — sin markdown, sin texto extra — un array con este esquema exacto:
 [
@@ -58,7 +59,7 @@ Responde SOLO con JSON válido — sin markdown, sin texto extra — un array co
     "day": número (1=lunes … 7=domingo),
     "slot": "lunch" o "dinner",
     "meal_id": "uuid exacto del catálogo",
-    "title": "título de esa comida"
+    "title": "título exacto del catálogo (cópialo tal cual, sin paráfrasis)"
   }
 ]`;
 
