@@ -12,7 +12,6 @@ struct MenuView: View {
         let id = UUID()
         let day: Int
         let slot: MealSlot
-        let entry: MealEntry?
     }
 
     var body: some View {
@@ -22,8 +21,7 @@ struct MenuView: View {
                     ForEach(MealSlot.allCases, id: \.self) { slot in
                         let entry = store.mealEntry(day: weekday.rawValue, slot: slot)
                         Button {
-                            editTarget = EditTarget(day: weekday.rawValue, slot: slot,
-                                                    entry: entry)
+                            editTarget = EditTarget(day: weekday.rawValue, slot: slot)
                         } label: {
                             MealSlotRow(
                                 slot: slot,
@@ -40,7 +38,7 @@ struct MenuView: View {
                     HStack {
                         Text(weekday.displayName)
                         Spacer()
-                        if store.meals.contains(where: { $0.dayOfWeek == weekday.rawValue }) {
+                        if store.menuEntries.contains(where: { $0.dayOfWeek == weekday.rawValue }) {
                             Button("Vaciar día", systemImage: "trash") {
                                 dayToClear = weekday
                             }
@@ -62,7 +60,8 @@ struct MenuView: View {
                 } label: {
                     Label("Sugerir semana", systemImage: "sparkles")
                 }
-                .disabled(isSuggesting || store.emptyMealSlots.isEmpty)
+                .disabled(isSuggesting || store.emptyMealSlots.isEmpty
+                          || store.meals.allSatisfy { $0.title.isEmpty })
             }
         }
         .overlay {
@@ -73,11 +72,7 @@ struct MenuView: View {
             }
         }
         .sheet(item: $editTarget) { target in
-            MealEditSheet(
-                dayOfWeek: target.day,
-                slot: target.slot,
-                entry: target.entry
-            )
+            MealPickerSheet(day: target.day, slot: target.slot)
         }
         .confirmationDialog(
             "¿Vaciar \(dayToClear?.displayName ?? "")?",

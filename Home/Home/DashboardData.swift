@@ -27,14 +27,26 @@ enum DashboardData {
         return (Array(out.prefix(limit)), out.count)
     }
 
-    static func weekMeals(meals: [Meal], todayWeekday: Int, limit: Int) -> (items: [Meal], total: Int) {
+    struct WeekMeal: Identifiable {
+        let entry: MenuEntry
+        let meal: Meal
+        var id: UUID { entry.id }
+    }
+
+    static func weekMeals(
+        entries: [MenuEntry], meals: [Meal], todayWeekday: Int, limit: Int
+    ) -> (items: [WeekMeal], total: Int) {
         let slotOrder: (MealSlot) -> Int = { MealSlot.allCases.firstIndex(of: $0) ?? 0 }
-        let planned = meals.filter { !$0.title.isEmpty }
+        let planned = entries.compactMap { entry -> WeekMeal? in
+            guard let meal = meals.first(where: { $0.id == entry.mealId }),
+                  !meal.title.isEmpty else { return nil }
+            return WeekMeal(entry: entry, meal: meal)
+        }
         let rotated = planned.sorted { lhs, rhs in
-            let l = (lhs.dayOfWeek - todayWeekday + 7) % 7
-            let r = (rhs.dayOfWeek - todayWeekday + 7) % 7
+            let l = (lhs.entry.dayOfWeek - todayWeekday + 7) % 7
+            let r = (rhs.entry.dayOfWeek - todayWeekday + 7) % 7
             if l != r { return l < r }
-            return slotOrder(lhs.slot) < slotOrder(rhs.slot)
+            return slotOrder(lhs.entry.slot) < slotOrder(rhs.entry.slot)
         }
         return (Array(rotated.prefix(limit)), rotated.count)
     }

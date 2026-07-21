@@ -7,8 +7,6 @@ final class MealTests: XCTestCase {
         let json = """
         {
           "id": "00000000-0000-0000-0000-000000000001",
-          "day_of_week": 3,
-          "slot": "dinner",
           "title": "Pasta",
           "servings": 2,
           "calories": 520,
@@ -23,8 +21,6 @@ final class MealTests: XCTestCase {
         decoder.dateDecodingStrategy = .iso8601
         let meal = try decoder.decode(Meal.self, from: json)
 
-        XCTAssertEqual(meal.dayOfWeek, 3)
-        XCTAssertEqual(meal.slot, .dinner)
         XCTAssertEqual(meal.title, "Pasta")
         XCTAssertEqual(meal.nutrition.calories, 520)
         XCTAssertEqual(meal.nutrition.proteinG, 25)
@@ -35,8 +31,6 @@ final class MealTests: XCTestCase {
         let json = """
         {
           "id": "00000000-0000-0000-0000-000000000002",
-          "day_of_week": 1,
-          "slot": "lunch",
           "title": "",
           "servings": null,
           "calories": null,
@@ -51,7 +45,6 @@ final class MealTests: XCTestCase {
         decoder.dateDecodingStrategy = .iso8601
         let meal = try decoder.decode(Meal.self, from: json)
 
-        XCTAssertEqual(meal.slot, .lunch)
         XCTAssertNil(meal.servings)
         XCTAssertNil(meal.nutrition.calories)
         XCTAssertFalse(meal.nutrition.hasAnyValue)

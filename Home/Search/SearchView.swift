@@ -84,11 +84,7 @@ struct SearchView: View {
                 case .stock(let p): AddStockProductSheet(existing: p)
                 case .task(let t):  HouseholdTaskSheet(existing: t)
                 case .meal(let m):
-                    MealEditSheet(
-                        dayOfWeek: m.dayOfWeek,
-                        slot: m.slot,
-                        entry: store.mealEntry(day: m.dayOfWeek, slot: m.slot)
-                    )
+                    MealFormSheet(existing: m)
                 }
             }
             .searchable(text: $searchText, prompt: "Search stock, tasks, meals, pets")

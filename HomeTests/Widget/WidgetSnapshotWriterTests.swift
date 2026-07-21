@@ -127,14 +127,15 @@ struct WidgetSnapshotWriterTests {
     }
 
     @Test func presentMealEntryMapsCorrectly() {
-        let meal = Meal(dayOfWeek: 1, slot: .lunch, title: "Pasta carbonara")
+        let meal = Meal(title: "Pasta carbonara")
         let productId = UUID()
         let product = StockProduct(
             id: productId, name: "Panceta", icon: "cart",
             packages: 1, looseUnits: 0, unitsPerPackage: 1
         )
         let link = MealEntry.Link(product: product, quantity: 1)
-        let entry = MealEntry(meal: meal, links: [link])
+        let entry = MealEntry(menuEntry: MenuEntry(dayOfWeek: 1, slot: .lunch, mealId: meal.id),
+                              meal: meal, links: [link])
 
         let snapshot = WidgetSnapshotWriter.buildSnapshot(
             timeline: [], stockProducts: [], lunch: entry, dinner: nil
@@ -147,13 +148,14 @@ struct WidgetSnapshotWriterTests {
     }
 
     @Test func isShortPropagates() {
-        let meal = Meal(dayOfWeek: 1, slot: .dinner, title: "Paella")
+        let meal = Meal(title: "Paella")
         let product = StockProduct(
             name: "Arroz", icon: "cart",
             packages: 0, looseUnits: 0, unitsPerPackage: 1  // totalUnits = 0
         )
         let link = MealEntry.Link(product: product, quantity: 2)  // needs 2, has 0
-        let entry = MealEntry(meal: meal, links: [link])
+        let entry = MealEntry(menuEntry: MenuEntry(dayOfWeek: 1, slot: .dinner, mealId: meal.id),
+                              meal: meal, links: [link])
 
         let snapshot = WidgetSnapshotWriter.buildSnapshot(
             timeline: [], stockProducts: [], lunch: nil, dinner: entry

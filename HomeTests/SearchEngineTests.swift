@@ -11,7 +11,7 @@ import Foundation
         HouseholdTask(title: title, icon: "x", intervalDays: 7, nextDueDate: .now)
     }
     private func meal(_ title: String) -> Meal {
-        Meal(dayOfWeek: 0, slot: .lunch, title: title)
+        Meal(title: title)
     }
     private func pet(_ name: String) -> Pet {
         Pet(name: name, type: "Dog", breed: "Lab")
