@@ -58,6 +58,7 @@
 		5793579B326ADCE50A1CD189 /* MealSuggestion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B8B994CF9E69594B9A07ACA /* MealSuggestion.swift */; };
 		5AACA79B2C1F4B282A524B4F /* WidgetStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFD07EB72B922B3B688CC2A /* WidgetStore.swift */; };
 		5B333B1BDEF4E93AC16D9136 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2D908018579E74C4F6DE3F /* MainTabView.swift */; };
+		5C48795BA122ECF5A5F138CE /* MenuEntrySyncTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F92FBF3D893CCC3E6A10DDC7 /* MenuEntrySyncTests.swift */; };
 		617C3B49B6DBEC76C70CC5AF /* DashboardHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD1D58A605AADA241317ABAD /* DashboardHeaderView.swift */; };
 		64526258DA779FBFD5028DDC /* DashboardEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD405E293585DCC625C015EE /* DashboardEditView.swift */; };
 		68AEAB43A2107550172A58AE /* HomeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4CDCB58B9C74EE5C806160F /* HomeApp.swift */; };
@@ -113,6 +114,7 @@
 		CD57016D61746F8775546D4B /* TasksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06C806DCF5034FAB66D7D2B8 /* TasksView.swift */; };
 		D1C6AFF8131FA3F7022D0D79 /* AppRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E74FFE725D990117ACBBE36 /* AppRoute.swift */; };
 		D2BB3997470BE93B225FCE78 /* WidgetStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFD07EB72B922B3B688CC2A /* WidgetStore.swift */; };
+		D84E927463A8C0DA8EEA7014 /* MenuEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFEEEAAA06C82715FF19FAD9 /* MenuEntry.swift */; };
 		D89773D11F0D48B8AEC82CDC /* AppAppearanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0299C23DD2754C41B0432E88 /* AppAppearanceTests.swift */; };
 		D8D65E87B7F34D1DB8A2FB68 /* HomeWidgetEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBD8A1718F9DB1A2A0DE70DA /* HomeWidgetEntryView.swift */; };
 		D9F30640853702C1D4B379F0 /* DashboardDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13D3CEF61028E26D5BFB642E /* DashboardDataTests.swift */; };
@@ -287,6 +289,7 @@
 		CC44DD55EE55FF6600AABB22 /* ClinicalEntryRow.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ClinicalEntryRow.swift; sourceTree = "<group>"; };
 		CD1D58A605AADA241317ABAD /* DashboardHeaderView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DashboardHeaderView.swift; sourceTree = "<group>"; };
 		CF21E00DCCBEF18421A267A3 /* AppTab.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppTab.swift; sourceTree = "<group>"; };
+		CFEEEAAA06C82715FF19FAD9 /* MenuEntry.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MenuEntry.swift; sourceTree = "<group>"; };
 		D0894A58F3E0471E870AA5A4 /* ClinicalEntry.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ClinicalEntry.swift; sourceTree = "<group>"; };
 		D337BEEFF45641A7A41446D8 /* PetFile.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PetFile.swift; sourceTree = "<group>"; };
 		D89EF1C5AC494C239A04F4CE /* SQLiteDatabase.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SQLiteDatabase.swift; sourceTree = "<group>"; };
@@ -313,6 +316,7 @@
 		F076DD376D0245EFBD1E48BB /* SyncEngineTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SyncEngineTests.swift; sourceTree = "<group>"; };
 		F2E5721358282A900C31C30E /* HubDestinationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HubDestinationTests.swift; sourceTree = "<group>"; };
 		F5BAB79A911B4FD3860DCA75 /* SyncEngine.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SyncEngine.swift; sourceTree = "<group>"; };
+		F92FBF3D893CCC3E6A10DDC7 /* MenuEntrySyncTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MenuEntrySyncTests.swift; sourceTree = "<group>"; };
 		FAE725D024BD4C668DC2B46C /* ColorHexTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ColorHexTests.swift; sourceTree = "<group>"; };
 		FD405E293585DCC625C015EE /* DashboardEditView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DashboardEditView.swift; sourceTree = "<group>"; };
 		FDDE5A16D5905503DD57E66B /* TaskContextMenu.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TaskContextMenu.swift; sourceTree = "<group>"; };
@@ -396,6 +400,7 @@
 			isa = PBXGroup;
 			children = (
 				F076DD376D0245EFBD1E48BB /* SyncEngineTests.swift */,
+				F92FBF3D893CCC3E6A10DDC7 /* MenuEntrySyncTests.swift */,
 			);
 			path = Sync;
 			sourceTree = "<group>";
@@ -513,6 +518,7 @@
 				52F12A83C676197BA7862B03 /* MenuView.swift */,
 				8A2A0C24360D9F72C3AEFB22 /* HubDestination.swift */,
 				75294F7E5A66EB5C77B450CE /* MenuHubView.swift */,
+				CFEEEAAA06C82715FF19FAD9 /* MenuEntry.swift */,
 			);
 			path = Menu;
 			sourceTree = "<group>";
@@ -1052,6 +1058,7 @@
 				EEC3DDBBE34A44331DC13BCE /* EventContextMenu.swift in Sources */,
 				AD4F7C9E6F9A029465653034 /* AppointmentContextMenu.swift in Sources */,
 				49DF2592DDF6227CD2718279 /* StockContextMenu.swift in Sources */,
+				D84E927463A8C0DA8EEA7014 /* MenuEntry.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1111,6 +1118,7 @@
 				2719B8303E8F45E28B575B80 /* DashboardHeaderTests.swift in Sources */,
 				349C6CE04663272E56B08536 /* CalendarReminderTests.swift in Sources */,
 				EB78549E75C30BEAC08D841C /* HouseholdTaskSnoozeTests.swift in Sources */,
+				5C48795BA122ECF5A5F138CE /* MenuEntrySyncTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
