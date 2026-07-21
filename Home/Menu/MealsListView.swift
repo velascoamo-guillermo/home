@@ -36,6 +36,8 @@ struct MealsListView: View {
                                     Text("\(cals) kcal").font(.caption).foregroundStyle(.secondary)
                                 }
                             }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .contentShape(.rect)
                         }
                         .buttonStyle(.plain)
                         .glassRow()

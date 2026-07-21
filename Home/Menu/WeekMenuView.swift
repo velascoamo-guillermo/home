@@ -30,6 +30,7 @@ struct WeekMenuView: View {
                                     if let entry { Task { await cook(entry) } }
                                 }
                             )
+                            .contentShape(.rect)
                         }
                         .buttonStyle(.plain)
                         .glassRow()
