@@ -68,12 +68,20 @@ extension SupabaseStore {
     // MARK: - Weekly menu
 
     func assign(mealId: UUID, day: Int, slot: MealSlot) async throws {
-        if var existing = menuEntries.first(where: { $0.dayOfWeek == day && $0.slot == slot }) {
-            existing.mealId = mealId
-            existing.updatedAt = .now
-            try await _local?.upsert([existing], enqueue: true)
-            if let i = menuEntries.firstIndex(where: { $0.id == existing.id }) {
-                menuEntries[i] = existing
+        let matches = menuEntries.filter { $0.dayOfWeek == day && $0.slot == slot }
+        if let keeper = matches.first {
+            var updated = keeper
+            updated.mealId = mealId
+            updated.updatedAt = .now
+            try await _local?.upsert([updated], enqueue: true)
+            if let i = menuEntries.firstIndex(where: { $0.id == updated.id }) {
+                menuEntries[i] = updated
+            }
+            let duplicates = matches.dropFirst()
+            for dup in duplicates { try await _local?.softDelete(dup, enqueue: true) }
+            if !duplicates.isEmpty {
+                let duplicateIds = Set(duplicates.map(\.id))
+                menuEntries.removeAll { duplicateIds.contains($0.id) }
             }
         } else {
             var entry = MenuEntry(dayOfWeek: day, slot: slot, mealId: mealId)
@@ -85,10 +93,11 @@ extension SupabaseStore {
     }
 
     func unassign(day: Int, slot: MealSlot) async throws {
-        guard let entry = menuEntries.first(where: { $0.dayOfWeek == day && $0.slot == slot })
-        else { return }
-        try await _local?.softDelete(entry, enqueue: true)
-        menuEntries.removeAll { $0.id == entry.id }
+        let matches = menuEntries.filter { $0.dayOfWeek == day && $0.slot == slot }
+        guard !matches.isEmpty else { return }
+        for entry in matches { try await _local?.softDelete(entry, enqueue: true) }
+        let matchIds = Set(matches.map(\.id))
+        menuEntries.removeAll { matchIds.contains($0.id) }
         await _sync?.sync(tables: [MenuEntry.tableName])
     }
 
@@ -168,14 +177,22 @@ extension SupabaseStore {
         }
 
         for choice in choices {
-            guard mealEntry(day: choice.day, slot: choice.slot) == nil else { continue }
-            let meal = catalog.first { $0.id == choice.mealId }
-                ?? catalog.first {
-                    guard let title = choice.title else { return false }
-                    return $0.title.compare(title, options: .caseInsensitive) == .orderedSame
-                }
-            guard let meal else { continue }
+            guard Weekday(rawValue: choice.day) != nil,
+                  mealEntry(day: choice.day, slot: choice.slot) == nil else { continue }
+            guard let meal = Self.resolveChoice(choice, in: catalog) else { continue }
             try await assign(mealId: meal.id, day: choice.day, slot: choice.slot)
         }
+    }
+
+    /// Resolves a suggested `WeekMealChoice` to a catalog `Meal`, preferring an exact
+    /// id match and falling back to a case-insensitive title match. Pulled out as a
+    /// pure helper so the highest-risk part of `suggestWeek` is unit-testable without
+    /// the surrounding network call.
+    nonisolated static func resolveChoice(_ choice: WeekMealChoice, in catalog: [Meal]) -> Meal? {
+        catalog.first { $0.id == choice.mealId }
+            ?? catalog.first {
+                guard let title = choice.title else { return false }
+                return $0.title.compare(title, options: .caseInsensitive) == .orderedSame
+            }
     }
 }
