@@ -13,8 +13,9 @@ import Foundation
     private func stock(_ name: String, packages: Int, loose: Int) -> StockProduct {
         StockProduct(name: name, icon: "x", packages: packages, looseUnits: loose, unitsPerPackage: 6)
     }
-    private func meal(_ title: String, day: Int, slot: MealSlot) -> Meal {
-        Meal(dayOfWeek: day, slot: slot, title: title)
+    private func planned(day: Int, slot: MealSlot, title: String) -> (MenuEntry, Meal) {
+        let meal = Meal(title: title)
+        return (MenuEntry(dayOfWeek: day, slot: slot, mealId: meal.id), meal)
     }
     private func appt(_ reason: String, date: Date, status: AppointmentStatus, petId: UUID) -> Appointment {
         Appointment(petId: petId, date: date, reason: reason, notes: "", status: status)
@@ -52,22 +53,41 @@ import Foundation
 
     @Test("weekMeals drops empty titles and rotates to start at today")
     func meals() {
-        let m = [meal("Mon lunch", day: 1, slot: .lunch),
-                 meal("", day: 2, slot: .lunch),               // dropped: empty
-                 meal("Wed dinner", day: 3, slot: .dinner),
-                 meal("Fri lunch", day: 5, slot: .lunch)]
+        let pairs = [planned(day: 1, slot: .lunch, title: "Mon lunch"),
+                     planned(day: 2, slot: .lunch, title: ""),               // dropped: empty
+                     planned(day: 3, slot: .dinner, title: "Wed dinner"),
+                     planned(day: 5, slot: .lunch, title: "Fri lunch")]
+        let entries = pairs.map(\.0)
+        let meals = pairs.map(\.1)
         // today = Wednesday (3): order should be Wed, Fri, then wrap to Mon.
-        let r = DashboardData.weekMeals(meals: m, todayWeekday: 3, limit: 5)
-        #expect(r.items.map(\.title) == ["Wed dinner", "Fri lunch", "Mon lunch"])
+        let r = DashboardData.weekMeals(entries: entries, meals: meals,
+                                        todayWeekday: 3, limit: 5)
+        #expect(r.items.map(\.meal.title) == ["Wed dinner", "Fri lunch", "Mon lunch"])
         #expect(r.total == 3)
+    }
+
+    @Test("weekMeals collapses duplicate (day, slot) entries, keeping the newest updatedAt")
+    func mealsCollapsesDuplicateSlot() {
+        let now = Date(timeIntervalSince1970: 1_000_000)
+        let meal = Meal(title: "Mon lunch")
+        let older = MenuEntry(dayOfWeek: 1, slot: .lunch, mealId: meal.id, updatedAt: now)
+        let newer = MenuEntry(dayOfWeek: 1, slot: .lunch, mealId: meal.id, updatedAt: now + day)
+        let r = DashboardData.weekMeals(entries: [older, newer], meals: [meal],
+                                        todayWeekday: 1, limit: 5)
+        #expect(r.items.count == 1)
+        #expect(r.items.first?.entry.id == newer.id)
+        #expect(r.total == 1)
     }
 
     @Test("weekMeals reports total beyond limit")
     func mealsOverflow() {
-        let m = [meal("A", day: 1, slot: .lunch),
-                 meal("B", day: 2, slot: .lunch),
-                 meal("C", day: 3, slot: .lunch)]
-        let r = DashboardData.weekMeals(meals: m, todayWeekday: 1, limit: 2)
+        let pairs = [planned(day: 1, slot: .lunch, title: "A"),
+                     planned(day: 2, slot: .lunch, title: "B"),
+                     planned(day: 3, slot: .lunch, title: "C")]
+        let entries = pairs.map(\.0)
+        let meals = pairs.map(\.1)
+        let r = DashboardData.weekMeals(entries: entries, meals: meals,
+                                        todayWeekday: 1, limit: 2)
         #expect(r.items.count == 2)
         #expect(r.total == 3)
     }

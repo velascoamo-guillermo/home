@@ -25,8 +25,6 @@ nonisolated struct Nutrition: Hashable {
 
 nonisolated struct Meal: Codable, Identifiable, Hashable {
     var id: UUID = UUID()
-    var dayOfWeek: Int
-    var slot: MealSlot
     var title: String = ""
     var servings: Int?
     var nutrition: Nutrition = Nutrition()
@@ -35,8 +33,7 @@ nonisolated struct Meal: Codable, Identifiable, Hashable {
     var deletedAt: Date? = nil
 
     enum CodingKeys: String, CodingKey {
-        case id, slot, title, servings, calories
-        case dayOfWeek = "day_of_week"
+        case id, title, servings, calories
         case proteinG  = "protein_g"
         case carbsG    = "carbs_g"
         case fatG      = "fat_g"
@@ -45,12 +42,10 @@ nonisolated struct Meal: Codable, Identifiable, Hashable {
         case deletedAt = "deleted_at"
     }
 
-    init(id: UUID = UUID(), dayOfWeek: Int, slot: MealSlot, title: String = "",
-         servings: Int? = nil, nutrition: Nutrition = Nutrition(), createdAt: Date = .now,
+    init(id: UUID = UUID(), title: String = "", servings: Int? = nil,
+         nutrition: Nutrition = Nutrition(), createdAt: Date = .now,
          updatedAt: Date = .now, deletedAt: Date? = nil) {
         self.id = id
-        self.dayOfWeek = dayOfWeek
-        self.slot = slot
         self.title = title
         self.servings = servings
         self.nutrition = nutrition
@@ -62,8 +57,6 @@ nonisolated struct Meal: Codable, Identifiable, Hashable {
     init(from decoder: any Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         id = try c.decode(UUID.self, forKey: .id)
-        dayOfWeek = try c.decode(Int.self, forKey: .dayOfWeek)
-        slot = try c.decode(MealSlot.self, forKey: .slot)
         title = try c.decodeIfPresent(String.self, forKey: .title) ?? ""
         servings = try c.decodeIfPresent(Int.self, forKey: .servings)
         nutrition = Nutrition(
@@ -80,8 +73,6 @@ nonisolated struct Meal: Codable, Identifiable, Hashable {
     func encode(to encoder: Encoder) throws {
         var c = encoder.container(keyedBy: CodingKeys.self)
         try c.encode(id, forKey: .id)
-        try c.encode(dayOfWeek, forKey: .dayOfWeek)
-        try c.encode(slot, forKey: .slot)
         try c.encode(title, forKey: .title)
         try c.encodeIfPresent(servings, forKey: .servings)
         try c.encodeIfPresent(nutrition.calories, forKey: .calories)

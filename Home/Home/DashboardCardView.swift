@@ -66,13 +66,20 @@ struct DashboardCardView: View {
 
         case .weekMeals:
             let result = DashboardData.weekMeals(
+                entries: store.menuEntries,
                 meals: store.meals,
                 todayWeekday: Self.currentWeekday(),
                 limit: DashboardData.mealLimit)
             if result.items.isEmpty {
                 emptyState("No meals planned")
             } else {
-                ForEach(result.items) { SearchMealRow(meal: $0, showsIcon: false) }
+                ForEach(result.items) { item in
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(item.meal.title).font(.headline)
+                        Text("\(Weekday(rawValue: item.entry.dayOfWeek)?.displayName ?? "") · \(item.entry.slot.displayName)")
+                            .font(.caption).foregroundStyle(.secondary)
+                    }
+                }
                 overflowFooter(shown: result.items.count, total: result.total)
             }
 

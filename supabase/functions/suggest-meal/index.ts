@@ -16,7 +16,11 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
 
   try {
-    const { stock, slots, planned } = await req.json();
+    const { catalog, stock, slots, planned } = await req.json();
+
+    const catalogList = (catalog ?? [])
+      .map((c: { id: string; title: string }) => `- ${c.title} (meal_id="${c.id}")`)
+      .join("\n");
 
     const stockList = (stock ?? [])
       .map((s: { name: string; totalUnits: number }) => `- ${s.name} (${s.totalUnits} unidades)`)
@@ -30,37 +34,34 @@ Deno.serve(async (req) => {
       .map((p: { day: number; slot: string; title: string }) => `- ${dayName(p.day)} / ${slotName(p.slot)}: ${p.title}`)
       .join("\n");
 
-    const prompt = `Eres un asistente de planificación de comidas semanal. Planifica comidas para TODOS estos huecos vacíos de la semana, de una sola vez:
+    const prompt = `Eres un asistente de planificación de comidas semanal. Asigna una comida del catálogo a CADA uno de estos huecos vacíos de la semana:
 ${slotsList || "(ninguno)"}
 
-Stock disponible (presupuesto compartido para TODA la semana — no excedas las unidades totales sumando todas las comidas):
+Catálogo de comidas disponibles (elige SOLO de aquí, usando su meal_id exacto):
+${catalogList || "(vacío)"}
+
+Stock disponible (orientativo, para preferir platos cocinables):
 ${stockList || "(sin stock)"}
 
-Comidas ya planificadas esta semana (NO las repitas, y tenlas en cuenta para variar):
+Comidas ya planificadas esta semana (tenlas en cuenta para variar):
 ${plannedList || "(ninguna)"}
 
 Reglas:
-- No repitas el mismo plato en distintos huecos.
-- Prioriza comidas equilibradas y saludables: incluye proteína, verdura y carbohidrato cuando sea posible; varía a lo largo de la semana y evita repetir el mismo tipo de plato muchos días.
-- Usa preferentemente el stock disponible, repartiendo las unidades entre toda la semana sin pasarte del total de cada producto.
-- Usa exactamente los nombres del stock en "products".
+- Elige únicamente comidas del catálogo; nunca inventes platos nuevos.
+- Evita repetir la misma comida en varios huecos; si hay menos comidas que huecos, reparte las repeticiones lo máximo posible.
+- Varía a lo largo de la semana y respecto a lo ya planificado.
 - Devuelve un objeto por cada hueco solicitado, con su day y slot exactos.
+- Copia exactamente el título de cada comida tal como aparece en el catálogo (sin paráfrasis, sin reescrituras, sin cambios de capitalización).
 
 Responde SOLO con JSON válido — sin markdown, sin texto extra — un array con este esquema exacto:
 [
   {
     "day": número (1=lunes … 7=domingo),
     "slot": "lunch" o "dinner",
-    "title": "string",
-    "products": [{"name": "string que coincida con el stock", "quantity": número}],
-    "servings": número o null,
-    "calories": número o null,
-    "protein_g": número o null,
-    "carbs_g": número o null,
-    "fat_g": número o null
+    "meal_id": "uuid exacto del catálogo",
+    "title": "título exacto del catálogo (cópialo tal cual, sin paráfrasis)"
   }
-]
-Estima la nutrición para el plato completo.`;
+]`;
 
     const msg = await anthropic.messages.create({
       model: "claude-opus-4-8",

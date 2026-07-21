@@ -24,6 +24,7 @@ final class SupabaseStore {
 
     var meals: [Meal] = []
     var mealProducts: [MealProduct] = []
+    var menuEntries: [MenuEntry] = []
     var isLoading = false
     var loadError: String? = nil
 
@@ -109,6 +110,7 @@ final class SupabaseStore {
         meals           = try await local.fetchAll(Meal.self)
         mealProducts    = try await local.fetchAll(MealProduct.self)
         weightEntries   = try await local.fetchAll(WeightEntry.self)
+        menuEntries     = try await local.fetchAll(MenuEntry.self)
     }
 
     private func startReconnectObserver() {

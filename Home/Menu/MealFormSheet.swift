@@ -1,11 +1,11 @@
 import SwiftUI
 
-struct MealEditSheet: View {
+struct MealFormSheet: View {
     @Environment(SupabaseStore.self) private var store
     @Environment(\.dismiss) private var dismiss
 
-    let dayOfWeek: Int
-    let slot: MealSlot
+    private let existing: Meal?
+    private let onSaved: ((Meal) -> Void)?
 
     @State private var title: String
     @State private var links: [MealEntry.Link]
@@ -14,18 +14,14 @@ struct MealEditSheet: View {
     @State private var proteinText: String
     @State private var carbsText: String
     @State private var fatText: String
-    private let existingMeal: Meal?
 
-    init(dayOfWeek: Int, slot: MealSlot, entry: MealEntry?,
-         suggestion: MealSuggestion? = nil, suggestedLinks: [MealEntry.Link] = []) {
-        self.dayOfWeek = dayOfWeek
-        self.slot = slot
-        self.existingMeal = entry?.meal
-
-        let nutrition = suggestion?.nutrition ?? entry?.meal.nutrition ?? Nutrition()
-        _title = State(initialValue: suggestion?.title ?? entry?.meal.title ?? "")
-        _links = State(initialValue: suggestion != nil ? suggestedLinks : (entry?.links ?? []))
-        _servingsText = State(initialValue: (suggestion?.servings ?? entry?.meal.servings).map(String.init) ?? "")
+    init(existing: Meal?, onSaved: ((Meal) -> Void)? = nil) {
+        self.existing = existing
+        self.onSaved = onSaved
+        let nutrition = existing?.nutrition ?? Nutrition()
+        _title = State(initialValue: existing?.title ?? "")
+        _links = State(initialValue: [])
+        _servingsText = State(initialValue: existing?.servings.map(String.init) ?? "")
         _caloriesText = State(initialValue: nutrition.calories.map(String.init) ?? "")
         _proteinText  = State(initialValue: nutrition.proteinG.map(String.init) ?? "")
         _carbsText    = State(initialValue: nutrition.carbsG.map(String.init) ?? "")
@@ -49,16 +45,29 @@ struct MealEditSheet: View {
                     numberField("Grasa (g)", $fatText)
                 }
             }
-            .navigationTitle(slot.displayName)
+            .navigationTitle(existing == nil ? "Nueva meal" : "Editar meal")
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Guardar") { Task { await save() } }
+                        .disabled(title.trimmingCharacters(in: .whitespaces).isEmpty)
                 }
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancelar") { dismiss() }
                 }
             }
+            .task { loadLinks() }
         }
+    }
+
+    private func loadLinks() {
+        guard let existing else { return }
+        links = store.mealProducts
+            .filter { $0.mealId == existing.id }
+            .compactMap { mp in
+                guard let product = store.stockProducts.first(where: { $0.id == mp.productId })
+                else { return nil }
+                return MealEntry.Link(product: product, quantity: mp.quantity)
+            }
     }
 
     private func numberField(_ label: String, _ binding: Binding<String>) -> some View {
@@ -73,24 +82,23 @@ struct MealEditSheet: View {
     }
 
     private func save() async {
-        let nutrition = Nutrition(
+        var meal = existing ?? Meal()
+        meal.title = title
+        meal.servings = Int(servingsText)
+        meal.nutrition = Nutrition(
             calories: Int(caloriesText),
             proteinG: Int(proteinText),
             carbsG:   Int(carbsText),
             fatG:     Int(fatText)
         )
-        var meal = existingMeal ?? Meal(dayOfWeek: dayOfWeek, slot: slot)
-        meal.title = title
-        meal.servings = Int(servingsText)
-        meal.nutrition = nutrition
-
         do {
-            if existingMeal != nil {
+            if existing != nil {
                 try await store.updateMeal(meal)
             } else {
                 try await store.addMeal(meal)
             }
             try await store.setMealProducts(for: meal, links: links)
+            onSaved?(meal)
             dismiss()
         } catch {
             dismiss()
