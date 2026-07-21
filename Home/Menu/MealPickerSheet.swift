@@ -65,6 +65,8 @@ struct MealPickerSheet: View {
                                         .accessibilityHidden(true)
                                 }
                             }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .contentShape(.rect)
                         }
                         .buttonStyle(.plain)
                     }
