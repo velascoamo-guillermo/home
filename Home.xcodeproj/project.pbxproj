@@ -18,6 +18,7 @@
 		0D3EA5825F054834AA2B255F /* SyncEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F076DD376D0245EFBD1E48BB /* SyncEngineTests.swift */; };
 		0D4B7552A2AE6EDECF7ABCCB /* ProductCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41FE432DDA91EAABD7776413 /* ProductCategory.swift */; };
 		0E0AA7C4CA938121B253413C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E5129084F7E0223D3775A5E /* Foundation.framework */; };
+		1171E2B4B857DE142CCB9FF9 /* AddWeightEntrySheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D2C3CCB9AC6D0EFC0F0516 /* AddWeightEntrySheet.swift */; };
 		13BC5B2F5A754F9C9C0364F2 /* SupabaseStore+Meals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54D020C3C3350CD92309BE0A /* SupabaseStore+Meals.swift */; };
 		14031BEA538D69D13B14FAD5 /* MealsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7A7E16D08B512354D9C0C70 /* MealsListView.swift */; };
 		163D4FEF7CF9F43A87445ADA /* HomeWidgetEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DBDF147B2AFB6506292479 /* HomeWidgetEntry.swift */; };
@@ -37,6 +38,7 @@
 		33DDF8ADC1BB63F2E738876D /* WidgetSnapshotWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167B044780DEF36B6D746BFB /* WidgetSnapshotWriter.swift */; };
 		349C6CE04663272E56B08536 /* CalendarReminderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00942EB6083001B5C216901C /* CalendarReminderTests.swift */; };
 		3E64928E949373E0FDFAB0BB /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DACB8785E9B997314DDA68E3 /* SearchView.swift */; };
+		4058855340D879AED1C58A12 /* WeightEntryStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBD05E9E51504422D866DC2D /* WeightEntryStoreTests.swift */; };
 		432CC1C59252275CCB99215B /* SupabaseStoreMealTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934BB72A2A2516A2E5E46923 /* SupabaseStoreMealTests.swift */; };
 		4437583E6EB0D9482C98DB97 /* HomeWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E65927107DA46DF3718B9ABD /* HomeWidgetBundle.swift */; };
 		4750BD2B32964E23B7398111 /* Color+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7603356EA14FDFA1B64E20 /* Color+Hex.swift */; };
@@ -52,6 +54,7 @@
 		507823BF2FBCF2E10042E71E /* PostgREST in Frameworks */ = {isa = PBXBuildFile; productRef = 507823BE2FBCF2E10042E71E /* PostgREST */; };
 		507823C12FBCF2E10042E71E /* Storage in Frameworks */ = {isa = PBXBuildFile; productRef = 507823C02FBCF2E10042E71E /* Storage */; };
 		507823C32FBCF2E10042E71E /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 507823C22FBCF2E10042E71E /* Supabase */; };
+		5232E4E79F99413A58531CAA /* WeightTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36D484685AC700B85D190A9C /* WeightTabView.swift */; };
 		52B0B5D1327DCC3123DB4311 /* AppRouteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED657400E0DE2A8489B10A41 /* AppRouteTests.swift */; };
 		571FA64A725740595C4EEF77 /* HouseholdTaskTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA71150C75F436073C4F3240 /* HouseholdTaskTests.swift */; };
 		5AACA79B2C1F4B282A524B4F /* WidgetStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFD07EB72B922B3B688CC2A /* WidgetStore.swift */; };
@@ -76,6 +79,7 @@
 		933BA309D7D1C551B6B392D5 /* SupermarketTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0A7B5E764753BED9E8D27EC /* SupermarketTests.swift */; };
 		93672456092DE1FF2A6392C5 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52F12A83C676197BA7862B03 /* MenuView.swift */; };
 		96A6927DAC9046738B759A900327673D /* SupabaseConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEE741125AA949498F90211C36D7FA12 /* SupabaseConfig.swift */; };
+		985797305D829938DA14193A /* WeightEntrySyncTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B70FBD20CA49086C65360F4 /* WeightEntrySyncTests.swift */; };
 		A1B2C3D4E5F600112233A002 /* IconChip.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F600112233A001 /* IconChip.swift */; };
 		A2CF43A1BB01D911BBF1344E /* DashboardConfigStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8909F629B09C536374934D /* DashboardConfigStore.swift */; };
 		AA11BB22CC33DD44EE55FF66 /* VetTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA11BB22CC33DD44EE55FF01 /* VetTabView.swift */; };
@@ -92,6 +96,7 @@
 		B611D6F8A81DCC192451C3BF /* Supermarket.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD721BF9855C09D131A9116 /* Supermarket.swift */; };
 		B767693EAE3C3E0144D52B3E /* ProductCategoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7992BC0AD8B24DC8437E5EFF /* ProductCategoryTests.swift */; };
 		B8C7BBC4A3634B80B24013B7 /* ColorHexTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE725D024BD4C668DC2B46C /* ColorHexTests.swift */; };
+		BADF8AF2C7EA5548D28C6796 /* WeightEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE743A0826F04073B2E8A00C /* WeightEntry.swift */; };
 		BB22CC33DD44EE55FF6600AA /* AppointmentsTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB22CC33DD44EE55FF6600A1 /* AppointmentsTabView.swift */; };
 		BC2F8376F7B5864B45DB602E /* TaskContextMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDDE5A16D5905503DD57E66B /* TaskContextMenu.swift */; };
 		BD3751E8C32A05906722913A /* MealSlotRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4A3A21671ACE388CBA0BFD /* MealSlotRow.swift */; };
@@ -216,6 +221,7 @@
 		2E74FFE725D990117ACBBE36 /* AppRoute.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppRoute.swift; sourceTree = "<group>"; };
 		2F79186D4E37F97C05487C25 /* MealFormSheet.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MealFormSheet.swift; sourceTree = "<group>"; };
 		2FD0EC17349AAB28CC54A5CB /* PetRow.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PetRow.swift; sourceTree = "<group>"; };
+		36D484685AC700B85D190A9C /* WeightTabView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WeightTabView.swift; sourceTree = "<group>"; };
 		38EF62C71B523FCC7B9727A2 /* Provider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Provider.swift; sourceTree = "<group>"; };
 		3D0CE6DF7B2B78D682B30375 /* WidgetSnapshotCodableTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetSnapshotCodableTests.swift; sourceTree = "<group>"; };
 		3E17A3C0BD0C64888E5CFA0A /* StockContextMenu.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StockContextMenu.swift; sourceTree = "<group>"; };
@@ -258,6 +264,7 @@
 		934BB72A2A2516A2E5E46923 /* SupabaseStoreMealTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SupabaseStoreMealTests.swift; sourceTree = "<group>"; };
 		97BF39A8D0642A279A151CCE /* HomeWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HomeWidget.swift; sourceTree = "<group>"; };
 		9AE500AD395CBA5FAADB2307 /* MealChoiceTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MealChoiceTests.swift; sourceTree = "<group>"; };
+		9B70FBD20CA49086C65360F4 /* WeightEntrySyncTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WeightEntrySyncTests.swift; sourceTree = "<group>"; };
 		9BB602702653BB94D55F5891 /* WidgetSnapshot.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetSnapshot.swift; sourceTree = "<group>"; };
 		A1B2C3D4E5F600112233A001 /* IconChip.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = IconChip.swift; sourceTree = "<group>"; };
 		A4CDCB58B9C74EE5C806160F /* HomeApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HomeApp.swift; sourceTree = "<group>"; };
@@ -291,10 +298,12 @@
 		CC33DD44EE55FF6600AABB11 /* ClinicalHistoryTabView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ClinicalHistoryTabView.swift; sourceTree = "<group>"; };
 		CC44DD55EE55FF6600AABB22 /* ClinicalEntryRow.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ClinicalEntryRow.swift; sourceTree = "<group>"; };
 		CD1D58A605AADA241317ABAD /* DashboardHeaderView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DashboardHeaderView.swift; sourceTree = "<group>"; };
+		CE743A0826F04073B2E8A00C /* WeightEntry.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WeightEntry.swift; sourceTree = "<group>"; };
 		CF21E00DCCBEF18421A267A3 /* AppTab.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppTab.swift; sourceTree = "<group>"; };
 		CFEEEAAA06C82715FF19FAD9 /* MenuEntry.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MenuEntry.swift; sourceTree = "<group>"; };
 		D0894A58F3E0471E870AA5A4 /* ClinicalEntry.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ClinicalEntry.swift; sourceTree = "<group>"; };
 		D337BEEFF45641A7A41446D8 /* PetFile.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PetFile.swift; sourceTree = "<group>"; };
+		D3D2C3CCB9AC6D0EFC0F0516 /* AddWeightEntrySheet.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AddWeightEntrySheet.swift; sourceTree = "<group>"; };
 		D89EF1C5AC494C239A04F4CE /* SQLiteDatabase.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SQLiteDatabase.swift; sourceTree = "<group>"; };
 		DACB8785E9B997314DDA68E3 /* SearchView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
 		DBE699B39D6D42F2BA958119 /* Appointment.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Appointment.swift; sourceTree = "<group>"; };
@@ -311,6 +320,7 @@
 		E85A8B57FB327E77B3638C0E /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/WidgetKit.framework; sourceTree = DEVELOPER_DIR; };
 		E9125CD47912497347744376 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/SwiftUI.framework; sourceTree = DEVELOPER_DIR; };
 		EB819B41D43A4B60B67EFC22 /* OutboxTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OutboxTests.swift; sourceTree = "<group>"; };
+		EBD05E9E51504422D866DC2D /* WeightEntryStoreTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WeightEntryStoreTests.swift; sourceTree = "<group>"; };
 		ED3B777CB62C4ED981C62D2A /* AppAppearance.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppAppearance.swift; sourceTree = "<group>"; };
 		ED657400E0DE2A8489B10A41 /* AppRouteTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppRouteTests.swift; sourceTree = "<group>"; };
 		EE55FF6600AABB22CC33DD01 /* FilesTabView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FilesTabView.swift; sourceTree = "<group>"; };
@@ -405,6 +415,7 @@
 			children = (
 				F076DD376D0245EFBD1E48BB /* SyncEngineTests.swift */,
 				F92FBF3D893CCC3E6A10DDC7 /* MenuEntrySyncTests.swift */,
+				9B70FBD20CA49086C65360F4 /* WeightEntrySyncTests.swift */,
 			);
 			path = Sync;
 			sourceTree = "<group>";
@@ -420,6 +431,15 @@
 				B2C3D4E5F6A7B8C9D0E1F2A3 /* Models */,
 			);
 			path = Pets;
+			sourceTree = "<group>";
+		};
+		1ECAC51DE450B972505B8688 /* Store */ = {
+			isa = PBXGroup;
+			children = (
+				EBD05E9E51504422D866DC2D /* WeightEntryStoreTests.swift */,
+			);
+			name = Store;
+			path = Store;
 			sourceTree = "<group>";
 		};
 		248845B37ACBAB618358A586 /* Home */ = {
@@ -602,6 +622,7 @@
 				64A61C82CA7D4580AEE3FD8F /* PetEvent.swift */,
 				D337BEEFF45641A7A41446D8 /* PetFile.swift */,
 				2C6856914DFD42828E88B77E /* Veterinarian.swift */,
+				CE743A0826F04073B2E8A00C /* WeightEntry.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -735,6 +756,7 @@
 				DD44EE55FF6600AABB22CC01 /* EventsTabView.swift */,
 				EE88FF9922DDEE55FF6600A7 /* EventRow.swift */,
 				EE55FF6600AABB22CC33DD01 /* FilesTabView.swift */,
+				36D484685AC700B85D190A9C /* WeightTabView.swift */,
 			);
 			path = Tabs;
 			sourceTree = "<group>";
@@ -748,6 +770,7 @@
 				AB22CD33EF44AB55CD66EF12 /* ClinicalEntryDetailView.swift */,
 				EE66FF7700BBCC33DD44EE15 /* AddEventSheet.swift */,
 				EE77FF8811CCDD44EE55FF16 /* EventDetailView.swift */,
+				D3D2C3CCB9AC6D0EFC0F0516 /* AddWeightEntrySheet.swift */,
 			);
 			path = Sheets;
 			sourceTree = "<group>";
@@ -796,6 +819,7 @@
 				00942EB6083001B5C216901C /* CalendarReminderTests.swift */,
 				4E4A502AC63099711750A1DA /* HouseholdTaskSnoozeTests.swift */,
 				9AE500AD395CBA5FAADB2307 /* MealChoiceTests.swift */,
+				1ECAC51DE450B972505B8688 /* Store */,
 			);
 			path = HomeTests;
 			sourceTree = "<group>";
@@ -1067,6 +1091,9 @@
 				F142F8F1DAEBD84FCF44FA55 /* MealPickerSheet.swift in Sources */,
 				C89F3F40F1CDE87733C5F385 /* WeekMenuView.swift in Sources */,
 				14031BEA538D69D13B14FAD5 /* MealsListView.swift in Sources */,
+				BADF8AF2C7EA5548D28C6796 /* WeightEntry.swift in Sources */,
+				5232E4E79F99413A58531CAA /* WeightTabView.swift in Sources */,
+				1171E2B4B857DE142CCB9FF9 /* AddWeightEntrySheet.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1127,6 +1154,8 @@
 				EB78549E75C30BEAC08D841C /* HouseholdTaskSnoozeTests.swift in Sources */,
 				5C48795BA122ECF5A5F138CE /* MenuEntrySyncTests.swift in Sources */,
 				663606FD98F2697756FAD5E6 /* MealChoiceTests.swift in Sources */,
+				985797305D829938DA14193A /* WeightEntrySyncTests.swift in Sources */,
+				4058855340D879AED1C58A12 /* WeightEntryStoreTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

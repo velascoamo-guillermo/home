@@ -42,7 +42,7 @@ actor SyncEngine {
         Pet.tableName, Veterinarian.tableName, Appointment.tableName,
         ClinicalEntry.tableName, PetEvent.tableName, TaskSection.tableName,
         HouseholdTask.tableName, StockProduct.tableName, Meal.tableName,
-        MealProduct.tableName, MenuEntry.tableName
+        MealProduct.tableName, WeightEntry.tableName, MenuEntry.tableName
     ]
 
     func pull(table: String) async throws {
@@ -65,6 +65,7 @@ actor SyncEngine {
         case "stock_products":   return try await reconcileTyped(StockProduct.self, blobs)
         case "meals":            return try await reconcileTyped(Meal.self, blobs)
         case "meal_products":    return try await reconcileTyped(MealProduct.self, blobs)
+        case "weight_entries":   return try await reconcileTyped(WeightEntry.self, blobs)
         case "menu_entries":     return try await reconcileTyped(MenuEntry.self, blobs)
         default:
             assertionFailure("reconcile: unhandled table '\(table)'")

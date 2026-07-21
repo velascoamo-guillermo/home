@@ -16,6 +16,7 @@ final class SupabaseStore {
     var householdTasks: [HouseholdTask] = []
     var customSections: [TaskSection] = []
     var stockProducts: [StockProduct] = []
+    var weightEntries: [WeightEntry] = []
 
     var shoppingList: [StockProduct] {
         stockProducts.filter { $0.totalUnits == 0 }
@@ -108,6 +109,7 @@ final class SupabaseStore {
         stockProducts   = try await local.fetchAll(StockProduct.self)
         meals           = try await local.fetchAll(Meal.self)
         mealProducts    = try await local.fetchAll(MealProduct.self)
+        weightEntries   = try await local.fetchAll(WeightEntry.self)
         menuEntries     = try await local.fetchAll(MenuEntry.self)
     }
 
@@ -168,13 +170,15 @@ final class SupabaseStore {
         for appt in appointments(for: pet.id) { try await _local?.softDelete(appt, enqueue: true) }
         for ce in clinicalEntries(for: pet.id) { try await _local?.softDelete(ce, enqueue: true) }
         for ev in events(for: pet.id) { try await _local?.softDelete(ev, enqueue: true) }
+        for we in weightEntries(for: pet.id) { try await _local?.softDelete(we, enqueue: true) }
         try await _local?.softDelete(pet, enqueue: true)
         pets.removeAll { $0.id == pet.id }
         appointments.removeAll { $0.petId == pet.id }
         clinicalEntries.removeAll { $0.petId == pet.id }
         events.removeAll { $0.petId == pet.id }
         files.removeAll { $0.petId == pet.id }
-        await _sync?.sync(tables: [Pet.tableName, Appointment.tableName, ClinicalEntry.tableName, PetEvent.tableName])
+        weightEntries.removeAll { $0.petId == pet.id }
+        await _sync?.sync(tables: [Pet.tableName, Appointment.tableName, ClinicalEntry.tableName, PetEvent.tableName, WeightEntry.tableName])
     }
 
     // MARK: - Vet
@@ -240,6 +244,21 @@ final class SupabaseStore {
         clinicalEntries.removeAll { $0.id == entry.id }
         files.removeAll { $0.linkedToId == entry.id && $0.linkedToType == "clinicalEntry" }
         await _sync?.sync(tables: [ClinicalEntry.tableName])
+    }
+
+    // MARK: - Weight Entries
+
+    func addWeightEntry(_ entry: WeightEntry) async throws {
+        var e = entry; e.updatedAt = .now
+        try await _local?.upsert([e], enqueue: true)
+        weightEntries.append(e)
+        await _sync?.sync(tables: [WeightEntry.tableName])
+    }
+
+    func deleteWeightEntry(_ entry: WeightEntry) async throws {
+        try await _local?.softDelete(entry, enqueue: true)
+        weightEntries.removeAll { $0.id == entry.id }
+        await _sync?.sync(tables: [WeightEntry.tableName])
     }
 
     // MARK: - Events
@@ -393,6 +412,10 @@ final class SupabaseStore {
 
     func clinicalEntries(for petId: UUID) -> [ClinicalEntry] {
         clinicalEntries.filter { $0.petId == petId }.sorted { $0.date > $1.date }
+    }
+
+    func weightEntries(for petId: UUID) -> [WeightEntry] {
+        weightEntries.filter { $0.petId == petId }.sorted { $0.date > $1.date }
     }
 
     func events(for petId: UUID) -> [PetEvent] {
