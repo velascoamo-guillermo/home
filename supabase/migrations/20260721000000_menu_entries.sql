@@ -28,7 +28,7 @@ create trigger menu_entries_set_updated_at
 insert into menu_entries (day_of_week, slot, meal_id)
 select day_of_week, slot, id
 from meals
-where deleted_at is null;
+where deleted_at is null and title <> '';
 
 -- Dedupe recipes by lower(title). Canonical = most recently updated.
 -- Empty titles are NOT deduped.
