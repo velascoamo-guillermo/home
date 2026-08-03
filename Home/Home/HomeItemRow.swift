@@ -2,6 +2,7 @@ import SwiftUI
 
 struct HomeItemRow: View {
     let item: HomeItem
+    var onComplete: (() -> Void)? = nil
     @Environment(SupabaseStore.self) private var store
 
     private var isOverdue: Bool {
@@ -44,6 +45,16 @@ struct HomeItemRow: View {
                         .background(.red.opacity(0.12), in: Capsule())
                         .foregroundStyle(.red)
                 }
+            }
+
+            if let onComplete {
+                Button(action: onComplete) {
+                    Image(systemName: "checkmark.circle")
+                        .font(.title2)
+                        .foregroundStyle(.tint)
+                }
+                .buttonStyle(.borderless)
+                .accessibilityLabel("Mark done")
             }
         }
         .padding(.vertical, 4)
