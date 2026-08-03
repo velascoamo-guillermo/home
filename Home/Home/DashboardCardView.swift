@@ -6,6 +6,7 @@ struct DashboardCardView: View {
 
     @Environment(SupabaseStore.self) private var store
     @Environment(\.openURL) private var openURL
+    @State private var outOfStock: OutOfStockInfo? = nil
 
     private var shopping: (items: [StockProduct], total: Int) {
         DashboardData.shoppingList(stock: store.stockProducts, limit: DashboardData.shoppingLimit)
@@ -16,6 +17,7 @@ struct DashboardCardView: View {
             header
             content
         }
+        .outOfStockAlert($outOfStock)
     }
 
     private var header: some View {
@@ -44,11 +46,12 @@ struct DashboardCardView: View {
             } else {
                 VStack(spacing: 0) {
                     ForEach(result.items) { item in
-                        HomeItemRow(item: item)
+                        HomeItemRow(item: item, onComplete: completeAction(for: item))
                             .contentShape(Rectangle())
                             .onTapGesture {
                                 if case .task(let t) = item { onSelectTask(t) }
                             }
+                            .contextMenu { menu(for: item) }
                             .transition(.opacity.combined(with: .move(edge: .top)))
                     }
                 }
@@ -60,7 +63,10 @@ struct DashboardCardView: View {
             if shopping.items.isEmpty {
                 emptyState("Nothing to buy")
             } else {
-                ForEach(shopping.items) { StockProductRow(product: $0, showsIcon: false) }
+                ForEach(shopping.items) { product in
+                    StockProductRow(product: product, showsIcon: false)
+                        .contextMenu { StockContextMenu(product: product) }
+                }
                 overflowFooter(shown: shopping.items.count, total: shopping.total)
             }
 
@@ -90,7 +96,10 @@ struct DashboardCardView: View {
             if result.items.isEmpty {
                 emptyState("No upcoming appointments")
             } else {
-                ForEach(result.items) { HomeItemRow(item: $0) }
+                ForEach(result.items) { item in
+                    HomeItemRow(item: item)
+                        .contextMenu { menu(for: item) }
+                }
                 overflowFooter(shown: result.items.count, total: result.total)
             }
         }
@@ -119,6 +128,36 @@ struct DashboardCardView: View {
     private func navigate() {
         guard let host = card.deepLinkHost, let url = URL(string: "home://\(host)") else { return }
         openURL(url)
+    }
+
+    private func complete(_ t: HouseholdTask) {
+        Task {
+            if let result = try? await store.completeTask(t),
+               case .outOfStock(let product) = result {
+                outOfStock = OutOfStockInfo(product: product, needed: t.quantityPerCompletion)
+            }
+        }
+    }
+
+    private func completeAction(for item: HomeItem) -> (() -> Void)? {
+        guard case .task(let t) = item else { return nil }
+        return { complete(t) }
+    }
+
+    @ViewBuilder
+    private func menu(for item: HomeItem) -> some View {
+        switch item {
+        case .task(let t):
+            TaskContextMenu(task: t) { result in
+                if case .outOfStock(let product) = result {
+                    outOfStock = OutOfStockInfo(product: product, needed: t.quantityPerCompletion)
+                }
+            }
+        case .event(let e, let pet):
+            EventContextMenu(event: e, petName: pet.name)
+        case .appointment(let a, let pet):
+            AppointmentContextMenu(appointment: a, petName: pet.name)
+        }
     }
 
     private static func currentWeekday() -> Int {
