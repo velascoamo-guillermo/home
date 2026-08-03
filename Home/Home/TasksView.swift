@@ -7,12 +7,6 @@ struct TasksView: View {
     @State private var selectedEvent: PetEvent? = nil
     @State private var outOfStock: OutOfStockInfo? = nil
 
-    private struct OutOfStockInfo: Identifiable {
-        let id = UUID()
-        let product: StockProduct
-        let needed: Int
-    }
-
     var body: some View {
         Group {
             if store.homeTimeline.isEmpty {
@@ -24,7 +18,7 @@ struct TasksView: View {
             } else {
                 List {
                     ForEach(store.homeTimeline) { item in
-                        HomeItemRow(item: item)
+                        HomeItemRow(item: item, onComplete: completeAction(for: item))
                             .contentShape(Rectangle())
                             .onTapGesture { handleTap(item) }
                             .glassRow()
@@ -43,6 +37,24 @@ struct TasksView: View {
                                     EventContextMenu(event: e, petName: pet.name)
                                 case .appointment(let a, let pet):
                                     AppointmentContextMenu(appointment: a, petName: pet.name)
+                                }
+                            }
+                            .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                                if case .task(let t) = item {
+                                    Button { complete(t) } label: {
+                                        Label("Done", systemImage: "checkmark")
+                                    }
+                                    .tint(.green)
+                                }
+                            }
+                            .swipeActions(edge: .trailing) {
+                                if case .task(let t) = item {
+                                    Button(role: .destructive) {
+                                        Task { try? await store.deleteTask(t) }
+                                    } label: { Label("Delete", systemImage: "trash") }
+                                    Button {
+                                        Task { try? await store.updateTask(t.snoozedByOneDay()) }
+                                    } label: { Label("Snooze 1d", systemImage: "clock.arrow.circlepath") }
                                 }
                             }
                     }
@@ -67,16 +79,7 @@ struct TasksView: View {
                 EventDetailView(event: event, pet: pet)
             }
         }
-        .alert("Out of stock",
-               isPresented: Binding(
-                   get: { outOfStock != nil },
-                   set: { if !$0 { outOfStock = nil } }
-               ),
-               presenting: outOfStock) { _ in
-            Button("OK", role: .cancel) { }
-        } message: { info in
-            Text("Needs \(info.needed), only \(info.product.totalUnits) left. Restock \(info.product.name) — the task was marked done anyway.")
-        }
+        .outOfStockAlert($outOfStock)
     }
 
     private func handleTap(_ item: HomeItem) {
@@ -85,6 +88,20 @@ struct TasksView: View {
         case .event(let e, _): selectedEvent = e
         default:               break
         }
+    }
+
+    private func complete(_ t: HouseholdTask) {
+        Task {
+            if let result = try? await store.completeTask(t),
+               case .outOfStock(let product) = result {
+                outOfStock = OutOfStockInfo(product: product, needed: t.quantityPerCompletion)
+            }
+        }
+    }
+
+    private func completeAction(for item: HomeItem) -> (() -> Void)? {
+        guard case .task(let t) = item else { return nil }
+        return { complete(t) }
     }
 
 }

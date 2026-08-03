@@ -17,11 +17,27 @@ struct StockView: View {
                 List {
                     ForEach(store.stockProducts) { product in
                         Button { editing = product } label: {
-                            StockProductRow(product: product)
+                            StockProductRow(product: product, onConsume: { consumeOne(product) })
                         }
                         .buttonStyle(.plain)
                         .glassRow()
                         .contextMenu { StockContextMenu(product: product) }
+                        .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                            if product.totalUnits > 0 {
+                                Button { consumeOne(product) } label: {
+                                    Label("Consume 1", systemImage: "minus.circle")
+                                }
+                                .tint(.orange)
+                            }
+                        }
+                        .swipeActions(edge: .trailing) {
+                            Button(role: .destructive) {
+                                Task { try? await store.deleteProduct(product) }
+                            } label: { Label("Delete", systemImage: "trash") }
+                            Button {
+                                Task { try? await store.replenish(product) }
+                            } label: { Label("Replenish", systemImage: "plus.square.on.square") }
+                        }
                     }
                 }
                 .glassListStyle()
@@ -36,6 +52,11 @@ struct StockView: View {
         }
         .sheet(isPresented: $showAdd) { AddStockProductSheet() }
         .sheet(item: $editing) { product in AddStockProductSheet(existing: product) }
+    }
+
+    private func consumeOne(_ product: StockProduct) {
+        guard let consumed = product.consumingOneUnit() else { return }
+        Task { try? await store.updateProduct(consumed) }
     }
 }
 

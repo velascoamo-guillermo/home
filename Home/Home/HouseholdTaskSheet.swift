@@ -11,7 +11,9 @@ struct HouseholdTaskSheet: View {
     @State private var sectionId: UUID? = nil
     @State private var intervalValue = 1
     @State private var intervalUnit  = IntervalUnit.months
-    @State private var nextDueDate   = Date.now
+    @State private var nextDueDate = HouseholdTask.defaultDueDate(
+        intervalDays: IntervalUnit.months.toDays(1))
+    @State private var dateTouched = false
     @State private var notes = ""
     @State private var productId: UUID? = nil
     @State private var quantityPerCompletion = 1
@@ -107,6 +109,13 @@ struct HouseholdTaskSheet: View {
             .sheet(isPresented: $showSectionPicker) {
                 TaskSectionPicker(selectedIcon: $icon, selectedSectionId: $sectionId)
             }
+            .onChange(of: intervalValue) { syncDerivedDueDate() }
+            .onChange(of: intervalUnit) { syncDerivedDueDate() }
+            .onChange(of: nextDueDate) { _, newValue in
+                if !Calendar.current.isDate(newValue, inSameDayAs: derivedDueDate) {
+                    dateTouched = true
+                }
+            }
         }
     }
 
@@ -117,6 +126,15 @@ struct HouseholdTaskSheet: View {
         }
         return TaskSection.Predefined.allCases
             .first(where: { $0.icon == icon })?.name ?? icon
+    }
+
+    private var derivedDueDate: Date {
+        HouseholdTask.defaultDueDate(intervalDays: intervalUnit.toDays(intervalValue))
+    }
+
+    private func syncDerivedDueDate() {
+        guard !isEditing, !dateTouched else { return }
+        nextDueDate = derivedDueDate
     }
 
     private func save() {

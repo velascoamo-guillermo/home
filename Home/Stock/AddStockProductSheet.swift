@@ -9,7 +9,7 @@ struct AddStockProductSheet: View {
     @State private var name = ""
     @State private var icon = "shippingbox"
     @State private var unitsPerPackage = 1
-    @State private var packages = 0
+    @State private var packages = 1
     @State private var looseUnits = 0
     @State private var supermarket: Supermarket?
     @State private var category: ProductCategory?
