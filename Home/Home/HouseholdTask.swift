@@ -23,6 +23,11 @@ nonisolated struct HouseholdTask: Codable, Identifiable, Hashable {
 
     func snoozedByOneDay() -> HouseholdTask { snoozed(byDays: 1) }
 
+    static func defaultDueDate(intervalDays: Int, from date: Date = .now,
+                               calendar: Calendar = .current) -> Date {
+        calendar.date(byAdding: .day, value: intervalDays, to: date) ?? date
+    }
+
     enum CodingKeys: String, CodingKey {
         case id, title, icon, notes
         case intervalDays          = "interval_days"
