@@ -31,6 +31,7 @@ final class SmokeTests: XCTestCase {
         nameField.typeText("Fixture New Task")
         app.buttons["Save"].tap()
 
+        XCTAssertTrue(app.staticTexts["Fixture New Task"].waitForExistence(timeout: 10))
         XCTAssertTrue(app.staticTexts["Fixture Change Filter"].waitForExistence(timeout: 10))
     }
 

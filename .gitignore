@@ -2,6 +2,8 @@
 .superpowers/
 docs/superpowers/
 fastlane/test_output/
+fastlane/test_output_ui/
+fastlane/report.xml
 Config.xcconfig
 fastlane/build_output/
 .claude/worktrees/
