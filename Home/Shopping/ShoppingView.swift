@@ -32,6 +32,8 @@ struct ShoppingView: View {
                 TextField("Add item…", text: $newItemName)
                     .onSubmit(quickAdd)
                     .submitLabel(.done)
+                    .autocorrectionDisabled()
+                    .accessibilityIdentifier("quickAddField")
                     .glassRow()
             }
             if store.shoppingList.isEmpty {
@@ -61,6 +63,7 @@ struct ShoppingView: View {
                         .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.borderedProminent)
+                .accessibilityIdentifier("finishShopping")
                 .padding(.horizontal)
                 .padding(.bottom, 8)
             }

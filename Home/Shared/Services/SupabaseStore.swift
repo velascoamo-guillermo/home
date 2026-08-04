@@ -6,6 +6,8 @@ import Supabase
 @Observable
 final class SupabaseStore {
     let client: SupabaseClient
+    nonisolated let localURLOverride: URL?
+    nonisolated let syncEnabled: Bool
 
     var pets: [Pet] = []
     var veterinarians: [Veterinarian] = []
@@ -46,12 +48,16 @@ final class SupabaseStore {
             supabaseKey: SupabaseConfig.anonKey,
             options: .init(auth: .init(emitLocalSessionAsInitialSession: true))
         )
+        self.localURLOverride = nil
+        self.syncEnabled = true
     }
 
     /// For unit tests — accepts a pre-built client so tests can inject a
     /// non-connecting stub without triggering Keychain access.
-    init(client: SupabaseClient) {
+    init(client: SupabaseClient, localURL: URL? = nil, syncEnabled: Bool = true) {
         self.client = client
+        self.localURLOverride = localURL
+        self.syncEnabled = syncEnabled
     }
 
     /// Released off the main actor. An isolated (`@MainActor`) deinit routes
@@ -81,16 +87,20 @@ final class SupabaseStore {
         loadError = nil
         do {
             if _local == nil {
-                let store = try await LocalStore(url: localURL)
-                _sync = SyncEngine(local: store, gateway: SupabaseGateway(client: client))
+                let store = try await LocalStore(url: localURLOverride ?? localURL)
+                if syncEnabled {
+                    _sync = SyncEngine(local: store, gateway: SupabaseGateway(client: client))
+                }
                 _local = store
-                startReconnectObserver()
+                if syncEnabled { startReconnectObserver() }
             }
             try await hydrate()
             isLoading = false
-            await _sync?.sync(tables: SyncEngine.syncedTables)
-            try? await hydrate()
-            if loadError == nil { WidgetSnapshotWriter.write(from: self) }
+            if syncEnabled {
+                await _sync?.sync(tables: SyncEngine.syncedTables)
+                try? await hydrate()
+                if loadError == nil { WidgetSnapshotWriter.write(from: self) }
+            }
         } catch {
             loadError = error.localizedDescription
             isLoading = false

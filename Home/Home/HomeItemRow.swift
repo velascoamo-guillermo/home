@@ -55,6 +55,7 @@ struct HomeItemRow: View {
                 }
                 .buttonStyle(.borderless)
                 .accessibilityLabel("Mark done")
+                .accessibilityIdentifier("markDone-\(title)")
             }
         }
         .padding(.vertical, 4)
