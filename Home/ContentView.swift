@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var store = SupabaseStore()
+    @State private var store = UITestSupport.isActive ? UITestSupport.makeStore() : SupabaseStore()
     @State private var theme = ThemeStore()
     @State private var selectedTab: AppTab = .home
     @State private var hubPath = NavigationPath()
@@ -30,7 +30,12 @@ struct ContentView: View {
         .environment(theme)
         .tint(theme.tint)
         .preferredColorScheme(theme.colorScheme)
-        .task { await store.loadAll() }
+        .task {
+            await store.loadAll()
+            if UITestSupport.isActive, store.stockProducts.isEmpty {
+                await UITestSupport.seed(store)
+            }
+        }
         .onOpenURL { url in
             let route = AppRouter.route(host: url.host)
             selectedTab = route.tab
@@ -39,7 +44,7 @@ struct ContentView: View {
             hubPath = path
         }
         .onChange(of: scenePhase) { _, new in
-            if new == .background && store.loadError == nil && !store.isLoading {
+            if new == .background && !UITestSupport.isActive && store.loadError == nil && !store.isLoading {
                 WidgetSnapshotWriter.write(from: store)
             }
         }
