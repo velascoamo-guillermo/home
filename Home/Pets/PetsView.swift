@@ -3,6 +3,7 @@ import SwiftUI
 struct PetsView: View {
     @Environment(SupabaseStore.self) private var store
     @State private var showAddPet = false
+    @State private var petToDelete: Pet? = nil
     @Namespace private var heroNamespace
 
     var body: some View {
@@ -13,7 +14,7 @@ struct PetsView: View {
             .matchedTransitionSource(id: pet.id, in: heroNamespace)
             .contextMenu {
                 Button(role: .destructive) {
-                    Task { try? await store.deletePet(pet) }
+                    petToDelete = pet
                 } label: { Label("Delete", systemImage: "trash") }
             }
         }
@@ -28,6 +29,21 @@ struct PetsView: View {
             }
         }
         .sheet(isPresented: $showAddPet) { AddPetSheet() }
+        .confirmationDialog(
+            "Delete \(petToDelete?.name ?? "")?",
+            isPresented: Binding(
+                get: { petToDelete != nil },
+                set: { if !$0 { petToDelete = nil } }
+            ),
+            titleVisibility: .visible,
+            presenting: petToDelete
+        ) { pet in
+            Button("Delete Pet", role: .destructive) {
+                Task { try? await store.deletePet(pet) }
+            }
+        } message: { pet in
+            Text("Also removes \(store.appointments(for: pet.id).count) appointments, \(store.events(for: pet.id).count) events, \(store.clinicalEntries(for: pet.id).count) clinical entries, \(store.weightEntries(for: pet.id).count) weight entries and \(store.files(for: pet.id).count) files.")
+        }
     }
 }
 

@@ -4,6 +4,8 @@ struct SearchView: View {
     @Environment(SupabaseStore.self) private var store
     @State private var searchText = ""
     @State private var selection: SearchSelection?
+    @State private var productToDelete: StockProduct? = nil
+    @State private var petToDelete: Pet? = nil
 
     private var results: SearchResults {
         SearchEngine.search(
@@ -35,7 +37,7 @@ struct SearchView: View {
                                         StockProductRow(product: product)
                                     }
                                     .buttonStyle(.plain)
-                                    .contextMenu { StockContextMenu(product: product) }
+                                    .contextMenu { StockContextMenu(product: product, onDeleteRequest: { productToDelete = $0 }) }
                                 }
                             }
                         }
@@ -88,6 +90,22 @@ struct SearchView: View {
                 }
             }
             .searchable(text: $searchText, prompt: "Search stock, tasks, meals, pets")
+            .productDeleteDialog($productToDelete)
+            .confirmationDialog(
+                "Delete \(petToDelete?.name ?? "")?",
+                isPresented: Binding(
+                    get: { petToDelete != nil },
+                    set: { if !$0 { petToDelete = nil } }
+                ),
+                titleVisibility: .visible,
+                presenting: petToDelete
+            ) { pet in
+                Button("Delete Pet", role: .destructive) {
+                    Task { try? await store.deletePet(pet) }
+                }
+            } message: { pet in
+                Text("Also removes \(store.appointments(for: pet.id).count) appointments, \(store.events(for: pet.id).count) events, \(store.clinicalEntries(for: pet.id).count) clinical entries, \(store.weightEntries(for: pet.id).count) weight entries and \(store.files(for: pet.id).count) files.")
+            }
         }
     }
 
@@ -104,7 +122,7 @@ struct SearchView: View {
     @ViewBuilder
     private func petMenu(_ pet: Pet) -> some View {
         Button(role: .destructive) {
-            Task { try? await store.deletePet(pet) }
+            petToDelete = pet
         } label: { Label("Delete", systemImage: "trash") }
     }
 }

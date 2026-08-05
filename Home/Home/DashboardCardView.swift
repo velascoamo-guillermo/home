@@ -7,6 +7,7 @@ struct DashboardCardView: View {
     @Environment(SupabaseStore.self) private var store
     @Environment(\.openURL) private var openURL
     @State private var outOfStock: OutOfStockInfo? = nil
+    @State private var productToDelete: StockProduct? = nil
 
     private var shopping: (items: [StockProduct], total: Int) {
         DashboardData.shoppingList(stock: store.stockProducts, limit: DashboardData.shoppingLimit)
@@ -18,6 +19,7 @@ struct DashboardCardView: View {
             content
         }
         .outOfStockAlert($outOfStock)
+        .productDeleteDialog($productToDelete)
     }
 
     private var header: some View {
@@ -65,7 +67,7 @@ struct DashboardCardView: View {
             } else {
                 ForEach(shopping.items) { product in
                     StockProductRow(product: product, showsIcon: false)
-                        .contextMenu { StockContextMenu(product: product) }
+                        .contextMenu { StockContextMenu(product: product, onDeleteRequest: { productToDelete = $0 }) }
                 }
                 overflowFooter(shown: shopping.items.count, total: shopping.total)
             }

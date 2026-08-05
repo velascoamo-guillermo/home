@@ -4,6 +4,7 @@ struct StockView: View {
     @Environment(SupabaseStore.self) private var store
     @State private var showAdd = false
     @State private var editing: StockProduct? = nil
+    @State private var productToDelete: StockProduct? = nil
 
     var body: some View {
         Group {
@@ -21,7 +22,7 @@ struct StockView: View {
                         }
                         .buttonStyle(.plain)
                         .glassRow()
-                        .contextMenu { StockContextMenu(product: product) }
+                        .contextMenu { StockContextMenu(product: product, onDeleteRequest: { productToDelete = $0 }) }
                         .swipeActions(edge: .leading, allowsFullSwipe: true) {
                             if product.totalUnits > 0 {
                                 Button { consumeOne(product) } label: {
@@ -52,6 +53,7 @@ struct StockView: View {
         }
         .sheet(isPresented: $showAdd) { AddStockProductSheet() }
         .sheet(item: $editing) { product in AddStockProductSheet(existing: product) }
+        .productDeleteDialog($productToDelete)
     }
 
     private func consumeOne(_ product: StockProduct) {

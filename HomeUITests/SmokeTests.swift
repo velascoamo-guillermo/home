@@ -99,6 +99,7 @@ final class SmokeTests: XCTestCase {
         XCTAssertTrue(alert.waitForExistence(timeout: 10))
         XCTAssertTrue(alert.staticTexts.element(
             matching: NSPredicate(format: "label CONTAINS %@", "Fixture Filters")).exists)
+        XCTAssertTrue(alert.buttons["View Shopping"].exists)
         alert.buttons["OK"].tap()
         XCTAssertTrue(waitForDisappearance(alert, timeout: 10))
     }
