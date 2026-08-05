@@ -4,6 +4,7 @@ struct SearchView: View {
     @Environment(SupabaseStore.self) private var store
     @State private var searchText = ""
     @State private var selection: SearchSelection?
+    @State private var productToDelete: StockProduct? = nil
 
     private var results: SearchResults {
         SearchEngine.search(
@@ -35,7 +36,7 @@ struct SearchView: View {
                                         StockProductRow(product: product)
                                     }
                                     .buttonStyle(.plain)
-                                    .contextMenu { StockContextMenu(product: product) }
+                                    .contextMenu { StockContextMenu(product: product, onDeleteRequest: { productToDelete = $0 }) }
                                 }
                             }
                         }
@@ -88,6 +89,7 @@ struct SearchView: View {
                 }
             }
             .searchable(text: $searchText, prompt: "Search stock, tasks, meals, pets")
+            .productDeleteDialog($productToDelete)
         }
     }
 
