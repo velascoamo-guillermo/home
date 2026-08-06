@@ -1,3 +1,4 @@
+import AppIntents
 import SwiftUI
 import WidgetKit
 
@@ -14,26 +15,39 @@ struct MediumWidgetView: View {
     }
 
     private var eventsColumn: some View {
-        Link(destination: URL(string: "home://home")!) {
-            VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 8) {
+            Link(destination: URL(string: "home://home")!) {
                 WidgetSectionHeader(systemImage: "checklist", title: "Hoy", tint: .blue)
-                if snapshot.events.isEmpty {
+            }
+            if snapshot.events.isEmpty {
+                Link(destination: URL(string: "home://home")!) {
                     Text("Nada para hoy")
                         .font(.caption)
                         .foregroundStyle(.secondary)
-                    Spacer(minLength: 0)
-                } else {
-                    VStack(alignment: .leading, spacing: 0) {
-                        ForEach(snapshot.events) { event in
-                            EventRowView(event: event)
-                                .frame(maxHeight: .infinity, alignment: .leading)
-                        }
-                    }
-                    .frame(maxHeight: .infinity)
                 }
+                Spacer(minLength: 0)
+            } else {
+                VStack(alignment: .leading, spacing: 0) {
+                    ForEach(snapshot.events) { event in
+                        HStack(spacing: 6) {
+                            Link(destination: URL(string: "home://home")!) {
+                                EventRowView(event: event)
+                            }
+                            if event.kind == .task {
+                                Button(intent: CompleteTaskIntent(taskId: event.id.uuidString)) {
+                                    Image(systemName: "checkmark.circle")
+                                        .foregroundStyle(.tint)
+                                }
+                                .buttonStyle(.plain)
+                            }
+                        }
+                        .frame(maxHeight: .infinity, alignment: .leading)
+                    }
+                }
+                .frame(maxHeight: .infinity)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
     }
 
     private var mealsColumn: some View {
