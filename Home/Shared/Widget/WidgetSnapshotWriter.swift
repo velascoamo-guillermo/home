@@ -60,22 +60,10 @@ enum WidgetSnapshotWriter {
                 systemImage: "calendar"
             )
         case .task(let task):
-            let base = task.notes.isEmpty
-                ? task.nextDueDate.formatted(date: .abbreviated, time: .omitted)
-                : task.notes
-            var subtitle = base
-            if let pid = task.productId,
-               let product = stockProducts.first(where: { $0.id == pid }) {
-                subtitle = "\(base) · \(product.name) × \(task.quantityPerCompletion)"
+            let productName = task.productId.flatMap { pid in
+                stockProducts.first(where: { $0.id == pid })?.name
             }
-            return WidgetEvent(
-                id: task.id,
-                title: task.title,
-                subtitle: subtitle,
-                date: task.nextDueDate,
-                kind: .task,
-                systemImage: task.icon
-            )
+            return WidgetEvent(task: task, productName: productName)
         case .event(let event, let pet):
             return WidgetEvent(
                 id: event.id,
