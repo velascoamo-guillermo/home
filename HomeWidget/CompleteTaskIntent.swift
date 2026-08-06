@@ -13,16 +13,28 @@ struct CompleteTaskIntent: AppIntent {
     init(taskId: String) { self.taskId = taskId }
 
     func perform() async throws -> some IntentResult {
+        let logger = Logger(subsystem: "com.guillermovelasco.managedhome.HomeWidget",
+                             category: "intent")
+        // Every exit path — success, guard early-out, or thrown error — must
+        // reload timelines so the widget never shows a stale checkmark state.
+        defer { WidgetCenter.shared.reloadAllTimelines() }
+
         guard let id = UUID(uuidString: taskId),
               let dbURL = FileManager.default
                   .containerURL(forSecurityApplicationGroupIdentifier: WidgetStore.appGroupIdentifier)?
                   .appendingPathComponent("home.sqlite")
-        else { return .result() }
+        else {
+            logger.error("invalid taskId or missing app-group container: \(taskId, privacy: .public)")
+            return .result()
+        }
 
         do {
             let store = try await LocalStore(url: dbURL)
             let tasks = try await store.fetchAll(HouseholdTask.self)
-            guard let task = tasks.first(where: { $0.id == id }) else { return .result() }
+            guard let task = tasks.first(where: { $0.id == id }) else {
+                logger.error("task not found: \(id, privacy: .public)")
+                return .result()
+            }
             let products = try await store.fetchAll(StockProduct.self)
 
             let plan = TaskCompletion.plan(for: task, stockProducts: products)
@@ -37,11 +49,9 @@ struct CompleteTaskIntent: AppIntent {
             refreshSnapshot(tasks: tasks.map { $0.id == id ? updatedTask : $0 },
                             products: products)
         } catch {
-            Logger(subsystem: "com.guillermovelasco.managedhome.HomeWidget",
-                   category: "intent").error("complete failed: \(error)")
+            logger.error("complete failed: \(error)")
         }
 
-        WidgetCenter.shared.reloadAllTimelines()
         return .result()
     }
 
