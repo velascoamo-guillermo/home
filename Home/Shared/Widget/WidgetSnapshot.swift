@@ -21,6 +21,27 @@ nonisolated struct WidgetEvent: Codable, Sendable, Identifiable {
     var systemImage: String
 }
 
+extension WidgetEvent {
+    // Mirrors WidgetSnapshotWriter's subtitle composition exactly (no format change).
+    nonisolated init(task: HouseholdTask, productName: String?, now: Date = .now) {
+        let base = task.notes.isEmpty
+            ? task.nextDueDate.formatted(date: .abbreviated, time: .omitted)
+            : task.notes
+        var subtitle = base
+        if task.productId != nil, let productName {
+            subtitle = "\(base) · \(productName) × \(task.quantityPerCompletion)"
+        }
+        self.init(
+            id: task.id,
+            title: task.title,
+            subtitle: subtitle,
+            date: task.nextDueDate,
+            kind: .task,
+            systemImage: task.icon
+        )
+    }
+}
+
 nonisolated struct WidgetMeal: Codable, Sendable {
     var slot: String        // "lunch" | "dinner"
     var title: String
