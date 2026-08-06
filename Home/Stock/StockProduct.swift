@@ -7,6 +7,7 @@ nonisolated struct StockProduct: Codable, Identifiable, Hashable {
     var packages: Int
     var looseUnits: Int
     var unitsPerPackage: Int
+    var needed: Bool = false
     var createdAt: Date = .now
     var supermarket: Supermarket?
     var category: ProductCategory?
@@ -36,6 +37,7 @@ nonisolated struct StockProduct: Codable, Identifiable, Hashable {
     func replenished() -> StockProduct {
         var copy = self
         copy.packages += 1
+        copy.needed = false
         return copy
     }
 
@@ -47,7 +49,7 @@ nonisolated struct StockProduct: Codable, Identifiable, Hashable {
     }
 
     init(id: UUID = UUID(), name: String, icon: String, packages: Int,
-         looseUnits: Int, unitsPerPackage: Int, createdAt: Date = .now,
+         looseUnits: Int, unitsPerPackage: Int, needed: Bool = false, createdAt: Date = .now,
          supermarket: Supermarket? = nil, category: ProductCategory? = nil,
          updatedAt: Date = .now, deletedAt: Date? = nil) {
         precondition(unitsPerPackage >= 1, "unitsPerPackage must be >= 1")
@@ -57,6 +59,7 @@ nonisolated struct StockProduct: Codable, Identifiable, Hashable {
         self.packages = packages
         self.looseUnits = looseUnits
         self.unitsPerPackage = unitsPerPackage
+        self.needed = needed
         self.createdAt = createdAt
         self.supermarket = supermarket
         self.category = category
@@ -65,7 +68,7 @@ nonisolated struct StockProduct: Codable, Identifiable, Hashable {
     }
 
     enum CodingKeys: String, CodingKey {
-        case id, name, icon, packages, supermarket, category
+        case id, name, icon, packages, needed, supermarket, category
         case looseUnits      = "loose_units"
         case unitsPerPackage = "units_per_package"
         case createdAt       = "created_at"
@@ -73,6 +76,21 @@ nonisolated struct StockProduct: Codable, Identifiable, Hashable {
         case deletedAt       = "deleted_at"
     }
 
+    init(from decoder: any Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        id = try c.decode(UUID.self, forKey: .id)
+        name = try c.decode(String.self, forKey: .name)
+        icon = try c.decode(String.self, forKey: .icon)
+        packages = try c.decode(Int.self, forKey: .packages)
+        looseUnits = try c.decode(Int.self, forKey: .looseUnits)
+        unitsPerPackage = try c.decode(Int.self, forKey: .unitsPerPackage)
+        needed = try c.decodeIfPresent(Bool.self, forKey: .needed) ?? false
+        createdAt = (try? c.decode(Date.self, forKey: .createdAt)) ?? .now
+        supermarket = try c.decodeIfPresent(Supermarket.self, forKey: .supermarket)
+        category = try c.decodeIfPresent(ProductCategory.self, forKey: .category)
+        updatedAt = (try? c.decode(Date.self, forKey: .updatedAt)) ?? .now
+        deletedAt = try? c.decodeIfPresent(Date.self, forKey: .deletedAt)
+    }
 }
 
 nonisolated extension StockProduct: SyncableEntity {
