@@ -483,35 +483,11 @@ final class SupabaseStore {
 
     // MARK: - Stock
 
-    enum CompletionResult: Equatable {
-        case consumed
-        case outOfStock(StockProduct)
-        case noProduct
-    }
-
-    struct CompletionPlan {
-        var updatedTask: HouseholdTask
-        var updatedProduct: StockProduct?
-        var result: CompletionResult
-    }
+    typealias CompletionResult = TaskCompletion.Result
+    typealias CompletionPlan = TaskCompletion.Plan
 
     func completionPlan(for task: HouseholdTask) -> CompletionPlan {
-        var updatedTask = task
-        updatedTask.nextDueDate = Calendar.current.date(
-            byAdding: .day, value: task.intervalDays, to: .now
-        ) ?? .now
-
-        guard let productId = task.productId,
-              let product = stockProducts.first(where: { $0.id == productId }) else {
-            return CompletionPlan(updatedTask: updatedTask, updatedProduct: nil, result: .noProduct)
-        }
-
-        guard let consumed = product.consuming(units: task.quantityPerCompletion) else {
-            return CompletionPlan(updatedTask: updatedTask, updatedProduct: nil,
-                                  result: .outOfStock(product))
-        }
-
-        return CompletionPlan(updatedTask: updatedTask, updatedProduct: consumed, result: .consumed)
+        TaskCompletion.plan(for: task, stockProducts: stockProducts)
     }
 
     @discardableResult
