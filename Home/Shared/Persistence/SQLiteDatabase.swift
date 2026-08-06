@@ -95,6 +95,7 @@ actor SQLiteDatabase {
         let rc = sqlite3_open(url.path, &handle)
         guard rc == SQLITE_OK, let handle else { throw SQLiteError.open(rc) }
         sqlite3_exec(handle, "PRAGMA journal_mode=WAL; PRAGMA foreign_keys=ON;", nil, nil, nil)
+        sqlite3_busy_timeout(handle, 5000)
         conn = Connection(handle)
     }
 
