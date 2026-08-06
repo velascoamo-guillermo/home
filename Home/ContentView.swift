@@ -44,6 +44,9 @@ struct ContentView: View {
             hubPath = path
         }
         .onChange(of: scenePhase) { _, new in
+            if new == .active && !UITestSupport.isActive {
+                Task { await store.refreshFromLocal() }
+            }
             if new == .background && !UITestSupport.isActive && store.loadError == nil && !store.isLoading {
                 WidgetSnapshotWriter.write(from: store)
             }

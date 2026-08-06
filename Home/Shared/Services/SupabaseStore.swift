@@ -107,6 +107,13 @@ final class SupabaseStore {
         }
     }
 
+    func refreshFromLocal() async {
+        guard !isLoading, _local != nil else { return }
+        try? await hydrate()
+        await _sync?.sync(tables: SyncEngine.syncedTables)
+        try? await hydrate()
+    }
+
     private func hydrate() async throws {
         guard let local = _local else { return }
         pets            = try await local.fetchAll(Pet.self)
