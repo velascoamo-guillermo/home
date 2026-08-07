@@ -111,7 +111,7 @@ extension SupabaseStore {
     }
 
     func markMissingNeeded(for entry: MealEntry) async {
-        for link in entry.shortLinks where !link.product.needed {
+        for link in entry.shortLinks {
             guard var product = stockProducts.first(where: { $0.id == link.product.id }),
                   !product.needed else { continue }
             product.needed = true

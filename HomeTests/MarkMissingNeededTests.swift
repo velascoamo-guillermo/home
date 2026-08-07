@@ -57,4 +57,17 @@ import Foundation
 
         #expect(store.stockProducts.first { $0.id == short.id }?.needed == true)
     }
+
+    @Test func markMissingNeededDecidesFromCurrentStoreStateNotStaleEntrySnapshot() async throws {
+        let store = SupabaseStore.makeTest()
+        let current = product(name: "Short", units: 1, needed: false)
+        store.stockProducts = [current]
+        var stale = current
+        stale.needed = true
+        let e = entry(links: [.init(product: stale, quantity: 3)])
+
+        await store.markMissingNeeded(for: e)
+
+        #expect(store.stockProducts.first { $0.id == current.id }?.needed == true)
+    }
 }
