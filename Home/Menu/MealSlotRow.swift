@@ -4,6 +4,7 @@ struct MealSlotRow: View {
     let slot: MealSlot
     let entry: MealEntry?
     let onCook: () -> Void
+    let onAddMissing: () -> Void
 
     var body: some View {
         if let entry {
@@ -22,11 +23,23 @@ struct MealSlotRow: View {
                 }
                 Spacer()
                 if entry.isShort {
-                    Text("Falta stock")
-                        .font(.caption2).bold()
-                        .padding(.horizontal, 8).padding(.vertical, 4)
-                        .background(.red.opacity(0.15), in: .capsule)
-                        .foregroundStyle(.red)
+                    if entry.allShortNeeded {
+                        Text("En la compra")
+                            .font(.caption2).bold()
+                            .padding(.horizontal, 8).padding(.vertical, 4)
+                            .background(.green.opacity(0.15), in: .capsule)
+                            .foregroundStyle(.green)
+                    } else {
+                        Button(action: onAddMissing) {
+                            Text("Falta stock")
+                                .font(.caption2).bold()
+                                .padding(.horizontal, 8).padding(.vertical, 4)
+                                .background(.red.opacity(0.15), in: .capsule)
+                                .foregroundStyle(.red)
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel("Añadir faltantes a la compra")
+                    }
                 }
             }
             .padding(.vertical, 4)
