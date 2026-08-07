@@ -110,6 +110,15 @@ extension SupabaseStore {
         await _sync?.sync(tables: [MenuEntry.tableName])
     }
 
+    func markMissingNeeded(for entry: MealEntry) async {
+        for link in entry.shortLinks where !link.product.needed {
+            guard var product = stockProducts.first(where: { $0.id == link.product.id }),
+                  !product.needed else { continue }
+            product.needed = true
+            try? await updateProduct(product)
+        }
+    }
+
     func cookMeal(_ entry: MealEntry) async throws {
         for link in entry.links {
             let current = stockProducts.first(where: { $0.id == link.product.id }) ?? link.product
