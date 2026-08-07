@@ -23,7 +23,7 @@ enum DashboardData {
     }
 
     static func shoppingList(stock: [StockProduct], limit: Int) -> (items: [StockProduct], total: Int) {
-        let out = stock.filter { $0.totalUnits == 0 }
+        let out = stock.filter { $0.totalUnits == 0 || $0.needed }
         return (Array(out.prefix(limit)), out.count)
     }
 
