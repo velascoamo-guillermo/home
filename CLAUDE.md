@@ -88,8 +88,10 @@ Binary files are stored in the `pet-files` Supabase Storage bucket. `storagePath
 ```
 HomeApp → ContentView (creates SupabaseStore, calls loadAll(), injects via .environment)
         → loading/error gate
-        → MainTabView (5 tabs: Home, Pets, Stock, Menu, Shopping)
+        → MainTabView (3 tabs: Home, Menu, Search)
 ```
+
+`MainTabView` overlays a `FloatingActionButton` (`fab.addTask`) on the `TabView` to open `HouseholdTaskSheet` for a new task; hidden on the Search tab.
 
 ### Home tab — unified timeline
 
@@ -125,4 +127,4 @@ Each tab reads filtered data from `SupabaseStore` via `appointments(for:)`, `cli
 - Accessibility: all icon-only buttons need `.accessibilityLabel`. Decorative images need `.accessibilityHidden(true)`.
 - Use `.tint` (not `.accent` or `Color.accentColor`) for `foregroundStyle` referencing the app tint.
 - Use `.clipShape(.rect(cornerRadius:))` not `clipShape(RoundedRectangle(cornerRadius:))`.
-- Colors come from `Palette` (`Home/Shared/Theme/Palette.swift`): feature fills (`tasks`, `shopping`, `meals`, `pets`, `stock`), `canvas`, `surface`, `accent`. No `.regularMaterial` / glass surfaces; semantic system colors (red/green/orange) only for status and swipe actions.
+- Colors come from `Palette` (`Home/Shared/Theme/Palette.swift`): feature fills (`tasks`, `shopping`, `meals`, `pets`, `stock`), `canvasTop`/`canvasMid`/`canvasBottom` (gradient stops), `canvas` (flat fallback only — screens get their background via `.gradientCanvas()`, not `Palette.canvas` directly), `surface` (85% translucent), `accent`, `accentSoft`, `onAccent`. No `.regularMaterial` / glass surfaces; semantic system colors (red/green/orange) only for status and swipe actions.
