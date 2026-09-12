@@ -20,9 +20,11 @@ nonisolated extension TaskSection: SyncableEntity {
 // MARK: - Predefined
 
 extension TaskSection {
-    nonisolated enum Predefined: String, CaseIterable, Codable, Sendable {
+    nonisolated enum Predefined: String, CaseIterable, Codable, Sendable, Identifiable {
         case general, plumbing, kitchen, climate, lighting
         case cleaning, storage, repairs, garden, airQuality
+
+        var id: String { rawValue }
 
         // Pre-redesign payloads stored the SF Symbol name instead of a key.
         init(legacyIcon: String) {

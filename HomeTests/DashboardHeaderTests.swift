@@ -24,4 +24,30 @@ import Testing
         #expect(DashboardHeaderView.summary(tasksDueToday: 0, itemsToBuy: 4) == "4 to buy")
         #expect(DashboardHeaderView.summary(tasksDueToday: 0, itemsToBuy: 0) == nil)
     }
+
+    @Test("heroSubline is nil when there is nothing to buy")
+    func heroSublineZero() {
+        #expect(DashboardHeaderView.heroSubline(itemsToBuy: 0) == nil)
+    }
+
+    @Test("heroSubline singularizes one item to buy")
+    func heroSublineSingular() {
+        #expect(DashboardHeaderView.heroSubline(itemsToBuy: 1) == "1 to buy")
+    }
+
+    @Test("heroSubline pluralizes multiple items to buy")
+    func heroSublinePlural() {
+        #expect(DashboardHeaderView.heroSubline(itemsToBuy: 3) == "3 to buy")
+    }
+
+    @Test("heroSubline celebrates an all-clear day and stays nil otherwise")
+    func heroSublineAllClear() {
+        #expect(DashboardHeaderView.heroSubline(tasksDueToday: 0, itemsToBuy: 0) == "All clear ✨")
+        #expect(DashboardHeaderView.heroSubline(tasksDueToday: 2, itemsToBuy: 0) == nil)
+    }
+
+    @Test("heroLabel prefixes the greeting before the formatted date")
+    func heroLabel() {
+        #expect(DashboardHeaderView.heroLabel(hour: 9, date: .now).hasPrefix("Good morning · "))
+    }
 }

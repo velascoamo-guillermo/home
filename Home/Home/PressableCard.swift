@@ -23,7 +23,7 @@ private struct CardButtonStyle: ButtonStyle {
             .padding(18)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(fill, in: .rect(cornerRadius: 20))
-            .shadow(color: .black.opacity(0.04), radius: 6, y: 2)
+            .shadow(color: .black.opacity(0.06), radius: 6, y: 2)
             .scaleEffect(configuration.isPressed ? 0.97 : 1)
             .animation(.spring(response: 0.3, dampingFraction: 0.7), value: configuration.isPressed)
             .contentShape(.rect(cornerRadius: 20))

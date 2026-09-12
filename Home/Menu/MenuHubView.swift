@@ -5,19 +5,30 @@ struct MenuHubView: View {
 
     var body: some View {
         NavigationStack(path: $path) {
-            List {
-                Section {
-                    ForEach(HubDestination.allCases) { dest in
-                        NavigationLink(value: dest) { Text(dest.title) }
-                            .pastelRow(dest.fill)
+            ScrollView {
+                TileGrid {
+                    ForEach(HubTile.all) { tile in
+                        switch tile {
+                        case .destination(let dest):
+                            NavigationLink(value: dest) {
+                                Tile(title: tile.title, systemImage: tile.systemImage, fill: tile.fill)
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityLabel(tile.title)
+                        case .settings:
+                            NavigationLink {
+                                SettingsView()
+                            } label: {
+                                Tile(title: tile.title, systemImage: tile.systemImage, fill: tile.fill)
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityLabel(tile.title)
+                        }
                     }
                 }
-                Section {
-                    NavigationLink { SettingsView() } label: { Text("Settings") }
-                        .pastelRow(Palette.surface)
-                }
+                .padding(16)
             }
-            .flatListStyle()
+            .gradientCanvas()
             .navigationTitle("Menu")
             .navigationDestination(for: HubDestination.self) { dest in
                 switch dest {

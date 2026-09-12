@@ -7,16 +7,16 @@ struct SettingsView: View {
         @Bindable var theme = theme
         List {
             Section("Appearance") {
-                Picker("Appearance", selection: $theme.appearance) {
-                    ForEach(AppAppearance.allCases) { mode in
-                        Text(mode.label).tag(mode)
-                    }
-                }
-                .pickerStyle(.segmented)
+                ChipGroup(
+                    items: AppAppearance.allCases,
+                    selection: $theme.appearance,
+                    fill: Palette.surface,
+                    title: \.label
+                )
             }
         }
         .scrollContentBackground(.hidden)
-        .background(Palette.canvas.ignoresSafeArea())
+        .gradientCanvas()
         .navigationTitle("Settings")
     }
 }

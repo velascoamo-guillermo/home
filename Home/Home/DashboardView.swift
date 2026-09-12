@@ -4,7 +4,6 @@ struct DashboardView: View {
     @Environment(SupabaseStore.self) private var store
 
     @State private var config = DashboardConfig.default
-    @State private var showAdd = false
     @State private var showEdit = false
     @State private var editingTask: HouseholdTask? = nil
 
@@ -40,18 +39,14 @@ struct DashboardView: View {
                 .animation(.spring(duration: 0.35), value: tasksDueToday)
                 .animation(.spring(duration: 0.35), value: itemsToBuy)
             }
-            .background(Palette.canvas.ignoresSafeArea())
+            .gradientCanvas()
             .navigationTitle("Home")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button("Edit", systemImage: "slider.horizontal.3") { showEdit = true }
                 }
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("Add task", systemImage: "plus") { showAdd = true }
-                }
             }
-            .sheet(isPresented: $showAdd) { HouseholdTaskSheet() }
             .sheet(item: $editingTask) { task in HouseholdTaskSheet(existing: task) }
             .sheet(isPresented: $showEdit) {
                 DashboardEditView(config: $config) { configStore.save($0) }

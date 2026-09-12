@@ -5,20 +5,12 @@ struct DashboardHeaderView: View {
     let itemsToBuy: Int
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(Self.greeting(hour: Calendar.current.component(.hour, from: .now)))
-                .font(.title.bold())
-            Text(Date.now.formatted(.dateTime.weekday(.wide).day().month(.wide)))
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-            if let summary = Self.summary(tasksDueToday: tasksDueToday, itemsToBuy: itemsToBuy) {
-                Text(summary)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .contentTransition(.numericText())
-            }
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
+        HeroHeader(
+            label: Self.heroLabel(hour: Calendar.current.component(.hour, from: .now), date: .now),
+            value: tasksDueToday,
+            unit: "tasks today",
+            subline: Self.heroSubline(tasksDueToday: tasksDueToday, itemsToBuy: itemsToBuy)
+        )
     }
 
     static func greeting(hour: Int) -> String {
@@ -38,6 +30,21 @@ struct DashboardHeaderView: View {
             parts.append("\(itemsToBuy) to buy")
         }
         return parts.isEmpty ? nil : parts.joined(separator: " · ")
+    }
+
+    static func heroLabel(hour: Int, date: Date) -> String {
+        "\(greeting(hour: hour)) · \(date.formatted(.dateTime.weekday(.wide).day().month(.wide)))"
+    }
+
+    static func heroSubline(itemsToBuy: Int) -> String? {
+        itemsToBuy == 0 ? nil : "\(itemsToBuy) to buy"
+    }
+
+    static func heroSubline(tasksDueToday: Int, itemsToBuy: Int) -> String? {
+        if tasksDueToday == 0 && itemsToBuy == 0 {
+            return "All clear ✨"
+        }
+        return heroSubline(itemsToBuy: itemsToBuy)
     }
 }
 

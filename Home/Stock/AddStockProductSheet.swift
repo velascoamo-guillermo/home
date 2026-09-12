@@ -38,13 +38,19 @@ struct AddStockProductSheet: View {
                             Text(market.displayName).tag(Supermarket?.some(market))
                         }
                     }
-                    Picker("Category", selection: $category) {
-                        Text("None").tag(ProductCategory?.none)
-                        ForEach(ProductCategory.allCases) { cat in
-                            Label(cat.displayName, systemImage: cat.icon)
-                                .tag(ProductCategory?.some(cat))
-                        }
-                    }
+                }
+                Section {
+                    ChipGroup(
+                        items: ProductCategory.allCases,
+                        selection: $category,
+                        fill: Palette.stock,
+                        title: \.displayName,
+                        systemImage: \.icon
+                    )
+                } header: {
+                    Text("Category")
+                } footer: {
+                    Text("Tap the selected category again to clear.")
                 }
                 Section("Quantities") {
                     Stepper("Units per package: \(unitsPerPackage)",
@@ -53,6 +59,8 @@ struct AddStockProductSheet: View {
                     Stepper("Loose units: \(looseUnits)", value: $looseUnits, in: 0...999)
                 }
             }
+            .scrollContentBackground(.hidden)
+            .gradientCanvas()
             .navigationTitle(isEditing ? "Edit Product" : "New Product")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

@@ -88,20 +88,22 @@ Binary files are stored in the `pet-files` Supabase Storage bucket. `storagePath
 ```
 HomeApp → ContentView (creates SupabaseStore, calls loadAll(), injects via .environment)
         → loading/error gate
-        → MainTabView (5 tabs: Home, Pets, Stock, Menu, Shopping)
+        → MainTabView (3 tabs: Home, Menu, Search)
 ```
 
-### Home tab — unified timeline
+`MainTabView` overlays a `FloatingActionButton` (`fab.addTask`) on the `TabView` to open `HouseholdTaskSheet` for a new task; shown only on the Home tab.
 
-`HomeView` displays `store.homeTimeline`, a computed property on `SupabaseStore` that merges upcoming `Appointment` entries and all `HouseholdTask` entries into `[HomeItem]`, sorted by due date.
+### Tasks — unified timeline
+
+`TasksView` (reached via Menu → Tasks) displays `store.homeTimeline`, a computed property on `SupabaseStore` that merges upcoming `Appointment` entries and all `HouseholdTask` entries into `[HomeItem]`, sorted by due date.
 
 `HomeItem` is an enum (`case appointment(Appointment, Pet)`, `case task(HouseholdTask)`) — add new timeline entry types here.
 
-Task actions (mark done, snooze, delete, add to calendar) are handled in `HomeView` helper methods.
+Task actions (mark done, snooze, delete, add to calendar) are handled in `TasksView` helper methods.
 
-### Pets tab — per-pet detail
+### Pets — per-pet detail
 
-`PetsView` → `PetDetailView` (tabbed: Vet, Appointments, Clinical History, Events, Files).
+`PetsView` (reached from the Menu hub tile, `MenuHubView` → `HubDestination.pets`) → `PetDetailView` (tabbed: Vet, Appointments, Clinical History, Events, Files).
 
 Each tab reads filtered data from `SupabaseStore` via `appointments(for:)`, `clinicalEntries(for:)`, etc.
 
@@ -125,4 +127,4 @@ Each tab reads filtered data from `SupabaseStore` via `appointments(for:)`, `cli
 - Accessibility: all icon-only buttons need `.accessibilityLabel`. Decorative images need `.accessibilityHidden(true)`.
 - Use `.tint` (not `.accent` or `Color.accentColor`) for `foregroundStyle` referencing the app tint.
 - Use `.clipShape(.rect(cornerRadius:))` not `clipShape(RoundedRectangle(cornerRadius:))`.
-- Colors come from `Palette` (`Home/Shared/Theme/Palette.swift`): feature fills (`tasks`, `shopping`, `meals`, `pets`, `stock`), `canvas`, `surface`, `accent`. No `.regularMaterial` / glass surfaces; semantic system colors (red/green/orange) only for status and swipe actions.
+- Colors come from `Palette` (`Home/Shared/Theme/Palette.swift`): feature fills (`tasks`, `shopping`, `meals`, `pets`, `stock`), `canvasTop`/`canvasMid`/`canvasBottom` (gradient stops), `canvas` (flat fallback only — screens get their background via `.gradientCanvas()`, not `Palette.canvas` directly), `surface` (85% translucent), `accent`, `accentSoft`, `onAccent`. No `.regularMaterial` / glass surfaces; semantic system colors (red/green/orange) only for status and swipe actions.

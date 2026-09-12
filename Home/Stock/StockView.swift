@@ -15,7 +15,7 @@ struct StockView: View {
                     description: Text("Add products you restock and link them to tasks.")
                 )
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(Palette.canvas.ignoresSafeArea())
+                .gradientCanvas()
             } else {
                 List {
                     ForEach(store.stockProducts) { product in

@@ -51,6 +51,7 @@ struct MealsListView: View {
                 .flatListStyle()
             }
         }
+        .gradientCanvas()
         .searchable(text: $searchText, prompt: "Buscar meal")
         .toolbar {
             ToolbarItem(placement: .primaryAction) {

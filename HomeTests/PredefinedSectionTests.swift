@@ -26,4 +26,11 @@ import Testing
     func names() {
         for c in TaskSection.Predefined.allCases { #expect(!c.name.isEmpty) }
     }
+
+    @Test("predefined sections are identifiable by their raw value")
+    func identifiable() {
+        #expect(TaskSection.Predefined.plumbing.id == "plumbing")
+        let ids = TaskSection.Predefined.allCases.map(\.id)
+        #expect(Set(ids).count == ids.count)
+    }
 }

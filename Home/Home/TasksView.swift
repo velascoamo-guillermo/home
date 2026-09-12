@@ -16,7 +16,7 @@ struct TasksView: View {
                     description: Text("Add a household task or schedule a pet appointment.")
                 )
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(Palette.canvas.ignoresSafeArea())
+                .gradientCanvas()
             } else {
                 List {
                     ForEach(store.homeTimeline) { item in

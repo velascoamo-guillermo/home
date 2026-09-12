@@ -81,6 +81,7 @@ struct SearchView: View {
                     .flatListStyle()
                 }
             }
+            .gradientCanvas()
             .navigationTitle("Search")
             .navigationDestination(for: Pet.self) { pet in
                 PetDetailView(pet: pet)
