@@ -6,6 +6,9 @@ struct MainTabView: View {
 
     @State private var showAdd = false
 
+    // Clears the iOS 26 floating tab bar; measured on iPhone 17 Pro Max.
+    private static let fabBottomPadding: CGFloat = 76
+
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
             TabView(selection: $selectedTab) {
@@ -20,10 +23,10 @@ struct MainTabView: View {
                 }
             }
 
-            if selectedTab != .search {
+            if selectedTab == .home {
                 FloatingActionButton { showAdd = true }
                     .padding(.trailing, 20)
-                    .padding(.bottom, 76)
+                    .padding(.bottom, Self.fabBottomPadding)
             }
         }
         .sheet(isPresented: $showAdd) { HouseholdTaskSheet() }

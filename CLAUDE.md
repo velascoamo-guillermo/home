@@ -91,7 +91,7 @@ HomeApp → ContentView (creates SupabaseStore, calls loadAll(), injects via .en
         → MainTabView (3 tabs: Home, Menu, Search)
 ```
 
-`MainTabView` overlays a `FloatingActionButton` (`fab.addTask`) on the `TabView` to open `HouseholdTaskSheet` for a new task; hidden on the Search tab.
+`MainTabView` overlays a `FloatingActionButton` (`fab.addTask`) on the `TabView` to open `HouseholdTaskSheet` for a new task; shown only on the Home tab.
 
 ### Tasks — unified timeline
 
