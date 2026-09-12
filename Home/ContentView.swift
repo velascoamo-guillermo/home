@@ -28,7 +28,7 @@ struct ContentView: View {
         }
         .environment(store)
         .environment(theme)
-        .tint(theme.tint)
+        .tint(Palette.accent)
         .preferredColorScheme(theme.colorScheme)
         .task {
             await store.loadAll()

@@ -52,7 +52,6 @@
 		4058855340D879AED1C58A12 /* WeightEntryStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBD05E9E51504422D866DC2D /* WeightEntryStoreTests.swift */; };
 		432CC1C59252275CCB99215B /* SupabaseStoreMealTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934BB72A2A2516A2E5E46923 /* SupabaseStoreMealTests.swift */; };
 		4437583E6EB0D9482C98DB97 /* HomeWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E65927107DA46DF3718B9ABD /* HomeWidgetBundle.swift */; };
-		4750BD2B32964E23B7398111 /* Color+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7603356EA14FDFA1B64E20 /* Color+Hex.swift */; };
 		4830CC9362BB4A8B95B0722F /* ThemeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA4D2835E8B247759BE40C5C /* ThemeStore.swift */; };
 		49DF2592DDF6227CD2718279 /* StockContextMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E17A3C0BD0C64888E5CFA0A /* StockContextMenu.swift */; };
 		4A35A9683B81824C94041330 /* MealProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DF0650AAC8C151554C098B6 /* MealProduct.swift */; };
@@ -119,7 +118,6 @@
 		B2F26FBCC7213633E7FB83E9 /* DashboardData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC8565D0720CB5FEAE079F58 /* DashboardData.swift */; };
 		B611D6F8A81DCC192451C3BF /* Supermarket.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD721BF9855C09D131A9116 /* Supermarket.swift */; };
 		B767693EAE3C3E0144D52B3E /* ProductCategoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7992BC0AD8B24DC8437E5EFF /* ProductCategoryTests.swift */; };
-		B8C7BBC4A3634B80B24013B7 /* ColorHexTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE725D024BD4C668DC2B46C /* ColorHexTests.swift */; };
 		BADF8AF2C7EA5548D28C6796 /* WeightEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE743A0826F04073B2E8A00C /* WeightEntry.swift */; };
 		BB22CC33DD44EE55FF6600AA /* AppointmentsTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB22CC33DD44EE55FF6600A1 /* AppointmentsTabView.swift */; };
 		BC2F8376F7B5864B45DB602E /* TaskContextMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDDE5A16D5905503DD57E66B /* TaskContextMenu.swift */; };
@@ -260,7 +258,6 @@
 		2A77C088219913ED29CF4865 /* SearchEngine.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SearchEngine.swift; sourceTree = "<group>"; };
 		2C2D908018579E74C4F6DE3F /* MainTabView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
 		2C6856914DFD42828E88B77E /* Veterinarian.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Veterinarian.swift; sourceTree = "<group>"; };
-		2C7603356EA14FDFA1B64E20 /* Color+Hex.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Color+Hex.swift"; sourceTree = "<group>"; };
 		2E6995C6A3CF4F4BB2E5B277 /* SettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		2E74FFE725D990117ACBBE36 /* AppRoute.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppRoute.swift; sourceTree = "<group>"; };
 		2F79186D4E37F97C05487C25 /* MealFormSheet.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MealFormSheet.swift; sourceTree = "<group>"; };
@@ -396,7 +393,6 @@
 		F5BAB79A911B4FD3860DCA75 /* SyncEngine.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SyncEngine.swift; sourceTree = "<group>"; };
 		F92FBF3D893CCC3E6A10DDC7 /* MenuEntrySyncTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MenuEntrySyncTests.swift; sourceTree = "<group>"; };
 		F9554CEBB73DA296D96B940D /* OutOfStockAlertTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OutOfStockAlertTests.swift; sourceTree = "<group>"; };
-		FAE725D024BD4C668DC2B46C /* ColorHexTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ColorHexTests.swift; sourceTree = "<group>"; };
 		FD405E293585DCC625C015EE /* DashboardEditView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DashboardEditView.swift; sourceTree = "<group>"; };
 		FDDE5A16D5905503DD57E66B /* TaskContextMenu.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TaskContextMenu.swift; sourceTree = "<group>"; };
 		FF11AA22BB33CC44DD55EE01 /* VetEditSheet.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = VetEditSheet.swift; sourceTree = "<group>"; };
@@ -805,7 +801,6 @@
 			children = (
 				AD7501ACE90E40C2948EDF5D /* ThemeStoreTests.swift */,
 				0299C23DD2754C41B0432E88 /* AppAppearanceTests.swift */,
-				FAE725D024BD4C668DC2B46C /* ColorHexTests.swift */,
 				71162745B168CB31CF119B23 /* PaletteTests.swift */,
 			);
 			path = Theme;
@@ -827,7 +822,6 @@
 			children = (
 				BA4D2835E8B247759BE40C5C /* ThemeStore.swift */,
 				ED3B777CB62C4ED981C62D2A /* AppAppearance.swift */,
-				2C7603356EA14FDFA1B64E20 /* Color+Hex.swift */,
 				3F0C7B856F01A4903BF1FFC9 /* Palette.swift */,
 			);
 			path = Theme;
@@ -1136,7 +1130,6 @@
 				EF7B5CBBD09842A0B22F7404 /* SettingsView.swift in Sources */,
 				4830CC9362BB4A8B95B0722F /* ThemeStore.swift in Sources */,
 				065301A1049341A595A68A39 /* AppAppearance.swift in Sources */,
-				4750BD2B32964E23B7398111 /* Color+Hex.swift in Sources */,
 				CD57016D61746F8775546D4B /* TasksView.swift in Sources */,
 				HM00AA11BB22CC33DD44EE11 /* HomeItem.swift in Sources */,
 				HM00AA11BB22CC33DD44EE12 /* HouseholdTask.swift in Sources */,
@@ -1280,7 +1273,6 @@
 			files = (
 				82DC16690C114789A146F1AE /* ThemeStoreTests.swift in Sources */,
 				D89773D11F0D48B8AEC82CDC /* AppAppearanceTests.swift in Sources */,
-				B8C7BBC4A3634B80B24013B7 /* ColorHexTests.swift in Sources */,
 				HT00AA11BB22CC33DD44EE02 /* ExtractionServiceTests.swift in Sources */,
 				HT00AA11BB22CC33DD44EE04 /* SupabaseStoreTests.swift in Sources */,
 				HT00AA11BB22CC33DD44EE06 /* HomeItemTests.swift in Sources */,
