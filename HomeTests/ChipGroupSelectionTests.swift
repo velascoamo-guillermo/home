@@ -3,7 +3,7 @@ import SwiftUI
 @testable import Casita
 
 private enum Fruit: String, CaseIterable, Identifiable, Hashable {
-    case apple, banana, cherry
+    case apple, banana, cherry, pear
 
     var id: String { rawValue }
 }
@@ -40,15 +40,33 @@ private enum Fruit: String, CaseIterable, Identifiable, Hashable {
         #expect(result == .banana)
     }
 
-    @Test("ChipGroup preserves the order of the items passed in")
-    func orderPreserved() {
-        let input = Array(Fruit.allCases)
+    @Test("required binding keeps selection on retap")
+    func requiredBindingKeepsSelectionOnRetap() {
+        var value = Fruit.apple
         let group = ChipGroup(
-            items: input,
-            selection: .constant(Fruit.apple),
-            fill: Palette.pets,
+            items: Fruit.allCases,
+            selection: Binding(get: { value }, set: { value = $0 }),
+            fill: .clear,
             title: { $0.rawValue }
         )
-        #expect(group.items == input)
+        group.select(.apple)
+        #expect(value == .apple)
+        group.select(.pear)
+        #expect(value == .pear)
+    }
+
+    @Test("optional binding clears on retap")
+    func optionalBindingClearsOnRetap() {
+        var value: Fruit?
+        let group = ChipGroup(
+            items: Fruit.allCases,
+            selection: Binding(get: { value }, set: { value = $0 }),
+            fill: .clear,
+            title: { $0.rawValue }
+        )
+        group.select(.apple)
+        #expect(value == .apple)
+        group.select(.apple)
+        #expect(value == nil)
     }
 }

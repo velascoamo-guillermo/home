@@ -52,13 +52,13 @@ struct ChipGroup<Item: Identifiable & Hashable>: View {
                     systemImage: systemImage(item),
                     fill: fill,
                     isSelected: selection.wrappedValue == item,
-                    action: { tap(item) }
+                    action: { select(item) }
                 )
             }
         }
     }
 
-    private func tap(_ item: Item) {
+    func select(_ item: Item) {
         if allowsDeselection {
             selection.wrappedValue = ChipSelection.next(current: selection.wrappedValue, tapped: item)
         } else {
