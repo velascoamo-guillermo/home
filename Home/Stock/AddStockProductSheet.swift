@@ -38,6 +38,8 @@ struct AddStockProductSheet: View {
                             Text(market.displayName).tag(Supermarket?.some(market))
                         }
                     }
+                }
+                Section {
                     ChipGroup(
                         items: ProductCategory.allCases,
                         selection: $category,
@@ -45,6 +47,10 @@ struct AddStockProductSheet: View {
                         title: \.displayName,
                         systemImage: \.icon
                     )
+                } header: {
+                    Text("Category")
+                } footer: {
+                    Text("Tap the selected category again to clear.")
                 }
                 Section("Quantities") {
                     Stepper("Units per package: \(unitsPerPackage)",
