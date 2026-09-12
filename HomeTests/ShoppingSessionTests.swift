@@ -68,7 +68,6 @@ import Foundation
     @Test func quickAddProductUsesShoppingDefaults() {
         let product = ShoppingSession.quickAddProduct(named: "  Leche  ")
         #expect(product?.name == "Leche")
-        #expect(product?.icon == "shippingbox")
         #expect(product?.packages == 0)
         #expect(product?.looseUnits == 0)
         #expect(product?.unitsPerPackage == 1)

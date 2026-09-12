@@ -24,12 +24,12 @@ struct TaskContextMenu: View {
 
         Menu {
             ForEach(TaskSection.Predefined.allCases, id: \.self) { section in
-                move(name: section.name, icon: section.icon, sectionId: nil)
+                move(name: section.name, section: section, sectionId: nil)
             }
             if !store.customSections.isEmpty {
                 Divider()
                 ForEach(store.customSections) { section in
-                    move(name: section.name, icon: section.icon, sectionId: section.id)
+                    move(name: section.name, section: task.section, sectionId: section.id)
                 }
             }
         } label: { Label("Section", systemImage: "folder") }
@@ -53,12 +53,12 @@ struct TaskContextMenu: View {
         }
     }
 
-    private func move(name: String, icon: String, sectionId: UUID?) -> some View {
-        Button {
+    private func move(name: String, section: TaskSection.Predefined, sectionId: UUID?) -> some View {
+        Button(name) {
             var updated = task
-            updated.icon = icon
+            updated.section = section
             updated.sectionId = sectionId
             Task { try? await store.updateTask(updated) }
-        } label: { Label(name, systemImage: icon) }
+        }
     }
 }

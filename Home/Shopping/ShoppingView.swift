@@ -89,17 +89,10 @@ struct ShoppingView: View {
                 Image(systemName: checked ? "checkmark.circle.fill" : "circle")
                     .foregroundStyle(checked ? AnyShapeStyle(.tint) : AnyShapeStyle(.secondary))
                     .accessibilityHidden(true)
-                IconChip(systemImage: product.icon)
                 Text(product.name)
                     .strikethrough(checked)
                     .foregroundStyle(checked ? .secondary : .primary)
                 Spacer()
-                if let category = product.category {
-                    Image(systemName: category.icon)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                        .accessibilityLabel(category.displayName)
-                }
             }
             .contentShape(.rect)
         }

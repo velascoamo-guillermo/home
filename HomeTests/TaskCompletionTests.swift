@@ -6,7 +6,7 @@ import Foundation
     private let cal = Calendar.current
 
     private func task(interval: Int = 7, productId: UUID? = nil, qty: Int = 1) -> HouseholdTask {
-        var t = HouseholdTask(title: "t", icon: "wrench", intervalDays: interval,
+        var t = HouseholdTask(title: "t", intervalDays: interval,
                               nextDueDate: cal.date(byAdding: .day, value: -1, to: .now)!)
         t.productId = productId
         t.quantityPerCompletion = qty
@@ -22,14 +22,14 @@ import Foundation
     }
 
     @Test func consumesLinkedProduct() {
-        let p = StockProduct(name: "p", icon: "shippingbox", packages: 1, looseUnits: 0, unitsPerPackage: 2)
+        let p = StockProduct(name: "p", packages: 1, looseUnits: 0, unitsPerPackage: 2)
         let plan = TaskCompletion.plan(for: task(productId: p.id, qty: 1), stockProducts: [p])
         #expect(plan.result == .consumed)
         #expect(plan.updatedProduct?.totalUnits == 1)
     }
 
     @Test func outOfStockWhenInsufficient() {
-        let p = StockProduct(name: "p", icon: "shippingbox", packages: 0, looseUnits: 1, unitsPerPackage: 1)
+        let p = StockProduct(name: "p", packages: 0, looseUnits: 1, unitsPerPackage: 1)
         let plan = TaskCompletion.plan(for: task(productId: p.id, qty: 2), stockProducts: [p])
         #expect(plan.result == .outOfStock(p))
         #expect(plan.updatedProduct == nil)

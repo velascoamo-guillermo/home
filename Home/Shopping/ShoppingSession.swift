@@ -49,7 +49,7 @@ final class ShoppingSession {
     nonisolated static func quickAddProduct(named rawName: String) -> StockProduct? {
         let name = rawName.trimmingCharacters(in: .whitespaces)
         guard !name.isEmpty else { return nil }
-        return StockProduct(name: name, icon: "shippingbox",
+        return StockProduct(name: name,
                             packages: 0, looseUnits: 0, unitsPerPackage: 1)
     }
 

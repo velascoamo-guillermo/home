@@ -24,7 +24,7 @@ import Supabase
 
         // Simulate the widget intent writing to the same sqlite file via its own LocalStore.
         let local = try await LocalStore(url: url)
-        let task = HouseholdTask(title: "Feed cat", icon: "pawprint", intervalDays: 1, nextDueDate: .now)
+        let task = HouseholdTask(title: "Feed cat", intervalDays: 1, nextDueDate: .now)
         try await local.upsert([task], enqueue: false)
 
         await store.refreshFromLocal()

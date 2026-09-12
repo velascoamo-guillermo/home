@@ -5,7 +5,7 @@ import Foundation
 @Suite("SupabaseStore – task completion + stock") @MainActor struct StockCompletionTests {
 
     private func makeTask(productId: UUID?) -> HouseholdTask {
-        HouseholdTask(title: "Change filter", icon: "wrench", intervalDays: 30,
+        HouseholdTask(title: "Change filter", intervalDays: 30,
                       nextDueDate: Date(timeIntervalSince1970: 0), productId: productId)
     }
 
@@ -28,8 +28,7 @@ import Foundation
     @Test("completionPlan consumes one unit when stock available")
     func consumes() {
         let store = SupabaseStore()
-        let product = StockProduct(name: "Filter", icon: "wrench",
-                                   packages: 1, looseUnits: 2, unitsPerPackage: 3)
+        let product = StockProduct(name: "Filter",                                    packages: 1, looseUnits: 2, unitsPerPackage: 3)
         store.stockProducts = [product]
         let plan = store.completionPlan(for: makeTask(productId: product.id))
         #expect(plan.result == .consumed)
@@ -40,8 +39,7 @@ import Foundation
     @Test("completionPlan returns .outOfStock when product totalUnits == 0")
     func outOfStock() {
         let store = SupabaseStore()
-        let product = StockProduct(name: "Filter", icon: "wrench",
-                                   packages: 0, looseUnits: 0, unitsPerPackage: 3)
+        let product = StockProduct(name: "Filter",                                    packages: 0, looseUnits: 0, unitsPerPackage: 3)
         store.stockProducts = [product]
         let plan = store.completionPlan(for: makeTask(productId: product.id))
         #expect(plan.result == .outOfStock(product))
@@ -56,7 +54,7 @@ import Foundation
     }
 
     private func makeTask(productId: UUID?, quantity: Int) -> HouseholdTask {
-        HouseholdTask(title: "Change filter", icon: "wrench", intervalDays: 30,
+        HouseholdTask(title: "Change filter", intervalDays: 30,
                       nextDueDate: Date(timeIntervalSince1970: 0),
                       productId: productId, quantityPerCompletion: quantity)
     }
@@ -64,8 +62,7 @@ import Foundation
     @Test("completionPlan consumes quantityPerCompletion units")
     func consumesN() {
         let store = SupabaseStore()
-        let product = StockProduct(name: "Filter", icon: "wrench",
-                                   packages: 1, looseUnits: 2, unitsPerPackage: 3)
+        let product = StockProduct(name: "Filter",                                    packages: 1, looseUnits: 2, unitsPerPackage: 3)
         store.stockProducts = [product]
         let plan = store.completionPlan(for: makeTask(productId: product.id, quantity: 2))
         #expect(plan.result == .consumed)
@@ -75,8 +72,7 @@ import Foundation
     @Test("completionPlan blocks when quantityPerCompletion exceeds stock")
     func blocksWhenNotEnough() {
         let store = SupabaseStore()
-        let product = StockProduct(name: "Filter", icon: "wrench",
-                                   packages: 0, looseUnits: 1, unitsPerPackage: 3)
+        let product = StockProduct(name: "Filter",                                    packages: 0, looseUnits: 1, unitsPerPackage: 3)
         store.stockProducts = [product]
         let plan = store.completionPlan(for: makeTask(productId: product.id, quantity: 2))
         #expect(plan.result == .outOfStock(product))

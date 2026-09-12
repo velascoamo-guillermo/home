@@ -66,7 +66,7 @@ struct DashboardCardView: View {
                 emptyState("Nothing to buy")
             } else {
                 ForEach(shopping.items) { product in
-                    StockProductRow(product: product, showsIcon: false)
+                    StockProductRow(product: product)
                         .contextMenu { StockContextMenu(product: product, onDeleteRequest: { productToDelete = $0 }) }
                 }
                 overflowFooter(shown: shopping.items.count, total: shopping.total)

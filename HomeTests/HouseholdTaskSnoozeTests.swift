@@ -4,7 +4,7 @@ import Foundation
 
 @Suite @MainActor struct HouseholdTaskSnoozeTests {
     private func makeTask(due: Date) -> HouseholdTask {
-        HouseholdTask(title: "x", icon: "wrench", intervalDays: 7, nextDueDate: due)
+        HouseholdTask(title: "x", intervalDays: 7, nextDueDate: due)
     }
 
     @Test func snoozeAddsGivenDays() {

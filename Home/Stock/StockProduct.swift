@@ -3,7 +3,6 @@ import Foundation
 nonisolated struct StockProduct: Codable, Identifiable, Hashable {
     var id: UUID = UUID()
     var name: String
-    var icon: String
     var packages: Int
     var looseUnits: Int
     var unitsPerPackage: Int
@@ -48,14 +47,13 @@ nonisolated struct StockProduct: Codable, Identifiable, Hashable {
         return copy
     }
 
-    init(id: UUID = UUID(), name: String, icon: String, packages: Int,
+    init(id: UUID = UUID(), name: String, packages: Int,
          looseUnits: Int, unitsPerPackage: Int, needed: Bool = false, createdAt: Date = .now,
          supermarket: Supermarket? = nil, category: ProductCategory? = nil,
          updatedAt: Date = .now, deletedAt: Date? = nil) {
         precondition(unitsPerPackage >= 1, "unitsPerPackage must be >= 1")
         self.id = id
         self.name = name
-        self.icon = icon
         self.packages = packages
         self.looseUnits = looseUnits
         self.unitsPerPackage = unitsPerPackage
@@ -68,7 +66,7 @@ nonisolated struct StockProduct: Codable, Identifiable, Hashable {
     }
 
     enum CodingKeys: String, CodingKey {
-        case id, name, icon, packages, needed, supermarket, category
+        case id, name, packages, needed, supermarket, category
         case looseUnits      = "loose_units"
         case unitsPerPackage = "units_per_package"
         case createdAt       = "created_at"
@@ -80,7 +78,6 @@ nonisolated struct StockProduct: Codable, Identifiable, Hashable {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         id = try c.decode(UUID.self, forKey: .id)
         name = try c.decode(String.self, forKey: .name)
-        icon = try c.decode(String.self, forKey: .icon)
         packages = try c.decode(Int.self, forKey: .packages)
         looseUnits = try c.decode(Int.self, forKey: .looseUnits)
         unitsPerPackage = try c.decode(Int.self, forKey: .unitsPerPackage)

@@ -26,7 +26,7 @@ actor FakeGateway: RemoteGateway {
         return (SyncEngine(local: store, gateway: gw), store, gw)
     }
     private func product() -> StockProduct {
-        StockProduct(name: "Milk", icon: "i", packages: 1, looseUnits: 0, unitsPerPackage: 6)
+        StockProduct(name: "Milk", packages: 1, looseUnits: 0, unitsPerPackage: 6)
     }
 
     @Test("successful push clears the outbox op")
@@ -61,7 +61,7 @@ actor FakeGateway: RemoteGateway {
     }
 
     private func blob(id: UUID, name: String, updatedAt: Date, deletedAt: Date? = nil) throws -> Data {
-        let p = StockProduct(id: id, name: name, icon: "i", packages: 1, looseUnits: 0,
+        let p = StockProduct(id: id, name: name, packages: 1, looseUnits: 0,
                              unitsPerPackage: 6, updatedAt: updatedAt, deletedAt: deletedAt)
         let e = JSONEncoder()
         e.dateEncodingStrategy = .iso8601
@@ -82,7 +82,7 @@ actor FakeGateway: RemoteGateway {
     func localWins() async throws {
         let (engine, store, gw) = try await make()
         let id = UUID()
-        let newer = StockProduct(id: id, name: "Local", icon: "i", packages: 1, looseUnits: 0,
+        let newer = StockProduct(id: id, name: "Local", packages: 1, looseUnits: 0,
                                  unitsPerPackage: 6, updatedAt: .now)
         try await store.upsert([newer], enqueue: false)
         await gw.setPull("stock_products",
@@ -95,7 +95,7 @@ actor FakeGateway: RemoteGateway {
     func remoteTombstone() async throws {
         let (engine, store, gw) = try await make()
         let id = UUID()
-        try await store.upsert([StockProduct(id: id, name: "Milk", icon: "i", packages: 1,
+        try await store.upsert([StockProduct(id: id, name: "Milk", packages: 1,
                                              looseUnits: 0, unitsPerPackage: 6)], enqueue: false)
         await gw.setPull("stock_products",
                          [try blob(id: id, name: "Milk", updatedAt: .now.addingTimeInterval(60),
@@ -109,7 +109,7 @@ actor FakeGateway: RemoteGateway {
         let (engine, store, gw) = try await make()
         let id = UUID()
         let ts = Date.now
-        let local = StockProduct(id: id, name: "Local", icon: "i", packages: 1,
+        let local = StockProduct(id: id, name: "Local", packages: 1,
                                  looseUnits: 0, unitsPerPackage: 6, updatedAt: ts)
         try await store.upsert([local], enqueue: false)
         await gw.setPull("stock_products", [try blob(id: id, name: "Remote", updatedAt: ts)])

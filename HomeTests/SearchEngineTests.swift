@@ -5,10 +5,10 @@ import Foundation
 @Suite("SearchEngine") @MainActor struct SearchEngineTests {
 
     private func stock(_ name: String) -> StockProduct {
-        StockProduct(name: name, icon: "x", packages: 1, looseUnits: 0, unitsPerPackage: 6)
+        StockProduct(name: name, packages: 1, looseUnits: 0, unitsPerPackage: 6)
     }
     private func task(_ title: String) -> HouseholdTask {
-        HouseholdTask(title: title, icon: "x", intervalDays: 7, nextDueDate: .now)
+        HouseholdTask(title: title, intervalDays: 7, nextDueDate: .now)
     }
     private func meal(_ title: String) -> Meal {
         Meal(title: title)

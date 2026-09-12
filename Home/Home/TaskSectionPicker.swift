@@ -2,7 +2,7 @@ import SwiftUI
 
 struct TaskSectionPicker: View {
     @Environment(SupabaseStore.self) private var store
-    @Binding var selectedIcon: String
+    @Binding var selectedSection: TaskSection.Predefined
     @Binding var selectedSectionId: UUID?
     @Environment(\.dismiss) private var dismiss
 
@@ -14,11 +14,10 @@ struct TaskSectionPicker: View {
                 Section("Predefined") {
                     ForEach(TaskSection.Predefined.allCases, id: \.self) { section in
                         sectionRow(
-                            icon: section.icon,
                             name: section.name,
-                            isSelected: selectedSectionId == nil && selectedIcon == section.icon
+                            isSelected: selectedSectionId == nil && selectedSection == section
                         ) {
-                            selectedIcon = section.icon
+                            selectedSection = section
                             selectedSectionId = nil
                             dismiss()
                         }
@@ -28,11 +27,9 @@ struct TaskSectionPicker: View {
                 Section("Custom") {
                     ForEach(store.customSections) { section in
                         sectionRow(
-                            icon: section.icon,
                             name: section.name,
                             isSelected: selectedSectionId == section.id
                         ) {
-                            selectedIcon = section.icon
                             selectedSectionId = section.id
                             dismiss()
                         }
@@ -61,7 +58,6 @@ struct TaskSectionPicker: View {
             }
             .sheet(isPresented: $showAddCustom) {
                 AddCustomSectionSheet { newSection in
-                    selectedIcon = newSection.icon
                     selectedSectionId = newSection.id
                     dismiss()
                 }
@@ -69,18 +65,16 @@ struct TaskSectionPicker: View {
         }
     }
 
-    private func sectionRow(icon: String, name: String, isSelected: Bool, action: @escaping () -> Void) -> some View {
+    private func sectionRow(name: String, isSelected: Bool, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             HStack {
-                Image(systemName: icon)
-                    .frame(width: 28)
-                    .foregroundStyle(.tint)
                 Text(name)
                     .foregroundStyle(.primary)
                 Spacer()
                 if isSelected {
                     Image(systemName: "checkmark")
                         .foregroundStyle(.tint)
+                        .accessibilityHidden(true)
                 }
             }
         }
@@ -96,29 +90,12 @@ private struct AddCustomSectionSheet: View {
     let onCreated: (TaskSection) -> Void
 
     @State private var name = ""
-    @State private var icon = "star"
-    @State private var showSymbolPicker = false
 
     var body: some View {
         NavigationStack {
             Form {
                 Section("Section") {
                     TextField("Name", text: $name)
-
-                    Button {
-                        showSymbolPicker = true
-                    } label: {
-                        HStack {
-                            Text("Icon")
-                                .foregroundStyle(.primary)
-                            Spacer()
-                            Image(systemName: icon)
-                                .foregroundStyle(.tint)
-                            Image(systemName: "chevron.right")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                        }
-                    }
                 }
             }
             .navigationTitle("New Section")
@@ -132,18 +109,11 @@ private struct AddCustomSectionSheet: View {
                         .disabled(name.trimmingCharacters(in: .whitespaces).isEmpty)
                 }
             }
-            .sheet(isPresented: $showSymbolPicker) {
-                SFSymbolPicker(selection: $icon)
-            }
         }
     }
 
     private func save() {
-        let section = TaskSection(
-            id: UUID(),
-            name: name.trimmingCharacters(in: .whitespaces),
-            icon: icon
-        )
+        let section = TaskSection(id: UUID(), name: name.trimmingCharacters(in: .whitespaces))
         Task {
             try? await store.addCustomSection(section)
             onCreated(section)

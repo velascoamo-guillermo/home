@@ -4,7 +4,7 @@ import XCTest
 @MainActor
 final class MealEntryTests: XCTestCase {
     private func product(units: Int) -> StockProduct {
-        StockProduct(name: "Rice", icon: "leaf", packages: 0,
+        StockProduct(name: "Rice", packages: 0,
                      looseUnits: units, unitsPerPackage: 1)
     }
 

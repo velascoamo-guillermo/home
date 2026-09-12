@@ -6,7 +6,7 @@ import Foundation
 
     private func product(_ name: String, packages: Int, loose: Int,
                          market: Supermarket? = nil) -> StockProduct {
-        StockProduct(name: name, icon: "x", packages: packages,
+        StockProduct(name: name, packages: packages,
                      looseUnits: loose, unitsPerPackage: 6, supermarket: market)
     }
 
