@@ -8,7 +8,7 @@ extension View {
             .listStyle(.insetGrouped)
             .scrollContentBackground(.hidden)
             .listRowSpacing(10)
-            .background(Palette.canvas.ignoresSafeArea())
+            .gradientCanvas()
     }
 
     /// Flat pastel backing for a list row, matching the dashboard card look.
