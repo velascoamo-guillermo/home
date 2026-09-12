@@ -61,8 +61,8 @@ nonisolated struct HouseholdTask: Codable, Identifiable, Hashable {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         id = try c.decode(UUID.self, forKey: .id)
         title = try c.decode(String.self, forKey: .title)
-        if let key = try c.decodeIfPresent(TaskSection.Predefined.self, forKey: .section) {
-            section = key
+        if let rawSection = try c.decodeIfPresent(String.self, forKey: .section) {
+            section = TaskSection.Predefined(rawValue: rawSection) ?? .general
         } else if let icon = try c.decodeIfPresent(String.self, forKey: .legacyIcon) {
             section = TaskSection.Predefined(legacyIcon: icon)
         } else {
@@ -74,8 +74,8 @@ nonisolated struct HouseholdTask: Codable, Identifiable, Hashable {
         sectionId = try c.decodeIfPresent(UUID.self, forKey: .sectionId)
         productId = try c.decodeIfPresent(UUID.self, forKey: .productId)
         quantityPerCompletion = try c.decodeIfPresent(Int.self, forKey: .quantityPerCompletion) ?? 1
-        updatedAt = (try? c.decode(Date.self, forKey: .updatedAt)) ?? .now
-        deletedAt = try? c.decodeIfPresent(Date.self, forKey: .deletedAt)
+        updatedAt = try c.decodeIfPresent(Date.self, forKey: .updatedAt) ?? .now
+        deletedAt = try c.decodeIfPresent(Date.self, forKey: .deletedAt)
     }
 
     func encode(to encoder: any Encoder) throws {
