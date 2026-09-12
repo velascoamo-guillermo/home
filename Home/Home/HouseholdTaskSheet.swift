@@ -7,7 +7,7 @@ struct HouseholdTaskSheet: View {
     let existing: HouseholdTask?
 
     @State private var title = ""
-    @State private var icon = "wrench"
+    @State private var section: TaskSection.Predefined = .general
     @State private var sectionId: UUID? = nil
     @State private var intervalValue = 1
     @State private var intervalUnit  = IntervalUnit.months
@@ -25,7 +25,7 @@ struct HouseholdTaskSheet: View {
         self.existing = existing
         if let t = existing {
             _title         = State(initialValue: t.title)
-            _icon          = State(initialValue: t.icon)
+            _section       = State(initialValue: t.section)
             _sectionId     = State(initialValue: t.sectionId)
             _nextDueDate   = State(initialValue: t.nextDueDate)
             _notes         = State(initialValue: t.notes)
@@ -50,8 +50,6 @@ struct HouseholdTaskSheet: View {
                             Text("Section")
                                 .foregroundStyle(.primary)
                             Spacer()
-                            Image(systemName: icon)
-                                .foregroundStyle(.tint)
                             Text(sectionLabel)
                                 .foregroundStyle(.secondary)
                             Image(systemName: "chevron.right")
@@ -107,7 +105,7 @@ struct HouseholdTaskSheet: View {
                 }
             }
             .sheet(isPresented: $showSectionPicker) {
-                TaskSectionPicker(selectedIcon: $icon, selectedSectionId: $sectionId)
+                TaskSectionPicker(selectedSection: $section, selectedSectionId: $sectionId)
             }
             .onChange(of: intervalValue) { syncDerivedDueDate() }
             .onChange(of: intervalUnit) { syncDerivedDueDate() }
@@ -124,8 +122,7 @@ struct HouseholdTaskSheet: View {
            let custom = store.customSections.first(where: { $0.id == id }) {
             return custom.name
         }
-        return TaskSection.Predefined.allCases
-            .first(where: { $0.icon == icon })?.name ?? icon
+        return section.name
     }
 
     private var derivedDueDate: Date {
@@ -138,9 +135,9 @@ struct HouseholdTaskSheet: View {
     }
 
     private func save() {
-        var task = existing ?? HouseholdTask(title: "", icon: icon, intervalDays: 1, nextDueDate: nextDueDate)
+        var task = existing ?? HouseholdTask(title: "", intervalDays: 1, nextDueDate: nextDueDate)
         task.title        = title.trimmingCharacters(in: .whitespaces)
-        task.icon         = icon
+        task.section      = section
         task.sectionId    = sectionId
         task.intervalDays = intervalUnit.toDays(intervalValue)
         task.nextDueDate  = nextDueDate

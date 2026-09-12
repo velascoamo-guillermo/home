@@ -12,10 +12,8 @@ import Foundation
 
     @Test func intentStyleCompletionWritesTaskAndProductOutboxOps() async throws {
         let store = try await makeStore()
-        let product = StockProduct(name: "Filters", icon: "shippingbox",
-                                   packages: 1, looseUnits: 0, unitsPerPackage: 1)
-        var task = HouseholdTask(title: "Change filter", icon: "wrench",
-                                 intervalDays: 30, nextDueDate: .now)
+        let product = StockProduct(name: "Filters",                                    packages: 1, looseUnits: 0, unitsPerPackage: 1)
+        var task = HouseholdTask(title: "Change filter",                                  intervalDays: 30, nextDueDate: .now)
         task.productId = product.id
         try await store.upsert([product], enqueue: false)
         try await store.upsert([task], enqueue: false)

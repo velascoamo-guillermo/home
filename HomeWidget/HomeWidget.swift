@@ -7,7 +7,7 @@ struct HomeWidget: Widget {
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: kind, provider: Provider()) { entry in
             HomeWidgetEntryView(entry: entry)
-                .containerBackground(.regularMaterial, for: .widget)
+                .containerBackground(Palette.canvas, for: .widget)
         }
         .configurationDisplayName("Hogar")
         .description("Próximos eventos y menú de hoy.")

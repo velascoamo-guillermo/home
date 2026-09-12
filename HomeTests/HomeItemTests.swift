@@ -17,7 +17,7 @@ import Foundation
 
     @Test("id returns task id for .task case")
     func idForTask() {
-        let task = HouseholdTask(title: "Feed", icon: "fork.knife", intervalDays: 1, nextDueDate: .now)
+        let task = HouseholdTask(title: "Feed", intervalDays: 1, nextDueDate: .now)
         let item = HomeItem.task(task)
         #expect(item.id == task.id)
     }
@@ -36,7 +36,7 @@ import Foundation
     @Test("dueDate returns nextDueDate for .task case")
     func dueDateForTask() {
         let date = Date(timeIntervalSince1970: 2_000_000)
-        let task = HouseholdTask(title: "Filter", icon: "drop", intervalDays: 90, nextDueDate: date)
+        let task = HouseholdTask(title: "Filter", intervalDays: 90, nextDueDate: date)
         let item = HomeItem.task(task)
         #expect(item.dueDate == date)
     }

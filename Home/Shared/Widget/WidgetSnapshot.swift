@@ -18,7 +18,6 @@ nonisolated struct WidgetEvent: Codable, Sendable, Identifiable {
     var subtitle: String
     var date: Date
     var kind: Kind
-    var systemImage: String
 }
 
 extension WidgetEvent {
@@ -36,8 +35,7 @@ extension WidgetEvent {
             title: task.title,
             subtitle: subtitle,
             date: task.nextDueDate,
-            kind: .task,
-            systemImage: task.icon
+            kind: .task
         )
     }
 }
@@ -58,9 +56,9 @@ extension WidgetSnapshot {
             generatedAt: .now,
             events: [
                 WidgetEvent(id: UUID(), title: "Cita veterinario", subtitle: "Max",
-                            date: .now.addingTimeInterval(3600), kind: .appointment, systemImage: "calendar"),
+                            date: .now.addingTimeInterval(3600), kind: .appointment),
                 WidgetEvent(id: UUID(), title: "Cambiar filtro agua", subtitle: "Cocina",
-                            date: .now.addingTimeInterval(86400), kind: .task, systemImage: "drop"),
+                            date: .now.addingTimeInterval(86400), kind: .task),
             ],
             lunch: WidgetMeal(slot: "lunch", title: "Ensalada mediterránea", products: [], isShort: false, isEmpty: false),
             dinner: WidgetMeal(slot: "dinner", title: "Pasta boloñesa", products: [], isShort: false, isEmpty: false)

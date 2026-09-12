@@ -36,7 +36,7 @@ struct WeekMenuView: View {
                             .contentShape(.rect)
                         }
                         .buttonStyle(.plain)
-                        .glassRow()
+                        .pastelRow(Palette.meals)
                     }
                 } header: {
                     HStack {
@@ -55,7 +55,7 @@ struct WeekMenuView: View {
                 }
             }
         }
-        .glassListStyle()
+        .flatListStyle()
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Button {
@@ -71,7 +71,7 @@ struct WeekMenuView: View {
             if isSuggesting {
                 ProgressView("Planificando la semana…")
                     .padding()
-                    .background(.regularMaterial, in: .rect(cornerRadius: 12))
+                    .background(Palette.surface, in: .rect(cornerRadius: 12))
             }
         }
         .sheet(item: $editTarget) { target in

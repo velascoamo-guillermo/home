@@ -24,22 +24,22 @@ enum UITestSupport {
     }
 
     static func seed(_ store: SupabaseStore) async {
-        let milk = StockProduct(name: "Fixture Milk", icon: "shippingbox",
+        let milk = StockProduct(name: "Fixture Milk",
                                 packages: 2, looseUnits: 0, unitsPerPackage: 6)
-        let coffee = StockProduct(name: "Fixture Coffee", icon: "shippingbox",
+        let coffee = StockProduct(name: "Fixture Coffee",
                                   packages: 1, looseUnits: 0, unitsPerPackage: 1)
-        let filters = StockProduct(name: "Fixture Filters", icon: "shippingbox",
+        let filters = StockProduct(name: "Fixture Filters",
                                    packages: 0, looseUnits: 0, unitsPerPackage: 1)
         try? await store.addProduct(milk)
         try? await store.addProduct(coffee)
         try? await store.addProduct(filters)
 
         var changeFilter = HouseholdTask(
-            title: "Fixture Change Filter", icon: "wrench", intervalDays: 30,
+            title: "Fixture Change Filter", intervalDays: 30,
             nextDueDate: Calendar.current.date(byAdding: .day, value: -3, to: .now) ?? .now)
         changeFilter.productId = filters.id
         let waterPlants = HouseholdTask(
-            title: "Fixture Water Plants", icon: "wrench", intervalDays: 7,
+            title: "Fixture Water Plants", intervalDays: 7,
             nextDueDate: Calendar.current.date(byAdding: .day, value: 2, to: .now) ?? .now)
         try? await store.addTask(changeFilter)
         try? await store.addTask(waterPlants)

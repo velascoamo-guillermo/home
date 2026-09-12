@@ -27,12 +27,12 @@ nonisolated enum DashboardCard: String, CaseIterable, Codable, Identifiable, Sen
         }
     }
 
-    var tint: Color {
+    var fill: Color {
         switch self {
-        case .upcomingTasks: .blue
-        case .shoppingList:  .green
-        case .weekMeals:     .orange
-        case .appointments:  .pink
+        case .upcomingTasks: Palette.tasks
+        case .shoppingList:  Palette.shopping
+        case .weekMeals:     Palette.meals
+        case .appointments:  Palette.pets
         }
     }
 

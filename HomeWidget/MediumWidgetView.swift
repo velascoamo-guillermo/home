@@ -17,7 +17,7 @@ struct MediumWidgetView: View {
     private var eventsColumn: some View {
         VStack(alignment: .leading, spacing: 8) {
             Link(destination: URL(string: "home://home")!) {
-                WidgetSectionHeader(systemImage: "checklist", title: "Hoy", tint: .blue)
+                WidgetSectionHeader(systemImage: "checklist", title: "Hoy", tint: Palette.tasks)
             }
             if snapshot.events.isEmpty {
                 Link(destination: URL(string: "home://home")!) {
@@ -53,7 +53,7 @@ struct MediumWidgetView: View {
     private var mealsColumn: some View {
         Link(destination: URL(string: "home://meals")!) {
             VStack(alignment: .leading, spacing: 8) {
-                WidgetSectionHeader(systemImage: "fork.knife", title: "Menú", tint: .orange)
+                WidgetSectionHeader(systemImage: "fork.knife", title: "Menú", tint: Palette.meals)
                 VStack(alignment: .leading, spacing: 0) {
                     MealTitleView(meal: snapshot.lunch)
                         .frame(maxHeight: .infinity, alignment: .leading)
@@ -78,9 +78,9 @@ struct WidgetSectionHeader: View {
         HStack(spacing: 6) {
             Image(systemName: systemImage)
                 .font(.caption2.weight(.semibold))
-                .foregroundStyle(tint)
+                .foregroundStyle(.primary)
                 .frame(width: 20, height: 20)
-                .background(tint.opacity(0.15), in: .rect(cornerRadius: 6))
+                .background(tint, in: .rect(cornerRadius: 6))
                 .accessibilityHidden(true)
             Text(title)
                 .font(.caption.weight(.semibold))
@@ -122,7 +122,7 @@ struct MealTitleView: View {
             } else {
                 Text(meal.title)
                     .font(.caption.weight(.medium))
-                    .foregroundStyle(.orange)
+                    .foregroundStyle(.primary)
                     .lineLimit(2)
             }
         }

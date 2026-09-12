@@ -30,12 +30,42 @@ actor SyncEngine {
     func push() async throws {
         for op in try await local.pendingOps() {
             do {
-                try await gateway.push(kind: op.kind, table: op.tableName, payload: op.payload)
+                let payload = try normalize(table: op.tableName, payload: op.payload)
+                try await gateway.push(kind: op.kind, table: op.tableName, payload: payload)
                 try await local.deleteOp(seq: op.seq)
             } catch {
                 try? await local.recordOpFailure(seq: op.seq, error: error.localizedDescription)
             }
         }
+    }
+
+    /// Re-encode an outbox payload through its model. Blobs enqueued by an earlier
+    /// build carry an `icon` key the Supabase schema no longer has, so PostgREST
+    /// rejects them forever; decoding tolerates the legacy key and re-encoding emits
+    /// the current shape. Current blobs round-trip unchanged.
+    private func normalize(table: String, payload: Data) throws -> Data {
+        switch table {
+        case "pets":             return try normalizeTyped(Pet.self, payload)
+        case "veterinarian":     return try normalizeTyped(Veterinarian.self, payload)
+        case "appointments":     return try normalizeTyped(Appointment.self, payload)
+        case "clinical_entries": return try normalizeTyped(ClinicalEntry.self, payload)
+        case "pet_events":       return try normalizeTyped(PetEvent.self, payload)
+        case "task_sections":    return try normalizeTyped(TaskSection.self, payload)
+        case "household_tasks":  return try normalizeTyped(HouseholdTask.self, payload)
+        case "stock_products":   return try normalizeTyped(StockProduct.self, payload)
+        case "meals":            return try normalizeTyped(Meal.self, payload)
+        case "meal_products":    return try normalizeTyped(MealProduct.self, payload)
+        case "weight_entries":   return try normalizeTyped(WeightEntry.self, payload)
+        case "menu_entries":     return try normalizeTyped(MenuEntry.self, payload)
+        default:                 return payload
+        }
+    }
+
+    private func normalizeTyped<T: SyncableEntity>(_ type: T.Type, _ payload: Data) throws -> Data {
+        let entity = try SyncDateCoding.makeDecoder().decode(T.self, from: payload)
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .iso8601
+        return try encoder.encode(entity)
     }
 
     static let syncedTables: [String] = [

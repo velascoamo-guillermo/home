@@ -20,11 +20,13 @@ import SwiftUI
         #expect(HubDestination.pets.systemImage == "pawprint.fill")
     }
 
-    @Test("each destination has a distinct tint")
-    func tints() {
-        let tints = HubDestination.allCases.map(\.tint)
-        #expect(Set(tints).count == HubDestination.allCases.count)
-        #expect(HubDestination.tasks.tint == .blue)
+    @Test("each destination maps to its feature pastel")
+    func fills() {
+        #expect(HubDestination.tasks.fill == Palette.tasks)
+        #expect(HubDestination.pets.fill == Palette.pets)
+        #expect(HubDestination.stock.fill == Palette.stock)
+        #expect(HubDestination.meals.fill == Palette.meals)
+        #expect(HubDestination.shopping.fill == Palette.shopping)
     }
 
     @Test("bridges to and from AppTab")

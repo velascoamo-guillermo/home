@@ -40,6 +40,7 @@ struct DashboardView: View {
                 .animation(.spring(duration: 0.35), value: tasksDueToday)
                 .animation(.spring(duration: 0.35), value: itemsToBuy)
             }
+            .background(Palette.canvas.ignoresSafeArea())
             .navigationTitle("Home")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

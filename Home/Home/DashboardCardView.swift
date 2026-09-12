@@ -14,7 +14,7 @@ struct DashboardCardView: View {
     }
 
     var body: some View {
-        PressableGlassCard(onTap: navigate) {
+        PressableCard(fill: card.fill, onTap: navigate) {
             header
             content
         }
@@ -24,7 +24,6 @@ struct DashboardCardView: View {
 
     private var header: some View {
         HStack(spacing: 10) {
-            IconChip(systemImage: card.systemImage, tint: card.tint)
             Text(card.title).font(.headline)
             Spacer()
             if card.deepLinkHost != nil {
@@ -66,7 +65,7 @@ struct DashboardCardView: View {
                 emptyState("Nothing to buy")
             } else {
                 ForEach(shopping.items) { product in
-                    StockProductRow(product: product, showsIcon: false)
+                    StockProductRow(product: product)
                         .contextMenu { StockContextMenu(product: product, onDeleteRequest: { productToDelete = $0 }) }
                 }
                 overflowFooter(shown: shopping.items.count, total: shopping.total)

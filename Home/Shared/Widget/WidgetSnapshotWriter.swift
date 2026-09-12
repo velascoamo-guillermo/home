@@ -56,8 +56,7 @@ enum WidgetSnapshotWriter {
                 title: appt.reason,
                 subtitle: pet.name,
                 date: appt.date,
-                kind: .appointment,
-                systemImage: "calendar"
+                kind: .appointment
             )
         case .task(let task):
             let productName = task.productId.flatMap { pid in
@@ -70,8 +69,7 @@ enum WidgetSnapshotWriter {
                 title: event.title,
                 subtitle: pet.name,
                 date: event.date,
-                kind: .appointment,
-                systemImage: event.category.icon
+                kind: .appointment
             )
         }
     }

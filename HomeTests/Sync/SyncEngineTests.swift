@@ -3,17 +3,18 @@ import Foundation
 @testable import Casita
 
 actor FakeGateway: RemoteGateway {
-    private var pushed: [(OutboxOpKind, String)] = []
+    private var pushed: [(OutboxOpKind, String, Data)] = []
     private var failTables: Set<String> = []
     private var pullReturns: [String: [Data]] = [:]
 
     func push(kind: OutboxOpKind, table: String, payload: Data) async throws {
         if failTables.contains(table) { throw NSError(domain: "net", code: 1) }
-        pushed.append((kind, table))
+        pushed.append((kind, table, payload))
     }
     func pull(table: String, since: Date?) async throws -> [Data] { pullReturns[table] ?? [] }
     func setFail(_ t: String) async { failTables.insert(t) }
     func pushedCount() async -> Int { pushed.count }
+    func pushedPayloads() async -> [Data] { pushed.map(\.2) }
     func setPull(_ t: String, _ data: [Data]) async { pullReturns[t] = data }
 }
 
@@ -26,7 +27,7 @@ actor FakeGateway: RemoteGateway {
         return (SyncEngine(local: store, gateway: gw), store, gw)
     }
     private func product() -> StockProduct {
-        StockProduct(name: "Milk", icon: "i", packages: 1, looseUnits: 0, unitsPerPackage: 6)
+        StockProduct(name: "Milk", packages: 1, looseUnits: 0, unitsPerPackage: 6)
     }
 
     @Test("successful push clears the outbox op")
@@ -49,6 +50,78 @@ actor FakeGateway: RemoteGateway {
         #expect(ops.count == 1)
         #expect(ops[0].attempts == 1)
     }
+
+    private func pushedObject(_ gw: FakeGateway) async throws -> [String: Any] {
+        let payloads = await gw.pushedPayloads()
+        #expect(payloads.count == 1)
+        let data = try #require(payloads.first)
+        return try #require(JSONSerialization.jsonObject(with: data) as? [String: Any])
+    }
+
+    @Test("legacy task payload with an icon key is normalized to a section key")
+    func normalizesLegacyTaskPayload() async throws {
+        let (engine, store, gw) = try await make()
+        let id = UUID()
+        let updatedAtRaw = "2024-06-01T12:00:00+00:00"
+        let updatedAt = try #require(SyncDateCoding.date(from: updatedAtRaw))
+        let blob = Data("""
+            {"id":"\(id.uuidString)","title":"Filter","icon":"drop",
+             "interval_days":30,"next_due_date":"2024-05-01T09:00:00+00:00",
+             "notes":"","quantity_per_completion":1,"updated_at":"\(updatedAtRaw)"}
+            """.utf8)
+        try await store.enqueueRaw(kind: .update, table: "household_tasks", id: id,
+                                   payload: blob, updatedAt: updatedAt)
+
+        try await engine.push()
+
+        let obj = try await pushedObject(gw)
+        #expect(obj["section"] as? String == "plumbing")
+        #expect(obj["icon"] == nil)
+        #expect(obj["id"] as? String == id.uuidString)
+        #expect(obj["title"] as? String == "Filter")
+        let pushedUpdatedAt = SyncDateCoding.date(from: (obj["updated_at"] as? String) ?? "")
+        #expect(pushedUpdatedAt == updatedAt)
+    }
+
+    @Test("legacy stock payload with an icon key drops it and keeps stock fields")
+    func normalizesLegacyProductPayload() async throws {
+        let (engine, store, gw) = try await make()
+        let id = UUID()
+        let blob = Data("""
+            {"id":"\(id.uuidString)","name":"Milk","icon":"x","packages":2,
+             "loose_units":3,"units_per_package":6,"needed":true,
+             "created_at":"2024-06-01T12:00:00+00:00",
+             "updated_at":"2024-06-01T12:00:00+00:00"}
+            """.utf8)
+        try await store.enqueueRaw(kind: .update, table: "stock_products", id: id,
+                                   payload: blob, updatedAt: .now)
+
+        try await engine.push()
+
+        let obj = try await pushedObject(gw)
+        #expect(obj["icon"] == nil)
+        #expect(obj["name"] as? String == "Milk")
+        #expect(obj["packages"] as? Int == 2)
+        #expect(obj["loose_units"] as? Int == 3)
+        #expect(obj["units_per_package"] as? Int == 6)
+        #expect(obj["needed"] as? Bool == true)
+    }
+
+    @Test("a current-shape task payload round-trips unchanged through push")
+    func currentTaskPayloadRoundTrips() async throws {
+        let (engine, store, gw) = try await make()
+        let task = HouseholdTask(title: "Filter", section: .garden, intervalDays: 30,
+                                 nextDueDate: Date(timeIntervalSince1970: 1_700_000_000),
+                                 updatedAt: Date(timeIntervalSince1970: 1_700_000_100))
+        try await store.upsert([task], enqueue: true)
+
+        try await engine.push()
+
+        let payloads = await gw.pushedPayloads()
+        let data = try #require(payloads.first)
+        let decoded = try SyncDateCoding.makeDecoder().decode(HouseholdTask.self, from: data)
+        #expect(decoded == task)
+    }
 }
 
 @Suite("SyncEngine pull") @MainActor struct SyncEnginePullTests {
@@ -61,7 +134,7 @@ actor FakeGateway: RemoteGateway {
     }
 
     private func blob(id: UUID, name: String, updatedAt: Date, deletedAt: Date? = nil) throws -> Data {
-        let p = StockProduct(id: id, name: name, icon: "i", packages: 1, looseUnits: 0,
+        let p = StockProduct(id: id, name: name, packages: 1, looseUnits: 0,
                              unitsPerPackage: 6, updatedAt: updatedAt, deletedAt: deletedAt)
         let e = JSONEncoder()
         e.dateEncodingStrategy = .iso8601
@@ -82,7 +155,7 @@ actor FakeGateway: RemoteGateway {
     func localWins() async throws {
         let (engine, store, gw) = try await make()
         let id = UUID()
-        let newer = StockProduct(id: id, name: "Local", icon: "i", packages: 1, looseUnits: 0,
+        let newer = StockProduct(id: id, name: "Local", packages: 1, looseUnits: 0,
                                  unitsPerPackage: 6, updatedAt: .now)
         try await store.upsert([newer], enqueue: false)
         await gw.setPull("stock_products",
@@ -95,7 +168,7 @@ actor FakeGateway: RemoteGateway {
     func remoteTombstone() async throws {
         let (engine, store, gw) = try await make()
         let id = UUID()
-        try await store.upsert([StockProduct(id: id, name: "Milk", icon: "i", packages: 1,
+        try await store.upsert([StockProduct(id: id, name: "Milk", packages: 1,
                                              looseUnits: 0, unitsPerPackage: 6)], enqueue: false)
         await gw.setPull("stock_products",
                          [try blob(id: id, name: "Milk", updatedAt: .now.addingTimeInterval(60),
@@ -109,7 +182,7 @@ actor FakeGateway: RemoteGateway {
         let (engine, store, gw) = try await make()
         let id = UUID()
         let ts = Date.now
-        let local = StockProduct(id: id, name: "Local", icon: "i", packages: 1,
+        let local = StockProduct(id: id, name: "Local", packages: 1,
                                  looseUnits: 0, unitsPerPackage: 6, updatedAt: ts)
         try await store.upsert([local], enqueue: false)
         await gw.setPull("stock_products", [try blob(id: id, name: "Remote", updatedAt: ts)])

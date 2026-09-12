@@ -2,7 +2,6 @@ import SwiftUI
 
 struct StockProductRow: View {
     let product: StockProduct
-    var showsIcon: Bool = true
     var onConsume: (() -> Void)? = nil
 
     private var breakdown: String {
@@ -16,9 +15,6 @@ struct StockProductRow: View {
 
     var body: some View {
         HStack(spacing: 12) {
-            if showsIcon {
-                IconChip(systemImage: product.icon)
-            }
             VStack(alignment: .leading, spacing: 2) {
                 Text(product.name).font(.headline)
                 if !breakdown.isEmpty {

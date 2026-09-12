@@ -6,8 +6,7 @@ import Foundation
 
     @Test("init stores product and needed, and each instance gets a distinct id")
     func storesFieldsAndDistinctId() {
-        let product = StockProduct(name: "Filter", icon: "wrench",
-                                    packages: 0, looseUnits: 0, unitsPerPackage: 3)
+        let product = StockProduct(name: "Filter",                                     packages: 0, looseUnits: 0, unitsPerPackage: 3)
         let a = OutOfStockInfo(product: product, needed: 2)
         let b = OutOfStockInfo(product: product, needed: 2)
 

@@ -14,6 +14,8 @@ struct StockView: View {
                     systemImage: "shippingbox",
                     description: Text("Add products you restock and link them to tasks.")
                 )
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(Palette.canvas.ignoresSafeArea())
             } else {
                 List {
                     ForEach(store.stockProducts) { product in
@@ -21,7 +23,7 @@ struct StockView: View {
                             StockProductRow(product: product, onConsume: { consumeOne(product) })
                         }
                         .buttonStyle(.plain)
-                        .glassRow()
+                        .pastelRow(Palette.stock)
                         .contextMenu { StockContextMenu(product: product, onDeleteRequest: { productToDelete = $0 }) }
                         .swipeActions(edge: .leading, allowsFullSwipe: true) {
                             if product.totalUnits > 0 {
@@ -41,7 +43,7 @@ struct StockView: View {
                         }
                     }
                 }
-                .glassListStyle()
+                .flatListStyle()
             }
         }
         .navigationTitle("Stock")

@@ -40,7 +40,7 @@ struct MealsListView: View {
                             .contentShape(.rect)
                         }
                         .buttonStyle(.plain)
-                        .glassRow()
+                        .pastelRow(Palette.meals)
                         .swipeActions(edge: .trailing) {
                             Button(role: .destructive) { mealToDelete = meal } label: {
                                 Label("Eliminar", systemImage: "trash")
@@ -48,7 +48,7 @@ struct MealsListView: View {
                         }
                     }
                 }
-                .glassListStyle()
+                .flatListStyle()
             }
         }
         .searchable(text: $searchText, prompt: "Buscar meal")

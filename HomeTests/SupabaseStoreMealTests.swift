@@ -5,7 +5,7 @@ import XCTest
 final class SupabaseStoreMealTests: XCTestCase {
     func testMealEntryResolvesViaMenuEntry() {
         let store = SupabaseStore.makeTest()
-        let rice = StockProduct(name: "Rice", icon: "leaf", packages: 1,
+        let rice = StockProduct(name: "Rice", packages: 1,
                                 looseUnits: 0, unitsPerPackage: 10)
         let meal = Meal(title: "Risotto")
         store.stockProducts = [rice]
@@ -169,7 +169,7 @@ final class SupabaseStoreMealTests: XCTestCase {
 
 extension SupabaseStoreMealTests {
     func testConsumingClampsAtAvailableUnits() {
-        let p = StockProduct(name: "Eggs", icon: "leaf", packages: 0,
+        let p = StockProduct(name: "Eggs", packages: 0,
                              looseUnits: 2, unitsPerPackage: 1)
         XCTAssertNil(p.consuming(units: 3))
         let take = min(3, p.totalUnits)

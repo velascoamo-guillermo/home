@@ -7,11 +7,11 @@ import Foundation
     private let day: TimeInterval = 86_400
 
     private func task(_ title: String, due: Date) -> HouseholdTask {
-        HouseholdTask(title: title, icon: "x", intervalDays: 7, nextDueDate: due)
+        HouseholdTask(title: title, intervalDays: 7, nextDueDate: due)
     }
     private func pet(_ name: String) -> Pet { Pet(name: name, type: "Dog", breed: "Lab") }
     private func stock(_ name: String, packages: Int, loose: Int, needed: Bool = false) -> StockProduct {
-        StockProduct(name: name, icon: "x", packages: packages, looseUnits: loose,
+        StockProduct(name: name, packages: packages, looseUnits: loose,
                      unitsPerPackage: 6, needed: needed)
     }
     private func planned(day: Int, slot: MealSlot, title: String) -> (MenuEntry, Meal) {

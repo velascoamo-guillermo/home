@@ -4,8 +4,7 @@ import Foundation
 
 @Suite @MainActor struct MarkMissingNeededTests {
     private func product(name: String, units: Int, needed: Bool = false) -> StockProduct {
-        var p = StockProduct(name: name, icon: "shippingbox",
-                             packages: 0, looseUnits: units, unitsPerPackage: 1)
+        var p = StockProduct(name: name,                              packages: 0, looseUnits: units, unitsPerPackage: 1)
         p.needed = needed
         return p
     }

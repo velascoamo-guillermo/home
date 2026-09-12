@@ -20,7 +20,7 @@ struct LargeWidgetView: View {
     private var eventsSection: some View {
         VStack(alignment: .leading, spacing: 8) {
             Link(destination: URL(string: "home://home")!) {
-                WidgetSectionHeader(systemImage: "checklist", title: "Hoy", tint: .blue)
+                WidgetSectionHeader(systemImage: "checklist", title: "Hoy", tint: Palette.tasks)
             }
             if snapshot.events.isEmpty {
                 Link(destination: URL(string: "home://home")!) {
@@ -57,7 +57,7 @@ struct LargeWidgetView: View {
     private var mealsSection: some View {
         Link(destination: URL(string: "home://meals")!) {
             VStack(alignment: .leading, spacing: 8) {
-                WidgetSectionHeader(systemImage: "fork.knife", title: "Menú", tint: .orange)
+                WidgetSectionHeader(systemImage: "fork.knife", title: "Menú", tint: Palette.meals)
                 if snapshot.lunch.isEmpty && snapshot.dinner.isEmpty {
                     Text("Sin comidas")
                         .font(.subheadline)
@@ -100,7 +100,7 @@ struct MealDetailView: View {
             }
             Text(meal.title)
                 .font(.subheadline.weight(.medium))
-                .foregroundStyle(.orange)
+                .foregroundStyle(.primary)
                 .lineLimit(1)
             if !meal.products.isEmpty {
                 Text(meal.products.joined(separator: " · "))

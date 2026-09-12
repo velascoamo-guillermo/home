@@ -96,7 +96,7 @@ import Foundation
     func homeTimelineTasksOnly() {
         let store = SupabaseStore()
         store.householdTasks = [
-            HouseholdTask(title: "Water plants", icon: "drop", intervalDays: 3, nextDueDate: .now),
+            HouseholdTask(title: "Water plants", intervalDays: 3, nextDueDate: .now),
         ]
         #expect(store.homeTimeline.count == 1)
         if case .task(let t) = store.homeTimeline[0] {

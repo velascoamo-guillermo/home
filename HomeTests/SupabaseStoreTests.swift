@@ -44,7 +44,7 @@ import Foundation
         let later  = Date.now.addingTimeInterval(7200)
 
         store.appointments   = [Appointment(petId: pet.id, date: later,  reason: "checkup", notes: "", status: .upcoming)]
-        store.householdTasks = [HouseholdTask(title: "Filter", icon: "drop", intervalDays: 90, nextDueDate: sooner)]
+        store.householdTasks = [HouseholdTask(title: "Filter", intervalDays: 90, nextDueDate: sooner)]
 
         let timeline = store.homeTimeline
         #expect(timeline.count == 2)

@@ -8,7 +8,6 @@ struct WidgetEventTaskInitTests {
         let dueDate = Date(timeIntervalSince1970: 1_800_000_000)
         let task = HouseholdTask(
             title: "Cambiar filtro",
-            icon: "drop",
             intervalDays: 30,
             nextDueDate: dueDate,
             notes: ""
@@ -21,13 +20,11 @@ struct WidgetEventTaskInitTests {
         #expect(event.title == task.title)
         #expect(event.date == dueDate)
         #expect(event.kind == .task)
-        #expect(event.systemImage == task.icon)
     }
 
     @Test func nonEmptyNotesUsedAsSubtitle() {
         let task = HouseholdTask(
             title: "Cambiar filtro",
-            icon: "drop",
             intervalDays: 30,
             nextDueDate: .now,
             notes: "Filtro cocina"
@@ -42,7 +39,6 @@ struct WidgetEventTaskInitTests {
         let productId = UUID()
         let task = HouseholdTask(
             title: "Reponer sal",
-            icon: "shaker",
             intervalDays: 7,
             nextDueDate: .now,
             notes: "",
@@ -59,7 +55,6 @@ struct WidgetEventTaskInitTests {
     @Test func nilProductNameOmitsSuffixEvenWithProductId() {
         let task = HouseholdTask(
             title: "Reponer sal",
-            icon: "shaker",
             intervalDays: 7,
             nextDueDate: .now,
             notes: "",

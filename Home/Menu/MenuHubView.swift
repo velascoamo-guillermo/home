@@ -8,28 +8,16 @@ struct MenuHubView: View {
             List {
                 Section {
                     ForEach(HubDestination.allCases) { dest in
-                        NavigationLink(value: dest) {
-                            HStack(spacing: 12) {
-                                IconChip(systemImage: dest.systemImage, tint: dest.tint)
-                                Text(dest.title)
-                            }
-                        }
-                        .glassRow()
+                        NavigationLink(value: dest) { Text(dest.title) }
+                            .pastelRow(dest.fill)
                     }
                 }
                 Section {
-                    NavigationLink {
-                        SettingsView()
-                    } label: {
-                        HStack(spacing: 12) {
-                            IconChip(systemImage: "gearshape.fill", tint: .gray)
-                            Text("Settings")
-                        }
-                    }
-                    .glassRow()
+                    NavigationLink { SettingsView() } label: { Text("Settings") }
+                        .pastelRow(Palette.surface)
                 }
             }
-            .glassListStyle()
+            .flatListStyle()
             .navigationTitle("Menu")
             .navigationDestination(for: HubDestination.self) { dest in
                 switch dest {

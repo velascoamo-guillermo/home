@@ -15,8 +15,7 @@ struct WidgetSnapshotCodableTests {
                     title: "Vacunas",
                     subtitle: "Rex",
                     date: refDate.addingTimeInterval(3600),
-                    kind: .appointment,
-                    systemImage: "calendar"
+                    kind: .appointment
                 )
             ],
             lunch: WidgetMeal(slot: "lunch", title: "Pasta", products: ["Tomates"], isShort: false, isEmpty: false),

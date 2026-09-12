@@ -5,8 +5,7 @@ import Foundation
 @Suite("StockProduct – quantity math") @MainActor struct StockProductTests {
 
     private func make(packages: Int, loose: Int, perPackage: Int) -> StockProduct {
-        StockProduct(name: "Milk", icon: "takeoutbag.and.cup.and.straw.fill",
-                     packages: packages, looseUnits: loose, unitsPerPackage: perPackage)
+        StockProduct(name: "Milk",                      packages: packages, looseUnits: loose, unitsPerPackage: perPackage)
     }
 
     @Test("totalUnits = packages * unitsPerPackage + looseUnits")
@@ -68,7 +67,7 @@ import Foundation
 
     @Test("emptied() zeroes packages and loose units")
     func emptiedZeroesUnits() {
-        let p = StockProduct(name: "Milk", icon: "x", packages: 2,
+        let p = StockProduct(name: "Milk", packages: 2,
                              looseUnits: 3, unitsPerPackage: 6)
         let e = p.emptied()
         #expect(e.packages == 0)
@@ -118,7 +117,7 @@ import Foundation
 
     @Test("supermarket and category default to nil")
     func metadataDefaultsNil() {
-        let p = StockProduct(name: "Milk", icon: "x", packages: 1,
+        let p = StockProduct(name: "Milk", packages: 1,
                              looseUnits: 0, unitsPerPackage: 6)
         #expect(p.supermarket == nil)
         #expect(p.category == nil)
@@ -126,7 +125,7 @@ import Foundation
 
     @Test("Codable round-trip preserves supermarket and category")
     func codableRoundTripWithMetadata() throws {
-        var p = StockProduct(name: "Milk", icon: "x", packages: 1,
+        var p = StockProduct(name: "Milk", packages: 1,
                              looseUnits: 0, unitsPerPackage: 6)
         p.supermarket = .mercadona
         p.category = .food
@@ -139,8 +138,7 @@ import Foundation
     @Test("decodes when supermarket and category keys are absent")
     func codableDecodesWithoutMetadata() throws {
         let json = """
-        {"id":"\(UUID().uuidString)","name":"Milk","icon":"x",
-         "packages":1,"loose_units":0,"units_per_package":6,
+        {"id":"\(UUID().uuidString)","name":"Milk",         "packages":1,"loose_units":0,"units_per_package":6,
          "created_at":0,"updated_at":0}
         """.data(using: .utf8)!
         let decoded = try JSONDecoder().decode(StockProduct.self, from: json)
@@ -151,13 +149,24 @@ import Foundation
     @Test("decodes null JSON values for supermarket and category as nil")
     func codableDecodesNullMetadata() throws {
         let json = """
-        {"id":"\(UUID().uuidString)","name":"Milk","icon":"x",
-         "packages":1,"loose_units":0,"units_per_package":6,
+        {"id":"\(UUID().uuidString)","name":"Milk",         "packages":1,"loose_units":0,"units_per_package":6,
          "supermarket":null,"category":null,
          "created_at":0,"updated_at":0}
         """.data(using: .utf8)!
         let decoded = try JSONDecoder().decode(StockProduct.self, from: json)
         #expect(decoded.supermarket == nil)
         #expect(decoded.category == nil)
+    }
+
+    @Test("decodes legacy payloads that still carry an icon key")
+    func codableIgnoresLegacyIcon() throws {
+        let json = """
+        {"id":"\(UUID().uuidString)","name":"Milk","icon":"shippingbox",
+         "packages":1,"loose_units":0,"units_per_package":6,
+         "created_at":0,"updated_at":0}
+        """.data(using: .utf8)!
+        let decoded = try JSONDecoder().decode(StockProduct.self, from: json)
+        #expect(decoded.name == "Milk")
+        #expect(decoded.totalUnits == 6)
     }
 }

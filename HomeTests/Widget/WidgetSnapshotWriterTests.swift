@@ -65,14 +65,12 @@ struct WidgetSnapshotWriterTests {
         #expect(event.subtitle == "Rex")
         #expect(event.date == eventDate)
         #expect(event.kind == .appointment)
-        #expect(event.systemImage == "calendar")
     }
 
     @Test func taskEventUsesNotesAsSubtitle() {
         let dueDate = Date(timeIntervalSince1970: 1_800_000_000)
         let task = HouseholdTask(
             title: "Cambiar filtro",
-            icon: "drop",
             intervalDays: 30,
             nextDueDate: dueDate,
             notes: "Filtro cocina"
@@ -84,7 +82,6 @@ struct WidgetSnapshotWriterTests {
         )
 
         #expect(snapshot.events[0].subtitle == "Filtro cocina")
-        #expect(snapshot.events[0].systemImage == "drop")
         #expect(snapshot.events[0].kind == .task)
     }
 
@@ -92,7 +89,6 @@ struct WidgetSnapshotWriterTests {
         let productId = UUID()
         let task = HouseholdTask(
             title: "Reponer sal",
-            icon: "shaker",
             intervalDays: 7,
             nextDueDate: .now,
             notes: "",
@@ -100,8 +96,7 @@ struct WidgetSnapshotWriterTests {
             quantityPerCompletion: 2
         )
         let product = StockProduct(
-            id: productId, name: "Sal gruesa", icon: "shaker",
-            packages: 1, looseUnits: 0, unitsPerPackage: 5
+            id: productId, name: "Sal gruesa",             packages: 1, looseUnits: 0, unitsPerPackage: 5
         )
         let items: [HomeItem] = [.task(task)]
 
@@ -130,8 +125,7 @@ struct WidgetSnapshotWriterTests {
         let meal = Meal(title: "Pasta carbonara")
         let productId = UUID()
         let product = StockProduct(
-            id: productId, name: "Panceta", icon: "cart",
-            packages: 1, looseUnits: 0, unitsPerPackage: 1
+            id: productId, name: "Panceta",             packages: 1, looseUnits: 0, unitsPerPackage: 1
         )
         let link = MealEntry.Link(product: product, quantity: 1)
         let entry = MealEntry(menuEntry: MenuEntry(dayOfWeek: 1, slot: .lunch, mealId: meal.id),
@@ -150,8 +144,7 @@ struct WidgetSnapshotWriterTests {
     @Test func isShortPropagates() {
         let meal = Meal(title: "Paella")
         let product = StockProduct(
-            name: "Arroz", icon: "cart",
-            packages: 0, looseUnits: 0, unitsPerPackage: 1  // totalUnits = 0
+            name: "Arroz",             packages: 0, looseUnits: 0, unitsPerPackage: 1  // totalUnits = 0
         )
         let link = MealEntry.Link(product: product, quantity: 2)  // needs 2, has 0
         let entry = MealEntry(menuEntry: MenuEntry(dayOfWeek: 1, slot: .dinner, mealId: meal.id),
