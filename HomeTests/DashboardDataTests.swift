@@ -10,8 +10,9 @@ import Foundation
         HouseholdTask(title: title, icon: "x", intervalDays: 7, nextDueDate: due)
     }
     private func pet(_ name: String) -> Pet { Pet(name: name, type: "Dog", breed: "Lab") }
-    private func stock(_ name: String, packages: Int, loose: Int) -> StockProduct {
-        StockProduct(name: name, icon: "x", packages: packages, looseUnits: loose, unitsPerPackage: 6)
+    private func stock(_ name: String, packages: Int, loose: Int, needed: Bool = false) -> StockProduct {
+        StockProduct(name: name, icon: "x", packages: packages, looseUnits: loose,
+                     unitsPerPackage: 6, needed: needed)
     }
     private func planned(day: Int, slot: MealSlot, title: String) -> (MenuEntry, Meal) {
         let meal = Meal(title: title)
@@ -49,6 +50,16 @@ import Foundation
         let r = DashboardData.shoppingList(stock: s, limit: 2)
         #expect(r.total == 3)
         #expect(r.items.map(\.name) == ["Milk", "Bread"])
+    }
+
+    @Test("shoppingList includes needed-with-stock products alongside zero-unit ones")
+    func shoppingIncludesNeededWithStock() {
+        let s = [stock("Milk", packages: 0, loose: 0),
+                 stock("Eggs", packages: 1, loose: 0, needed: true),
+                 stock("Rice", packages: 2, loose: 0)]
+        let r = DashboardData.shoppingList(stock: s, limit: 5)
+        #expect(r.total == 2)
+        #expect(r.items.map(\.name) == ["Milk", "Eggs"])
     }
 
     @Test("weekMeals drops empty titles and rotates to start at today")

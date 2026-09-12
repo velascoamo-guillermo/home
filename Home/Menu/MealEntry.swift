@@ -13,6 +13,15 @@ struct MealEntry: Identifiable, Hashable {
     var id: UUID { menuEntry.id }
 
     nonisolated var isShort: Bool {
-        links.contains { $0.product.totalUnits < $0.quantity }
+        !shortLinks.isEmpty
+    }
+
+    nonisolated var shortLinks: [Link] {
+        links.filter { $0.product.totalUnits < $0.quantity }
+    }
+
+    nonisolated var allShortNeeded: Bool {
+        let short = shortLinks
+        return !short.isEmpty && short.allSatisfy { $0.product.needed }
     }
 }

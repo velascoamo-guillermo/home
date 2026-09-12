@@ -28,6 +28,9 @@ struct WeekMenuView: View {
                                 entry: entry,
                                 onCook: {
                                     if let entry { Task { await cook(entry) } }
+                                },
+                                onAddMissing: {
+                                    if let entry { Task { await store.markMissingNeeded(for: entry) } }
                                 }
                             )
                             .contentShape(.rect)
