@@ -7,22 +7,24 @@ struct MenuHubView: View {
         NavigationStack(path: $path) {
             ScrollView {
                 TileGrid {
-                    ForEach(HubDestination.allCases) { dest in
-                        NavigationLink(value: dest) {
-                            Tile(title: dest.title, systemImage: dest.systemImage, fill: dest.fill)
+                    ForEach(HubTile.all) { tile in
+                        switch tile {
+                        case .destination(let dest):
+                            NavigationLink(value: dest) {
+                                Tile(title: tile.title, systemImage: tile.systemImage, fill: tile.fill)
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityLabel(tile.title)
+                        case .settings:
+                            NavigationLink {
+                                SettingsView()
+                            } label: {
+                                Tile(title: tile.title, systemImage: tile.systemImage, fill: tile.fill)
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityLabel(tile.title)
                         }
-                        .buttonStyle(.plain)
-                        .accessibilityLabel(dest.title)
                     }
-                    NavigationLink {
-                        SettingsView()
-                    } label: {
-                        Tile(title: HubTile.settings.title,
-                             systemImage: HubTile.settings.systemImage,
-                             fill: HubTile.settings.fill)
-                    }
-                    .buttonStyle(.plain)
-                    .accessibilityLabel(HubTile.settings.title)
                 }
                 .padding(16)
             }
