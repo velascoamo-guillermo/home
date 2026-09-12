@@ -111,7 +111,7 @@ Each tab reads filtered data from `SupabaseStore` via `appointments(for:)`, `cli
 
 `HouseholdTask` has an optional `sectionId`. Sections are either predefined (`TaskSection.Predefined` enum, icon-keyed) or custom (`TaskSection`, stored in Supabase `task_sections` table).
 
-`TaskSectionPicker` → `AddCustomSectionSheet` → `SFSymbolPicker` is the section-assignment flow launched from `HouseholdTaskSheet`.
+`HouseholdTask.section` (`TaskSection.Predefined`, key-valued) selects a predefined section; `sectionId` points at a custom `TaskSection`. `TaskSectionPicker` → `AddCustomSectionSheet` is the flow launched from `HouseholdTaskSheet`.
 
 ---
 
@@ -125,3 +125,4 @@ Each tab reads filtered data from `SupabaseStore` via `appointments(for:)`, `cli
 - Accessibility: all icon-only buttons need `.accessibilityLabel`. Decorative images need `.accessibilityHidden(true)`.
 - Use `.tint` (not `.accent` or `Color.accentColor`) for `foregroundStyle` referencing the app tint.
 - Use `.clipShape(.rect(cornerRadius:))` not `clipShape(RoundedRectangle(cornerRadius:))`.
+- Colors come from `Palette` (`Home/Shared/Theme/Palette.swift`): feature fills (`tasks`, `shopping`, `meals`, `pets`, `stock`), `canvas`, `surface`, `accent`. No `.regularMaterial` / glass surfaces; semantic system colors (red/green/orange) only for status and swipe actions.

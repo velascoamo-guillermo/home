@@ -40,6 +40,15 @@ import UIKit
         #expect(light != UIColor.systemBlue.resolvedColor(with: .init(userInterfaceStyle: .light)))
     }
 
+    @Test("feature fills are distinct from each other in both schemes")
+    func distinctFills() {
+        let features: [Color] = [Palette.tasks, Palette.shopping, Palette.meals, Palette.pets, Palette.stock]
+        for style in [UIUserInterfaceStyle.light, .dark] {
+            let resolved = features.map { Palette.uiColor($0, style: style) }
+            #expect(Set(resolved).count == features.count, "\(style == .dark ? "dark" : "light")")
+        }
+    }
+
     private static func luminance(_ c: UIColor) -> CGFloat {
         var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0
         c.getRed(&r, green: &g, blue: &b, alpha: nil)

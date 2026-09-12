@@ -27,7 +27,7 @@ nonisolated enum DashboardCard: String, CaseIterable, Codable, Identifiable, Sen
         }
     }
 
-    @MainActor var fill: Color {
+    var fill: Color {
         switch self {
         case .upcomingTasks: Palette.tasks
         case .shoppingList:  Palette.shopping

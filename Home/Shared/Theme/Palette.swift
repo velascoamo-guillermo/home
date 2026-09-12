@@ -2,7 +2,7 @@
 import SwiftUI
 import UIKit
 
-enum Palette {
+nonisolated enum Palette {
     static let accent   = dynamic(light: 0xE8A090, dark: 0xF0B0A0)
     static let tasks    = dynamic(light: 0xD6E4F5, dark: 0x2B3A4F)
     static let shopping = dynamic(light: 0xD9EBD9, dark: 0x2C3F31)
