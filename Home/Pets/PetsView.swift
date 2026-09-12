@@ -18,6 +18,7 @@ struct PetsView: View {
                 } label: { Label("Delete", systemImage: "trash") }
             }
         }
+        .flatListStyle()
         .navigationTitle("My Pets")
         .navigationDestination(for: Pet.self) { pet in
             PetDetailView(pet: pet)
