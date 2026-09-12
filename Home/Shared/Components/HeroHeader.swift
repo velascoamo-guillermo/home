@@ -19,6 +19,7 @@ struct HeroHeader: View {
                 Text(unit)
                     .font(.title3)
             }
+            .accessibilityElement(children: .combine)
             if let subline {
                 Text(subline)
                     .font(.subheadline)

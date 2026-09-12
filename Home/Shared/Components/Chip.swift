@@ -12,6 +12,7 @@ struct Chip: View {
             HStack(spacing: 6) {
                 if let systemImage {
                     Image(systemName: systemImage)
+                        .accessibilityHidden(true)
                 }
                 Text(title)
                 if isSelected {
