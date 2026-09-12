@@ -65,14 +65,13 @@ struct HouseholdTaskSheet: View {
                         Text("Repeat every")
                         Spacer()
                         Stepper("\(intervalValue)", value: $intervalValue, in: 1...99)
-                        Picker("", selection: $intervalUnit) {
-                            ForEach(IntervalUnit.allCases) { unit in
-                                Text(unit.label).tag(unit)
-                            }
-                        }
-                        .labelsHidden()
-                        .fixedSize()
                     }
+                    ChipGroup(
+                        items: IntervalUnit.allCases,
+                        selection: $intervalUnit,
+                        fill: Palette.tasks,
+                        title: \.label
+                    )
                 }
 
                 Section("Linked product") {
@@ -93,6 +92,8 @@ struct HouseholdTaskSheet: View {
                         .lineLimit(3, reservesSpace: true)
                 }
             }
+            .scrollContentBackground(.hidden)
+            .gradientCanvas()
             .navigationTitle(isEditing ? "Edit Task" : "New Task")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
