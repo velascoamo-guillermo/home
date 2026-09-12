@@ -116,6 +116,17 @@ actor LocalStore {
         }
     }
 
+    /// Append an outbox op for a payload not produced by this build's encoder
+    /// (test seeding / replay of a legacy blob). Bypasses the entities table.
+    func enqueueRaw(kind: OutboxOpKind, table: String, id: UUID,
+                    payload: Data, updatedAt: Date) async throws {
+        let updatedAtS = iso.string(from: updatedAt)
+        try await db.transaction { conn in
+            try Self.appendOp(conn, kind: kind, table: table, id: id,
+                              payload: payload, updatedAtS: updatedAtS)
+        }
+    }
+
     func deleteOp(seq: Int) async throws {
         try await db.execute("DELETE FROM outbox WHERE seq=?", [seq])
     }

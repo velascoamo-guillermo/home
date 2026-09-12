@@ -1,6 +1,7 @@
--- supabase/migrations/20260912000000_remove_icons.sql
 alter table household_tasks
   add column if not exists section text not null default 'general';
+
+alter table household_tasks disable trigger household_tasks_set_updated_at;
 
 update household_tasks set section = case icon
   when 'drop'         then 'plumbing'
@@ -14,6 +15,8 @@ update household_tasks set section = case icon
   when 'air.purifier' then 'airQuality'
   else 'general'
 end;
+
+alter table household_tasks enable trigger household_tasks_set_updated_at;
 
 alter table household_tasks drop column if exists icon;
 alter table task_sections   drop column if exists icon;

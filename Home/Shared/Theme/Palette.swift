@@ -1,4 +1,3 @@
-// Home/Shared/Theme/Palette.swift
 import SwiftUI
 import UIKit
 

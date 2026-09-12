@@ -78,6 +78,7 @@ struct TaskSectionPicker: View {
                 }
             }
         }
+        .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 }
 

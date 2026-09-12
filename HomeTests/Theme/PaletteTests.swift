@@ -1,4 +1,3 @@
-// HomeTests/Theme/PaletteTests.swift
 import Testing
 import SwiftUI
 import UIKit

@@ -109,7 +109,7 @@ Each tab reads filtered data from `SupabaseStore` via `appointments(for:)`, `cli
 
 ### Household tasks — sections
 
-`HouseholdTask` has an optional `sectionId`. Sections are either predefined (`TaskSection.Predefined` enum, icon-keyed) or custom (`TaskSection`, stored in Supabase `task_sections` table).
+`HouseholdTask` has an optional `sectionId`. Sections are either predefined (`TaskSection.Predefined` enum, key-valued) or custom (`TaskSection`, stored in Supabase `task_sections` table).
 
 `HouseholdTask.section` (`TaskSection.Predefined`, key-valued) selects a predefined section; `sectionId` points at a custom `TaskSection`. `TaskSectionPicker` → `AddCustomSectionSheet` is the flow launched from `HouseholdTaskSheet`.
 
