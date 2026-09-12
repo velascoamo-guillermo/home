@@ -93,17 +93,17 @@ HomeApp → ContentView (creates SupabaseStore, calls loadAll(), injects via .en
 
 `MainTabView` overlays a `FloatingActionButton` (`fab.addTask`) on the `TabView` to open `HouseholdTaskSheet` for a new task; hidden on the Search tab.
 
-### Home tab — unified timeline
+### Tasks — unified timeline
 
-`HomeView` displays `store.homeTimeline`, a computed property on `SupabaseStore` that merges upcoming `Appointment` entries and all `HouseholdTask` entries into `[HomeItem]`, sorted by due date.
+`TasksView` (reached via Menu → Tasks) displays `store.homeTimeline`, a computed property on `SupabaseStore` that merges upcoming `Appointment` entries and all `HouseholdTask` entries into `[HomeItem]`, sorted by due date.
 
 `HomeItem` is an enum (`case appointment(Appointment, Pet)`, `case task(HouseholdTask)`) — add new timeline entry types here.
 
-Task actions (mark done, snooze, delete, add to calendar) are handled in `HomeView` helper methods.
+Task actions (mark done, snooze, delete, add to calendar) are handled in `TasksView` helper methods.
 
-### Pets tab — per-pet detail
+### Pets — per-pet detail
 
-`PetsView` → `PetDetailView` (tabbed: Vet, Appointments, Clinical History, Events, Files).
+`PetsView` (reached from the Menu hub tile, `MenuHubView` → `HubDestination.pets`) → `PetDetailView` (tabbed: Vet, Appointments, Clinical History, Events, Files).
 
 Each tab reads filtered data from `SupabaseStore` via `appointments(for:)`, `clinicalEntries(for:)`, etc.
 
