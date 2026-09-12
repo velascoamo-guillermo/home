@@ -34,7 +34,7 @@ struct ShoppingView: View {
                     .submitLabel(.done)
                     .autocorrectionDisabled()
                     .accessibilityIdentifier("quickAddField")
-                    .glassRow()
+                    .pastelRow(Palette.surface)
             }
             if store.shoppingList.isEmpty {
                 ContentUnavailableView(
@@ -53,7 +53,7 @@ struct ShoppingView: View {
                 }
             }
         }
-        .glassListStyle()
+        .flatListStyle()
         .navigationTitle("Shopping")
         .safeAreaInset(edge: .bottom) {
             if !session.checkedIds.isEmpty {
@@ -97,7 +97,7 @@ struct ShoppingView: View {
             .contentShape(.rect)
         }
         .buttonStyle(.plain)
-        .glassRow()
+        .pastelRow(Palette.shopping)
         .accessibilityLabel(product.name)
         .accessibilityHint(checked ? "Unchecks this item" : "Checks this item off the list")
         .swipeActions(edge: .trailing) {

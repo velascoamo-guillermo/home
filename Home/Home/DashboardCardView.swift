@@ -14,7 +14,7 @@ struct DashboardCardView: View {
     }
 
     var body: some View {
-        PressableGlassCard(onTap: navigate) {
+        PressableCard(fill: card.fill, onTap: navigate) {
             header
             content
         }
@@ -24,7 +24,6 @@ struct DashboardCardView: View {
 
     private var header: some View {
         HStack(spacing: 10) {
-            IconChip(systemImage: card.systemImage, tint: card.tint)
             Text(card.title).font(.headline)
             Spacer()
             if card.deepLinkHost != nil {

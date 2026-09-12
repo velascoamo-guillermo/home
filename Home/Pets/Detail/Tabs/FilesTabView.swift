@@ -52,7 +52,7 @@ private struct FileGridCell: View {
 
     var body: some View {
         RoundedRectangle(cornerRadius: 10)
-            .fill(.regularMaterial)
+            .fill(Palette.surface)
             .frame(height: 100)
             .overlay {
                 if sourceType == .document || sourceType == .scan {

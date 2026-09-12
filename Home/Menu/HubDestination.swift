@@ -25,13 +25,13 @@ enum HubDestination: String, CaseIterable, Identifiable, Hashable {
         }
     }
 
-    var tint: Color {
+    var fill: Color {
         switch self {
-        case .tasks:    .blue
-        case .pets:     .pink
-        case .stock:    .purple
-        case .meals:    .orange
-        case .shopping: .green
+        case .tasks:    Palette.tasks
+        case .pets:     Palette.pets
+        case .stock:    Palette.stock
+        case .meals:    Palette.meals
+        case .shopping: Palette.shopping
         }
     }
 

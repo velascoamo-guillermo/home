@@ -15,13 +15,15 @@ struct TasksView: View {
                     systemImage: "calendar.badge.clock",
                     description: Text("Add a household task or schedule a pet appointment.")
                 )
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(Palette.canvas.ignoresSafeArea())
             } else {
                 List {
                     ForEach(store.homeTimeline) { item in
                         HomeItemRow(item: item, onComplete: completeAction(for: item))
                             .contentShape(Rectangle())
                             .onTapGesture { handleTap(item) }
-                            .glassRow()
+                            .pastelRow(Palette.tasks)
                             .contextMenu {
                                 switch item {
                                 case .task(let t):
@@ -59,7 +61,7 @@ struct TasksView: View {
                             }
                     }
                 }
-                .glassListStyle()
+                .flatListStyle()
             }
         }
         .navigationTitle("Tasks")
