@@ -207,6 +207,7 @@
 		FDBBD192CA7641DC85D72185 /* DashboardConfigTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8667959058AF990DDB06832 /* DashboardConfigTests.swift */; };
 		FE59A6160D349559CDC47044 /* SearchSelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F20A5B0DF81C9A817739CAB /* SearchSelection.swift */; };
 		FF11AA22BB33CC44DD55EE77 /* VetEditSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF11AA22BB33CC44DD55EE01 /* VetEditSheet.swift */; };
+		FF406F7CCDC8905152BDA3A6 /* AgendaBuilderCalendarTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9EC112221ABF00FB0C64B50 /* AgendaBuilderCalendarTests.swift */; };
 		FF55AA66BB77CC88DD99EE01 /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF55AA66BB77CC88DD99EE00 /* KeychainService.swift */; };
 		HM00AA11BB22CC33DD44EE11 /* HomeItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = HM00AA11BB22CC33DD44EE01 /* HomeItem.swift */; };
 		HM00AA11BB22CC33DD44EE12 /* HouseholdTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = HM00AA11BB22CC33DD44EE02 /* HouseholdTask.swift */; };
@@ -374,6 +375,7 @@
 		A74D898413054708A6AED52C /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		A80EE84948749894F5494007 /* WeekMealChoice.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WeekMealChoice.swift; sourceTree = "<group>"; };
 		A84F21C10222426D94D76641 /* SQLiteDatabaseTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SQLiteDatabaseTests.swift; sourceTree = "<group>"; };
+		A9EC112221ABF00FB0C64B50 /* AgendaBuilderCalendarTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AgendaBuilderCalendarTests.swift; sourceTree = "<group>"; };
 		AA11BB22CC33DD44EE55FF01 /* VetTabView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = VetTabView.swift; sourceTree = "<group>"; };
 		AA11BB22CC33DD44EE55FF77 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		AA22BB33CC44DD55EE6600A2 /* AddAppointmentSheet.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AddAppointmentSheet.swift; sourceTree = "<group>"; };
@@ -1021,6 +1023,7 @@
 				AD59B5D71D0A33686D0B780F /* TaskOccurrenceTests.swift */,
 				4080532859C7F56ABA4D4A2B /* AgendaWeekTests.swift */,
 				66F8548E556881C17E53D9C8 /* AgendaBuilderTests.swift */,
+				A9EC112221ABF00FB0C64B50 /* AgendaBuilderCalendarTests.swift */,
 			);
 			path = HomeTests;
 			sourceTree = "<group>";
@@ -1450,6 +1453,7 @@
 				F247E04D334EAF009F94185E /* TaskOccurrenceTests.swift in Sources */,
 				EA7F33D5C14FFDA32C7C3E95 /* AgendaWeekTests.swift in Sources */,
 				E6A041601CDE35D1F2015FB8 /* AgendaBuilderTests.swift in Sources */,
+				FF406F7CCDC8905152BDA3A6 /* AgendaBuilderCalendarTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

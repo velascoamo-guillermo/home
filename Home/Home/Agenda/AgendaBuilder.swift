@@ -16,6 +16,7 @@ enum AgendaBuilder {
             + appointments(input, day: day, today: today, calendar: calendar)
             + petEvents(input, day: day, calendar: calendar)
             + meals(input, day: day, calendar: calendar)
+            + calendarEvents(input.calendarEvents, day: day, calendar: calendar)
 
         let groups = AgendaSection.allCases.compactMap { section -> AgendaGroup? in
             let items = placed.filter { $0.section == section }.sorted(by: precedes).map(\.item)
@@ -93,6 +94,27 @@ enum AgendaBuilder {
                   !meal.title.isEmpty else { return nil }
             let section: AgendaSection = entry.slot == .lunch ? .afternoon : .evening
             return Placed(section: section, item: .meal(meal, entry.slot), time: nil, rank: 2)
+        }
+    }
+
+    private static func calendarEvents(_ events: [CalendarEventSnapshot], day: Date, calendar: Calendar) -> [Placed] {
+        guard let dayEnd = calendar.date(byAdding: .day, value: 1, to: day) else { return [] }
+        return events.compactMap { event in
+            let startsToday = event.start >= day && event.start < dayEnd
+            let overlaps = event.start < dayEnd && event.end > day
+            guard startsToday || overlaps else { return nil }
+
+            if event.isAllDay {
+                return Placed(section: .allDay, item: .calendarEvent(event, continuesFromPreviousDay: false), time: nil, rank: 0)
+            }
+            if startsToday {
+                let section = AgendaSection.timeBucket(hour: calendar.component(.hour, from: event.start))
+                return Placed(section: section, item: .calendarEvent(event, continuesFromPreviousDay: false), time: event.start, rank: 0)
+            }
+            if event.end >= dayEnd {
+                return Placed(section: .allDay, item: .calendarEvent(event, continuesFromPreviousDay: true), time: nil, rank: 0)
+            }
+            return Placed(section: .morning, item: .calendarEvent(event, continuesFromPreviousDay: true), time: day, rank: 0)
         }
     }
 }
