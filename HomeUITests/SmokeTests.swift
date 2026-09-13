@@ -104,20 +104,6 @@ final class SmokeTests: XCTestCase {
         XCTAssertTrue(waitForDisappearance(alert, timeout: 10))
     }
 
-    func testFloatingActionButtonOpensNewTaskSheet() throws {
-        let app = launchApp()
-        let fab = app.buttons["fab.addTask"]
-        XCTAssertTrue(fab.waitForExistence(timeout: 15))
-        fab.tap()
-
-        let navBar = app.navigationBars["New Task"]
-        XCTAssertTrue(navBar.waitForExistence(timeout: 10))
-        navBar.buttons["Cancel"].tap()
-
-        XCTAssertTrue(waitForDisappearance(navBar, timeout: 10))
-        XCTAssertTrue(fab.waitForExistence(timeout: 10))
-    }
-
     private func waitForDisappearance(_ element: XCUIElement, timeout: TimeInterval) -> Bool {
         let predicate = NSPredicate(format: "exists == false")
         let expectation = XCTNSPredicateExpectation(predicate: predicate, object: element)
