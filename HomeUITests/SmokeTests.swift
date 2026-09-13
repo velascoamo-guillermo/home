@@ -14,7 +14,9 @@ final class SmokeTests: XCTestCase {
 
     func testNewTaskDefaultsDueDateToOneMonth() throws {
         let app = launchApp()
-        XCTAssertTrue(app.buttons["Add task"].waitForExistence(timeout: 15))
+        XCTAssertTrue(app.buttons["Menu"].waitForExistence(timeout: 15))
+        openHubScreen(app, row: "Tasks")
+        XCTAssertTrue(app.buttons["Add task"].waitForExistence(timeout: 10))
         app.buttons["Add task"].tap()
 
         let picker = app.buttons["Date Picker"]
