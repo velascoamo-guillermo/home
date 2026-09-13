@@ -10,7 +10,7 @@ struct MainTabView: View {
                 DashboardView()
             }
             Tab("Menu", systemImage: "square.grid.2x2.fill", value: AppTab.menu) {
-                MenuHubView(path: $hubPath)
+                MenuHubView(path: $hubPath, isActive: selectedTab == .menu)
             }
             Tab(value: AppTab.search, role: .search) {
                 SearchView()

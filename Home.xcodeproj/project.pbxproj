@@ -43,6 +43,7 @@
 		25CA01948C123110190D96ED /* SyncDateCoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = F24A9F754561007F5F7023E8 /* SyncDateCoding.swift */; };
 		2719B8303E8F45E28B575B80 /* DashboardHeaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278828B00692B8003C246B31 /* DashboardHeaderTests.swift */; };
 		2B98A5D567A51BCB98F4580E /* Supermarket.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD721BF9855C09D131A9116 /* Supermarket.swift */; };
+		2ECAC4F0104253983A0D8DB2 /* TileEntranceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C4EED22CC67F74D70380EB /* TileEntranceTests.swift */; };
 		3135C078C41093AD8A6FE83A /* AppTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF21E00DCCBEF18421A267A3 /* AppTab.swift */; };
 		33DDF8ADC1BB63F2E738876D /* WidgetSnapshotWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167B044780DEF36B6D746BFB /* WidgetSnapshotWriter.swift */; };
 		349C6CE04663272E56B08536 /* CalendarReminderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00942EB6083001B5C216901C /* CalendarReminderTests.swift */; };
@@ -334,6 +335,7 @@
 		8E48459EB4143A86114B4178 /* ShoppingListTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShoppingListTests.swift; sourceTree = "<group>"; };
 		932AAC9315EAFE3741709AE7 /* MealProductPicker.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MealProductPicker.swift; sourceTree = "<group>"; };
 		934BB72A2A2516A2E5E46923 /* SupabaseStoreMealTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SupabaseStoreMealTests.swift; sourceTree = "<group>"; };
+		96C4EED22CC67F74D70380EB /* TileEntranceTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TileEntranceTests.swift; sourceTree = "<group>"; };
 		97BF39A8D0642A279A151CCE /* HomeWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HomeWidget.swift; sourceTree = "<group>"; };
 		9AE500AD395CBA5FAADB2307 /* MealChoiceTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MealChoiceTests.swift; sourceTree = "<group>"; };
 		9B70FBD20CA49086C65360F4 /* WeightEntrySyncTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WeightEntrySyncTests.swift; sourceTree = "<group>"; };
@@ -952,6 +954,7 @@
 				8B6CF9AE1515AD0C98857877 /* TaskSectionCodingTests.swift */,
 				F6B5DFB706B6BF7C872CAEB6 /* ChipGroupSelectionTests.swift */,
 				D417FE8A4E9C6F77B4186EE7 /* HubTileTests.swift */,
+				96C4EED22CC67F74D70380EB /* TileEntranceTests.swift */,
 			);
 			path = HomeTests;
 			sourceTree = "<group>";
@@ -1364,6 +1367,7 @@
 				A28FB6EA7543294A93239E68 /* TaskSectionCodingTests.swift in Sources */,
 				D5E5ED779CB3A56568BE1EA9 /* ChipGroupSelectionTests.swift in Sources */,
 				39F739F8BF71953261C79E1E /* HubTileTests.swift in Sources */,
+				2ECAC4F0104253983A0D8DB2 /* TileEntranceTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
