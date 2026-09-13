@@ -91,8 +91,6 @@ HomeApp → ContentView (creates SupabaseStore, calls loadAll(), injects via .en
         → MainTabView (3 tabs: Home, Menu, Search)
 ```
 
-`MainTabView` overlays a `FloatingActionButton` (`fab.addTask`) on the `TabView` to open `HouseholdTaskSheet` for a new task; shown only on the Home tab.
-
 ### Tasks — unified timeline
 
 `TasksView` (reached via Menu → Tasks) displays `store.homeTimeline`, a computed property on `SupabaseStore` that merges upcoming `Appointment` entries and all `HouseholdTask` entries into `[HomeItem]`, sorted by due date.

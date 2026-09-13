@@ -14,7 +14,9 @@ final class SmokeTests: XCTestCase {
 
     func testNewTaskDefaultsDueDateToOneMonth() throws {
         let app = launchApp()
-        XCTAssertTrue(app.buttons["Add task"].waitForExistence(timeout: 15))
+        XCTAssertTrue(app.buttons["Menu"].waitForExistence(timeout: 15))
+        openHubScreen(app, row: "Tasks")
+        XCTAssertTrue(app.buttons["Add task"].waitForExistence(timeout: 10))
         app.buttons["Add task"].tap()
 
         let picker = app.buttons["Date Picker"]
@@ -102,20 +104,6 @@ final class SmokeTests: XCTestCase {
         XCTAssertTrue(alert.buttons["View Shopping"].exists)
         alert.buttons["OK"].tap()
         XCTAssertTrue(waitForDisappearance(alert, timeout: 10))
-    }
-
-    func testFloatingActionButtonOpensNewTaskSheet() throws {
-        let app = launchApp()
-        let fab = app.buttons["fab.addTask"]
-        XCTAssertTrue(fab.waitForExistence(timeout: 15))
-        fab.tap()
-
-        let navBar = app.navigationBars["New Task"]
-        XCTAssertTrue(navBar.waitForExistence(timeout: 10))
-        navBar.buttons["Cancel"].tap()
-
-        XCTAssertTrue(waitForDisappearance(navBar, timeout: 10))
-        XCTAssertTrue(fab.waitForExistence(timeout: 10))
     }
 
     private func waitForDisappearance(_ element: XCUIElement, timeout: TimeInterval) -> Bool {
