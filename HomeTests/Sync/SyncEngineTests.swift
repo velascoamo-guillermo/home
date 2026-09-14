@@ -11,7 +11,11 @@ actor FakeGateway: RemoteGateway {
         if failTables.contains(table) { throw NSError(domain: "net", code: 1) }
         pushed.append((kind, table, payload))
     }
-    func pull(table: String, since: Date?) async throws -> [Data] { pullReturns[table] ?? [] }
+    private(set) var pullSinces: [Date?] = []
+    func pull(table: String, since: Date?) async throws -> [Data] {
+        pullSinces.append(since)
+        return pullReturns[table] ?? []
+    }
     func setFail(_ t: String) async { failTables.insert(t) }
     func pushedCount() async -> Int { pushed.count }
     func pushedPayloads() async -> [Data] { pushed.map(\.2) }

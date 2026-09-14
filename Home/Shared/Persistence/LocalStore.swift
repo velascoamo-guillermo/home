@@ -36,6 +36,13 @@ actor LocalStore {
             CREATE TABLE IF NOT EXISTS sync_cursor (
               table_name TEXT PRIMARY KEY, cursor TEXT NOT NULL);
             """)
+        // v1: rows inserted remotely kept their client updated_at, so ones that reached
+        // Supabase late sat behind existing cursors and were never pulled. The server now
+        // stamps inserts too; one full re-pull recovers the rows already skipped.
+        if try await db.userVersion() < 1 {
+            try await db.execute("DELETE FROM sync_cursor")
+            try await db.setUserVersion(1)
+        }
     }
 
     // MARK: Entity CRUD
