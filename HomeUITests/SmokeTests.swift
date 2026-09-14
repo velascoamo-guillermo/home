@@ -41,7 +41,7 @@ final class SmokeTests: XCTestCase {
 
     func testCompleteTaskFromAgenda() throws {
         // Completing a recurring task advances nextDueDate by its 7-day interval,
-        // so the row leaves the day it was due on.
+        // so the row leaves the day it was due on and reappears exactly one week later.
         let app = launchApp()
         XCTAssertTrue(app.staticTexts["Fixture Change Filter"].waitForExistence(timeout: 15))
         openAgendaDay(app, daysFromToday: 2)
@@ -49,6 +49,12 @@ final class SmokeTests: XCTestCase {
         XCTAssertTrue(done.waitForExistence(timeout: 10))
         done.tap()
         XCTAssertTrue(waitForDisappearance(app.staticTexts["Fixture Water Plants"], timeout: 10))
+        // Guards against a false pass: an accidentally presented edit sheet would also
+        // hide the row from the day timeline behind it.
+        XCTAssertFalse(app.buttons["Save"].exists)
+
+        openAgendaDay(app, daysFromToday: 7)
+        XCTAssertTrue(app.buttons["markDone-Fixture Water Plants"].waitForExistence(timeout: 10))
     }
 
     func testStockConsumeAndReplenish() throws {
@@ -150,7 +156,16 @@ final class SmokeTests: XCTestCase {
         let c = Calendar.current.dateComponents([.year, .month, .day], from: day)
         let cell = app.buttons[String(format: "agendaDay-%04d-%02d-%02d", c.year!, c.month!, c.day!)]
         if !cell.waitForExistence(timeout: 5) {
+            // The strip may currently show a non-current week (e.g. a prior call already
+            // selected a day in a later week); re-anchor on today before walking forward
+            // so a fixed, bounded number of "Next week" taps always reaches the target.
+            let today = app.buttons["Today"]
+            if today.exists { today.tap() }
+        }
+        var attempts = 0
+        while !cell.waitForExistence(timeout: 5), attempts < 2 {
             app.buttons["Next week"].tap()
+            attempts += 1
         }
         XCTAssertTrue(cell.waitForExistence(timeout: 10))
         cell.tap()
