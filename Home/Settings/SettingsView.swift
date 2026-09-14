@@ -14,6 +14,14 @@ struct SettingsView: View {
                     title: \.label
                 )
             }
+
+            Section("Agenda") {
+                NavigationLink {
+                    CalendarsSettingsView()
+                } label: {
+                    Label("Calendars", systemImage: "calendar")
+                }
+            }
         }
         .scrollContentBackground(.hidden)
         .gradientCanvas()
@@ -25,5 +33,6 @@ struct SettingsView: View {
     NavigationStack {
         SettingsView()
             .environment(ThemeStore())
+            .environment(CalendarFeed(source: FakeCalendarSource.uiTestFixture()))
     }
 }

@@ -126,6 +126,19 @@ final class SmokeTests: XCTestCase {
         XCTAssertTrue(waitForDisappearance(alert, timeout: 10))
     }
 
+    func testCalendarsSettingsListsFixtureCalendar() throws {
+        let app = launchApp()
+        openHubScreen(app, row: "Settings")
+        let calendarsRow = app.buttons["Calendars"]
+        XCTAssertTrue(calendarsRow.waitForExistence(timeout: 10))
+        calendarsRow.tap()
+
+        XCTAssertTrue(app.staticTexts["Fixture Work"].waitForExistence(timeout: 10))
+        let toggle = app.switches["Fixture Work"]
+        XCTAssertTrue(toggle.waitForExistence(timeout: 10))
+        XCTAssertEqual(toggle.value as? String, "1")
+    }
+
     private func waitForDisappearance(_ element: XCUIElement, timeout: TimeInterval) -> Bool {
         let predicate = NSPredicate(format: "exists == false")
         let expectation = XCTNSPredicateExpectation(predicate: predicate, object: element)

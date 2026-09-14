@@ -84,6 +84,7 @@
 		62C335BADB6DC20777E85718 /* AgendaWeek.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549E84836998A70D5DB298A0 /* AgendaWeek.swift */; };
 		62DAA05EACCF43C3B5E7437C /* CalendarAccessState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A189AFE895DCBB25ADA61261 /* CalendarAccessState.swift */; };
 		645F658B0F889DA3719D5715 /* Palette.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0C7B856F01A4903BF1FFC9 /* Palette.swift */; };
+		6492972B2D648FA4E8E62AEF /* CalendarsSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D9286FCE7C221771A849A5 /* CalendarsSettingsView.swift */; };
 		663606FD98F2697756FAD5E6 /* MealChoiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AE500AD395CBA5FAADB2307 /* MealChoiceTests.swift */; };
 		68AEAB43A2107550172A58AE /* HomeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4CDCB58B9C74EE5C806160F /* HomeApp.swift */; };
 		68E6FB0FE1A44696B6615646 /* SyncEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5BAB79A911B4FD3860DCA75 /* SyncEngine.swift */; };
@@ -446,6 +447,7 @@
 		F1E13F7E360AAF01E8010ED1 /* AgendaHeaderTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AgendaHeaderTests.swift; sourceTree = "<group>"; };
 		F24A9F754561007F5F7023E8 /* SyncDateCoding.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SyncDateCoding.swift; sourceTree = "<group>"; };
 		F2E5721358282A900C31C30E /* HubDestinationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HubDestinationTests.swift; sourceTree = "<group>"; };
+		F4D9286FCE7C221771A849A5 /* CalendarsSettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CalendarsSettingsView.swift; sourceTree = "<group>"; };
 		F5BAB79A911B4FD3860DCA75 /* SyncEngine.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SyncEngine.swift; sourceTree = "<group>"; };
 		F6B5DFB706B6BF7C872CAEB6 /* ChipGroupSelectionTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ChipGroupSelectionTests.swift; sourceTree = "<group>"; };
 		F907ABF115538ACEE5000F7C /* Chip.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Chip.swift; sourceTree = "<group>"; };
@@ -715,6 +717,7 @@
 			isa = PBXGroup;
 			children = (
 				2E6995C6A3CF4F4BB2E5B277 /* SettingsView.swift */,
+				F4D9286FCE7C221771A849A5 /* CalendarsSettingsView.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -1354,6 +1357,7 @@
 				C99F9B3CC8B0211184ADA85C /* CalendarAccessBanner.swift in Sources */,
 				90BC1002E408882D044EFCF6 /* AgendaRow.swift in Sources */,
 				77BF36B872A3E7F02C611A8D /* AgendaView.swift in Sources */,
+				6492972B2D648FA4E8E62AEF /* CalendarsSettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
