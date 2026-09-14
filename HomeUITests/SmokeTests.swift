@@ -8,8 +8,10 @@ final class SmokeTests: XCTestCase {
     func testLaunchShowsSeededFixtures() throws {
         let app = launchApp()
         XCTAssertTrue(app.staticTexts["Fixture Change Filter"].waitForExistence(timeout: 15))
-        XCTAssertTrue(app.staticTexts["Fixture Water Plants"].exists)
-        XCTAssertTrue(app.staticTexts["Fixture Filters"].exists)
+        XCTAssertTrue(app.staticTexts["Fixture Standup"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["1 to buy"].exists)
+        openAgendaDay(app, daysFromToday: 2)
+        XCTAssertTrue(app.staticTexts["Fixture Water Plants"].waitForExistence(timeout: 10))
     }
 
     func testNewTaskDefaultsDueDateToOneMonth() throws {
@@ -37,18 +39,22 @@ final class SmokeTests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Fixture Change Filter"].waitForExistence(timeout: 10))
     }
 
-    func testOneTapCompleteFromDashboard() throws {
-        // "Fixture Water Plants" is a recurring task (no one-time "done" state), so
-        // completing it advances nextDueDate rather than removing the row. The
-        // observable effect of a successful one-tap complete is the due-date label
-        // moving from "in 2 days" to "in 7 days" (its 7-day interval, from today).
+    func testCompleteTaskFromAgenda() throws {
+        // Completing a recurring task advances nextDueDate by its 7-day interval,
+        // so the row leaves the day it was due on and reappears exactly one week later.
         let app = launchApp()
+        XCTAssertTrue(app.staticTexts["Fixture Change Filter"].waitForExistence(timeout: 15))
+        openAgendaDay(app, daysFromToday: 2)
         let done = app.buttons["markDone-Fixture Water Plants"]
-        XCTAssertTrue(done.waitForExistence(timeout: 15))
-        XCTAssertTrue(app.staticTexts["in 2 days"].waitForExistence(timeout: 10))
+        XCTAssertTrue(done.waitForExistence(timeout: 10))
         done.tap()
-        XCTAssertTrue(waitForDisappearance(app.staticTexts["in 2 days"], timeout: 10))
-        XCTAssertTrue(app.staticTexts["in 7 days"].waitForExistence(timeout: 10))
+        XCTAssertTrue(waitForDisappearance(app.staticTexts["Fixture Water Plants"], timeout: 10))
+        // Guards against a false pass: an accidentally presented edit sheet would also
+        // hide the row from the day timeline behind it.
+        XCTAssertFalse(app.buttons["Save"].exists)
+
+        openAgendaDay(app, daysFromToday: 7)
+        XCTAssertTrue(app.buttons["markDone-Fixture Water Plants"].waitForExistence(timeout: 10))
     }
 
     func testStockConsumeAndReplenish() throws {
@@ -91,6 +97,26 @@ final class SmokeTests: XCTestCase {
         XCTAssertTrue(waitForDisappearance(sponge, timeout: 10))
     }
 
+    func testHeaderChipsOpenTheirOwnScreens() throws {
+        // The two header Chips share one List row; a hit-testing/row-tap conflict
+        // could make a single tap fire both buttons. Verify each chip opens only
+        // its own screen.
+        let shoppingApp = launchApp()
+        let itemsToBuy = shoppingApp.buttons["1 to buy"]
+        XCTAssertTrue(itemsToBuy.waitForExistence(timeout: 15))
+        itemsToBuy.tap()
+        XCTAssertTrue(shoppingApp.textFields["quickAddField"].waitForExistence(timeout: 10))
+        XCTAssertFalse(shoppingApp.buttons["Add task"].exists)
+
+        let tasksApp = launchApp()
+        let tasksChip = tasksApp.buttons.matching(
+            NSPredicate(format: "label ENDSWITH 'task' OR label ENDSWITH 'tasks'")).firstMatch
+        XCTAssertTrue(tasksChip.waitForExistence(timeout: 15))
+        tasksChip.tap()
+        XCTAssertTrue(tasksApp.buttons["Add task"].waitForExistence(timeout: 10))
+        XCTAssertFalse(tasksApp.textFields["quickAddField"].exists)
+    }
+
     func testCompletingLinkedTaskWithoutStockShowsAlert() throws {
         let app = launchApp()
         let done = app.buttons["markDone-Fixture Change Filter"]
@@ -106,9 +132,57 @@ final class SmokeTests: XCTestCase {
         XCTAssertTrue(waitForDisappearance(alert, timeout: 10))
     }
 
+    func testCalendarsSettingsListsFixtureCalendar() throws {
+        let app = launchApp()
+        openHubScreen(app, row: "Settings")
+        let calendarsRow = app.buttons["Calendars"]
+        XCTAssertTrue(calendarsRow.waitForExistence(timeout: 10))
+        calendarsRow.tap()
+
+        XCTAssertTrue(app.staticTexts["Fixture Work"].waitForExistence(timeout: 10))
+        let toggle = app.switches["Fixture Work"]
+        XCTAssertTrue(toggle.waitForExistence(timeout: 10))
+        XCTAssertEqual(toggle.value as? String, "1")
+
+        // Prove the toggle actually wires into the agenda, not just its own list.
+        // The row's accessibility frame spans the whole list row, but only the switch
+        // glyph itself is hittable (same as the stock iOS Settings toggle rows), so
+        // tap a point inside the switch rather than the element's reported center.
+        toggle.coordinate(withNormalizedOffset: CGVector(dx: 0.92, dy: 0.5)).tap()
+        XCTAssertTrue(waitForValue(toggle, "0", timeout: 10))
+        app.buttons["Home"].tap()
+        XCTAssertTrue(waitForDisappearance(app.staticTexts["Fixture Standup"], timeout: 10))
+    }
+
     private func waitForDisappearance(_ element: XCUIElement, timeout: TimeInterval) -> Bool {
         let predicate = NSPredicate(format: "exists == false")
         let expectation = XCTNSPredicateExpectation(predicate: predicate, object: element)
         return XCTWaiter().wait(for: [expectation], timeout: timeout) == .completed
+    }
+
+    private func waitForValue(_ element: XCUIElement, _ value: String, timeout: TimeInterval) -> Bool {
+        let predicate = NSPredicate(format: "value == %@", value)
+        let expectation = XCTNSPredicateExpectation(predicate: predicate, object: element)
+        return XCTWaiter().wait(for: [expectation], timeout: timeout) == .completed
+    }
+
+    private func openAgendaDay(_ app: XCUIApplication, daysFromToday offset: Int) {
+        let day = Calendar.current.date(byAdding: .day, value: offset, to: .now)!
+        let c = Calendar.current.dateComponents([.year, .month, .day], from: day)
+        let cell = app.buttons[String(format: "agendaDay-%04d-%02d-%02d", c.year!, c.month!, c.day!)]
+        if !cell.waitForExistence(timeout: 5) {
+            // The strip may currently show a non-current week (e.g. a prior call already
+            // selected a day in a later week); re-anchor on today before walking forward
+            // so a fixed, bounded number of "Next week" taps always reaches the target.
+            let today = app.buttons["Today"]
+            if today.exists { today.tap() }
+        }
+        var attempts = 0
+        while !cell.waitForExistence(timeout: 5), attempts < 2 {
+            app.buttons["Next week"].tap()
+            attempts += 1
+        }
+        XCTAssertTrue(cell.waitForExistence(timeout: 10))
+        cell.tap()
     }
 }

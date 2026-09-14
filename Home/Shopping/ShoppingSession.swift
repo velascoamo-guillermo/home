@@ -2,7 +2,7 @@ import Foundation
 import Observation
 
 // Checked state is a local shopping-session preference — it deliberately
-// bypasses the sync/outbox path, like DashboardConfigStore.
+// bypasses the sync/outbox path, like CalendarSelectionStore.
 @Observable
 final class ShoppingSession {
     static let key = "shopping.checked.v1"

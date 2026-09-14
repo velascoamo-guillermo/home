@@ -5,6 +5,20 @@ struct Tile: View {
     let title: String
     let systemImage: String
     let fill: Color
+    /// Hidden icons pop in (staggered by `entranceIndex`) when this flips to `true`.
+    var isRevealed = true
+    var entranceIndex = 0
+
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var hasRenderedHidden = false
+
+    static let maxStaggeredIndex = 8
+
+    static func entranceDelay(forIndex index: Int) -> Double {
+        Double(min(max(index, 0), maxStaggeredIndex)) * 0.05
+    }
+
+    private var showsIcon: Bool { (isRevealed && hasRenderedHidden) || reduceMotion }
 
     var body: some View {
         VStack(spacing: 8) {
@@ -16,6 +30,15 @@ struct Tile: View {
                         .font(.system(size: 26))
                         .foregroundStyle(Palette.ink)
                 }
+                .scaleEffect(showsIcon ? 1 : 0.4)
+                .rotationEffect(showsIcon ? .zero : .degrees(-14))
+                .opacity(showsIcon ? 1 : 0)
+                .animation(
+                    .bouncy(duration: 0.45, extraBounce: 0.1).delay(Self.entranceDelay(forIndex: entranceIndex)),
+                    value: showsIcon
+                )
+                // A tile inserted already revealed would skip the pop-in; show it hidden for one render first.
+                .task { hasRenderedHidden = true }
             Text(title)
                 .font(.footnote.weight(.medium))
                 .foregroundStyle(Palette.ink)
