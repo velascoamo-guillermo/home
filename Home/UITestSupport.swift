@@ -23,6 +23,14 @@ enum UITestSupport {
         )
     }
 
+    static func makeCalendarFeed() -> CalendarFeed {
+        CalendarFeed(
+            source: FakeCalendarSource.uiTestFixture(),
+            selection: CalendarSelectionStore(
+                defaults: UserDefaults(suiteName: "uitests-calendar-\(UUID().uuidString)") ?? .standard)
+        )
+    }
+
     static func seed(_ store: SupabaseStore) async {
         let milk = StockProduct(name: "Fixture Milk",
                                 packages: 2, looseUnits: 0, unitsPerPackage: 6)

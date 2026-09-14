@@ -111,6 +111,7 @@
 		8912A3153E5F24C69535F26C /* AgendaItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01FAB3EADD463A749A657595 /* AgendaItem.swift */; };
 		8A4387D98D44677003E12152 /* UITestSupportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBDD07921566A58732A6EE3C /* UITestSupportTests.swift */; };
 		8A93AD27062449ECBE2D8C71 /* ClinicalEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0894A58F3E0471E870AA5A4 /* ClinicalEntry.swift */; };
+		8C49AA0A70BDD0795E884BCA /* EventKitCalendarSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5471148B47FFBBB4C6B2480 /* EventKitCalendarSource.swift */; };
 		8CC704053EBAEB4CC13C454A /* StockProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = ST00AA11BB22CC33DD44EE00 /* StockProduct.swift */; };
 		8E132DA744C4C630A51FAFB0 /* HubDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2A0C24360D9F72C3AEFB22 /* HubDestination.swift */; };
 		8EF9D958E2351DECF10BEBD4 /* GradientCanvas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02E555E11C53F4C544EE0CBA /* GradientCanvas.swift */; };
@@ -435,6 +436,7 @@
 		E0A7B5E764753BED9E8D27EC /* SupermarketTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SupermarketTests.swift; sourceTree = "<group>"; };
 		E32930F19D9DF1811CABFFA3 /* Weekday.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Weekday.swift; sourceTree = "<group>"; };
 		E34340CCC7406E17CA752BF1 /* EventContextMenu.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EventContextMenu.swift; sourceTree = "<group>"; };
+		E5471148B47FFBBB4C6B2480 /* EventKitCalendarSource.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EventKitCalendarSource.swift; sourceTree = "<group>"; };
 		E61C41F4B1B06370070D1E26 /* WeekMenuView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WeekMenuView.swift; sourceTree = "<group>"; };
 		E64E9A83ECD2A46C38C80B9D /* OutOfStockAlert.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OutOfStockAlert.swift; sourceTree = "<group>"; };
 		E65927107DA46DF3718B9ABD /* HomeWidgetBundle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HomeWidgetBundle.swift; sourceTree = "<group>"; };
@@ -852,6 +854,7 @@
 				623DF895243E34D8D30FE0FB /* CalendarEventSource.swift */,
 				38EF7E5046F4ADC30227998C /* FakeCalendarSource.swift */,
 				28F9C24E7C55F51A3B65ACC1 /* CalendarFeed.swift */,
+				E5471148B47FFBBB4C6B2480 /* EventKitCalendarSource.swift */,
 			);
 			name = Calendar;
 			path = Calendar;
@@ -1371,6 +1374,7 @@
 				7871F56DB1FD3C2C41BD3C9D /* CalendarEventSource.swift in Sources */,
 				378CDCA49B923D4B4E562AF2 /* FakeCalendarSource.swift in Sources */,
 				7A53B1FAEAA7880E9C7D5FBE /* CalendarFeed.swift in Sources */,
+				8C49AA0A70BDD0795E884BCA /* EventKitCalendarSource.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1668,7 +1672,7 @@
 				INFOPLIST_FILE = Home/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "$(PRODUCT_NAME)";
 				INFOPLIST_KEY_CFBundleName = "$(PRODUCT_NAME)";
-				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "Add appointments to the calendar";
+				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "Show your calendar events in your agenda and add appointments to your calendar";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -1706,7 +1710,7 @@
 				INFOPLIST_FILE = Home/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "$(PRODUCT_NAME)";
 				INFOPLIST_KEY_CFBundleName = "$(PRODUCT_NAME)";
-				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "Add appointments to the calendar";
+				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "Show your calendar events in your agenda and add appointments to your calendar";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
