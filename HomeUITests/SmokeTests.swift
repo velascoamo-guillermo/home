@@ -8,8 +8,10 @@ final class SmokeTests: XCTestCase {
     func testLaunchShowsSeededFixtures() throws {
         let app = launchApp()
         XCTAssertTrue(app.staticTexts["Fixture Change Filter"].waitForExistence(timeout: 15))
-        XCTAssertTrue(app.staticTexts["Fixture Water Plants"].exists)
-        XCTAssertTrue(app.staticTexts["Fixture Filters"].exists)
+        XCTAssertTrue(app.staticTexts["Fixture Standup"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["1 to buy"].exists)
+        openAgendaDay(app, daysFromToday: 2)
+        XCTAssertTrue(app.staticTexts["Fixture Water Plants"].waitForExistence(timeout: 10))
     }
 
     func testNewTaskDefaultsDueDateToOneMonth() throws {
@@ -37,18 +39,16 @@ final class SmokeTests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Fixture Change Filter"].waitForExistence(timeout: 10))
     }
 
-    func testOneTapCompleteFromDashboard() throws {
-        // "Fixture Water Plants" is a recurring task (no one-time "done" state), so
-        // completing it advances nextDueDate rather than removing the row. The
-        // observable effect of a successful one-tap complete is the due-date label
-        // moving from "in 2 days" to "in 7 days" (its 7-day interval, from today).
+    func testCompleteTaskFromAgenda() throws {
+        // Completing a recurring task advances nextDueDate by its 7-day interval,
+        // so the row leaves the day it was due on.
         let app = launchApp()
+        XCTAssertTrue(app.staticTexts["Fixture Change Filter"].waitForExistence(timeout: 15))
+        openAgendaDay(app, daysFromToday: 2)
         let done = app.buttons["markDone-Fixture Water Plants"]
-        XCTAssertTrue(done.waitForExistence(timeout: 15))
-        XCTAssertTrue(app.staticTexts["in 2 days"].waitForExistence(timeout: 10))
+        XCTAssertTrue(done.waitForExistence(timeout: 10))
         done.tap()
-        XCTAssertTrue(waitForDisappearance(app.staticTexts["in 2 days"], timeout: 10))
-        XCTAssertTrue(app.staticTexts["in 7 days"].waitForExistence(timeout: 10))
+        XCTAssertTrue(waitForDisappearance(app.staticTexts["Fixture Water Plants"], timeout: 10))
     }
 
     func testStockConsumeAndReplenish() throws {
@@ -110,5 +110,16 @@ final class SmokeTests: XCTestCase {
         let predicate = NSPredicate(format: "exists == false")
         let expectation = XCTNSPredicateExpectation(predicate: predicate, object: element)
         return XCTWaiter().wait(for: [expectation], timeout: timeout) == .completed
+    }
+
+    private func openAgendaDay(_ app: XCUIApplication, daysFromToday offset: Int) {
+        let day = Calendar.current.date(byAdding: .day, value: offset, to: .now)!
+        let c = Calendar.current.dateComponents([.year, .month, .day], from: day)
+        let cell = app.buttons[String(format: "agendaDay-%04d-%02d-%02d", c.year!, c.month!, c.day!)]
+        if !cell.waitForExistence(timeout: 5) {
+            app.buttons["Next week"].tap()
+        }
+        XCTAssertTrue(cell.waitForExistence(timeout: 10))
+        cell.tap()
     }
 }

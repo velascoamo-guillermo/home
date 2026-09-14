@@ -7,7 +7,7 @@ struct MainTabView: View {
     var body: some View {
         TabView(selection: $selectedTab) {
             Tab("Home", systemImage: "house.fill", value: AppTab.home) {
-                DashboardView()
+                AgendaView()
             }
             Tab("Menu", systemImage: "square.grid.2x2.fill", value: AppTab.menu) {
                 MenuHubView(path: $hubPath)
@@ -22,4 +22,5 @@ struct MainTabView: View {
 #Preview {
     MainTabView(selectedTab: .constant(.home), hubPath: .constant(NavigationPath()))
         .environment(SupabaseStore())
+        .environment(CalendarFeed(source: FakeCalendarSource.uiTestFixture()))
 }
