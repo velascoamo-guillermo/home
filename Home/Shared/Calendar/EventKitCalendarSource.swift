@@ -7,6 +7,10 @@ actor EventKitCalendarSource: CalendarEventSource {
     nonisolated let changes: AsyncStream<Void>
     private let store = EKEventStore()
     private let logger = Logger(subsystem: "com.guillermovelasco.managedhome", category: "calendar")
+    // Tracks authorization across reads so a store created before access was granted
+    // (e.g. via CalendarService's own store, or iOS Settings) is reset once we observe
+    // the transition into full access, instead of serving its pre-grant cache forever.
+    private var lastState: CalendarAccessState?
 
     init() {
         let (stream, continuation) = AsyncStream<Void>.makeStream(bufferingPolicy: .bufferingNewest(1))
@@ -23,7 +27,9 @@ actor EventKitCalendarSource: CalendarEventSource {
 
     func requestAccess() async -> Bool {
         do {
-            return try await store.requestFullAccessToEvents()
+            let granted = try await store.requestFullAccessToEvents()
+            if granted { _ = refreshStoreIfNeeded() }
+            return granted
         } catch {
             logger.error("Calendar access request failed: \(error.localizedDescription, privacy: .public)")
             return false
@@ -31,17 +37,27 @@ actor EventKitCalendarSource: CalendarEventSource {
     }
 
     func calendars() -> [CalendarInfo] {
-        store.calendars(for: .event).map {
+        _ = refreshStoreIfNeeded()
+        return store.calendars(for: .event).map {
             CalendarInfo(id: $0.calendarIdentifier, title: $0.title, color: CalendarColor($0.cgColor))
         }
     }
 
     func events(in interval: DateInterval, excluding excludedIDs: Set<String>) -> [CalendarEventSnapshot] {
-        guard accessState() == .fullAccess else { return [] }
+        guard refreshStoreIfNeeded() == .fullAccess else { return [] }
         let included = store.calendars(for: .event).filter { !excludedIDs.contains($0.calendarIdentifier) }
         guard !included.isEmpty else { return [] }
         let predicate = store.predicateForEvents(withStart: interval.start, end: interval.end, calendars: included)
         return store.events(matching: predicate).map(Self.snapshot)
+    }
+
+    private func refreshStoreIfNeeded() -> CalendarAccessState {
+        let current = accessState()
+        if current == .fullAccess, lastState != .fullAccess {
+            store.reset()
+        }
+        lastState = current
+        return current
     }
 
     private static func snapshot(_ event: EKEvent) -> CalendarEventSnapshot {
