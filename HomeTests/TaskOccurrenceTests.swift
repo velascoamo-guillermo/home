@@ -30,6 +30,14 @@ import Foundation
         #expect(TaskOccurrence.of(late, on: d(9, 17), today: today, calendar: cal) == nil)
     }
 
+    @Test("overdue tasks project from today, where completing them re-anchors the schedule")
+    func overdueProjectsFromToday() {
+        let late = task(due: d(9, 10))
+        #expect(TaskOccurrence.of(late, on: d(9, 23), today: today, calendar: cal) == .projected)
+        #expect(TaskOccurrence.of(late, on: d(9, 30), today: today, calendar: cal) == .projected)
+        #expect(TaskOccurrence.of(late, on: d(9, 17), today: today, calendar: cal) == nil)
+    }
+
     @Test("projected on exact interval multiples after the due date")
     func projected() {
         let t = task(due: d(9, 17))

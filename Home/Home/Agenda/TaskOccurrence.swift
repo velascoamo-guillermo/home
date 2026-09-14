@@ -14,7 +14,9 @@ enum TaskOccurrence: Hashable {
         if day == today, due < today { return .overdue(days: days(from: due, to: today, calendar: calendar)) }
         if due == day { return .real }
         guard day > due, task.intervalDays > 0 else { return nil }
-        return days(from: due, to: day, calendar: calendar) % task.intervalDays == 0 ? .projected : nil
+        // Completing an overdue task re-anchors its schedule to the completion day, so repeats count from today.
+        let anchor = max(due, today)
+        return days(from: anchor, to: day, calendar: calendar) % task.intervalDays == 0 ? .projected : nil
     }
 
     private static func days(from start: Date, to end: Date, calendar: Calendar) -> Int {
