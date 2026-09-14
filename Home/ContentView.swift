@@ -2,6 +2,9 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var store = UITestSupport.isActive ? UITestSupport.makeStore() : SupabaseStore()
+    @State private var calendarFeed = UITestSupport.isActive
+        ? UITestSupport.makeCalendarFeed()
+        : CalendarFeed(source: EventKitCalendarSource())
     @State private var theme = ThemeStore()
     @State private var selectedTab: AppTab = .home
     @State private var hubPath = NavigationPath()
@@ -28,6 +31,7 @@ struct ContentView: View {
         }
         .environment(store)
         .environment(theme)
+        .environment(calendarFeed)
         .tint(Palette.accent)
         .preferredColorScheme(theme.colorScheme)
         .task {
@@ -36,6 +40,7 @@ struct ContentView: View {
                 await UITestSupport.seed(store)
             }
         }
+        .task { await calendarFeed.observeChanges() }
         .onOpenURL { url in
             let route = AppRouter.route(host: url.host)
             selectedTab = route.tab

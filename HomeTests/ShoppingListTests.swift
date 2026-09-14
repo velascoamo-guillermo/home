@@ -28,4 +28,17 @@ import Foundation
         store.stockProducts = [product("Eggs", packages: 1, loose: 0)]
         #expect(store.shoppingList.isEmpty)
     }
+
+    @Test("shoppingList includes needed products that still have stock")
+    func includesNeededWithStock() {
+        let store = SupabaseStore()
+        var eggs = product("Eggs", packages: 1, loose: 0)
+        eggs.needed = true
+        store.stockProducts = [
+            product("Milk", packages: 0, loose: 0),
+            eggs,
+            product("Rice", packages: 2, loose: 0),
+        ]
+        #expect(store.shoppingList.map(\.name).sorted() == ["Eggs", "Milk"])
+    }
 }
