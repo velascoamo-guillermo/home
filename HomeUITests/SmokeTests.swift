@@ -91,6 +91,26 @@ final class SmokeTests: XCTestCase {
         XCTAssertTrue(waitForDisappearance(sponge, timeout: 10))
     }
 
+    func testHeaderChipsOpenTheirOwnScreens() throws {
+        // The two header Chips share one List row; a hit-testing/row-tap conflict
+        // could make a single tap fire both buttons. Verify each chip opens only
+        // its own screen.
+        let shoppingApp = launchApp()
+        let itemsToBuy = shoppingApp.buttons["1 to buy"]
+        XCTAssertTrue(itemsToBuy.waitForExistence(timeout: 15))
+        itemsToBuy.tap()
+        XCTAssertTrue(shoppingApp.textFields["quickAddField"].waitForExistence(timeout: 10))
+        XCTAssertFalse(shoppingApp.buttons["Add task"].exists)
+
+        let tasksApp = launchApp()
+        let tasksChip = tasksApp.buttons.matching(
+            NSPredicate(format: "label ENDSWITH 'task' OR label ENDSWITH 'tasks'")).firstMatch
+        XCTAssertTrue(tasksChip.waitForExistence(timeout: 15))
+        tasksChip.tap()
+        XCTAssertTrue(tasksApp.buttons["Add task"].waitForExistence(timeout: 10))
+        XCTAssertFalse(tasksApp.textFields["quickAddField"].exists)
+    }
+
     func testCompletingLinkedTaskWithoutStockShowsAlert() throws {
         let app = launchApp()
         let done = app.buttons["markDone-Fixture Change Filter"]

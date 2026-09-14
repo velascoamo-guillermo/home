@@ -5,7 +5,7 @@ struct AgendaRow: View {
     var onComplete: (() -> Void)? = nil
 
     var body: some View {
-        HStack(spacing: 12) {
+        let row = HStack(spacing: 12) {
             leading
                 .frame(width: 48, alignment: .leading)
             VStack(alignment: .leading, spacing: 2) {
@@ -22,6 +22,31 @@ struct AgendaRow: View {
         }
         .padding(.vertical, 4)
         .opacity(isDimmed ? 0.5 : 1)
+
+        // Rows with an inner mark-done button (real/overdue tasks) keep their own
+        // children so `markDone-<title>` stays independently reachable; everything
+        // else has no interactive child, so it reads as a single VoiceOver stop.
+        if let label = Self.accessibilityLabel(for: item) {
+            row
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel(label)
+        } else {
+            row
+        }
+    }
+
+    // nil means the row keeps its own children (real/overdue tasks — the
+    // mark-done button must stay reachable as its own element).
+    static func accessibilityLabel(for item: AgendaItem) -> String? {
+        switch item {
+        case .task(let task, .projected):
+            return "\(task.title), repeats, upcoming"
+        case .task(_, .real), .task(_, .overdue):
+            return nil
+        default:
+            guard let subtitle = subtitle(for: item) else { return item.title }
+            return "\(item.title), \(subtitle)"
+        }
     }
 
     static func fill(for item: AgendaItem) -> Color {
@@ -90,7 +115,9 @@ struct AgendaRow: View {
         }
     }
 
-    private var subtitle: String? {
+    private var subtitle: String? { Self.subtitle(for: item) }
+
+    private static func subtitle(for item: AgendaItem) -> String? {
         switch item {
         case .task(_, .overdue(let days)):
             return "\(days)d overdue"
