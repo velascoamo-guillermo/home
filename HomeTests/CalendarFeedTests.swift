@@ -130,4 +130,38 @@ import Foundation
         }
         #expect(await source.requestedIntervals.count == 2)
     }
+
+    @Test("setCalendar alone eventually refetches with the new exclusion")
+    func setCalendarRefetchesWithoutExplicitReload() async throws {
+        let source = FakeCalendarSource(events: [event("Standup", calendar: "work"),
+                                                 event("Gym", calendar: "personal")])
+        let feed = CalendarFeed(source: source, selection: CalendarSelectionStore(defaults: defaults()))
+        await feed.load(interval: week)
+        feed.setCalendar("work", included: false)
+
+        for _ in 0..<100 {
+            if feed.events.map(\.title) == ["Gym"] { break }
+            try await Task.sleep(for: .milliseconds(10))
+        }
+        #expect(feed.events.map(\.title) == ["Gym"])
+        #expect(await source.requestedExclusions.last == ["work"])
+    }
+
+    @Test("full access: banner does not flash before the first reload resolves")
+    func noBannerFlashFullAccess() async {
+        let feed = CalendarFeed(source: FakeCalendarSource(state: .fullAccess),
+                                selection: CalendarSelectionStore(defaults: defaults()))
+        #expect(feed.showsBanner == false)
+        await feed.reload()
+        #expect(feed.showsBanner == false)
+    }
+
+    @Test("not determined: banner is suppressed until the first reload resolves, then shown")
+    func noBannerFlashNotDetermined() async {
+        let feed = CalendarFeed(source: FakeCalendarSource(state: .notDetermined),
+                                selection: CalendarSelectionStore(defaults: defaults()))
+        #expect(feed.showsBanner == false)
+        await feed.reload()
+        #expect(feed.showsBanner)
+    }
 }

@@ -14,6 +14,11 @@ final class CalendarFeed {
     @ObservationIgnored private var loadedInterval: DateInterval?
     // A refused upgrade from write-only access still reports write-only; surface it as denied.
     @ObservationIgnored private var accessRefused = false
+    // Suppresses the banner during the network-free launch window before the first access read lands.
+    @ObservationIgnored private var hasResolvedAccess = false
+    // Latest-wins guards: an older concurrent reload()/refetch() must not clobber a newer one's result.
+    @ObservationIgnored private var accessGeneration = 0
+    @ObservationIgnored private var fetchGeneration = 0
 
     init(source: any CalendarEventSource, selection: CalendarSelectionStore = CalendarSelectionStore()) {
         self.source = source
@@ -23,7 +28,7 @@ final class CalendarFeed {
     }
 
     var showsBanner: Bool {
-        !isBannerDismissed && (accessState == .notDetermined || accessState == .denied)
+        hasResolvedAccess && !isBannerDismissed && (accessState == .notDetermined || accessState == .denied)
     }
 
     func load(interval: DateInterval) async {
@@ -32,8 +37,12 @@ final class CalendarFeed {
     }
 
     func reload() async {
+        accessGeneration += 1
+        let generation = accessGeneration
         let state = await source.accessState()
+        guard generation == accessGeneration else { return }
         accessState = (state == .notDetermined && accessRefused) ? .denied : state
+        hasResolvedAccess = true
         await refetch()
     }
 
@@ -83,12 +92,14 @@ final class CalendarFeed {
 
     private func refetch() async {
         guard let interval = loadedInterval else { return }
+        fetchGeneration += 1
+        let generation = fetchGeneration
         guard accessState == .fullAccess else {
             events = []
             return
         }
         let fetched = await source.events(in: interval, excluding: excludedIDs)
-        guard loadedInterval == interval else { return }
+        guard generation == fetchGeneration, loadedInterval == interval else { return }
         events = fetched
     }
 }
