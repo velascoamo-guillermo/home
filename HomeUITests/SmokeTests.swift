@@ -143,10 +143,25 @@ final class SmokeTests: XCTestCase {
         let toggle = app.switches["Fixture Work"]
         XCTAssertTrue(toggle.waitForExistence(timeout: 10))
         XCTAssertEqual(toggle.value as? String, "1")
+
+        // Prove the toggle actually wires into the agenda, not just its own list.
+        // The row's accessibility frame spans the whole list row, but only the switch
+        // glyph itself is hittable (same as the stock iOS Settings toggle rows), so
+        // tap a point inside the switch rather than the element's reported center.
+        toggle.coordinate(withNormalizedOffset: CGVector(dx: 0.92, dy: 0.5)).tap()
+        XCTAssertTrue(waitForValue(toggle, "0", timeout: 10))
+        app.buttons["Home"].tap()
+        XCTAssertTrue(waitForDisappearance(app.staticTexts["Fixture Standup"], timeout: 10))
     }
 
     private func waitForDisappearance(_ element: XCUIElement, timeout: TimeInterval) -> Bool {
         let predicate = NSPredicate(format: "exists == false")
+        let expectation = XCTNSPredicateExpectation(predicate: predicate, object: element)
+        return XCTWaiter().wait(for: [expectation], timeout: timeout) == .completed
+    }
+
+    private func waitForValue(_ element: XCUIElement, _ value: String, timeout: TimeInterval) -> Bool {
+        let predicate = NSPredicate(format: "value == %@", value)
         let expectation = XCTNSPredicateExpectation(predicate: predicate, object: element)
         return XCTWaiter().wait(for: [expectation], timeout: timeout) == .completed
     }
