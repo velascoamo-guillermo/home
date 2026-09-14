@@ -4,6 +4,7 @@ import UIKit
 struct CalendarsSettingsView: View {
     @Environment(CalendarFeed.self) private var feed
     @Environment(\.openURL) private var openURL
+    @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
         List {
@@ -14,6 +15,8 @@ struct CalendarsSettingsView: View {
                 case .notDetermined:
                     Button("Allow calendar access") { Task { await feed.requestAccess() } }
                 case .denied:
+                    Text("Calendar access is off")
+                        .foregroundStyle(Palette.inkSecondary)
                     Button("Open Settings") {
                         if let url = URL(string: UIApplication.openSettingsURLString) { openURL(url) }
                     }
@@ -48,6 +51,13 @@ struct CalendarsSettingsView: View {
         .task {
             await feed.reload()
             await feed.loadCalendars()
+        }
+        .onChange(of: scenePhase) { _, newPhase in
+            guard newPhase == .active else { return }
+            Task {
+                await feed.reload()
+                await feed.loadCalendars()
+            }
         }
     }
 }
