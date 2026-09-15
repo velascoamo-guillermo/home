@@ -68,6 +68,10 @@ actor SyncEngine {
         return try encoder.encode(entity)
     }
 
+    /// Seconds re-read behind the cursor, so a write committed with an earlier server
+    /// timestamp than an already-pulled row is still picked up. Re-applied rows are idempotent.
+    static let pullOverlap: TimeInterval = 5
+
     static let syncedTables: [String] = [
         Pet.tableName, Veterinarian.tableName, Appointment.tableName,
         ClinicalEntry.tableName, PetEvent.tableName, TaskSection.tableName,
@@ -76,11 +80,14 @@ actor SyncEngine {
     ]
 
     func pull(table: String) async throws {
-        let since = try await local.cursor(for: table)
+        let cursor = try await local.cursor(for: table)
+        let since = cursor?.addingTimeInterval(-Self.pullOverlap)
         let blobs = try await gateway.pull(table: table, since: since)
         guard !blobs.isEmpty else { return }
         let maxUpdated = try await reconcile(table: table, blobs: blobs)
-        if let maxUpdated { try await local.setCursor(maxUpdated, for: table) }
+        if let maxUpdated, maxUpdated > cursor ?? .distantPast {
+            try await local.setCursor(maxUpdated, for: table)
+        }
     }
 
     private func reconcile(table: String, blobs: [Data]) async throws -> Date? {
