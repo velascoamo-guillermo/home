@@ -30,7 +30,7 @@ struct Chip: View {
 }
 
 // Button-based press feedback (not a DragGesture) so the chip never blocks an enclosing ScrollView's pan and the press state cannot stick on scroll-steal.
-private struct ChipButtonStyle: ButtonStyle {
+struct ChipButtonStyle: ButtonStyle {
     let fill: Color
     let isSelected: Bool
 

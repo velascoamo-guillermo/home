@@ -5,7 +5,6 @@ import UIKit
 struct PetDetailView: View {
     let pet: Pet
     @Environment(SupabaseStore.self) private var store
-    @Environment(\.dismiss) private var dismiss
     @State private var photoPickerItem: PhotosPickerItem? = nil
     @State private var isUploadingPhoto = false
     @State private var uploadError: String? = nil
@@ -13,36 +12,11 @@ struct PetDetailView: View {
     @State private var showAddAppointment = false
     @State private var showAddEvent = false
     @State private var heroImage: UIImage?
-    @State private var heroTintColor: Color?
+
+    private static let heroHeight: CGFloat = 380
 
     private var currentPet: Pet {
         store.pets.first(where: { $0.id == pet.id }) ?? pet
-    }
-
-    private var heroTint: Color { heroTintColor ?? Color(.systemGray3) }
-
-    /// Foreground color readable on the tinted background.
-    private var onTint: Color {
-        var white: CGFloat = 0
-        UIColor(heroTint).getWhite(&white, alpha: nil)
-        return white > 0.6 ? .black : .white
-    }
-
-    private var ageString: String? {
-        guard let birthday = currentPet.birthday else { return nil }
-        let comps = Calendar.current.dateComponents([.year, .month], from: birthday, to: .now)
-        if let y = comps.year, y > 0 { return "\(y) yr\(y == 1 ? "" : "s")" }
-        if let m = comps.month { return "\(m) mo" }
-        return nil
-    }
-
-    private var metaLine: String? {
-        var parts: [String] = []
-        if let age = ageString { parts.append(age) }
-        if let birthday = currentPet.birthday {
-            parts.append(birthday.formatted(date: .abbreviated, time: .omitted))
-        }
-        return parts.isEmpty ? nil : parts.joined(separator: " · ")
     }
 
     var body: some View {
@@ -53,7 +27,7 @@ struct PetDetailView: View {
             }
         }
         .scrollIndicators(.hidden)
-        .background(heroTint.ignoresSafeArea())
+        .gradientCanvas()
         .ignoresSafeArea(.container, edges: .top)
         .task(id: currentPet.photoUrl) { await loadHero() }
         .sheet(item: $selectedSection) { section in
@@ -71,23 +45,7 @@ struct PetDetailView: View {
         }
         .sheet(isPresented: $showAddAppointment) { AddAppointmentSheet(petId: currentPet.id) }
         .sheet(isPresented: $showAddEvent) { AddEventSheet(petId: currentPet.id) }
-        .navigationBarBackButtonHidden(true)
         .toolbarBackground(.hidden, for: .navigationBar)
-        .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                Button {
-                    dismiss()
-                } label: {
-                    Image(systemName: "chevron.left")
-                        .fontWeight(.semibold)
-                        .foregroundStyle(.white)
-                        .padding(10)
-                        .background(.black.opacity(0.35), in: Circle())
-                }
-                .buttonStyle(.plain)
-                .accessibilityLabel("Back to My Pets")
-            }
-        }
         .onChange(of: photoPickerItem) { _, item in
             guard let item else { return }
             Task { await uploadPhoto(item) }
@@ -105,25 +63,34 @@ struct PetDetailView: View {
     // MARK: - Hero
 
     private var hero: some View {
-        ZStack(alignment: .bottom) {
-            Group {
-                if let img = heroImage {
-                    Image(uiImage: img).resizable().scaledToFill()
-                } else {
-                    Rectangle().fill(.quaternary)
-                        .overlay {
-                            Image(systemName: "pawprint.fill")
-                                .font(.system(size: 64))
-                                .foregroundStyle(.white.opacity(0.5))
-                        }
-                }
+        Group {
+            if let img = heroImage {
+                Image(uiImage: img).resizable().scaledToFill()
+            } else {
+                Rectangle().fill(Palette.pets)
+                    .overlay {
+                        Image(systemName: "pawprint.fill")
+                            .font(.system(size: 64))
+                            .foregroundStyle(Palette.accent.opacity(0.5))
+                            .accessibilityHidden(true)
+                    }
             }
-            .frame(height: 380)
-            .frame(maxWidth: .infinity)
-            .clipped()
-
-            LinearGradient(colors: [.clear, heroTint], startPoint: .center, endPoint: .bottom)
-                .frame(height: 380)
+        }
+        .frame(maxWidth: .infinity)
+        .frame(height: Self.heroHeight)
+        .clipped()
+        // Fade to transparent so the gradient canvas shows through instead of a flat tint.
+        .mask(alignment: .top) {
+            LinearGradient(
+                stops: [
+                    .init(color: .black, location: 0.45),
+                    .init(color: .black.opacity(0.6), location: 0.7),
+                    .init(color: .black.opacity(0.15), location: 0.9),
+                    .init(color: .clear, location: 1),
+                ],
+                startPoint: .top, endPoint: .bottom
+            )
+            .frame(height: Self.heroHeight)
         }
     }
 
@@ -133,92 +100,112 @@ struct PetDetailView: View {
         VStack(spacing: 24) {
             titleBlock
             actionRow
-            sectionsList
+            if let next = PetDetailSummary.nextAppointment(store.appointments(for: currentPet.id), now: .now) {
+                nextUpCard(next)
+            }
+            sectionGrid
         }
         .padding(.horizontal, 20)
+        .padding(.top, -48)
         .padding(.bottom, 32)
     }
 
     private var titleBlock: some View {
-        VStack(spacing: 6) {
+        let age = PetDetailSummary.ageText(birthday: currentPet.birthday, now: .now, calendar: .current)
+        let weight = PetDetailSummary.weightText(store.weightEntries(for: currentPet.id))
+        return VStack(spacing: 10) {
             Text(currentPet.name)
                 .font(.largeTitle.bold())
+                .foregroundStyle(Palette.ink)
                 .multilineTextAlignment(.center)
             Text("\(currentPet.breed) · \(currentPet.type)")
                 .font(.title3)
-                .foregroundStyle(onTint.opacity(0.85))
-            if let meta = metaLine {
-                Text(meta)
-                    .font(.subheadline)
-                    .foregroundStyle(onTint.opacity(0.65))
+                .foregroundStyle(Palette.inkSecondary)
+            if age != nil || weight != nil {
+                HStack(spacing: 8) {
+                    if let age { infoPill(age, systemImage: "birthday.cake") }
+                    if let weight { infoPill(weight, systemImage: "scalemass") }
+                }
             }
         }
-        .foregroundStyle(onTint)
         .frame(maxWidth: .infinity)
     }
 
+    private func infoPill(_ text: String, systemImage: String) -> some View {
+        Label(text, systemImage: systemImage)
+            .font(.footnote.weight(.medium))
+            .foregroundStyle(Palette.ink)
+            .padding(.horizontal, 12)
+            .padding(.vertical, 6)
+            .background(Palette.surface, in: .capsule)
+    }
+
     private var actionRow: some View {
-        HStack(spacing: 16) {
-            CircleActionButton(systemImage: "calendar.day.timeline.left",
-                               tint: onTint, label: "Add event") {
+        HStack(spacing: 8) {
+            Chip(title: "Appointment", systemImage: "plus", fill: Palette.pets, isSelected: false) {
+                showAddAppointment = true
+            }
+            Chip(title: "Event", systemImage: "plus", fill: Palette.tasks, isSelected: false) {
                 showAddEvent = true
             }
-
-            Button {
-                showAddAppointment = true
-            } label: {
-                Label("Add Appointment", systemImage: "calendar.badge.plus")
-                    .font(.headline)
-                    .foregroundStyle(heroTint)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 14)
-                    .background(.white, in: Capsule())
-            }
-
             if isUploadingPhoto {
                 ProgressView()
-                    .frame(width: 52, height: 52)
+                    .frame(width: 44, height: 38)
             } else {
                 PhotosPicker(selection: $photoPickerItem, matching: .images) {
                     Image(systemName: "camera.fill")
-                        .font(.title3)
-                        .foregroundStyle(onTint)
-                        .frame(width: 52, height: 52)
-                        .background(onTint.opacity(0.15), in: Circle())
                 }
+                .buttonStyle(ChipButtonStyle(fill: Palette.stock, isSelected: false))
                 .accessibilityLabel("Change pet photo")
             }
         }
+        .foregroundStyle(Palette.ink)
     }
 
-    private var sectionsList: some View {
-        VStack(spacing: 0) {
+    private func nextUpCard(_ appointment: Appointment) -> some View {
+        Button { selectedSection = .appointments } label: {
+            HStack(spacing: 14) {
+                Circle()
+                    .fill(Palette.pets)
+                    .frame(width: 44, height: 44)
+                    .overlay {
+                        Image(systemName: "stethoscope")
+                            .foregroundStyle(Palette.ink)
+                    }
+                    .accessibilityHidden(true)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("NEXT UP")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(Palette.inkSecondary)
+                    Text(appointment.reason.isEmpty ? "Appointment" : appointment.reason)
+                        .font(.headline)
+                        .foregroundStyle(Palette.ink)
+                        .lineLimit(1)
+                    Text(appointment.date, format: .dateTime.weekday(.abbreviated).day().month(.abbreviated).hour().minute())
+                        .font(.subheadline)
+                        .foregroundStyle(Palette.inkSecondary)
+                }
+                Spacer(minLength: 8)
+                Image(systemName: "chevron.right")
+                    .font(.caption.bold())
+                    .foregroundStyle(Palette.inkSecondary)
+                    .accessibilityHidden(true)
+            }
+            .padding(16)
+            .background(Palette.surface, in: .rect(cornerRadius: 20))
+            .contentShape(.rect)
+        }
+        .buttonStyle(.plain)
+    }
+
+    private var sectionGrid: some View {
+        TileGrid {
             ForEach(PetSection.allCases) { section in
                 Button { selectedSection = section } label: {
-                    HStack(spacing: 14) {
-                        Image(systemName: section.icon)
-                            .font(.body)
-                            .frame(width: 26)
-                        Text(section.title)
-                            .font(.body)
-                        Spacer()
-                        if let count = count(for: section) {
-                            Text("\(count)")
-                                .font(.subheadline)
-                                .foregroundStyle(onTint.opacity(0.6))
-                        }
-                        Image(systemName: "chevron.right")
-                            .font(.caption.bold())
-                            .foregroundStyle(onTint.opacity(0.4))
-                    }
-                    .foregroundStyle(onTint)
-                    .padding(.vertical, 15)
+                    Tile(title: section.title, systemImage: section.icon,
+                         fill: section.fill, badge: count(for: section))
                 }
                 .buttonStyle(.plain)
-
-                if section != PetSection.allCases.last {
-                    Divider().overlay(onTint.opacity(0.2))
-                }
             }
         }
     }
@@ -239,13 +226,11 @@ struct PetDetailView: View {
     private func loadHero() async {
         guard let urlStr = currentPet.photoUrl, let url = URL(string: urlStr) else {
             heroImage = nil
-            heroTintColor = nil
             return
         }
         guard let (data, _) = try? await URLSession.shared.data(from: url),
               let img = UIImage(data: data) else { return }
         heroImage = img
-        heroTintColor = img.averageColor
     }
 
     private func uploadPhoto(_ item: PhotosPickerItem) async {
@@ -286,8 +271,8 @@ private enum PetSection: String, CaseIterable, Identifiable {
         case .appointments: return "calendar"
         case .history:      return "clock.arrow.circlepath"
         case .events:       return "list.bullet"
-        case .weight:       return "scalemass"
-        case .files:        return "folder"
+        case .weight:       return "scalemass.fill"
+        case .files:        return "folder.fill"
         }
     }
 
@@ -301,23 +286,16 @@ private enum PetSection: String, CaseIterable, Identifiable {
         case .files:        return "Files"
         }
     }
-}
 
-private struct CircleActionButton: View {
-    let systemImage: String
-    let tint: Color
-    let label: String
-    let action: () -> Void
-
-    var body: some View {
-        Button(action: action) {
-            Image(systemName: systemImage)
-                .font(.title3)
-                .foregroundStyle(tint)
-                .frame(width: 52, height: 52)
-                .background(tint.opacity(0.15), in: Circle())
+    var fill: Color {
+        switch self {
+        case .vet:          return Palette.pets
+        case .appointments: return Palette.tasks
+        case .history:      return Palette.stock
+        case .events:       return Palette.meals
+        case .weight:       return Palette.shopping
+        case .files:        return Palette.surface
         }
-        .accessibilityLabel(label)
     }
 }
 

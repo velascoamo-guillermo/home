@@ -5,6 +5,8 @@ struct Tile: View {
     let title: String
     let systemImage: String
     let fill: Color
+    /// Count bubble on the icon; hidden when nil or zero.
+    var badge: Int? = nil
     /// Hidden icons pop in (staggered by `entranceIndex`) when this flips to `true`.
     var isRevealed = true
     var entranceIndex = 0
@@ -30,6 +32,17 @@ struct Tile: View {
                         .font(.system(size: 26))
                         .foregroundStyle(Palette.ink)
                 }
+                .overlay(alignment: .topTrailing) {
+                    if let badge, badge > 0 {
+                        Text(badge, format: .number)
+                            .font(.caption2.bold().monospacedDigit())
+                            .foregroundStyle(Palette.onAccent)
+                            .padding(.horizontal, 6)
+                            .frame(minWidth: 22, minHeight: 22)
+                            .background(Palette.accent, in: .capsule)
+                            .offset(x: 4, y: -4)
+                    }
+                }
                 .scaleEffect(showsIcon ? 1 : 0.4)
                 .rotationEffect(showsIcon ? .zero : .degrees(-14))
                 .opacity(showsIcon ? 1 : 0)
@@ -46,7 +59,13 @@ struct Tile: View {
                 .lineLimit(2)
         }
         .frame(maxWidth: .infinity)
-        .accessibilityElement(children: .combine)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Self.accessibilityLabel(title: title, badge: badge))
+    }
+
+    static func accessibilityLabel(title: String, badge: Int?) -> String {
+        guard let badge, badge > 0 else { return title }
+        return "\(title), \(badge)"
     }
 }
 
