@@ -3,6 +3,7 @@ import Foundation
 nonisolated struct StockProduct: Codable, Identifiable, Hashable {
     var id: UUID = UUID()
     var name: String
+    var level: StockLevel
     var packages: Int
     var looseUnits: Int
     var unitsPerPackage: Int
@@ -14,6 +15,16 @@ nonisolated struct StockProduct: Codable, Identifiable, Hashable {
     var deletedAt: Date? = nil
 
     nonisolated var totalUnits: Int { packages * unitsPerPackage + looseUnits }
+
+    func withLevel(_ level: StockLevel) -> StockProduct {
+        var copy = self
+        copy.level = level
+        return copy
+    }
+
+    func steppedDown() -> StockProduct {
+        withLevel(level.steppedDown())
+    }
 
     func consuming(units n: Int) -> StockProduct? {
         guard n >= 1, totalUnits >= n else { return nil }
@@ -28,6 +39,7 @@ nonisolated struct StockProduct: Codable, Identifiable, Hashable {
             }
             remaining -= 1
         }
+        copy.level = StockLevel.from(packages: copy.packages, looseUnits: copy.looseUnits)
         return copy
     }
 
@@ -36,6 +48,7 @@ nonisolated struct StockProduct: Codable, Identifiable, Hashable {
     func replenished() -> StockProduct {
         var copy = self
         copy.packages += 1
+        copy.level = .full
         copy.needed = false
         return copy
     }
@@ -44,7 +57,17 @@ nonisolated struct StockProduct: Codable, Identifiable, Hashable {
         var copy = self
         copy.packages = 0
         copy.looseUnits = 0
+        copy.level = .out
         return copy
+    }
+
+    init(id: UUID = UUID(), name: String, level: StockLevel, needed: Bool = false,
+         createdAt: Date = .now, supermarket: Supermarket? = nil, category: ProductCategory? = nil,
+         updatedAt: Date = .now, deletedAt: Date? = nil) {
+        self.init(id: id, name: name, packages: 0, looseUnits: 0, unitsPerPackage: 1,
+                  needed: needed, createdAt: createdAt, supermarket: supermarket,
+                  category: category, updatedAt: updatedAt, deletedAt: deletedAt)
+        self.level = level
     }
 
     init(id: UUID = UUID(), name: String, packages: Int,
@@ -54,6 +77,7 @@ nonisolated struct StockProduct: Codable, Identifiable, Hashable {
         precondition(unitsPerPackage >= 1, "unitsPerPackage must be >= 1")
         self.id = id
         self.name = name
+        self.level = StockLevel.from(packages: packages, looseUnits: looseUnits)
         self.packages = packages
         self.looseUnits = looseUnits
         self.unitsPerPackage = unitsPerPackage
@@ -66,7 +90,7 @@ nonisolated struct StockProduct: Codable, Identifiable, Hashable {
     }
 
     enum CodingKeys: String, CodingKey {
-        case id, name, packages, needed, supermarket, category
+        case id, name, level, packages, needed, supermarket, category
         case looseUnits      = "loose_units"
         case unitsPerPackage = "units_per_package"
         case createdAt       = "created_at"
@@ -78,9 +102,11 @@ nonisolated struct StockProduct: Codable, Identifiable, Hashable {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         id = try c.decode(UUID.self, forKey: .id)
         name = try c.decode(String.self, forKey: .name)
-        packages = try c.decode(Int.self, forKey: .packages)
-        looseUnits = try c.decode(Int.self, forKey: .looseUnits)
-        unitsPerPackage = try c.decode(Int.self, forKey: .unitsPerPackage)
+        packages = try c.decodeIfPresent(Int.self, forKey: .packages) ?? 0
+        looseUnits = try c.decodeIfPresent(Int.self, forKey: .looseUnits) ?? 0
+        unitsPerPackage = try c.decodeIfPresent(Int.self, forKey: .unitsPerPackage) ?? 1
+        level = try c.decodeIfPresent(StockLevel.self, forKey: .level)
+            ?? StockLevel.from(packages: packages, looseUnits: looseUnits)
         needed = try c.decodeIfPresent(Bool.self, forKey: .needed) ?? false
         createdAt = (try? c.decode(Date.self, forKey: .createdAt)) ?? .now
         supermarket = try c.decodeIfPresent(Supermarket.self, forKey: .supermarket)
