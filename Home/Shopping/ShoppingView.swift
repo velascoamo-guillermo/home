@@ -40,7 +40,7 @@ struct ShoppingView: View {
                 ContentUnavailableView(
                     "Nothing to Buy",
                     systemImage: "cart",
-                    description: Text("Out-of-stock products show up here.")
+                    description: Text("Out and low products show up here.")
                 )
                 .listRowBackground(Color.clear)
             } else {

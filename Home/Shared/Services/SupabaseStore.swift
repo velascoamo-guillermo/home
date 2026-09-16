@@ -21,7 +21,7 @@ final class SupabaseStore {
     var weightEntries: [WeightEntry] = []
 
     var shoppingList: [StockProduct] {
-        stockProducts.filter { $0.totalUnits == 0 || $0.needed }
+        stockProducts.filter(\.isOnShoppingList)
     }
 
     var meals: [Meal] = []

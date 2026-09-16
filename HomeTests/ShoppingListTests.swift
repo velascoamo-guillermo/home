@@ -4,41 +4,37 @@ import Foundation
 
 @Suite("SupabaseStore – shoppingList") @MainActor struct ShoppingListTests {
 
-    private func product(_ name: String, packages: Int, loose: Int,
-                         market: Supermarket? = nil) -> StockProduct {
-        StockProduct(name: name, packages: packages,
-                     looseUnits: loose, unitsPerPackage: 6, supermarket: market)
-    }
-
-    @Test("shoppingList contains only out-of-stock products")
-    func onlyOutOfStock() {
-        let store = SupabaseStore()
+    @Test("shoppingList holds Out and Low products plus anything marked needed")
+    func membership() {
+        let store = SupabaseStore.makeTest()
         store.stockProducts = [
-            product("Milk", packages: 0, loose: 0),
-            product("Eggs", packages: 1, loose: 0),
-            product("Bleach", packages: 0, loose: 0),
+            StockProduct(name: "Milk", level: .out),
+            StockProduct(name: "Bread", level: .low),
+            StockProduct(name: "Rice", level: .medium),
+            StockProduct(name: "Oil", level: .full),
+            StockProduct(name: "Eggs", level: .full, needed: true),
         ]
-        let names = store.shoppingList.map(\.name).sorted()
-        #expect(names == ["Bleach", "Milk"])
+        #expect(store.shoppingList.map(\.name).sorted() == ["Bread", "Eggs", "Milk"])
     }
 
-    @Test("shoppingList is empty when everything is stocked")
+    @Test("shoppingList is empty when everything is Medium or Full")
     func emptyWhenStocked() {
-        let store = SupabaseStore()
-        store.stockProducts = [product("Eggs", packages: 1, loose: 0)]
+        let store = SupabaseStore.makeTest()
+        store.stockProducts = [StockProduct(name: "Rice", level: .medium),
+                               StockProduct(name: "Oil", level: .full)]
         #expect(store.shoppingList.isEmpty)
     }
 
-    @Test("shoppingList includes needed products that still have stock")
-    func includesNeededWithStock() {
-        let store = SupabaseStore()
-        var eggs = product("Eggs", packages: 1, loose: 0)
-        eggs.needed = true
-        store.stockProducts = [
-            product("Milk", packages: 0, loose: 0),
-            eggs,
-            product("Rice", packages: 2, loose: 0),
-        ]
-        #expect(store.shoppingList.map(\.name).sorted() == ["Eggs", "Milk"])
+    @Test("replenish sets Full, clears needed and drops the product from the list")
+    func replenishLeavesList() async throws {
+        let store = SupabaseStore.makeTest()
+        let milk = StockProduct(name: "Milk", level: .low, needed: true)
+        store.stockProducts = [milk]
+
+        try await store.replenish(milk)
+
+        #expect(store.stockProducts.first?.level == .full)
+        #expect(store.stockProducts.first?.needed == false)
+        #expect(store.shoppingList.isEmpty)
     }
 }

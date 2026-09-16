@@ -3,9 +3,9 @@ import Foundation
 @testable import Casita
 
 @Suite @MainActor struct StockProductNeededTests {
-    @Test func decodesLegacyPayloadWithoutNeededAsFalse() throws {
+    @Test func decodesPayloadWithoutNeededAsFalse() throws {
         let json = """
-        {"id":"00000000-0000-0000-0000-000000000001","name":"Milk",         "packages":1,"loose_units":0,"units_per_package":6,
+        {"id":"00000000-0000-0000-0000-000000000001","name":"Milk","level":"full",
          "created_at":"2026-01-01T10:00:00Z","updated_at":"2026-01-01T10:00:00Z"}
         """.data(using: .utf8)!
         let decoder = JSONDecoder()
@@ -16,7 +16,7 @@ import Foundation
 
     @Test func decodesNeededWhenPresent() throws {
         let json = """
-        {"id":"00000000-0000-0000-0000-000000000002","name":"Milk",         "packages":1,"loose_units":0,"units_per_package":6,"needed":true,
+        {"id":"00000000-0000-0000-0000-000000000002","name":"Milk","level":"full","needed":true,
          "created_at":"2026-01-01T10:00:00Z","updated_at":"2026-01-01T10:00:00Z"}
         """.data(using: .utf8)!
         let decoder = JSONDecoder()
@@ -26,28 +26,23 @@ import Foundation
     }
 
     @Test func encodeRoundTripsNeeded() throws {
-        var product = StockProduct(name: "Milk",                                    packages: 1, looseUnits: 0, unitsPerPackage: 6)
-        product.needed = true
+        let product = StockProduct(name: "Milk", level: .full, needed: true)
         let data = try JSONEncoder().encode(product)
         let decoded = try JSONDecoder().decode(StockProduct.self, from: data)
         #expect(decoded.needed == true)
     }
 
-    @Test func replenishedClearsNeeded() {
-        var product = StockProduct(name: "Milk",                                    packages: 0, looseUnits: 0, unitsPerPackage: 6)
-        product.needed = true
-        let replenished = product.replenished()
+    @Test func replenishedSetsFullAndClearsNeeded() {
+        let replenished = StockProduct(name: "Milk", level: .out, needed: true).replenished()
         #expect(replenished.needed == false)
-        #expect(replenished.packages == 1)
+        #expect(replenished.level == .full)
     }
 
-    @Test func shoppingListIncludesNeededWithStock() {
-        let store = SupabaseStore.makeTest()
-        var inStockNeeded = StockProduct(name: "A",                                          packages: 1, looseUnits: 0, unitsPerPackage: 1)
-        inStockNeeded.needed = true
-        let inStockFine = StockProduct(name: "B",                                        packages: 1, looseUnits: 0, unitsPerPackage: 1)
-        let outOfStock = StockProduct(name: "C",                                       packages: 0, looseUnits: 0, unitsPerPackage: 1)
-        store.stockProducts = [inStockNeeded, inStockFine, outOfStock]
-        #expect(Set(store.shoppingList.map(\.name)) == ["A", "C"])
+    @Test func isOnShoppingListCoversOutLowAndNeeded() {
+        #expect(StockProduct(name: "A", level: .out).isOnShoppingList)
+        #expect(StockProduct(name: "A", level: .low).isOnShoppingList)
+        #expect(!StockProduct(name: "A", level: .medium).isOnShoppingList)
+        #expect(!StockProduct(name: "A", level: .full).isOnShoppingList)
+        #expect(StockProduct(name: "A", level: .full, needed: true).isOnShoppingList)
     }
 }

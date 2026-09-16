@@ -26,6 +26,8 @@ nonisolated struct StockProduct: Codable, Identifiable, Hashable {
         withLevel(level.steppedDown())
     }
 
+    var isOnShoppingList: Bool { level.needsRestock || needed }
+
     func consuming(units n: Int) -> StockProduct? {
         guard n >= 1, totalUnits >= n else { return nil }
         var copy = self

@@ -68,10 +68,9 @@ import Foundation
     @Test func quickAddProductUsesShoppingDefaults() {
         let product = ShoppingSession.quickAddProduct(named: "  Leche  ")
         #expect(product?.name == "Leche")
-        #expect(product?.packages == 0)
-        #expect(product?.looseUnits == 0)
-        #expect(product?.unitsPerPackage == 1)
-        #expect(product?.totalUnits == 0)
+        #expect(product?.level == .out)
+        #expect(product?.needed == true)
+        #expect(product?.isOnShoppingList == true)
     }
 
     @Test func quickAddProductRejectsBlankName() {
