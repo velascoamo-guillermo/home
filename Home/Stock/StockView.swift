@@ -20,9 +20,10 @@ struct StockView: View {
                 List {
                     ForEach(store.stockProducts) { product in
                         Button { editing = product } label: {
-                            StockProductRow(product: product, onConsume: { consumeOne(product) })
+                            StockProductRow(product: product, onSetLevel: { setLevel($0, for: product) })
                         }
                         .buttonStyle(.plain)
+                        .accessibilityIdentifier("stockRow-\(product.name)")
                         .pastelRow(Palette.stock)
                         .contextMenu { StockContextMenu(product: product, onDeleteRequest: { productToDelete = $0 }) }
                         .swipeActions(edge: .leading, allowsFullSwipe: true) {
@@ -61,6 +62,11 @@ struct StockView: View {
     private func consumeOne(_ product: StockProduct) {
         guard let consumed = product.consumingOneUnit() else { return }
         Task { try? await store.updateProduct(consumed) }
+    }
+
+    private func setLevel(_ level: StockLevel, for product: StockProduct) {
+        guard level != product.level else { return }
+        Task { try? await store.updateProduct(product.withLevel(level)) }
     }
 }
 

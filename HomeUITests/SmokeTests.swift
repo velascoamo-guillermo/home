@@ -57,23 +57,18 @@ final class SmokeTests: XCTestCase {
         XCTAssertTrue(app.buttons["markDone-Fixture Water Plants"].waitForExistence(timeout: 10))
     }
 
-    func testStockConsumeAndReplenish() throws {
+    func testStockGaugeStepsDown() throws {
         let app = launchApp()
         XCTAssertTrue(app.buttons["Menu"].waitForExistence(timeout: 15))
         openHubScreen(app, row: "Stock")
 
-        let consume = app.buttons["Consume one Fixture Coffee"]
-        XCTAssertTrue(consume.waitForExistence(timeout: 10))
-        consume.tap()
-        XCTAssertTrue(waitForDisappearance(consume, timeout: 10))
+        let gauge = app.descendants(matching: .any)["stockGauge-Fixture Coffee"]
+        XCTAssertTrue(gauge.waitForExistence(timeout: 10))
+        XCTAssertEqual(gauge.label, "Fixture Coffee, Medium")
 
-        let row = app.staticTexts["Fixture Coffee"].firstMatch
-        XCTAssertTrue(row.exists)
-        row.swipeLeft()
-        let replenish = app.buttons["Replenish"]
-        XCTAssertTrue(replenish.waitForExistence(timeout: 10))
-        replenish.tap()
-        XCTAssertTrue(app.buttons["Consume one Fixture Coffee"].waitForExistence(timeout: 10))
+        gauge.tap()
+        XCTAssertTrue(waitForLabel(gauge, "Fixture Coffee, Low", timeout: 10))
+        XCTAssertFalse(app.buttons["Save"].exists)
     }
 
     func testShoppingCheckOffAndFinish() throws {
@@ -162,6 +157,12 @@ final class SmokeTests: XCTestCase {
 
     private func waitForValue(_ element: XCUIElement, _ value: String, timeout: TimeInterval) -> Bool {
         let predicate = NSPredicate(format: "value == %@", value)
+        let expectation = XCTNSPredicateExpectation(predicate: predicate, object: element)
+        return XCTWaiter().wait(for: [expectation], timeout: timeout) == .completed
+    }
+
+    private func waitForLabel(_ element: XCUIElement, _ label: String, timeout: TimeInterval) -> Bool {
+        let predicate = NSPredicate(format: "label == %@", label)
         let expectation = XCTNSPredicateExpectation(predicate: predicate, object: element)
         return XCTWaiter().wait(for: [expectation], timeout: timeout) == .completed
     }
