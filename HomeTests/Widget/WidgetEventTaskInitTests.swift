@@ -35,21 +35,19 @@ struct WidgetEventTaskInitTests {
         #expect(event.subtitle == "Filtro cocina")
     }
 
-    @Test func productNameAppendsSuffix() {
-        let productId = UUID()
+    @Test func productNameAppendsWithoutQuantity() {
         let task = HouseholdTask(
             title: "Reponer sal",
             intervalDays: 7,
             nextDueDate: .now,
-            notes: "",
-            productId: productId,
+            notes: "Cocina",
+            productId: UUID(),
             quantityPerCompletion: 2
         )
 
         let event = WidgetEvent(task: task, productName: "Sal gruesa")
 
-        #expect(event.subtitle.contains("Sal gruesa"))
-        #expect(event.subtitle.contains("× 2"))
+        #expect(event.subtitle == "Cocina · Sal gruesa")
     }
 
     @Test func nilProductNameOmitsSuffixEvenWithProductId() {
@@ -57,13 +55,13 @@ struct WidgetEventTaskInitTests {
             title: "Reponer sal",
             intervalDays: 7,
             nextDueDate: .now,
-            notes: "",
+            notes: "Cocina",
             productId: UUID(),
             quantityPerCompletion: 2
         )
 
         let event = WidgetEvent(task: task, productName: nil)
 
-        #expect(!event.subtitle.contains("×"))
+        #expect(event.subtitle == "Cocina")
     }
 }

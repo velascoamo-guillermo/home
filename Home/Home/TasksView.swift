@@ -29,10 +29,7 @@ struct TasksView: View {
                                 case .task(let t):
                                     TaskContextMenu(task: t) { result in
                                         if case .outOfStock(let product) = result {
-                                            outOfStock = OutOfStockInfo(
-                                                product: product,
-                                                needed: t.quantityPerCompletion
-                                            )
+                                            outOfStock = OutOfStockInfo(product: product)
                                         }
                                     }
                                 case .event(let e, let pet):
@@ -96,7 +93,7 @@ struct TasksView: View {
         Task {
             if let result = try? await store.completeTask(t),
                case .outOfStock(let product) = result {
-                outOfStock = OutOfStockInfo(product: product, needed: t.quantityPerCompletion)
+                outOfStock = OutOfStockInfo(product: product)
             }
         }
     }

@@ -100,7 +100,7 @@ struct AgendaView: View {
             AgendaRow(item: item, onComplete: { complete(task) })
                 .contentShape(Rectangle())
                 .onTapGesture { editingTask = task }
-                .contextMenu { TaskContextMenu(task: task) { handle($0, for: task) } }
+                .contextMenu { TaskContextMenu(task: task) { handle($0) } }
                 .pastelRow(fill)
         case .appointment(let appt, let pet):
             AgendaRow(item: item)
@@ -123,14 +123,14 @@ struct AgendaView: View {
     private func complete(_ task: HouseholdTask) {
         Task {
             if let result = try? await store.completeTask(task) {
-                handle(result, for: task)
+                handle(result)
             }
         }
     }
 
-    private func handle(_ result: SupabaseStore.CompletionResult, for task: HouseholdTask) {
+    private func handle(_ result: SupabaseStore.CompletionResult) {
         if case .outOfStock(let product) = result {
-            outOfStock = OutOfStockInfo(product: product, needed: task.quantityPerCompletion)
+            outOfStock = OutOfStockInfo(product: product)
         }
     }
 

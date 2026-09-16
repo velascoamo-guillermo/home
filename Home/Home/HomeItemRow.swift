@@ -79,7 +79,7 @@ struct HomeItemRow: View {
                 : t.notes
             if let id = t.productId,
                let product = store.stockProducts.first(where: { $0.id == id }) {
-                return "\(base) · \(product.name) × \(t.quantityPerCompletion)"
+                return "\(base) · \(product.name)"
             }
             return base
         case .event(let e, let p):

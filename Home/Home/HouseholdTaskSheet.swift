@@ -16,7 +16,6 @@ struct HouseholdTaskSheet: View {
     @State private var dateTouched = false
     @State private var notes = ""
     @State private var productId: UUID? = nil
-    @State private var quantityPerCompletion = 1
     @State private var showSectionPicker = false
 
     private var isEditing: Bool { existing != nil }
@@ -33,7 +32,6 @@ struct HouseholdTaskSheet: View {
             _intervalValue = State(initialValue: val)
             _intervalUnit  = State(initialValue: unit)
             _productId     = State(initialValue: t.productId)
-            _quantityPerCompletion = State(initialValue: t.quantityPerCompletion)
         }
     }
 
@@ -80,10 +78,6 @@ struct HouseholdTaskSheet: View {
                         ForEach(store.stockProducts) { product in
                             Text(product.name).tag(UUID?.some(product.id))
                         }
-                    }
-                    if productId != nil {
-                        Stepper("Units per completion: \(quantityPerCompletion)",
-                                value: $quantityPerCompletion, in: 1...99)
                     }
                 }
 
@@ -144,7 +138,6 @@ struct HouseholdTaskSheet: View {
         task.nextDueDate  = nextDueDate
         task.notes        = notes.trimmingCharacters(in: .whitespaces)
         task.productId    = productId
-        task.quantityPerCompletion = quantityPerCompletion
 
         Task {
             if isEditing {

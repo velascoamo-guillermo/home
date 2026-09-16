@@ -85,28 +85,24 @@ struct WidgetSnapshotWriterTests {
         #expect(snapshot.events[0].kind == .task)
     }
 
-    @Test func taskEventWithProductAppendsSuffix() {
+    @Test func taskEventWithProductAppendsProductName() {
         let productId = UUID()
         let task = HouseholdTask(
             title: "Reponer sal",
             intervalDays: 7,
             nextDueDate: .now,
-            notes: "",
+            notes: "Cocina",
             productId: productId,
             quantityPerCompletion: 2
         )
-        let product = StockProduct(
-            id: productId, name: "Sal gruesa",             packages: 1, looseUnits: 0, unitsPerPackage: 5
-        )
+        let product = StockProduct(id: productId, name: "Sal gruesa", level: .full)
         let items: [HomeItem] = [.task(task)]
 
         let snapshot = WidgetSnapshotWriter.buildSnapshot(
             timeline: items, stockProducts: [product], lunch: nil, dinner: nil
         )
 
-        let subtitle = snapshot.events[0].subtitle
-        #expect(subtitle.contains("Sal gruesa"))
-        #expect(subtitle.contains("× 2"))
+        #expect(snapshot.events[0].subtitle == "Cocina · Sal gruesa")
     }
 
     // MARK: - buildSnapshot – meals
