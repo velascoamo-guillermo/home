@@ -22,8 +22,14 @@ Deno.serve(async (req) => {
       .map((c: { id: string; title: string }) => `- ${c.title} (meal_id="${c.id}")`)
       .join("\n");
 
+    const levelLabel: Record<string, string> = {
+      out: "agotado", low: "queda poco", medium: "a medias", full: "lleno",
+    };
     const stockList = (stock ?? [])
-      .map((s: { name: string; totalUnits: number }) => `- ${s.name} (${s.totalUnits} unidades)`)
+      .map((s: { name: string; level?: string; totalUnits?: number }) =>
+        s.level
+          ? `- ${s.name} (${levelLabel[s.level] ?? s.level})`
+          : `- ${s.name} (${s.totalUnits ?? 0} unidades)`)
       .join("\n");
 
     const slotsList = (slots ?? [])

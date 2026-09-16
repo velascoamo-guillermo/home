@@ -5,19 +5,18 @@ import XCTest
 final class SupabaseStoreMealTests: XCTestCase {
     func testMealEntryResolvesViaMenuEntry() {
         let store = SupabaseStore.makeTest()
-        let rice = StockProduct(name: "Rice", packages: 1,
-                                looseUnits: 0, unitsPerPackage: 10)
+        let rice = StockProduct(name: "Rice", level: .full)
         let meal = Meal(title: "Risotto")
         store.stockProducts = [rice]
         store.meals = [meal]
         store.menuEntries = [MenuEntry(dayOfWeek: 2, slot: .dinner, mealId: meal.id)]
-        store.mealProducts = [MealProduct(mealId: meal.id, productId: rice.id, quantity: 4)]
+        store.mealProducts = [MealProduct(mealId: meal.id, productId: rice.id)]
 
         let entry = store.mealEntry(day: 2, slot: .dinner)
         XCTAssertNotNil(entry)
         XCTAssertEqual(entry?.meal.title, "Risotto")
         XCTAssertEqual(entry?.links.count, 1)
-        XCTAssertEqual(entry?.links.first?.quantity, 4)
+        XCTAssertEqual(entry?.links.first?.product.id, rice.id)
     }
 
     func testMealEntryNilForEmptySlotAndDanglingMealId() {
@@ -164,16 +163,5 @@ final class SupabaseStoreMealTests: XCTestCase {
         XCTAssertTrue(store.meals.isEmpty)
         XCTAssertTrue(store.menuEntries.isEmpty)
         XCTAssertTrue(store.mealProducts.isEmpty)
-    }
-}
-
-extension SupabaseStoreMealTests {
-    func testConsumingClampsAtAvailableUnits() {
-        let p = StockProduct(name: "Eggs", packages: 0,
-                             looseUnits: 2, unitsPerPackage: 1)
-        XCTAssertNil(p.consuming(units: 3))
-        let take = min(3, p.totalUnits)
-        XCTAssertEqual(take, 2)
-        XCTAssertEqual(p.consuming(units: take)?.totalUnits, 0)
     }
 }

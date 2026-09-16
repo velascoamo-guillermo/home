@@ -120,10 +120,8 @@ struct WidgetSnapshotWriterTests {
     @Test func presentMealEntryMapsCorrectly() {
         let meal = Meal(title: "Pasta carbonara")
         let productId = UUID()
-        let product = StockProduct(
-            id: productId, name: "Panceta",             packages: 1, looseUnits: 0, unitsPerPackage: 1
-        )
-        let link = MealEntry.Link(product: product, quantity: 1)
+        let product = StockProduct(id: productId, name: "Panceta", level: .full)
+        let link = MealEntry.Link(product: product)
         let entry = MealEntry(menuEntry: MenuEntry(dayOfWeek: 1, slot: .lunch, mealId: meal.id),
                               meal: meal, links: [link])
 
@@ -139,10 +137,8 @@ struct WidgetSnapshotWriterTests {
 
     @Test func isShortPropagates() {
         let meal = Meal(title: "Paella")
-        let product = StockProduct(
-            name: "Arroz",             packages: 0, looseUnits: 0, unitsPerPackage: 1  // totalUnits = 0
-        )
-        let link = MealEntry.Link(product: product, quantity: 2)  // needs 2, has 0
+        let product = StockProduct(name: "Arroz", level: .out)
+        let link = MealEntry.Link(product: product)
         let entry = MealEntry(menuEntry: MenuEntry(dayOfWeek: 1, slot: .dinner, mealId: meal.id),
                               meal: meal, links: [link])
 

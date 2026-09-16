@@ -66,7 +66,7 @@ struct MealFormSheet: View {
             .compactMap { mp in
                 guard let product = store.stockProducts.first(where: { $0.id == mp.productId })
                 else { return nil }
-                return MealEntry.Link(product: product, quantity: mp.quantity)
+                return MealEntry.Link(product: product)
             }
     }
 
