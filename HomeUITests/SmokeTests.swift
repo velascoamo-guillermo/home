@@ -65,6 +65,7 @@ final class SmokeTests: XCTestCase {
         let gauge = app.descendants(matching: .any)["stockGauge-Fixture Coffee"]
         XCTAssertTrue(gauge.waitForExistence(timeout: 10))
         XCTAssertEqual(gauge.label, "Fixture Coffee, Medium")
+        XCTAssertEqual(gauge.elementType, .button)
 
         gauge.tap()
         XCTAssertTrue(waitForLabel(gauge, "Fixture Coffee, Low", timeout: 10))

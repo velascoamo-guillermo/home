@@ -16,25 +16,25 @@ struct StockProductRow: View {
             }
             Spacer()
             if let onSetLevel {
-                levelIndicator
-                    .opacity(product.level == .out ? 0.55 : 1)
-                    .onTapGesture {
-                        guard product.level > .out else { return }
-                        onSetLevel(product.level.steppedDown())
+                Button {
+                    guard product.level > .out else { return }
+                    onSetLevel(product.level.steppedDown())
+                } label: {
+                    levelIndicator
+                }
+                .buttonStyle(.borderless)
+                .opacity(product.level == .out ? 0.55 : 1)
+                .sensoryFeedback(.decrease, trigger: product.level) { old, new in new < old }
+                .accessibilityLabel(accessibilityText)
+                .accessibilityHint("Double tap to lower level")
+                .accessibilityIdentifier("stockGauge-\(product.name)")
+                .accessibilityAdjustableAction { direction in
+                    switch direction {
+                    case .increment: onSetLevel(product.level.steppedUp())
+                    case .decrement: onSetLevel(product.level.steppedDown())
+                    @unknown default: break
                     }
-                    .sensoryFeedback(.decrease, trigger: product.level) { old, new in new < old }
-                    .accessibilityElement(children: .ignore)
-                    .accessibilityAddTraits(.isButton)
-                    .accessibilityLabel(accessibilityText)
-                    .accessibilityHint("Double tap to lower level")
-                    .accessibilityIdentifier("stockGauge-\(product.name)")
-                    .accessibilityAdjustableAction { direction in
-                        switch direction {
-                        case .increment: onSetLevel(product.level.steppedUp())
-                        case .decrement: onSetLevel(product.level.steppedDown())
-                        @unknown default: break
-                        }
-                    }
+                }
             } else {
                 levelIndicator
                     .accessibilityElement(children: .ignore)
