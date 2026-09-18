@@ -60,7 +60,7 @@ import Foundation
         let engine = SyncEngine(local: store, gateway: gateway)
         let cursor = try #require(SyncDateCoding.date(from: "2026-09-14T20:08:05Z"))
         try await store.setCursor(cursor, for: "stock_products")
-        let product = StockProduct(name: "Milk", packages: 1, looseUnits: 0, unitsPerPackage: 6)
+        let product = StockProduct(name: "Milk", level: .full)
         await gateway.setPull("stock_products", [try blob(product, updatedAt: "2026-09-14T20:08:02Z")])
 
         try await engine.pull(table: "stock_products")

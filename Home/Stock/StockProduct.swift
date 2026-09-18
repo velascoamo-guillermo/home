@@ -4,9 +4,6 @@ nonisolated struct StockProduct: Codable, Identifiable, Hashable {
     var id: UUID = UUID()
     var name: String
     var level: StockLevel
-    var packages: Int
-    var looseUnits: Int
-    var unitsPerPackage: Int
     var needed: Bool = false
     var createdAt: Date = .now
     var supermarket: Supermarket?
@@ -14,7 +11,7 @@ nonisolated struct StockProduct: Codable, Identifiable, Hashable {
     var updatedAt: Date = .now
     var deletedAt: Date? = nil
 
-    nonisolated var totalUnits: Int { packages * unitsPerPackage + looseUnits }
+    var isOnShoppingList: Bool { level.needsRestock || needed }
 
     func withLevel(_ level: StockLevel) -> StockProduct {
         var copy = self
@@ -26,63 +23,18 @@ nonisolated struct StockProduct: Codable, Identifiable, Hashable {
         withLevel(level.steppedDown())
     }
 
-    var isOnShoppingList: Bool { level.needsRestock || needed }
-
-    func consuming(units n: Int) -> StockProduct? {
-        guard n >= 1, totalUnits >= n else { return nil }
-        var copy = self
-        var remaining = n
-        while remaining > 0 {
-            if copy.looseUnits > 0 {
-                copy.looseUnits -= 1
-            } else {
-                copy.packages -= 1
-                copy.looseUnits = copy.unitsPerPackage - 1
-            }
-            remaining -= 1
-        }
-        copy.level = StockLevel.from(packages: copy.packages, looseUnits: copy.looseUnits)
-        return copy
-    }
-
-    func consumingOneUnit() -> StockProduct? { consuming(units: 1) }
-
     func replenished() -> StockProduct {
-        var copy = self
-        copy.packages += 1
-        copy.level = .full
+        var copy = withLevel(.full)
         copy.needed = false
-        return copy
-    }
-
-    func emptied() -> StockProduct {
-        var copy = self
-        copy.packages = 0
-        copy.looseUnits = 0
-        copy.level = .out
         return copy
     }
 
     init(id: UUID = UUID(), name: String, level: StockLevel, needed: Bool = false,
          createdAt: Date = .now, supermarket: Supermarket? = nil, category: ProductCategory? = nil,
          updatedAt: Date = .now, deletedAt: Date? = nil) {
-        self.init(id: id, name: name, packages: 0, looseUnits: 0, unitsPerPackage: 1,
-                  needed: needed, createdAt: createdAt, supermarket: supermarket,
-                  category: category, updatedAt: updatedAt, deletedAt: deletedAt)
-        self.level = level
-    }
-
-    init(id: UUID = UUID(), name: String, packages: Int,
-         looseUnits: Int, unitsPerPackage: Int, needed: Bool = false, createdAt: Date = .now,
-         supermarket: Supermarket? = nil, category: ProductCategory? = nil,
-         updatedAt: Date = .now, deletedAt: Date? = nil) {
-        precondition(unitsPerPackage >= 1, "unitsPerPackage must be >= 1")
         self.id = id
         self.name = name
-        self.level = StockLevel.from(packages: packages, looseUnits: looseUnits)
-        self.packages = packages
-        self.looseUnits = looseUnits
-        self.unitsPerPackage = unitsPerPackage
+        self.level = level
         self.needed = needed
         self.createdAt = createdAt
         self.supermarket = supermarket
@@ -92,23 +44,31 @@ nonisolated struct StockProduct: Codable, Identifiable, Hashable {
     }
 
     enum CodingKeys: String, CodingKey {
-        case id, name, level, packages, needed, supermarket, category
-        case looseUnits      = "loose_units"
-        case unitsPerPackage = "units_per_package"
-        case createdAt       = "created_at"
-        case updatedAt       = "updated_at"
-        case deletedAt       = "deleted_at"
+        case id, name, level, needed, supermarket, category
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
+        case deletedAt = "deleted_at"
+    }
+
+    // Cached rows and outbox blobs written before levels existed carry unit counts instead.
+    private enum LegacyUnitKeys: String, CodingKey {
+        case packages
+        case loose = "loose_units"
     }
 
     init(from decoder: any Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         id = try c.decode(UUID.self, forKey: .id)
         name = try c.decode(String.self, forKey: .name)
-        packages = try c.decodeIfPresent(Int.self, forKey: .packages) ?? 0
-        looseUnits = try c.decodeIfPresent(Int.self, forKey: .looseUnits) ?? 0
-        unitsPerPackage = try c.decodeIfPresent(Int.self, forKey: .unitsPerPackage) ?? 1
-        level = try c.decodeIfPresent(StockLevel.self, forKey: .level)
-            ?? StockLevel.from(packages: packages, looseUnits: looseUnits)
+        if let decodedLevel = try c.decodeIfPresent(StockLevel.self, forKey: .level) {
+            level = decodedLevel
+        } else {
+            let legacy = try decoder.container(keyedBy: LegacyUnitKeys.self)
+            level = StockLevel.from(
+                packages: try legacy.decodeIfPresent(Int.self, forKey: .packages) ?? 0,
+                looseUnits: try legacy.decodeIfPresent(Int.self, forKey: .loose) ?? 0
+            )
+        }
         needed = try c.decodeIfPresent(Bool.self, forKey: .needed) ?? false
         createdAt = (try? c.decode(Date.self, forKey: .createdAt)) ?? .now
         supermarket = try c.decodeIfPresent(Supermarket.self, forKey: .supermarket)

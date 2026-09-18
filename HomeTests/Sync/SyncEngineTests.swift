@@ -31,7 +31,7 @@ actor FakeGateway: RemoteGateway {
         return (SyncEngine(local: store, gateway: gw), store, gw)
     }
     private func product() -> StockProduct {
-        StockProduct(name: "Milk", packages: 1, looseUnits: 0, unitsPerPackage: 6)
+        StockProduct(name: "Milk", level: .full)
     }
 
     @Test("successful push clears the outbox op")
@@ -87,12 +87,12 @@ actor FakeGateway: RemoteGateway {
         #expect(pushedUpdatedAt == updatedAt)
     }
 
-    @Test("legacy stock payload with an icon key drops it and keeps stock fields")
+    @Test("legacy stock payload gains a level from its units and drops icon and unit keys")
     func normalizesLegacyProductPayload() async throws {
         let (engine, store, gw) = try await make()
         let id = UUID()
         let blob = Data("""
-            {"id":"\(id.uuidString)","name":"Milk","icon":"x","packages":2,
+            {"id":"\(id.uuidString)","name":"Milk","icon":"x","packages":0,
              "loose_units":3,"units_per_package":6,"needed":true,
              "created_at":"2024-06-01T12:00:00+00:00",
              "updated_at":"2024-06-01T12:00:00+00:00"}
@@ -105,9 +105,10 @@ actor FakeGateway: RemoteGateway {
         let obj = try await pushedObject(gw)
         #expect(obj["icon"] == nil)
         #expect(obj["name"] as? String == "Milk")
-        #expect(obj["packages"] as? Int == 2)
-        #expect(obj["loose_units"] as? Int == 3)
-        #expect(obj["units_per_package"] as? Int == 6)
+        #expect(obj["level"] as? String == "low")
+        #expect(obj["packages"] == nil)
+        #expect(obj["loose_units"] == nil)
+        #expect(obj["units_per_package"] == nil)
         #expect(obj["needed"] as? Bool == true)
     }
 
@@ -138,8 +139,7 @@ actor FakeGateway: RemoteGateway {
     }
 
     private func blob(id: UUID, name: String, updatedAt: Date, deletedAt: Date? = nil) throws -> Data {
-        let p = StockProduct(id: id, name: name, packages: 1, looseUnits: 0,
-                             unitsPerPackage: 6, updatedAt: updatedAt, deletedAt: deletedAt)
+        let p = StockProduct(id: id, name: name, level: .full, updatedAt: updatedAt, deletedAt: deletedAt)
         let e = JSONEncoder()
         e.dateEncodingStrategy = .iso8601
         return try e.encode(p)
@@ -159,8 +159,7 @@ actor FakeGateway: RemoteGateway {
     func localWins() async throws {
         let (engine, store, gw) = try await make()
         let id = UUID()
-        let newer = StockProduct(id: id, name: "Local", packages: 1, looseUnits: 0,
-                                 unitsPerPackage: 6, updatedAt: .now)
+        let newer = StockProduct(id: id, name: "Local", level: .full, updatedAt: .now)
         try await store.upsert([newer], enqueue: false)
         await gw.setPull("stock_products",
                          [try blob(id: id, name: "Remote", updatedAt: .now.addingTimeInterval(-60))])
@@ -172,8 +171,7 @@ actor FakeGateway: RemoteGateway {
     func remoteTombstone() async throws {
         let (engine, store, gw) = try await make()
         let id = UUID()
-        try await store.upsert([StockProduct(id: id, name: "Milk", packages: 1,
-                                             looseUnits: 0, unitsPerPackage: 6)], enqueue: false)
+        try await store.upsert([StockProduct(id: id, name: "Milk", level: .full)], enqueue: false)
         await gw.setPull("stock_products",
                          [try blob(id: id, name: "Milk", updatedAt: .now.addingTimeInterval(60),
                                    deletedAt: .now.addingTimeInterval(60))])
@@ -186,8 +184,7 @@ actor FakeGateway: RemoteGateway {
         let (engine, store, gw) = try await make()
         let id = UUID()
         let ts = Date.now
-        let local = StockProduct(id: id, name: "Local", packages: 1,
-                                 looseUnits: 0, unitsPerPackage: 6, updatedAt: ts)
+        let local = StockProduct(id: id, name: "Local", level: .full, updatedAt: ts)
         try await store.upsert([local], enqueue: false)
         await gw.setPull("stock_products", [try blob(id: id, name: "Remote", updatedAt: ts)])
         try await engine.pull(table: "stock_products")

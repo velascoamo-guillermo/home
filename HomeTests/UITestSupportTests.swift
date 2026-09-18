@@ -21,11 +21,12 @@ import Foundation
         #expect(store.householdTasks.count == 2)
 
         let filters = store.stockProducts.first { $0.name == "Fixture Filters" }
-        #expect(filters?.totalUnits == 0)
+        #expect(filters?.level == .out)
         #expect(store.shoppingList.map(\.name) == ["Fixture Filters"])
 
         let milk = store.stockProducts.first { $0.name == "Fixture Milk" }
-        #expect(milk?.totalUnits == 12)
+        #expect(milk?.level == .full)
+        #expect(store.stockProducts.first { $0.name == "Fixture Coffee" }?.level == .medium)
 
         let linked = store.householdTasks.first { $0.title == "Fixture Change Filter" }
         #expect(linked?.productId == filters?.id)
