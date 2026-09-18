@@ -72,6 +72,39 @@ final class SmokeTests: XCTestCase {
         XCTAssertFalse(app.buttons["Save"].exists)
     }
 
+    func testStockSwipeMarksBought() throws {
+        let app = launchApp()
+        XCTAssertTrue(app.buttons["Menu"].waitForExistence(timeout: 15))
+        openHubScreen(app, row: "Stock")
+
+        let gauge = app.descendants(matching: .any)["stockGauge-Fixture Filters"]
+        XCTAssertTrue(gauge.waitForExistence(timeout: 10))
+        XCTAssertEqual(gauge.label, "Fixture Filters, Out")
+
+        app.staticTexts["Fixture Filters"].firstMatch.swipeRight()
+        let bought = app.buttons["Bought"]
+        if bought.waitForExistence(timeout: 3) { bought.tap() }
+        XCTAssertTrue(waitForLabel(gauge, "Fixture Filters, Full", timeout: 10))
+    }
+
+    func testStockChipsFilterByLevel() throws {
+        let app = launchApp()
+        XCTAssertTrue(app.buttons["Menu"].waitForExistence(timeout: 15))
+        openHubScreen(app, row: "Stock")
+
+        let outChip = app.buttons["Out 1"]
+        XCTAssertTrue(outChip.waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["All 3"].exists)
+        XCTAssertFalse(app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'Low '")).firstMatch.exists)
+
+        outChip.tap()
+        XCTAssertTrue(waitForDisappearance(app.staticTexts["Fixture Milk"], timeout: 10))
+        XCTAssertTrue(app.staticTexts["Fixture Filters"].exists)
+
+        app.buttons["Out 1"].tap()
+        XCTAssertTrue(app.staticTexts["Fixture Milk"].waitForExistence(timeout: 10))
+    }
+
     func testShoppingCheckOffAndFinish() throws {
         let app = launchApp()
         XCTAssertTrue(app.buttons["Menu"].waitForExistence(timeout: 15))
