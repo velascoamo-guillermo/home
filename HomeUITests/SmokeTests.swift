@@ -105,6 +105,29 @@ final class SmokeTests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Fixture Milk"].waitForExistence(timeout: 10))
     }
 
+    func testAddProductWithLevel() throws {
+        let app = launchApp()
+        XCTAssertTrue(app.buttons["Menu"].waitForExistence(timeout: 15))
+        openHubScreen(app, row: "Stock")
+
+        let add = app.buttons["Add product"]
+        XCTAssertTrue(add.waitForExistence(timeout: 10))
+        add.tap()
+
+        let name = app.textFields["Name"].firstMatch
+        XCTAssertTrue(name.waitForExistence(timeout: 10))
+        name.tap()
+        name.typeText("Fixture Soap")
+        let low = app.segmentedControls.buttons["Low"]
+        XCTAssertTrue(low.waitForExistence(timeout: 10))
+        low.tap()
+        app.buttons["Save"].tap()
+
+        let gauge = app.descendants(matching: .any)["stockGauge-Fixture Soap"]
+        XCTAssertTrue(gauge.waitForExistence(timeout: 10))
+        XCTAssertEqual(gauge.label, "Fixture Soap, Low")
+    }
+
     func testShoppingCheckOffAndFinish() throws {
         let app = launchApp()
         XCTAssertTrue(app.buttons["Menu"].waitForExistence(timeout: 15))
