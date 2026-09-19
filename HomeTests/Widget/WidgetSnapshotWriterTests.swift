@@ -85,28 +85,24 @@ struct WidgetSnapshotWriterTests {
         #expect(snapshot.events[0].kind == .task)
     }
 
-    @Test func taskEventWithProductAppendsSuffix() {
+    @Test func taskEventWithProductAppendsProductName() {
         let productId = UUID()
         let task = HouseholdTask(
             title: "Reponer sal",
             intervalDays: 7,
             nextDueDate: .now,
-            notes: "",
+            notes: "Cocina",
             productId: productId,
             quantityPerCompletion: 2
         )
-        let product = StockProduct(
-            id: productId, name: "Sal gruesa",             packages: 1, looseUnits: 0, unitsPerPackage: 5
-        )
+        let product = StockProduct(id: productId, name: "Sal gruesa", level: .full)
         let items: [HomeItem] = [.task(task)]
 
         let snapshot = WidgetSnapshotWriter.buildSnapshot(
             timeline: items, stockProducts: [product], lunch: nil, dinner: nil
         )
 
-        let subtitle = snapshot.events[0].subtitle
-        #expect(subtitle.contains("Sal gruesa"))
-        #expect(subtitle.contains("× 2"))
+        #expect(snapshot.events[0].subtitle == "Cocina · Sal gruesa")
     }
 
     // MARK: - buildSnapshot – meals
@@ -124,10 +120,8 @@ struct WidgetSnapshotWriterTests {
     @Test func presentMealEntryMapsCorrectly() {
         let meal = Meal(title: "Pasta carbonara")
         let productId = UUID()
-        let product = StockProduct(
-            id: productId, name: "Panceta",             packages: 1, looseUnits: 0, unitsPerPackage: 1
-        )
-        let link = MealEntry.Link(product: product, quantity: 1)
+        let product = StockProduct(id: productId, name: "Panceta", level: .full)
+        let link = MealEntry.Link(product: product)
         let entry = MealEntry(menuEntry: MenuEntry(dayOfWeek: 1, slot: .lunch, mealId: meal.id),
                               meal: meal, links: [link])
 
@@ -143,10 +137,8 @@ struct WidgetSnapshotWriterTests {
 
     @Test func isShortPropagates() {
         let meal = Meal(title: "Paella")
-        let product = StockProduct(
-            name: "Arroz",             packages: 0, looseUnits: 0, unitsPerPackage: 1  // totalUnits = 0
-        )
-        let link = MealEntry.Link(product: product, quantity: 2)  // needs 2, has 0
+        let product = StockProduct(name: "Arroz", level: .out)
+        let link = MealEntry.Link(product: product)
         let entry = MealEntry(menuEntry: MenuEntry(dayOfWeek: 1, slot: .dinner, mealId: meal.id),
                               meal: meal, links: [link])
 

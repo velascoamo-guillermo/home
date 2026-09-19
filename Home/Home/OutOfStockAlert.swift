@@ -3,7 +3,10 @@ import SwiftUI
 struct OutOfStockInfo: Identifiable {
     let id = UUID()
     let product: StockProduct
-    let needed: Int
+
+    var message: String {
+        "\(product.name) is out of stock. Restock it — the task was marked done anyway."
+    }
 }
 
 extension View {
@@ -28,7 +31,7 @@ private struct OutOfStockAlertModifier: ViewModifier {
             }
             Button("OK", role: .cancel) { }
         } message: { i in
-            Text("Needs \(i.needed), only \(i.product.totalUnits) left. Restock \(i.product.name) — the task was marked done anyway.")
+            Text(i.message)
         }
     }
 }

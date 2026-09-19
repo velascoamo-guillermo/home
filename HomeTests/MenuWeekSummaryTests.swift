@@ -4,13 +4,11 @@ import Foundation
 
 @Suite("MenuWeekSummary") @MainActor struct MenuWeekSummaryTests {
 
-    private func entry(_ day: Weekday, _ slot: MealSlot, stock: Int? = nil, needed: Bool = false) -> MealEntry {
+    private func entry(_ day: Weekday, _ slot: MealSlot, stock: StockLevel? = nil, needed: Bool = false) -> MealEntry {
         let meal = Meal(title: "\(day.displayName) \(slot.displayName)")
         var links: [MealEntry.Link] = []
         if let stock {
-            var product = StockProduct(name: "Rice", packages: 0, looseUnits: stock, unitsPerPackage: 1)
-            product.needed = needed
-            links = [MealEntry.Link(product: product, quantity: 2)]
+            links = [MealEntry.Link(product: StockProduct(name: "Rice", level: stock, needed: needed))]
         }
         return MealEntry(menuEntry: MenuEntry(dayOfWeek: day.rawValue, slot: slot, mealId: meal.id),
                          meal: meal, links: links)
@@ -40,9 +38,9 @@ import Foundation
     @Test("short count excludes meals whose missing items are already on the shopping list")
     func shortCount() {
         let summary = MenuWeekSummary(entries: [
-            entry(.monday, .lunch, stock: 0),
-            entry(.tuesday, .lunch, stock: 0, needed: true),
-            entry(.friday, .dinner, stock: 5),
+            entry(.monday, .lunch, stock: .out),
+            entry(.tuesday, .lunch, stock: .out, needed: true),
+            entry(.friday, .dinner, stock: .low),
         ])
         #expect(summary.shortCount == 1)
         #expect(summary.firstShortDay(from: .tuesday) == .monday)

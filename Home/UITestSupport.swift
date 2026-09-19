@@ -32,12 +32,9 @@ enum UITestSupport {
     }
 
     static func seed(_ store: SupabaseStore) async {
-        let milk = StockProduct(name: "Fixture Milk",
-                                packages: 2, looseUnits: 0, unitsPerPackage: 6)
-        let coffee = StockProduct(name: "Fixture Coffee",
-                                  packages: 1, looseUnits: 0, unitsPerPackage: 1)
-        let filters = StockProduct(name: "Fixture Filters",
-                                   packages: 0, looseUnits: 0, unitsPerPackage: 1)
+        let milk = StockProduct(name: "Fixture Milk", level: .full)
+        let coffee = StockProduct(name: "Fixture Coffee", level: .medium)
+        let filters = StockProduct(name: "Fixture Filters", level: .out)
         try? await store.addProduct(milk)
         try? await store.addProduct(coffee)
         try? await store.addProduct(filters)

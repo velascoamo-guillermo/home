@@ -7,9 +7,7 @@ struct AddStockProductSheet: View {
     let existing: StockProduct?
 
     @State private var name = ""
-    @State private var unitsPerPackage = 1
-    @State private var packages = 1
-    @State private var looseUnits = 0
+    @State private var level: StockLevel = .full
     @State private var supermarket: Supermarket?
     @State private var category: ProductCategory?
 
@@ -18,12 +16,10 @@ struct AddStockProductSheet: View {
     init(existing: StockProduct? = nil) {
         self.existing = existing
         if let p = existing {
-            _name            = State(initialValue: p.name)
-            _unitsPerPackage = State(initialValue: p.unitsPerPackage)
-            _packages        = State(initialValue: p.packages)
-            _looseUnits      = State(initialValue: p.looseUnits)
-            _supermarket     = State(initialValue: p.supermarket)
-            _category        = State(initialValue: p.category)
+            _name        = State(initialValue: p.name)
+            _level       = State(initialValue: p.level)
+            _supermarket = State(initialValue: p.supermarket)
+            _category    = State(initialValue: p.category)
         }
     }
 
@@ -32,6 +28,12 @@ struct AddStockProductSheet: View {
             Form {
                 Section("Product") {
                     TextField("Name", text: $name)
+                    Picker("Level", selection: $level) {
+                        ForEach(StockLevel.allCases, id: \.self) { level in
+                            Text(level.displayName).tag(level)
+                        }
+                    }
+                    .pickerStyle(.segmented)
                     Picker("Supermarket", selection: $supermarket) {
                         Text("None").tag(Supermarket?.none)
                         ForEach(Supermarket.allCases) { market in
@@ -52,12 +54,6 @@ struct AddStockProductSheet: View {
                 } footer: {
                     Text("Tap the selected category again to clear.")
                 }
-                Section("Quantities") {
-                    Stepper("Units per package: \(unitsPerPackage)",
-                            value: $unitsPerPackage, in: 1...99)
-                    Stepper("Full packages: \(packages)", value: $packages, in: 0...999)
-                    Stepper("Loose units: \(looseUnits)", value: $looseUnits, in: 0...999)
-                }
             }
             .scrollContentBackground(.hidden)
             .gradientCanvas()
@@ -76,11 +72,9 @@ struct AddStockProductSheet: View {
     }
 
     private func save() {
-        var product = existing ?? StockProduct(name: "", packages: 0, looseUnits: 0, unitsPerPackage: 1)
-        product.name            = name.trimmingCharacters(in: .whitespaces)
-        product.unitsPerPackage = unitsPerPackage
-        product.packages        = packages
-        product.looseUnits      = looseUnits
+        var product = existing ?? StockProduct(name: "", level: level)
+        product.name        = name.trimmingCharacters(in: .whitespaces)
+        product.level       = level
         product.supermarket = supermarket
         product.category    = category
 

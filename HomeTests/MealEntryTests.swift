@@ -3,34 +3,22 @@ import XCTest
 
 @MainActor
 final class MealEntryTests: XCTestCase {
-    private func product(units: Int) -> StockProduct {
-        StockProduct(name: "Rice", packages: 0,
-                     looseUnits: units, unitsPerPackage: 1)
+    private func entry(_ levels: [StockLevel]) -> MealEntry {
+        let meal = Meal(title: "X")
+        return MealEntry(menuEntry: MenuEntry(dayOfWeek: 1, slot: .lunch, mealId: meal.id),
+                         meal: meal,
+                         links: levels.map { MealEntry.Link(product: StockProduct(name: "Rice", level: $0)) })
     }
 
-    func testShortWhenQuantityExceedsStock() {
-        let p = product(units: 1)
-        let meal = Meal(title: "X")
-        let entry = MealEntry(menuEntry: MenuEntry(dayOfWeek: 1, slot: .lunch, mealId: meal.id),
-                              meal: meal,
-                              links: [MealEntry.Link(product: p, quantity: 2)])
-        XCTAssertTrue(entry.isShort)
+    func testShortWhenAnyLinkedProductIsOut() {
+        XCTAssertTrue(entry([.full, .out]).isShort)
     }
 
-    func testNotShortWhenStockSufficient() {
-        let p = product(units: 5)
-        let meal = Meal(title: "X")
-        let entry = MealEntry(menuEntry: MenuEntry(dayOfWeek: 1, slot: .lunch, mealId: meal.id),
-                              meal: meal,
-                              links: [MealEntry.Link(product: p, quantity: 5)])
-        XCTAssertFalse(entry.isShort)
+    func testLowAndAboveAreNotShort() {
+        XCTAssertFalse(entry([.low, .medium, .full]).isShort)
     }
 
     func testNotShortWhenNoLinks() {
-        let meal = Meal(title: "X")
-        let entry = MealEntry(menuEntry: MenuEntry(dayOfWeek: 1, slot: .lunch, mealId: meal.id),
-                              meal: meal,
-                              links: [])
-        XCTAssertFalse(entry.isShort)
+        XCTAssertFalse(entry([]).isShort)
     }
 }

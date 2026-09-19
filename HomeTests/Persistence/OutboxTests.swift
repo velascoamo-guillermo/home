@@ -9,7 +9,7 @@ import Foundation
         return try await LocalStore(url: url)
     }
     private func product(_ id: UUID, _ name: String) -> StockProduct {
-        StockProduct(id: id, name: name, packages: 1, looseUnits: 0, unitsPerPackage: 6)
+        StockProduct(id: id, name: name, level: .full)
     }
 
     @Test("two edits to same entity coalesce into one op")

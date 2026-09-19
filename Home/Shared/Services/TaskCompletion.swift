@@ -27,10 +27,10 @@ nonisolated enum TaskCompletion {
             return Plan(updatedTask: updatedTask, updatedProduct: nil, result: .noProduct)
         }
 
-        guard let consumed = product.consuming(units: task.quantityPerCompletion) else {
+        guard product.level > .out else {
             return Plan(updatedTask: updatedTask, updatedProduct: nil, result: .outOfStock(product))
         }
 
-        return Plan(updatedTask: updatedTask, updatedProduct: consumed, result: .consumed)
+        return Plan(updatedTask: updatedTask, updatedProduct: product.steppedDown(), result: .consumed)
     }
 }

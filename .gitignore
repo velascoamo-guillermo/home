@@ -12,3 +12,4 @@ fastlane/build_output/
 .codegraph/
 supabase/.temp/
 *.p8
+.argent/

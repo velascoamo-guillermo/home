@@ -5,11 +5,10 @@ import Foundation
 @Suite @MainActor struct TaskCompletionTests {
     private let cal = Calendar.current
 
-    private func task(interval: Int = 7, productId: UUID? = nil, qty: Int = 1) -> HouseholdTask {
+    private func task(interval: Int = 7, productId: UUID? = nil) -> HouseholdTask {
         var t = HouseholdTask(title: "t", intervalDays: interval,
                               nextDueDate: cal.date(byAdding: .day, value: -1, to: .now)!)
         t.productId = productId
-        t.quantityPerCompletion = qty
         return t
     }
 
@@ -21,18 +20,34 @@ import Foundation
         #expect(plan.updatedProduct == nil)
     }
 
-    @Test func consumesLinkedProduct() {
-        let p = StockProduct(name: "p", packages: 1, looseUnits: 0, unitsPerPackage: 2)
-        let plan = TaskCompletion.plan(for: task(productId: p.id, qty: 1), stockProducts: [p])
+    @Test func fullStepsDownToMedium() {
+        let p = StockProduct(name: "p", level: .full)
+        let plan = TaskCompletion.plan(for: task(productId: p.id), stockProducts: [p])
         #expect(plan.result == .consumed)
-        #expect(plan.updatedProduct?.totalUnits == 1)
+        #expect(plan.updatedProduct?.level == .medium)
+        #expect(plan.updatedProduct?.id == p.id)
     }
 
-    @Test func outOfStockWhenInsufficient() {
-        let p = StockProduct(name: "p", packages: 0, looseUnits: 1, unitsPerPackage: 1)
-        let plan = TaskCompletion.plan(for: task(productId: p.id, qty: 2), stockProducts: [p])
+    @Test func lowStepsDownToOut() {
+        let p = StockProduct(name: "p", level: .low)
+        let plan = TaskCompletion.plan(for: task(productId: p.id), stockProducts: [p])
+        #expect(plan.result == .consumed)
+        #expect(plan.updatedProduct?.level == .out)
+    }
+
+    @Test func outIsOutOfStockAndLeavesProductUntouched() {
+        let p = StockProduct(name: "p", level: .out)
+        let plan = TaskCompletion.plan(for: task(productId: p.id), stockProducts: [p])
         #expect(plan.result == .outOfStock(p))
         #expect(plan.updatedProduct == nil)
+    }
+
+    @Test func quantityPerCompletionNoLongerChangesTheStep() {
+        let p = StockProduct(name: "p", level: .full)
+        var t = task(productId: p.id)
+        t.quantityPerCompletion = 5
+        let plan = TaskCompletion.plan(for: t, stockProducts: [p])
+        #expect(plan.updatedProduct?.level == .medium)
     }
 
     @Test func unknownProductIdIsNoProduct() {

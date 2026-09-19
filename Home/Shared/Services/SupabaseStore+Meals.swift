@@ -18,7 +18,7 @@ extension SupabaseStore {
                 guard let product = stockProducts.first(where: { $0.id == mp.productId }) else {
                     return nil
                 }
-                return MealEntry.Link(product: product, quantity: mp.quantity)
+                return MealEntry.Link(product: product)
             }
     }
 
@@ -55,7 +55,7 @@ extension SupabaseStore {
         for mp in existing { try await _local?.softDelete(mp, enqueue: true) }
         mealProducts.removeAll { $0.mealId == meal.id }
         let rows = links.map {
-            MealProduct(mealId: meal.id, productId: $0.product.id, quantity: $0.quantity)
+            MealProduct(mealId: meal.id, productId: $0.product.id)
         }
         if !rows.isEmpty {
             let stamped = rows.map { mp -> MealProduct in var m = mp; m.updatedAt = .now; return m }
@@ -122,9 +122,8 @@ extension SupabaseStore {
     func cookMeal(_ entry: MealEntry) async throws {
         for link in entry.links {
             let current = stockProducts.first(where: { $0.id == link.product.id }) ?? link.product
-            let take = min(link.quantity, current.totalUnits)
-            guard take > 0, let consumed = current.consuming(units: take) else { continue }
-            try await updateProduct(consumed)
+            guard current.level > .out else { continue }
+            try await updateProduct(current.steppedDown())
         }
     }
 
@@ -142,7 +141,7 @@ extension SupabaseStore {
     func suggestWeek() async throws {
         guard reachability.isOnline else { throw SyncError.requiresConnection }
         struct CatalogItem: Encodable { let id: UUID; let title: String }
-        struct StockItem: Encodable { let name: String; let totalUnits: Int }
+        struct StockItem: Encodable { let name: String; let level: StockLevel }
         struct SlotRef: Encodable { let day: Int; let slot: String }
         struct PlannedRef: Encodable { let day: Int; let slot: String; let title: String }
         struct RequestBody: Encodable {
@@ -165,7 +164,7 @@ extension SupabaseStore {
 
         let body = RequestBody(
             catalog: catalog.map { CatalogItem(id: $0.id, title: $0.title) },
-            stock: stockProducts.map { StockItem(name: $0.name, totalUnits: $0.totalUnits) },
+            stock: stockProducts.map { StockItem(name: $0.name, level: $0.level) },
             slots: slots.map { SlotRef(day: $0.day, slot: $0.slot.rawValue) },
             planned: planned
         )

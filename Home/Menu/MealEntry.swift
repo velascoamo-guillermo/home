@@ -3,7 +3,6 @@ import Foundation
 struct MealEntry: Identifiable, Hashable {
     struct Link: Hashable {
         var product: StockProduct
-        var quantity: Int
     }
 
     var menuEntry: MenuEntry
@@ -17,7 +16,7 @@ struct MealEntry: Identifiable, Hashable {
     }
 
     nonisolated var shortLinks: [Link] {
-        links.filter { $0.product.totalUnits < $0.quantity }
+        links.filter { $0.product.level == .out }
     }
 
     nonisolated var allShortNeeded: Bool {

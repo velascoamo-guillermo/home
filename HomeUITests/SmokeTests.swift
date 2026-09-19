@@ -57,23 +57,101 @@ final class SmokeTests: XCTestCase {
         XCTAssertTrue(app.buttons["markDone-Fixture Water Plants"].waitForExistence(timeout: 10))
     }
 
-    func testStockConsumeAndReplenish() throws {
+    func testStockGaugeStepsDown() throws {
         let app = launchApp()
         XCTAssertTrue(app.buttons["Menu"].waitForExistence(timeout: 15))
         openHubScreen(app, row: "Stock")
 
-        let consume = app.buttons["Consume one Fixture Coffee"]
-        XCTAssertTrue(consume.waitForExistence(timeout: 10))
-        consume.tap()
-        XCTAssertTrue(waitForDisappearance(consume, timeout: 10))
+        let gauge = app.descendants(matching: .any)["stockGauge-Fixture Coffee"]
+        XCTAssertTrue(gauge.waitForExistence(timeout: 10))
+        XCTAssertEqual(gauge.label, "Fixture Coffee, Medium")
+        XCTAssertEqual(gauge.elementType, .button)
 
-        let row = app.staticTexts["Fixture Coffee"].firstMatch
-        XCTAssertTrue(row.exists)
-        row.swipeLeft()
-        let replenish = app.buttons["Replenish"]
-        XCTAssertTrue(replenish.waitForExistence(timeout: 10))
-        replenish.tap()
-        XCTAssertTrue(app.buttons["Consume one Fixture Coffee"].waitForExistence(timeout: 10))
+        gauge.tap()
+        XCTAssertTrue(waitForLabel(gauge, "Fixture Coffee, Low", timeout: 10))
+        XCTAssertFalse(app.buttons["Save"].exists)
+    }
+
+    func testStockSwipeMarksBought() throws {
+        let app = launchApp()
+        XCTAssertTrue(app.buttons["Menu"].waitForExistence(timeout: 15))
+        openHubScreen(app, row: "Stock")
+
+        let gauge = app.descendants(matching: .any)["stockGauge-Fixture Filters"]
+        XCTAssertTrue(gauge.waitForExistence(timeout: 10))
+        XCTAssertEqual(gauge.label, "Fixture Filters, Out")
+
+        app.staticTexts["Fixture Filters"].firstMatch.swipeRight()
+        let bought = app.buttons["Bought"]
+        if bought.waitForExistence(timeout: 3) { bought.tap() }
+        XCTAssertTrue(waitForLabel(gauge, "Fixture Filters, Full", timeout: 10))
+    }
+
+    func testStockChipsFilterByLevel() throws {
+        let app = launchApp()
+        XCTAssertTrue(app.buttons["Menu"].waitForExistence(timeout: 15))
+        openHubScreen(app, row: "Stock")
+
+        let outChip = app.buttons["Out 1"]
+        XCTAssertTrue(outChip.waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["All 3"].exists)
+        XCTAssertFalse(app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'Low '")).firstMatch.exists)
+
+        outChip.tap()
+        XCTAssertTrue(waitForDisappearance(app.staticTexts["Fixture Milk"], timeout: 10))
+        XCTAssertTrue(app.staticTexts["Fixture Filters"].exists)
+
+        app.buttons["Out 1"].tap()
+        XCTAssertTrue(app.staticTexts["Fixture Milk"].waitForExistence(timeout: 10))
+    }
+
+    func testAddProductWithLevel() throws {
+        let app = launchApp()
+        XCTAssertTrue(app.buttons["Menu"].waitForExistence(timeout: 15))
+        openHubScreen(app, row: "Stock")
+
+        let add = app.buttons["Add product"]
+        XCTAssertTrue(add.waitForExistence(timeout: 10))
+        add.tap()
+
+        let name = app.textFields["Name"].firstMatch
+        XCTAssertTrue(name.waitForExistence(timeout: 10))
+        name.tap()
+        name.typeText("Fixture Soap")
+        let low = app.segmentedControls.buttons["Low"]
+        XCTAssertTrue(low.waitForExistence(timeout: 10))
+        low.tap()
+        app.buttons["Save"].tap()
+
+        let gauge = app.descendants(matching: .any)["stockGauge-Fixture Soap"]
+        XCTAssertTrue(gauge.waitForExistence(timeout: 10))
+        XCTAssertEqual(gauge.label, "Fixture Soap, Low")
+    }
+
+    func testDeletingProductAsksForConfirmation() throws {
+        let app = launchApp()
+        XCTAssertTrue(app.buttons["Menu"].waitForExistence(timeout: 15))
+        openHubScreen(app, row: "Stock")
+
+        let row = app.staticTexts["Fixture Milk"].firstMatch
+        XCTAssertTrue(row.waitForExistence(timeout: 10))
+        row.press(forDuration: 1.0)
+
+        let deleteAction = app.buttons["Delete"]
+        XCTAssertTrue(deleteAction.waitForExistence(timeout: 10))
+        deleteAction.tap()
+
+        let dialogTitle = app.staticTexts["Delete Fixture Milk?"]
+        XCTAssertTrue(dialogTitle.waitForExistence(timeout: 10))
+        // The confirmation renders as a compact anchored popover with only the
+        // destructive action (no separate Cancel button); tapping the system
+        // dismiss region behind it — the same gesture the popover teaches the
+        // user — is how you back out.
+        let dismissRegion = app.descendants(matching: .any)["PopoverDismissRegion"]
+        XCTAssertTrue(dismissRegion.waitForExistence(timeout: 5))
+        dismissRegion.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.9)).tap()
+        XCTAssertTrue(waitForDisappearance(dialogTitle, timeout: 10))
+        XCTAssertTrue(app.staticTexts["Fixture Milk"].waitForExistence(timeout: 10))
     }
 
     func testShoppingCheckOffAndFinish() throws {
@@ -162,6 +240,12 @@ final class SmokeTests: XCTestCase {
 
     private func waitForValue(_ element: XCUIElement, _ value: String, timeout: TimeInterval) -> Bool {
         let predicate = NSPredicate(format: "value == %@", value)
+        let expectation = XCTNSPredicateExpectation(predicate: predicate, object: element)
+        return XCTWaiter().wait(for: [expectation], timeout: timeout) == .completed
+    }
+
+    private func waitForLabel(_ element: XCUIElement, _ label: String, timeout: TimeInterval) -> Bool {
+        let predicate = NSPredicate(format: "label == %@", label)
         let expectation = XCTNSPredicateExpectation(predicate: predicate, object: element)
         return XCTWaiter().wait(for: [expectation], timeout: timeout) == .completed
     }

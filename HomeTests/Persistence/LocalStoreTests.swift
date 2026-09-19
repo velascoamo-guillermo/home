@@ -10,7 +10,7 @@ import Foundation
     }
 
     private func product(_ name: String) -> StockProduct {
-        StockProduct(name: name, packages: 1, looseUnits: 0, unitsPerPackage: 6)
+        StockProduct(name: name, level: .full)
     }
 
     @Test("upsert then fetchAll returns the row")

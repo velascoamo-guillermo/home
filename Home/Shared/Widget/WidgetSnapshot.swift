@@ -21,14 +21,14 @@ nonisolated struct WidgetEvent: Codable, Sendable, Identifiable {
 }
 
 extension WidgetEvent {
-    // Mirrors WidgetSnapshotWriter's subtitle composition exactly (no format change).
+    // Shared by WidgetSnapshotWriter and CompleteTaskIntent so task subtitles stay identical.
     nonisolated init(task: HouseholdTask, productName: String?, now: Date = .now) {
         let base = task.notes.isEmpty
             ? task.nextDueDate.formatted(date: .abbreviated, time: .omitted)
             : task.notes
         var subtitle = base
         if task.productId != nil, let productName {
-            subtitle = "\(base) · \(productName) × \(task.quantityPerCompletion)"
+            subtitle = "\(base) · \(productName)"
         }
         self.init(
             id: task.id,

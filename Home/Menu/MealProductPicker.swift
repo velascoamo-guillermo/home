@@ -6,32 +6,25 @@ struct MealProductPicker: View {
 
     var body: some View {
         ForEach(store.stockProducts.filter { $0.category == .food }) { product in
-            let index = links.firstIndex { $0.product.id == product.id }
+            let isLinked = links.contains { $0.product.id == product.id }
             Button {
-                if let index {
-                    links.remove(at: index)
+                if isLinked {
+                    links.removeAll { $0.product.id == product.id }
                 } else {
-                    links.append(MealEntry.Link(product: product, quantity: 1))
+                    links.append(MealEntry.Link(product: product))
                 }
             } label: {
                 HStack {
-                    Image(systemName: index != nil ? "checkmark.circle.fill" : "circle")
-                        .foregroundStyle(index != nil ? AnyShapeStyle(.tint) : AnyShapeStyle(.secondary))
+                    Image(systemName: isLinked ? "checkmark.circle.fill" : "circle")
+                        .foregroundStyle(isLinked ? AnyShapeStyle(.tint) : AnyShapeStyle(.secondary))
+                        .accessibilityHidden(true)
                     Text(product.name)
                     Spacer()
-                    if let index {
-                        Stepper(
-                            "\(links[index].quantity)",
-                            value: $links[index].quantity,
-                            in: 1...999
-                        )
-                        .labelsHidden()
-                        Text("\(links[index].quantity)").monospacedDigit().frame(width: 28)
-                    }
                 }
                 .contentShape(.rect)
             }
             .buttonStyle(.plain)
+            .accessibilityAddTraits(isLinked ? .isSelected : [])
         }
     }
 }

@@ -12,7 +12,7 @@ import Foundation
 
     @Test func intentStyleCompletionWritesTaskAndProductOutboxOps() async throws {
         let store = try await makeStore()
-        let product = StockProduct(name: "Filters",                                    packages: 1, looseUnits: 0, unitsPerPackage: 1)
+        let product = StockProduct(name: "Filters", level: .medium)
         var task = HouseholdTask(title: "Change filter",                                  intervalDays: 30, nextDueDate: .now)
         task.productId = product.id
         try await store.upsert([product], enqueue: false)
@@ -40,6 +40,6 @@ import Foundation
         #expect(abs(storedNextDueDate.timeIntervalSince1970
                     - updatedTask.nextDueDate.timeIntervalSince1970) < 1)
         let storedProducts = try await store.fetchAll(StockProduct.self)
-        #expect(storedProducts.first?.totalUnits == 0)
+        #expect(storedProducts.first?.level == .low)
     }
 }
