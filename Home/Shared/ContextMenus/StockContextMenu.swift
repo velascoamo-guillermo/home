@@ -31,8 +31,7 @@ struct StockContextMenu: View {
         }
 
         Button(role: .destructive) {
-            if store.householdTasks.contains(where: { $0.productId == product.id }),
-               let onDeleteRequest {
+            if let onDeleteRequest {
                 onDeleteRequest(product)
             } else {
                 Task { try? await store.deleteProduct(product) }
@@ -47,7 +46,7 @@ extension View {
     }
 }
 
-private struct ProductDeleteDialog: ViewModifier {
+struct ProductDeleteDialog: ViewModifier {
     @Binding var product: StockProduct?
     @Environment(SupabaseStore.self) private var store
 
@@ -66,7 +65,15 @@ private struct ProductDeleteDialog: ViewModifier {
             }
         } message: { p in
             let n = store.householdTasks.count { $0.productId == p.id }
-            Text("Unlinks \(n) task\(n == 1 ? "" : "s") pointing at it.")
+            Text(ProductDeleteDialog.deleteMessage(taskCount: n))
+        }
+    }
+
+    nonisolated static func deleteMessage(taskCount: Int) -> String {
+        if taskCount == 0 {
+            return "This can't be undone."
+        } else {
+            return "Unlinks \(taskCount) task\(taskCount == 1 ? "" : "s") pointing at it."
         }
     }
 }

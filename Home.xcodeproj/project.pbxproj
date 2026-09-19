@@ -51,6 +51,7 @@
 		38CA1CBDB011A8C6591B15DF /* Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC262E814DA0E9986D5584F6 /* Navigation.swift */; };
 		39A37148A96FCFA8514AED04 /* CompleteTaskIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FF9A424CE1A6036BF1AE55A /* CompleteTaskIntent.swift */; };
 		39F739F8BF71953261C79E1E /* HubTileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D417FE8A4E9C6F77B4186EE7 /* HubTileTests.swift */; };
+		3DC823BFEE3914B7A91370EF /* StockDeleteDialogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244DE4E675A66191F4EB75A1 /* StockDeleteDialogTests.swift */; };
 		3E64928E949373E0FDFAB0BB /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DACB8785E9B997314DDA68E3 /* SearchView.swift */; };
 		4006EBD590F809D8C994F6D6 /* FlatRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C5B71A2B12122C1472E6DE6 /* FlatRow.swift */; };
 		4058855340D879AED1C58A12 /* WeightEntryStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBD05E9E51504422D866DC2D /* WeightEntryStoreTests.swift */; };
@@ -302,6 +303,7 @@
 		1D0158180053E7D22DC9B44E /* AgendaSection.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AgendaSection.swift; sourceTree = "<group>"; };
 		239C164751EBD9737D8745C2 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		23DBDF147B2AFB6506292479 /* HomeWidgetEntry.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HomeWidgetEntry.swift; sourceTree = "<group>"; };
+		244DE4E675A66191F4EB75A1 /* StockDeleteDialogTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StockDeleteDialogTests.swift; sourceTree = "<group>"; };
 		28F9C24E7C55F51A3B65ACC1 /* CalendarFeed.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CalendarFeed.swift; sourceTree = "<group>"; };
 		2A42C7D06A49055F588C8624 /* WidgetSnapshotWriterTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetSnapshotWriterTests.swift; sourceTree = "<group>"; };
 		2A77C088219913ED29CF4865 /* SearchEngine.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SearchEngine.swift; sourceTree = "<group>"; };
@@ -1065,6 +1067,7 @@
 				8D8B20DD471EA7D7D5E94985 /* StockProductLevelTests.swift */,
 				2D48AC1C572C84D369000E39 /* MealStockLevelTests.swift */,
 				49DD808308D999CBC360A75A /* StockListModelTests.swift */,
+				244DE4E675A66191F4EB75A1 /* StockDeleteDialogTests.swift */,
 			);
 			path = HomeTests;
 			sourceTree = "<group>";
@@ -1512,6 +1515,7 @@
 				6021D6269F0D3F0A72CEAA4D /* StockProductLevelTests.swift in Sources */,
 				4EB82649B4E7D08950479D5E /* MealStockLevelTests.swift in Sources */,
 				DC170082CE7744FC4D87721C /* StockListModelTests.swift in Sources */,
+				3DC823BFEE3914B7A91370EF /* StockDeleteDialogTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
