@@ -128,6 +128,32 @@ final class SmokeTests: XCTestCase {
         XCTAssertEqual(gauge.label, "Fixture Soap, Low")
     }
 
+    func testDeletingProductAsksForConfirmation() throws {
+        let app = launchApp()
+        XCTAssertTrue(app.buttons["Menu"].waitForExistence(timeout: 15))
+        openHubScreen(app, row: "Stock")
+
+        let row = app.staticTexts["Fixture Milk"].firstMatch
+        XCTAssertTrue(row.waitForExistence(timeout: 10))
+        row.press(forDuration: 1.0)
+
+        let deleteAction = app.buttons["Delete"]
+        XCTAssertTrue(deleteAction.waitForExistence(timeout: 10))
+        deleteAction.tap()
+
+        let dialogTitle = app.staticTexts["Delete Fixture Milk?"]
+        XCTAssertTrue(dialogTitle.waitForExistence(timeout: 10))
+        // The confirmation renders as a compact anchored popover with only the
+        // destructive action (no separate Cancel button); tapping the system
+        // dismiss region behind it — the same gesture the popover teaches the
+        // user — is how you back out.
+        let dismissRegion = app.descendants(matching: .any)["PopoverDismissRegion"]
+        XCTAssertTrue(dismissRegion.waitForExistence(timeout: 5))
+        dismissRegion.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.9)).tap()
+        XCTAssertTrue(waitForDisappearance(dialogTitle, timeout: 10))
+        XCTAssertTrue(app.staticTexts["Fixture Milk"].waitForExistence(timeout: 10))
+    }
+
     func testShoppingCheckOffAndFinish() throws {
         let app = launchApp()
         XCTAssertTrue(app.buttons["Menu"].waitForExistence(timeout: 15))

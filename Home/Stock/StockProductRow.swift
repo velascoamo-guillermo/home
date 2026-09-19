@@ -26,7 +26,7 @@ struct StockProductRow: View {
                 .opacity(product.level == .out ? 0.55 : 1)
                 .sensoryFeedback(.decrease, trigger: product.level) { old, new in new < old }
                 .accessibilityLabel(accessibilityText)
-                .accessibilityHint("Double tap to lower level")
+                .accessibilityHint(product.level == .out ? "Already out of stock" : "Double tap to lower level")
                 .accessibilityIdentifier("stockGauge-\(product.name)")
                 .accessibilityAdjustableAction { direction in
                     switch direction {

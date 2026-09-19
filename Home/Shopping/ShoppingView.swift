@@ -5,6 +5,7 @@ struct ShoppingView: View {
     @State private var session = ShoppingSession()
     @State private var newItemName = ""
     @State private var failedNames: [String] = []
+    @State private var productToDelete: StockProduct? = nil
 
     private struct MarketGroup: Identifiable {
         let id: String
@@ -78,6 +79,7 @@ struct ShoppingView: View {
         } message: {
             Text("Failed for: \(failedNames.joined(separator: ", ")). Try again.")
         }
+        .productDeleteDialog($productToDelete)
     }
 
     private func row(for product: StockProduct) -> some View {
@@ -102,7 +104,7 @@ struct ShoppingView: View {
         .accessibilityHint(checked ? "Unchecks this item" : "Checks this item off the list")
         .swipeActions(edge: .trailing) {
             Button(role: .destructive) {
-                Task { try? await store.deleteProduct(product) }
+                productToDelete = product
             } label: { Label("Delete", systemImage: "trash") }
         }
     }

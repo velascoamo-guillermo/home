@@ -88,7 +88,7 @@ struct StockView: View {
         }
         .swipeActions(edge: .trailing) {
             Button(role: .destructive) {
-                Task { try? await store.deleteProduct(product) }
+                productToDelete = product
             } label: { Label("Delete", systemImage: "trash") }
         }
     }
