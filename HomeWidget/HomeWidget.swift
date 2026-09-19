@@ -12,5 +12,6 @@ struct HomeWidget: Widget {
         .configurationDisplayName("Hogar")
         .description("Próximos eventos y menú de hoy.")
         .supportedFamilies([.systemMedium, .systemLarge])
+        .contentMarginsDisabled()
     }
 }

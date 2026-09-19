@@ -46,6 +46,10 @@ nonisolated struct WidgetMeal: Codable, Sendable {
     var products: [String]
     var isShort: Bool
     var isEmpty: Bool
+
+    var slotLabel: String {
+        slot == "lunch" ? "Comida" : "Cena"
+    }
 }
 
 // MARK: - Placeholder
