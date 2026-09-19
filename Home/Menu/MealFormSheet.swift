@@ -14,6 +14,7 @@ struct MealFormSheet: View {
     @State private var proteinText: String
     @State private var carbsText: String
     @State private var fatText: String
+    @State private var errorMessage: String?
 
     init(existing: Meal?, onSaved: ((Meal) -> Void)? = nil) {
         self.existing = existing
@@ -56,6 +57,14 @@ struct MealFormSheet: View {
                 }
             }
             .task { loadLinks() }
+            .alert("No se pudo guardar", isPresented: Binding(
+                get: { errorMessage != nil },
+                set: { if !$0 { errorMessage = nil } }
+            )) {
+                Button("OK", role: .cancel) {}
+            } message: {
+                Text(errorMessage ?? "")
+            }
         }
     }
 
@@ -101,7 +110,7 @@ struct MealFormSheet: View {
             onSaved?(meal)
             dismiss()
         } catch {
-            dismiss()
+            errorMessage = error.localizedDescription
         }
     }
 }
