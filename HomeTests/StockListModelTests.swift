@@ -89,4 +89,61 @@ import Foundation
         let food = StockListModel(products: sample).groups.first
         #expect(food?.products.map(\.name) == ["Apples", "Eggs", "Café", "Milk"])
     }
+
+    // MARK: - Category filter
+
+    @Test("a category chip keeps only products in that category")
+    func filterByCategory() {
+        let model = StockListModel(products: sample, category: .food)
+        #expect(model.groups.count == 1)
+        #expect(names(model) == ["Apples", "Eggs", "Café", "Milk"])
+        #expect(names(StockListModel(products: sample, category: .hygiene)) == ["Soap"])
+    }
+
+    @Test("category counts stay stable: they ignore the active level filter")
+    func categoryCountsAreLevelBlind() {
+        let all = StockListModel(products: sample)
+        #expect(all.count(for: .food) == 4)
+        #expect(all.title(for: .food) == "Food 4")
+
+        let out = StockListModel(products: sample, filter: .out)
+        #expect(out.count(for: .food) == 4)
+        #expect(out.title(for: .cleaning) == "Cleaning 1")
+    }
+
+    @Test("level counts are faceted by the active category")
+    func levelCountsFollowCategory() {
+        let food = StockListModel(products: sample, category: .food)
+        #expect(food.count(for: .all) == 4)
+        #expect(food.count(for: .out) == 0)
+        #expect(food.count(for: .low) == 2)
+        #expect(food.visibleFilters == [.all, .low])
+    }
+
+    @Test("only categories that hold products get a chip, and the level filter never moves them")
+    func visibleCategories() {
+        #expect(StockListModel(products: sample).visibleCategories == [.food, .cleaning, .hygiene])
+        #expect(StockListModel(products: sample, filter: .out).visibleCategories == [.food, .cleaning, .hygiene])
+        #expect(StockListModel(products: []).visibleCategories == [])
+    }
+
+    @Test("a category holding nothing falls back to all categories")
+    func staleCategoryFallsBack() {
+        let model = StockListModel(products: sample, category: .other)
+        #expect(model.effectiveCategory == nil)
+        #expect(model.groups.map(\.category) == [.food, .cleaning, .hygiene, nil])
+    }
+
+    @Test("a level with no products in the chosen category falls back to All within it")
+    func staleLevelInsideCategory() {
+        let model = StockListModel(products: sample, filter: .out, category: .food)
+        #expect(model.effectiveFilter == .all)
+        #expect(names(model) == ["Apples", "Eggs", "Café", "Milk"])
+    }
+
+    @Test("category, level and search all combine")
+    func categoryLevelAndSearch() {
+        let model = StockListModel(products: sample, filter: .low, category: .food, query: "app")
+        #expect(names(model) == ["Apples"])
+    }
 }

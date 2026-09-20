@@ -6,6 +6,7 @@ struct StockView: View {
     @State private var editing: StockProduct? = nil
     @State private var productToDelete: StockProduct? = nil
     @State private var filter: StockListModel.Filter = .all
+    @State private var category: ProductCategory? = nil
     @State private var searchText = ""
 
     var body: some View {
@@ -19,7 +20,8 @@ struct StockView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .gradientCanvas()
             } else {
-                list(StockListModel(products: store.stockProducts, filter: filter, query: searchText))
+                list(StockListModel(products: store.stockProducts, filter: filter,
+                                    category: category, query: searchText))
             }
         }
         .navigationTitle("Stock")
@@ -39,13 +41,22 @@ struct StockView: View {
     private func list(_ model: StockListModel) -> some View {
         List {
             Section {
-                HStack(spacing: 8) {
-                    ForEach(model.visibleFilters, id: \.self) { option in
-                        Chip(title: model.title(for: option), fill: fill(for: option),
-                             isSelected: model.effectiveFilter == option) {
-                            filter = StockListModel.toggled(model.effectiveFilter, tapped: option)
+                // Wider than the 8pt FlowLayout uses between wrapped category rows, so the
+                // two filter axes read as separate groups rather than one chip stack.
+                VStack(alignment: .leading, spacing: 16) {
+                    HStack(spacing: 8) {
+                        ForEach(model.visibleFilters, id: \.self) { option in
+                            Chip(title: model.title(for: option), fill: fill(for: option),
+                                 isSelected: model.effectiveFilter == option) {
+                                filter = StockListModel.toggled(model.effectiveFilter, tapped: option)
+                            }
                         }
                     }
+                    ChipGroup(items: model.visibleCategories,
+                              selection: $category,
+                              fill: Palette.tasks,
+                              title: { model.title(for: $0) },
+                              systemImage: { $0.icon })
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
@@ -105,6 +116,7 @@ struct StockView: View {
         case .low: Palette.meals
         }
     }
+
 }
 
 #Preview {
