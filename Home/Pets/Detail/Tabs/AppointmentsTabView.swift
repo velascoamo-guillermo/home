@@ -25,6 +25,7 @@ struct AppointmentsTabView: View {
                 Section("Upcoming") {
                     ForEach(upcoming) { appt in
                         AppointmentRow(appointment: appt)
+                            .pastelRow(Palette.pets)
                             .contextMenu {
                                 AppointmentContextMenu(appointment: appt, petName: pet.name)
                             }
@@ -35,6 +36,7 @@ struct AppointmentsTabView: View {
                 Section("Past") {
                     ForEach(past) { appt in
                         AppointmentRow(appointment: appt)
+                            .pastelRow(Palette.pets)
                             .contextMenu {
                                 AppointmentContextMenu(appointment: appt, petName: pet.name)
                             }
@@ -42,6 +44,7 @@ struct AppointmentsTabView: View {
                 }
             }
         }
+        .flatListStyle()
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button("Add", systemImage: "plus") { showAdd = true }
@@ -63,21 +66,19 @@ private struct AppointmentRow: View {
     }
 
     var body: some View {
-        HStack {
-            VStack(alignment: .leading, spacing: 4) {
-                Text(appointment.reason).font(.headline)
-                Text(appointment.date.formatted(date: .abbreviated, time: .shortened))
-                    .font(.caption).foregroundStyle(.secondary)
-                if !appointment.notes.isEmpty {
-                    Text(appointment.notes).font(.caption2).foregroundStyle(.tertiary)
-                }
-            }
-            Spacer()
+        HStack(spacing: 10) {
+            PetEntryLabel(
+                title: appointment.reason,
+                meta: appointment.date.formatted(date: .abbreviated, time: .shortened),
+                detail: appointment.notes
+            )
+            // White, not Palette.onAccent: these are saturated system status colours in
+            // both appearances, unlike the app's pale accent that onAccent is tuned for.
             Text(appointment.status.rawValue.capitalized)
-                .font(.caption2.bold())
+                .font(.system(.caption2, design: .rounded, weight: .semibold))
                 .padding(.horizontal, 8).padding(.vertical, 4)
-                .background(statusColor.opacity(0.15), in: Capsule())
-                .foregroundStyle(statusColor)
+                .background(statusColor, in: .capsule)
+                .foregroundStyle(.white)
         }
     }
 }

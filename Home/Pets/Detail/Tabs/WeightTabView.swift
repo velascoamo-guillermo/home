@@ -20,15 +20,20 @@ struct WeightTabView: View {
                     chart
                         .frame(height: 220)
                         .padding(.vertical, 8)
+                        .pastelRow(Palette.pets)
                 }
             }
             ForEach(entries) { entry in
                 HStack {
                     Text(entry.date.formatted(date: .abbreviated, time: .omitted))
+                        .font(.system(.subheadline, design: .rounded))
+                        .foregroundStyle(Palette.inkSecondary)
                     Spacer()
                     Text(entry.weightKg.formatted(.number.precision(.fractionLength(0...1))) + " kg")
-                        .font(.headline)
+                        .font(.system(.headline, design: .rounded, weight: .semibold))
+                        .foregroundStyle(Palette.ink)
                 }
+                .pastelRow(Palette.pets)
                 .contextMenu {
                     Button(role: .destructive) {
                         Task { try? await store.deleteWeightEntry(entry) }
@@ -36,6 +41,7 @@ struct WeightTabView: View {
                 }
             }
         }
+        .flatListStyle()
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button("Add", systemImage: "plus") { showAdd = true }
@@ -50,10 +56,13 @@ struct WeightTabView: View {
                 x: .value("Date", entry.date),
                 y: .value("Weight", entry.weightKg)
             )
+            .foregroundStyle(Palette.accent)
+            .interpolationMethod(.catmullRom)
             PointMark(
                 x: .value("Date", entry.date),
                 y: .value("Weight", entry.weightKg)
             )
+            .foregroundStyle(Palette.accent)
         }
         .chartYAxisLabel("kg")
     }

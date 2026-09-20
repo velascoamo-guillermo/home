@@ -31,6 +31,7 @@ struct FilesTabView: View {
                 .padding()
             }
         }
+        .gradientCanvas()
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button("Add", systemImage: "plus") { showFilePicker = true }
@@ -51,19 +52,21 @@ private struct FileGridCell: View {
     let sourceType: FileSourceType
 
     var body: some View {
-        RoundedRectangle(cornerRadius: 10)
-            .fill(Palette.surface)
+        RoundedRectangle(cornerRadius: 16)
+            .fill(Palette.pets)
             .frame(height: 100)
             .overlay {
                 if sourceType == .document || sourceType == .scan {
-                    Image(systemName: "doc.fill").font(.largeTitle).foregroundStyle(.secondary)
+                    Image(systemName: "doc.fill")
+                        .font(.largeTitle)
+                        .foregroundStyle(Palette.inkSecondary)
                 } else {
                     AsyncImage(url: url) { image in
                         image.resizable().scaledToFill().clipped()
                     } placeholder: {
                         ProgressView()
                     }
-                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                    .clipShape(.rect(cornerRadius: 16))
                 }
             }
     }
