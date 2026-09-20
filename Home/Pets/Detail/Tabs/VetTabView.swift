@@ -20,6 +20,7 @@ struct VetTabView: View {
             ForEach(store.veterinarians) { vet in
                 VetRow(vet: vet)
                     .onTapGesture { editingVet = vet }
+                    .pastelRow(Palette.pets)
                     .contextMenu {
                         Button(role: .destructive) {
                             Task { try? await store.deleteVet(vet) }
@@ -27,6 +28,7 @@ struct VetTabView: View {
                     }
             }
         }
+        .flatListStyle()
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button("Add Vet", systemImage: "plus") { showAdd = true }
@@ -42,32 +44,41 @@ private struct VetRow: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            HStack {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(vet.name).font(.headline)
-                    Text(vet.clinicName).font(.subheadline).foregroundStyle(.secondary)
-                }
-                Spacer()
-                Image(systemName: "chevron.right").font(.caption2).foregroundStyle(.tertiary)
+            HStack(spacing: 10) {
+                PetEntryLabel(title: vet.name, meta: vet.clinicName)
+                Image(systemName: "chevron.right")
+                    .font(.caption2)
+                    .foregroundStyle(Palette.inkSecondary)
                     .accessibilityHidden(true)
             }
             if !vet.phone.isEmpty || !vet.address.isEmpty || !vet.schedule.isEmpty {
-                Divider()
-                if !vet.phone.isEmpty {
-                    Link(destination: URL(string: "tel:\(vet.phone.replacingOccurrences(of: " ", with: ""))")!) {
-                        Label(vet.phone, systemImage: "phone.fill").font(.subheadline)
+                VStack(alignment: .leading, spacing: 6) {
+                    if !vet.phone.isEmpty {
+                        Link(destination: URL(string: "tel:\(vet.phone.replacingOccurrences(of: " ", with: ""))")!) {
+                            contactLabel(vet.phone, systemImage: "phone.fill")
+                        }
+                    }
+                    if !vet.address.isEmpty {
+                        Link(destination: URL(string: "maps://?q=\(vet.address.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")")!) {
+                            contactLabel(vet.address, systemImage: "map.fill")
+                        }
+                    }
+                    if !vet.schedule.isEmpty {
+                        contactLabel(vet.schedule, systemImage: "clock", tint: Palette.inkSecondary)
                     }
                 }
-                if !vet.address.isEmpty {
-                    Link(destination: URL(string: "maps://?q=\(vet.address.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")")!) {
-                        Label(vet.address, systemImage: "map.fill").font(.subheadline)
-                    }
-                }
-                if !vet.schedule.isEmpty {
-                    Label(vet.schedule, systemImage: "clock").font(.caption).foregroundStyle(.secondary)
-                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(10)
+                .background(Palette.surface, in: .rect(cornerRadius: 12))
             }
         }
         .padding(.vertical, 4)
+    }
+
+    private func contactLabel(_ text: String, systemImage: String,
+                              tint: Color = Palette.accent) -> some View {
+        Label(text, systemImage: systemImage)
+            .font(.system(.subheadline, design: .rounded))
+            .foregroundStyle(tint)
     }
 }

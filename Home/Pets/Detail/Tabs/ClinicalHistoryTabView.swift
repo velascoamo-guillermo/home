@@ -22,6 +22,7 @@ struct ClinicalHistoryTabView: View {
                     ClinicalEntryRow(entry: entry, fileCount: fileCount)
                 }
                 .buttonStyle(.plain)
+                .pastelRow(Palette.pets)
                 .contextMenu {
                     Button(role: .destructive) {
                         Task { try? await store.deleteClinicalEntry(entry) }
@@ -29,6 +30,7 @@ struct ClinicalHistoryTabView: View {
                 }
             }
         }
+        .flatListStyle()
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button("Add", systemImage: "plus") { showAdd = true }

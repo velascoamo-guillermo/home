@@ -20,9 +20,11 @@ struct EventsTabView: View {
             ForEach(events) { event in
                 Button { selectedEvent = event } label: { EventRow(event: event) }
                     .buttonStyle(.plain)
+                    .pastelRow(Palette.pets)
                     .contextMenu { EventContextMenu(event: event, petName: pet.name) }
             }
         }
+        .flatListStyle()
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button("Add", systemImage: "plus") { showAdd = true }
