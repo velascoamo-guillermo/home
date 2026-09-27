@@ -149,8 +149,15 @@ extension SupabaseStore {
         await _sync?.sync(tables: [BudgetCategory.tableName])
     }
 
+    /// Renumbers the FULL live category list: `ordered` first (in the given order), then any
+    /// live categories not included (e.g. archived, when only the active subset was reordered)
+    /// keeping their existing relative order. This avoids `sortOrder` collisions between the
+    /// reordered subset and categories the caller didn't pass.
     func reorderBudgetCategories(_ ordered: [BudgetCategory]) async throws {
-        let changed = ordered.enumerated().compactMap { index, category -> BudgetCategory? in
+        let orderedIds = Set(ordered.map(\.id))
+        let rest = budgetCategories.filter { !orderedIds.contains($0.id) }
+        let combined = ordered + rest
+        let changed = combined.enumerated().compactMap { index, category -> BudgetCategory? in
             guard category.sortOrder != index else { return nil }
             var c = category
             c.sortOrder = index

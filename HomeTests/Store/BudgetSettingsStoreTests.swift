@@ -144,4 +144,27 @@ import Foundation
         #expect(store.budgetCategories.map(\.sortOrder) == Array(0..<14))
         #expect(await F.makeStore(url: url).budgetCategories.first?.name == "Otros")
     }
+
+    @Test("reordering only the active subset renumbers the full list, keeping archived categories after it")
+    func reorderActiveSubsetKeepsArchivedAfter() async throws {
+        let url = F.tempURL()
+        let store = try await seeded(url: url)
+        let toArchive = try #require(store.budgetCategories.first)
+        try await store.setBudgetCategoryArchived(toArchive, archived: true)
+
+        let active = store.budgetCategories.filter { !$0.archived }
+        let reversedActive = Array(active.reversed())
+        try await store.reorderBudgetCategories(reversedActive)
+
+        func assertInvariants(_ categories: [BudgetCategory]) throws {
+            let sortOrders = categories.map(\.sortOrder)
+            #expect(Set(sortOrders).count == sortOrders.count)
+            #expect(categories.filter { !$0.archived }.map(\.name) == reversedActive.map(\.name))
+            let archivedSortOrder = try #require(categories.first { $0.id == toArchive.id }?.sortOrder)
+            #expect(categories.filter { !$0.archived }.allSatisfy { $0.sortOrder < archivedSortOrder })
+        }
+
+        try assertInvariants(store.budgetCategories)
+        try assertInvariants(await F.makeStore(url: url).budgetCategories)
+    }
 }
