@@ -6,6 +6,8 @@ nonisolated enum BudgetValidationError: LocalizedError, Equatable {
     case emptyName
     case missingCategory
     case missingPayer
+    case categoryInUse
+    case lastMember
 
     var errorDescription: String? {
         switch self {
@@ -14,6 +16,8 @@ nonisolated enum BudgetValidationError: LocalizedError, Equatable {
         case .emptyName:       "Name can't be empty."
         case .missingCategory: "Pick a category."
         case .missingPayer:    "Pick who paid."
+        case .categoryInUse:   "This category has expenses or bills. Archive it instead."
+        case .lastMember:      "Keep at least one member."
         }
     }
 }

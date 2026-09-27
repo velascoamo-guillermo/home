@@ -47,6 +47,7 @@
 		1FF79AEDF0BC6723B882AD94 /* Outbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7E9C6C5EAB74373BF8B9164 /* Outbox.swift */; };
 		2387E1C24DF4C8261A442AE7 /* MealEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD5A137BF574ECD289B8183D /* MealEntry.swift */; };
 		23C6F6FF7AB12291C383E7E9 /* MealFormSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F79186D4E37F97C05487C25 /* MealFormSheet.swift */; };
+		24BD692137380CF3C5D32501 /* BudgetSettingsStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB29CE16CD051331E33BD1C /* BudgetSettingsStoreTests.swift */; };
 		24DFBB553F6F4BA1A438222B /* OutboxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB819B41D43A4B60B67EFC22 /* OutboxTests.swift */; };
 		25CA01948C123110190D96ED /* SyncDateCoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = F24A9F754561007F5F7023E8 /* SyncDateCoding.swift */; };
 		25D83AEFE4208F64DB7AB670 /* WidgetMealSlotLabelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5175DAD9B53DFCE06554F92F /* WidgetMealSlotLabelTests.swift */; };
@@ -513,6 +514,7 @@
 		BBDD07921566A58732A6EE3C /* UITestSupportTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UITestSupportTests.swift; sourceTree = "<group>"; };
 		BD13999CBECA368301BAB886 /* MenuHeaderView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MenuHeaderView.swift; sourceTree = "<group>"; };
 		BD71C92C5B049383A7F07FC2 /* Meal.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Meal.swift; sourceTree = "<group>"; };
+		BEB29CE16CD051331E33BD1C /* BudgetSettingsStoreTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BudgetSettingsStoreTests.swift; sourceTree = "<group>"; };
 		BEE741125AA949498F90211C36D7FA12 /* SupabaseConfig.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SupabaseConfig.swift; sourceTree = "<group>"; };
 		BFD721BF9855C09D131A9116 /* Supermarket.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Supermarket.swift; sourceTree = "<group>"; };
 		C15F8CFEEF44FB8979083451 /* SearchTaskRow.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SearchTaskRow.swift; sourceTree = "<group>"; };
@@ -697,6 +699,7 @@
 				EBD05E9E51504422D866DC2D /* WeightEntryStoreTests.swift */,
 				A899F2EDB42AD53F99F5FA23 /* BudgetSeedingTests.swift */,
 				56DA161FB333CB07ADCE95B0 /* BudgetExpenseStoreTests.swift */,
+				BEB29CE16CD051331E33BD1C /* BudgetSettingsStoreTests.swift */,
 			);
 			name = Store;
 			path = Store;
@@ -1744,6 +1747,7 @@
 				57F29F591405AF66F3F1DAEC /* MoneyParsingTests.swift in Sources */,
 				F7C67280788DB0522208AD75 /* ExpenseDraftTests.swift in Sources */,
 				ADC010D68C64911FB1FF0CA4 /* BudgetExpenseStoreTests.swift in Sources */,
+				24BD692137380CF3C5D32501 /* BudgetSettingsStoreTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
