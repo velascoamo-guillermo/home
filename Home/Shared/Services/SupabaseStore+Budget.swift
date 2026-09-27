@@ -13,13 +13,34 @@ extension SupabaseStore {
     // MARK: - Seeding
 
     /// Seeds only once the remote has been read, so a fresh install never writes defaults
-    /// over a household that already exists on another device.
+    /// over a household that already exists on another device. Emptiness is re-checked
+    /// against on-disk rows (not the in-memory arrays, which can be stale when the
+    /// reconnect observer races `loadAll`'s hydrate, or when an earlier table throws
+    /// inside `hydrate`). The in-flight flag is set synchronously before the first
+    /// `await` so concurrent callers (`loadAll`, `refreshFromLocal`, the reconnect
+    /// observer) never both seed; it clears on any exit so a failed or not-yet-eligible
+    /// attempt can still retry later, while a completed attempt (seeded, or found
+    /// existing rows) is marked done for good.
     func seedBudgetIfNeeded() async {
-        guard let sync = _sync, _local != nil,
-              budgetMembers.isEmpty, budgetCategories.isEmpty else { return }
+        guard !seedCompleted, !seedInFlight else { return }
+        seedInFlight = true
+        defer { seedInFlight = false }
+
+        guard let sync = _sync, let local = _local else { return }
         guard await sync.hasPulled(BudgetMember.tableName),
               await sync.hasPulled(BudgetCategory.tableName) else { return }
-        try? await seedBudgetDefaults()
+        guard let localMembers = try? await local.fetchAll(BudgetMember.self),
+              let localCategories = try? await local.fetchAll(BudgetCategory.self) else { return }
+        guard localMembers.isEmpty, localCategories.isEmpty else {
+            seedCompleted = true
+            return
+        }
+        do {
+            try await seedBudgetDefaults()
+            seedCompleted = true
+        } catch {
+            // leave seedCompleted false so a later call can retry
+        }
     }
 
     func seedBudgetDefaults() async throws {

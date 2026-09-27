@@ -1,5 +1,6 @@
 import Testing
 import Foundation
+import Supabase
 @testable import Casita
 
 @Suite("Budget seeding and hydration") @MainActor struct BudgetSeedingTests {
@@ -108,5 +109,57 @@ import Foundation
         let s = store.budgetSummary(for: F.november, today: F.date(2026, 11, 15), calendar: F.calendar)
         #expect(s.totalCents == 1_000)
         #expect(s.settlement == [Transfer(fromMemberId: F.lu.id, toMemberId: F.guille.id, amountCents: 500)])
+    }
+
+    @Test("does not seed over existing local rows even when the in-memory arrays are stale")
+    func noSeedWhenLocalHasRowsButArraysAreStale() async throws {
+        let url = F.tempURL()
+        let local = try await LocalStore(url: url)
+        try await local.upsert([BudgetMember(name: "Ana")], enqueue: false)
+        let store = await F.makeStore(syncEnabled: true, gateway: InMemoryRemote(), url: url)
+        try await F.waitUntil { !store.budgetMembers.isEmpty }
+        // Simulate the reconnect observer racing loadAll's hydrate, or an earlier
+        // table throwing inside hydrate: the in-memory arrays go stale/empty even
+        // though the local store (and hasPulled) already reflect reality.
+        store.budgetMembers = []
+        store.budgetCategories = []
+        await store.seedBudgetIfNeeded()
+        let members = try await local.fetchAll(BudgetMember.self)
+        #expect(members.map(\.name) == ["Ana"])
+        #expect(try await local.fetchAll(BudgetCategory.self).isEmpty)
+    }
+
+    @Test("concurrent seedBudgetIfNeeded calls seed exactly once")
+    func concurrentSeedRunsOnce() async throws {
+        let url = F.tempURL()
+        let client = SupabaseClient(
+            supabaseURL: URL(string: "http://127.0.0.1")!,
+            supabaseKey: "test",
+            options: .init(auth: .init(autoRefreshToken: false, emitLocalSessionAsInitialSession: false))
+        )
+        let remote = InMemoryRemote()
+        let store = SupabaseStore(client: client, localURL: url, syncEnabled: true, gateway: remote)
+        let local = try await LocalStore(url: url)
+        store._local = local
+        store._sync = SyncEngine(local: local, gateway: remote)
+        await store._sync!.sync(tables: [BudgetMember.tableName, BudgetCategory.tableName])
+        #expect(store.budgetMembers.isEmpty)
+        #expect(store.budgetCategories.isEmpty)
+
+        async let first: Void = store.seedBudgetIfNeeded()
+        async let second: Void = store.seedBudgetIfNeeded()
+        _ = await (first, second)
+
+        let members = try await local.fetchAll(BudgetMember.self)
+        let categories = try await local.fetchAll(BudgetCategory.self)
+        #expect(members.count == 2)
+        #expect(categories.count == 14)
+        // seedBudgetDefaults syncs at the end, which drains the outbox on a successful
+        // push, so a duplicate seeding attempt can't be seen in pendingOps() afterward
+        // (and row counts alone wouldn't show it either, since push upserts by id).
+        // Count push calls instead: exactly one upsert per seeded row means only one
+        // of the two concurrent calls ran seedBudgetDefaults.
+        #expect(await remote.pushCount(BudgetMember.tableName) == 2)
+        #expect(await remote.pushCount(BudgetCategory.tableName) == 14)
     }
 }

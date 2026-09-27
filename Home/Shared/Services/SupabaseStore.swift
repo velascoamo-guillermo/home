@@ -45,6 +45,8 @@ final class SupabaseStore {
     }
     var _local: LocalStore?
     var _sync: SyncEngine?
+    var seedInFlight = false
+    var seedCompleted = false
     private var reconnectTask: Task<Void, Never>?
     let reachability = Reachability()
 
