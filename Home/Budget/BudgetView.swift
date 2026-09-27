@@ -4,6 +4,7 @@ struct BudgetView: View {
     @Environment(SupabaseStore.self) private var store
     @State private var month = BudgetMonth(date: .now, calendar: .current)
     @State private var editor: ExpenseDraft?
+    @State private var deleteErrorMessage: String?
     @AppStorage(ExpenseDraft.lastPayerKey) private var lastPayerId = ""
 
     var body: some View {
@@ -40,7 +41,13 @@ struct BudgetView: View {
                         .pastelRow(Palette.surface)
                         .swipeActions(edge: .trailing) {
                             Button(role: .destructive) {
-                                Task { try? await store.deleteBudgetExpense(expense) }
+                                Task {
+                                    do {
+                                        try await store.deleteBudgetExpense(expense)
+                                    } catch {
+                                        deleteErrorMessage = error.localizedDescription
+                                    }
+                                }
                             } label: { Label("Delete", systemImage: "trash") }
                         }
                     }
@@ -70,6 +77,18 @@ struct BudgetView: View {
         .sheet(item: $editor) { draft in
             AddExpenseSheet(draft: draft)
         }
+        .alert("Couldn't delete expense", isPresented: deleteErrorAlertBinding) {
+            Button("OK") {}
+        } message: {
+            Text(deleteErrorMessage ?? "")
+        }
+    }
+
+    private var deleteErrorAlertBinding: Binding<Bool> {
+        Binding(
+            get: { deleteErrorMessage != nil },
+            set: { if !$0 { deleteErrorMessage = nil } }
+        )
     }
 
     private var monthSwitcher: some View {
