@@ -8,6 +8,7 @@ final class SupabaseStore {
     let client: SupabaseClient
     nonisolated let localURLOverride: URL?
     nonisolated let syncEnabled: Bool
+    nonisolated let gatewayOverride: (any RemoteGateway)?
 
     var pets: [Pet] = []
     var veterinarians: [Veterinarian] = []
@@ -27,6 +28,11 @@ final class SupabaseStore {
     var meals: [Meal] = []
     var mealProducts: [MealProduct] = []
     var menuEntries: [MenuEntry] = []
+    var budgetMembers: [BudgetMember] = []
+    var budgetCategories: [BudgetCategory] = []
+    var budgetIncomes: [BudgetIncome] = []
+    var recurringExpenses: [RecurringExpense] = []
+    var budgetExpenses: [BudgetExpense] = []
     var isLoading = false
     var loadError: String? = nil
 
@@ -50,14 +56,17 @@ final class SupabaseStore {
         )
         self.localURLOverride = nil
         self.syncEnabled = true
+        self.gatewayOverride = nil
     }
 
     /// For unit tests — accepts a pre-built client so tests can inject a
     /// non-connecting stub without triggering Keychain access.
-    init(client: SupabaseClient, localURL: URL? = nil, syncEnabled: Bool = true) {
+    init(client: SupabaseClient, localURL: URL? = nil, syncEnabled: Bool = true,
+         gateway: (any RemoteGateway)? = nil) {
         self.client = client
         self.localURLOverride = localURL
         self.syncEnabled = syncEnabled
+        self.gatewayOverride = gateway
     }
 
     /// Released off the main actor. An isolated (`@MainActor`) deinit routes
@@ -89,7 +98,8 @@ final class SupabaseStore {
             if _local == nil {
                 let store = try await LocalStore(url: localURLOverride ?? localURL)
                 if syncEnabled {
-                    _sync = SyncEngine(local: store, gateway: SupabaseGateway(client: client))
+                    _sync = SyncEngine(local: store,
+                                       gateway: gatewayOverride ?? SupabaseGateway(client: client))
                 }
                 _local = store
                 if syncEnabled { startReconnectObserver() }
@@ -99,6 +109,7 @@ final class SupabaseStore {
             if syncEnabled {
                 await _sync?.sync(tables: SyncEngine.syncedTables)
                 try? await hydrate()
+                await seedBudgetIfNeeded()
                 if loadError == nil { WidgetSnapshotWriter.write(from: self) }
             }
         } catch {
@@ -112,6 +123,7 @@ final class SupabaseStore {
         try? await hydrate()
         await _sync?.sync(tables: SyncEngine.syncedTables)
         try? await hydrate()
+        await seedBudgetIfNeeded()
     }
 
     private func hydrate() async throws {
@@ -128,6 +140,13 @@ final class SupabaseStore {
         mealProducts    = try await local.fetchAll(MealProduct.self)
         weightEntries   = try await local.fetchAll(WeightEntry.self)
         menuEntries     = try await local.fetchAll(MenuEntry.self)
+        budgetMembers     = try await local.fetchAll(BudgetMember.self)
+            .sorted { ($0.sortOrder, $0.name) < ($1.sortOrder, $1.name) }
+        budgetCategories  = try await local.fetchAll(BudgetCategory.self)
+            .sorted { ($0.sortOrder, $0.name) < ($1.sortOrder, $1.name) }
+        budgetIncomes     = try await local.fetchAll(BudgetIncome.self)
+        recurringExpenses = try await local.fetchAll(RecurringExpense.self)
+        budgetExpenses    = try await local.fetchAll(BudgetExpense.self)
     }
 
     private func startReconnectObserver() {
@@ -138,6 +157,7 @@ final class SupabaseStore {
                 guard let self else { return }
                 await self._sync?.sync(tables: SyncEngine.syncedTables)
                 try? await self.hydrate()
+                await self.seedBudgetIfNeeded()
             }
         }
     }
