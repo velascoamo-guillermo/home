@@ -57,20 +57,27 @@ import Foundation
     @Test("two settlement transfers with three members")
     func multipleTransfers() {
         let third = BudgetMember(name: "Third", sortOrder: 2)
-        // Create expenses where settlement produces 2 transfers
-        // If Guille pays 100 (owes 100/3 = 33.33, paid 100, balance = +66.67)
-        // Lu pays 0 (owes 100/3 = 33.33, paid 0, balance = -33.33)
-        // Third pays 0 (owes 100/3 = 33.33, paid 0, balance = -33.33)
-        // Settlement: Lu → Guille, Third → Guille
         let s = summary(members: [F.guille, F.lu, third],
                        expenses: [F.expense(100, by: F.guille, in: everything)])
         let model = BudgetHeroModel(summary: s, locale: us)
         #expect(!model.isAllSquare)
         #expect(model.lines.count == 2)
-        // Check that both transfers are present in the model
-        let titles = model.lines.map(\.title)
-        #expect(titles.contains("Lu → Guille"))
-        #expect(titles.contains("Third → Guille"))
+
+        // Verify member balances: with 100¢ paid by Guille and equal weights,
+        // largest-remainder apportionment gives shares 34/33/33.
+        // Balances: Guille +66, Lu -33, Third -33
+        #expect(s.members[0].balanceCents == 66)  // Guille
+        #expect(s.members[1].balanceCents == -33) // Lu
+        #expect(s.members[2].balanceCents == -33) // Third
+
+        // Verify settlement transfers: Lu and Third each owe Guille 33¢
+        #expect(model.lines == [
+            BudgetHeroModel.Line(title: "Lu → Guille", amountText: "€0.33",
+                                accessibilityLabel: "Lu owes Guille 0 euros 33"),
+            BudgetHeroModel.Line(title: "Third → Guille", amountText: "€0.33",
+                                accessibilityLabel: "Third owes Guille 0 euros 33")
+        ])
+
         // Verify accessibility label contains both transfers
         #expect(model.accessibilityLabel.contains("Lu owes Guille"))
         #expect(model.accessibilityLabel.contains("Third owes Guille"))
