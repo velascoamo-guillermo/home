@@ -12,6 +12,11 @@ import Foundation
             .summary(for: F.november, today: F.date(2026, 11, 15))
     }
 
+    private func summary(members: [BudgetMember], incomes: [BudgetIncome] = [], expenses: [BudgetExpense]) -> MonthSummary {
+        F.calculator(members: members, categories: [everything], incomes: incomes, expenses: expenses)
+            .summary(for: F.november, today: F.date(2026, 11, 15))
+    }
+
     @Test("empty month is All square")
     func allSquare() {
         let model = BudgetHeroModel(summary: summary(expenses: []), locale: us)
@@ -38,5 +43,36 @@ import Foundation
         let s = summary(incomes: [F.income(380_000, for: F.guille), F.income(100_000, for: F.lu)],
                         expenses: [F.expense(100, by: ghost, in: everything)])
         #expect(BudgetHeroModel(summary: s, locale: us).ratioLine == "Guille 79% · Lu 21%")
+    }
+
+    @Test("remaining line shows negative amount when over budget")
+    func overBudgetRemaining() {
+        // Expenses exceed estimate (200,000 > 185,500)
+        let s = summary(expenses: [F.expense(200_000, by: F.guille, in: everything)])
+        let model = BudgetHeroModel(summary: s, locale: us)
+        // remainingCents = estimate - total = 185_500 - 200_000 = -14_500
+        #expect(model.remainingLine == "Remaining -€145.00 of €1,855.00")
+    }
+
+    @Test("two settlement transfers with three members")
+    func multipleTransfers() {
+        let third = BudgetMember(name: "Third", sortOrder: 2)
+        // Create expenses where settlement produces 2 transfers
+        // If Guille pays 100 (owes 100/3 = 33.33, paid 100, balance = +66.67)
+        // Lu pays 0 (owes 100/3 = 33.33, paid 0, balance = -33.33)
+        // Third pays 0 (owes 100/3 = 33.33, paid 0, balance = -33.33)
+        // Settlement: Lu → Guille, Third → Guille
+        let s = summary(members: [F.guille, F.lu, third],
+                       expenses: [F.expense(100, by: F.guille, in: everything)])
+        let model = BudgetHeroModel(summary: s, locale: us)
+        #expect(!model.isAllSquare)
+        #expect(model.lines.count == 2)
+        // Check that both transfers are present in the model
+        let titles = model.lines.map(\.title)
+        #expect(titles.contains("Lu → Guille"))
+        #expect(titles.contains("Third → Guille"))
+        // Verify accessibility label contains both transfers
+        #expect(model.accessibilityLabel.contains("Lu owes Guille"))
+        #expect(model.accessibilityLabel.contains("Third owes Guille"))
     }
 }
