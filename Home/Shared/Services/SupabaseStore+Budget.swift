@@ -52,4 +52,26 @@ extension SupabaseStore {
         budgetCategories = categories
         await _sync?.sync(tables: [BudgetMember.tableName, BudgetCategory.tableName])
     }
+
+    // MARK: - Expenses
+
+    func saveBudgetExpense(_ expense: BudgetExpense) async throws {
+        try BudgetValidation.amount(expense.amountCents)
+        var e = expense
+        e.updatedAt = .now
+        e.deletedAt = nil
+        try await _local?.upsert([e], enqueue: true)
+        if let i = budgetExpenses.firstIndex(where: { $0.id == e.id }) {
+            budgetExpenses[i] = e
+        } else {
+            budgetExpenses.append(e)
+        }
+        await _sync?.sync(tables: [BudgetExpense.tableName])
+    }
+
+    func deleteBudgetExpense(_ expense: BudgetExpense) async throws {
+        try await _local?.softDelete(expense, enqueue: true)
+        budgetExpenses.removeAll { $0.id == expense.id }
+        await _sync?.sync(tables: [BudgetExpense.tableName])
+    }
 }
