@@ -1,7 +1,7 @@
 import SwiftUI
 
 enum HubDestination: String, CaseIterable, Identifiable, Hashable {
-    case tasks, pets, stock, meals, shopping
+    case tasks, pets, stock, meals, shopping, budget
 
     var id: String { rawValue }
 
@@ -12,6 +12,7 @@ enum HubDestination: String, CaseIterable, Identifiable, Hashable {
         case .stock:    "Stock"
         case .meals:    "Meals"
         case .shopping: "Shopping"
+        case .budget:   "Budget"
         }
     }
 
@@ -22,6 +23,7 @@ enum HubDestination: String, CaseIterable, Identifiable, Hashable {
         case .stock:    "shippingbox.fill"
         case .meals:    "fork.knife"
         case .shopping: "cart.fill"
+        case .budget:   "eurosign.circle.fill"
         }
     }
 
@@ -32,6 +34,7 @@ enum HubDestination: String, CaseIterable, Identifiable, Hashable {
         case .stock:    Palette.stock
         case .meals:    Palette.meals
         case .shopping: Palette.shopping
+        case .budget:   Palette.budget
         }
     }
 
@@ -42,6 +45,7 @@ enum HubDestination: String, CaseIterable, Identifiable, Hashable {
         case .stock:    .stock
         case .meals:    .meals
         case .shopping: .shopping
+        case .budget:   .budget
         }
     }
 
@@ -52,6 +56,7 @@ enum HubDestination: String, CaseIterable, Identifiable, Hashable {
         case .stock:    self = .stock
         case .meals:    self = .meals
         case .shopping: self = .shopping
+        case .budget:   self = .budget
         default:        return nil
         }
     }

@@ -9,7 +9,7 @@ import UIKit
     private static let fills: [(String, Color)] = [
         ("tasks", Palette.tasks), ("shopping", Palette.shopping),
         ("meals", Palette.meals), ("pets", Palette.pets),
-        ("stock", Palette.stock), ("canvas", Palette.canvas),
+        ("stock", Palette.stock), ("budget", Palette.budget), ("canvas", Palette.canvas),
         ("surface", Palette.surface),
         ("canvasTop", Palette.canvasTop), ("canvasMid", Palette.canvasMid),
         ("canvasBottom", Palette.canvasBottom),
@@ -50,7 +50,7 @@ import UIKit
 
     @Test("feature fills are distinct from each other in both schemes")
     func distinctFills() {
-        let features: [Color] = [Palette.tasks, Palette.shopping, Palette.meals, Palette.pets, Palette.stock]
+        let features: [Color] = [Palette.tasks, Palette.shopping, Palette.meals, Palette.pets, Palette.stock, Palette.budget]
         for style in [UIUserInterfaceStyle.light, .dark] {
             let resolved = features.map { Palette.uiColor($0, style: style) }
             #expect(Set(resolved).count == features.count, "\(style == .dark ? "dark" : "light")")
