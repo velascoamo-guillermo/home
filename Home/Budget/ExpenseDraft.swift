@@ -39,6 +39,17 @@ nonisolated struct ExpenseDraft: Identifiable, Equatable {
         name = ""
     }
 
+    init(confirming bill: RecurringExpense, month: BudgetMonth, calendar: Calendar) {
+        id = BudgetIDs.recurringExpense(recurringId: bill.id, month: month)
+        isNew = true
+        recurringId = bill.id
+        amountText = Money.editText(cents: bill.amountCents)
+        categoryId = bill.categoryId
+        payerId = bill.payerId
+        date = month.date(day: bill.dayOfMonth, calendar: calendar)
+        name = bill.name
+    }
+
     func makeExpense() throws -> BudgetExpense {
         guard let cents = Money.parseCents(amountText) else { throw BudgetValidationError.invalidAmount }
         try BudgetValidation.amount(cents)

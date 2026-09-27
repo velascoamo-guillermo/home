@@ -80,4 +80,21 @@ import Foundation
         #expect(ExpenseDraft.defaultPayer(stored: "", members: members) == F.guille.id)
         #expect(ExpenseDraft.defaultPayer(stored: "", members: []) == nil)
     }
+
+    @Test("confirming a bill pre-fills it with a deterministic id for that month")
+    func confirming() throws {
+        let bill = RecurringExpense(name: "Internet", amountCents: 5_000, categoryId: F.rent.id,
+                                    payerId: F.lu.id, dayOfMonth: 5)
+        let d = ExpenseDraft(confirming: bill, month: F.november, calendar: F.calendar)
+        #expect(d.id == BudgetIDs.recurringExpense(recurringId: bill.id, month: F.november))
+        #expect(d.isNew)
+        #expect(d.title == "Confirm bill")
+        #expect(d.amountText == "50.00")
+        #expect(d.categoryId == F.rent.id)
+        #expect(d.payerId == F.lu.id)
+        #expect(d.name == "Internet")
+        #expect(F.calendar.component(.day, from: d.date) == 5)
+        #expect(BudgetMonth(date: d.date, calendar: F.calendar) == F.november)
+        #expect(try d.makeExpense().recurringId == bill.id)
+    }
 }

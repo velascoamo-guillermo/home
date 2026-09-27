@@ -18,4 +18,8 @@ nonisolated enum BudgetValidation {
         guard cents >= 0 else { throw BudgetValidationError.invalidAmount }
         guard cents <= maxAmountCents else { throw BudgetValidationError.amountTooLarge }
     }
+
+    static func dayOfMonth(_ day: Int) throws {
+        guard (1...28).contains(day) else { throw BudgetValidationError.dayOutOfRange }
+    }
 }
