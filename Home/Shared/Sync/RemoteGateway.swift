@@ -2,7 +2,7 @@ import Foundation
 import Supabase
 
 /// Network boundary for sync. One method per outbox op kind + a pull.
-protocol RemoteGateway: Sendable {
+nonisolated protocol RemoteGateway: Sendable {
     /// Push a single entity payload. insert/update both upsert; delete writes the
     /// tombstone (payload already carries deleted_at). Returns on success, throws on failure.
     func push(kind: OutboxOpKind, table: String, payload: Data) async throws

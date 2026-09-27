@@ -344,13 +344,13 @@ final class SupabaseStore {
         let ext = (file.storagePath as NSString).pathExtension.lowercased()
         let mediaType = ext == "pdf" ? "application/pdf" : "image/jpeg"
 
-        struct RequestBody: Encodable {
+        nonisolated struct RequestBody: Encodable {
             let storagePath: String
             let mediaType: String
             let petName: String
         }
 
-        struct ResponseBody: Decodable {
+        nonisolated struct ResponseBody: Decodable {
             let success: Bool
             let visitDate: String?
             let diagnosis: String?
