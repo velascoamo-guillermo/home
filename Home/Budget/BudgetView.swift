@@ -3,6 +3,8 @@ import SwiftUI
 struct BudgetView: View {
     @Environment(SupabaseStore.self) private var store
     @State private var month = BudgetMonth(date: .now, calendar: .current)
+    @State private var editor: ExpenseDraft?
+    @AppStorage(ExpenseDraft.lastPayerKey) private var lastPayerId = ""
 
     var body: some View {
         let summary = store.budgetSummary(for: month)
@@ -29,10 +31,18 @@ struct BudgetView: View {
             ForEach(BudgetDayGroup.groups(store.budgetExpenses, in: month, calendar: .current)) { group in
                 Section {
                     ForEach(group.expenses) { expense in
-                        BudgetExpenseRow(expense: expense,
-                                         categoryName: categoryName(expense.categoryId),
-                                         payerName: summary.memberName(expense.payerId))
-                            .pastelRow(Palette.surface)
+                        Button { editor = ExpenseDraft(expense: expense) } label: {
+                            BudgetExpenseRow(expense: expense,
+                                             categoryName: categoryName(expense.categoryId),
+                                             payerName: summary.memberName(expense.payerId))
+                        }
+                        .buttonStyle(.plain)
+                        .pastelRow(Palette.surface)
+                        .swipeActions(edge: .trailing) {
+                            Button(role: .destructive) {
+                                Task { try? await store.deleteBudgetExpense(expense) }
+                            } label: { Label("Delete", systemImage: "trash") }
+                        }
                     }
                 } header: {
                     Text(group.day, format: .dateTime.weekday(.wide).day().month(.wide))
@@ -42,6 +52,24 @@ struct BudgetView: View {
         .flatListStyle()
         .navigationTitle("Budget")
         .navigationBarTitleDisplayMode(.inline)
+        .overlay(alignment: .bottomTrailing) {
+            Button {
+                editor = ExpenseDraft(
+                    payerId: ExpenseDraft.defaultPayer(stored: lastPayerId, members: store.budgetMembers),
+                    date: .now)
+            } label: {
+                Image(systemName: "plus")
+                    .font(.title2.weight(.bold))
+                    .foregroundStyle(Palette.onAccent)
+                    .frame(width: 56, height: 56)
+                    .background(Palette.accent, in: .circle)
+            }
+            .accessibilityLabel("Add expense")
+            .padding(20)
+        }
+        .sheet(item: $editor) { draft in
+            AddExpenseSheet(draft: draft)
+        }
     }
 
     private var monthSwitcher: some View {

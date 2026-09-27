@@ -189,6 +189,7 @@
 		B2A14F6741FFCF63CC0D1A8F /* HubTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = A019554D2097390095088A80 /* HubTile.swift */; };
 		B611D6F8A81DCC192451C3BF /* Supermarket.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD721BF9855C09D131A9116 /* Supermarket.swift */; };
 		B68A261E1EE7FA856D63DFAA /* AgendaDay.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC9CD642EEEF0D9A5145F994 /* AgendaDay.swift */; };
+		B7199B8FBC9C6E1689DA93BB /* AddExpenseSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = C902976E2E0B034648B81CDE /* AddExpenseSheet.swift */; };
 		B767693EAE3C3E0144D52B3E /* ProductCategoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7992BC0AD8B24DC8437E5EFF /* ProductCategoryTests.swift */; };
 		BADF8AF2C7EA5548D28C6796 /* WeightEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE743A0826F04073B2E8A00C /* WeightEntry.swift */; };
 		BB22CC33DD44EE55FF6600AA /* AppointmentsTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB22CC33DD44EE55FF6600A1 /* AppointmentsTabView.swift */; };
@@ -517,6 +518,7 @@
 		C15F8CFEEF44FB8979083451 /* SearchTaskRow.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SearchTaskRow.swift; sourceTree = "<group>"; };
 		C50C7DD5D3AD5D0A4D7AF3C4 /* CasitaWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CasitaWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		C57D4A8D15A29874892A7B83 /* HomeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HomeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C902976E2E0B034648B81CDE /* AddExpenseSheet.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AddExpenseSheet.swift; sourceTree = "<group>"; };
 		CA00BB11CC22DD33EE44FF15 /* ExtractionResultSheet.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ExtractionResultSheet.swift; sourceTree = "<group>"; };
 		CA00BB11CC22DD33EE44FF16 /* ExtractionService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ExtractionService.swift; sourceTree = "<group>"; };
 		CA11BB22CC33DD44EE55FF00 /* CalendarService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CalendarService.swift; sourceTree = "<group>"; };
@@ -906,6 +908,7 @@
 				0E197B5FF8F8828F27D25ECD /* BudgetValidation.swift */,
 				99385EE9E75FA88939D9361E /* BudgetValidationError.swift */,
 				238138A4A457178D87BF279A /* ExpenseDraft.swift */,
+				C902976E2E0B034648B81CDE /* AddExpenseSheet.swift */,
 			);
 			name = Budget;
 			path = Budget;
@@ -1612,6 +1615,7 @@
 				A91542CED3A0AC1B8CFA9CF6 /* BudgetValidation.swift in Sources */,
 				C94E71E8D93E212E830A0E08 /* BudgetValidationError.swift in Sources */,
 				3E7936E683F649797F5A5B2C /* ExpenseDraft.swift in Sources */,
+				B7199B8FBC9C6E1689DA93BB /* AddExpenseSheet.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
