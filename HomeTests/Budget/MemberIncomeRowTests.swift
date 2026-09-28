@@ -30,4 +30,22 @@ import Foundation
             try MemberIncomeRow.incomeToSave(text: "1000000,01", current: line(income: 0, carried: false))
         }
     }
+
+    @Test("a name equal to the current one after trimming writes nothing")
+    func nameUnchanged() {
+        #expect(MemberIncomeRow.nameToSave(text: "Lu", current: line(income: 0, carried: false)) == nil)
+        #expect(MemberIncomeRow.nameToSave(text: " Lu ", current: line(income: 0, carried: false)) == nil)
+    }
+
+    @Test("a changed name is saved trimmed; an empty one is passed on so validation reports it")
+    func nameChanged() {
+        #expect(MemberIncomeRow.nameToSave(text: " Lucía ", current: line(income: 0, carried: false)) == "Lucía")
+        #expect(MemberIncomeRow.nameToSave(text: "  ", current: line(income: 0, carried: false)) == "")
+    }
+
+    @Test("an incoming value replaces the field unless the user is editing it")
+    func resync() {
+        #expect(MemberIncomeRow.resynced(local: "1000,00", incoming: "1200,00", isEditing: false) == "1200,00")
+        #expect(MemberIncomeRow.resynced(local: "1000,5", incoming: "1200,00", isEditing: true) == "1000,5")
+    }
 }
