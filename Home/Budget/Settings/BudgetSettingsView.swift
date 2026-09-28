@@ -8,6 +8,8 @@ struct BudgetSettingsView: View {
     @State private var showAddMember = false
     @State private var newMemberName = ""
     @State private var errorMessage: String?
+    @State private var editingBill: RecurringExpense?
+    @State private var showNewBill = false
 
     var body: some View {
         let summary = store.budgetSummary(for: month)
@@ -67,6 +69,26 @@ struct BudgetSettingsView: View {
                 }
             }
 
+            Section("Recurring bills") {
+                ForEach(store.recurringExpenses.sorted { ($0.dayOfMonth, $0.name) < ($1.dayOfMonth, $1.name) }) { bill in
+                    Button { editingBill = bill } label: {
+                        HStack {
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(bill.name).foregroundStyle(Palette.ink)
+                                Text("Day \(bill.dayOfMonth)\(bill.active ? "" : " · paused")")
+                                    .font(.caption)
+                                    .foregroundStyle(Palette.inkSecondary)
+                            }
+                            Spacer()
+                            Text(Money.format(cents: bill.amountCents))
+                                .foregroundStyle(Palette.inkSecondary)
+                        }
+                    }
+                    .buttonStyle(.plain)
+                }
+                Button("Add bill", systemImage: "plus") { showNewBill = true }
+            }
+
             if !archived.isEmpty {
                 Section("Archived") {
                     ForEach(archived) { category in
@@ -91,6 +113,8 @@ struct BudgetSettingsView: View {
             CategoryEditSheet(category: category,
                               isNew: !store.budgetCategories.contains { $0.id == category.id })
         }
+        .sheet(item: $editingBill) { bill in RecurringBillSheet(existing: bill) }
+        .sheet(isPresented: $showNewBill) { RecurringBillSheet(existing: nil) }
         .alert("New member", isPresented: $showAddMember) {
             TextField("Name", text: $newMemberName)
             Button("Add") {

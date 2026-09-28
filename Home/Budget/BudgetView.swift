@@ -19,6 +19,32 @@ struct BudgetView: View {
             .listRowSeparator(.hidden)
             .listRowInsets(EdgeInsets(top: 6, leading: 0, bottom: 6, trailing: 0))
 
+            if !summary.pendingRecurring.isEmpty {
+                Section("Pending bills") {
+                    ForEach(summary.pendingRecurring) { bill in
+                        Button {
+                            editor = ExpenseDraft(confirming: bill, month: month, calendar: .current)
+                        } label: {
+                            HStack {
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(bill.name).foregroundStyle(Palette.ink)
+                                    Text("Day \(bill.dayOfMonth) · \(summary.memberName(bill.payerId))")
+                                        .font(.caption)
+                                        .foregroundStyle(Palette.inkSecondary)
+                                }
+                                Spacer()
+                                Text(Money.format(cents: bill.amountCents))
+                                    .font(.body.monospacedDigit())
+                                    .foregroundStyle(Palette.ink)
+                            }
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityHint("Opens the bill to confirm this month's amount")
+                        .pastelRow(Palette.budget)
+                    }
+                }
+            }
+
             Section {
                 Text(hero.remainingLine)
                     .font(.headline)
