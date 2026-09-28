@@ -83,6 +83,8 @@ struct BudgetView: View {
             }
         }
         .flatListStyle()
+        .contentMargins(.bottom, 88, for: .scrollContent)
+        .refreshable { await store.refreshFromLocal() }
         .navigationTitle("Budget")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
