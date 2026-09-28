@@ -10,6 +10,7 @@ struct BudgetSettingsView: View {
     @State private var errorMessage: String?
     @State private var editingBill: RecurringExpense?
     @State private var showNewBill = false
+    @State private var memberPendingRemoval: BudgetMember?
 
     var body: some View {
         let summary = store.budgetSummary(for: month)
@@ -26,10 +27,9 @@ struct BudgetSettingsView: View {
             Section {
                 ForEach(summary.members.filter { !$0.isFormer }) { line in
                     MemberIncomeRow(line: line, month: month)
-                        .swipeActions(edge: .trailing) {
+                        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                             Button(role: .destructive) {
-                                guard let member = store.budgetMembers.first(where: { $0.id == line.id }) else { return }
-                                Task { await run { try await store.deleteBudgetMember(member) } }
+                                memberPendingRemoval = store.budgetMembers.first { $0.id == line.id }
                             } label: { Label("Remove", systemImage: "person.fill.xmark") }
                         }
                 }
@@ -115,6 +115,13 @@ struct BudgetSettingsView: View {
         }
         .sheet(item: $editingBill) { bill in RecurringBillSheet(existing: bill) }
         .sheet(isPresented: $showNewBill) { RecurringBillSheet(existing: nil) }
+        .confirmationDialog(removalTitle, isPresented: removalDialogBinding, titleVisibility: .visible,
+                            presenting: memberPendingRemoval) { member in
+            Button("Remove \(member.name)", role: .destructive) {
+                Task { await run { try await store.deleteBudgetMember(member) } }
+            }
+            Button("Cancel", role: .cancel) {}
+        }
         .alert("New member", isPresented: $showAddMember) {
             TextField("Name", text: $newMemberName)
             Button("Add") {
@@ -124,6 +131,18 @@ struct BudgetSettingsView: View {
             }
             Button("Cancel", role: .cancel) { newMemberName = "" }
         }
+    }
+
+    private var removalTitle: String {
+        guard let name = memberPendingRemoval?.name else { return "" }
+        return "Remove \(name)? Their past payments will show as Former member and they'll no longer share costs."
+    }
+
+    private var removalDialogBinding: Binding<Bool> {
+        Binding(
+            get: { memberPendingRemoval != nil },
+            set: { if !$0 { memberPendingRemoval = nil } }
+        )
     }
 
     private func run(_ action: () async throws -> Void) async {
