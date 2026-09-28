@@ -176,12 +176,42 @@ import Foundation
         #expect(calc.summary(for: F.november.next, today: today).pendingRecurring.isEmpty)
     }
 
+    private func confirmation(of bill: RecurringExpense, for month: BudgetMonth,
+                              on day: Date) -> BudgetExpense {
+        BudgetExpense(id: BudgetIDs.recurringExpense(recurringId: bill.id, month: month),
+                      amountCents: bill.amountCents, categoryId: bill.categoryId,
+                      payerId: bill.payerId, date: day, recurringId: bill.id)
+    }
+
     @Test("a bill confirmed this month is no longer pending")
     func confirmedNotPending() {
         let internet = bill("Internet", day: 5)
         let s = F.calculator(recurring: [internet],
-                             expenses: [F.expense(2_000, by: F.guille, recurringId: internet.id)])
+                             expenses: [confirmation(of: internet, for: F.november, on: F.date(2026, 11, 5))])
             .summary(for: F.november, today: today)
         #expect(s.pendingRecurring.isEmpty)
+    }
+
+    @Test("confirmation is matched by the month's deterministic id, not the expense date")
+    func confirmedByIdNotDate() {
+        let internet = bill("Internet", day: 5)
+        let paidLate = confirmation(of: internet, for: F.november, on: F.date(2026, 12, 1))
+        let calc = F.calculator(recurring: [internet], expenses: [paidLate])
+        let decemberToday = F.date(2026, 12, 15)
+        let nov = calc.summary(for: F.november, today: decemberToday)
+        let dec = calc.summary(for: F.november.next, today: decemberToday)
+        #expect(nov.pendingRecurring.isEmpty)
+        #expect(nov.totalCents == 0)
+        #expect(dec.pendingRecurring.map(\.id) == [internet.id])
+        #expect(dec.totalCents == 2_000)
+    }
+
+    @Test("a soft-deleted confirmation leaves the bill pending")
+    func deletedConfirmationStillPending() {
+        let internet = bill("Internet", day: 5)
+        var gone = confirmation(of: internet, for: F.november, on: F.date(2026, 11, 5))
+        gone.deletedAt = F.date(2026, 11, 6)
+        let s = F.calculator(recurring: [internet], expenses: [gone]).summary(for: F.november, today: today)
+        #expect(s.pendingRecurring.map(\.id) == [internet.id])
     }
 }
