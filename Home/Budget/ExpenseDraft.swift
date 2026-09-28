@@ -72,6 +72,11 @@ nonisolated struct ExpenseDraft: Identifiable, Equatable {
             }
     }
 
+    static func defaultDate(viewing month: BudgetMonth, today: Date, calendar: Calendar) -> Date {
+        if month.contains(today, calendar: calendar) { return today }
+        return month.date(day: min(calendar.component(.day, from: today), 28), calendar: calendar)
+    }
+
     static func defaultPayer(stored: String, members: [BudgetMember]) -> UUID? {
         if let id = UUID(uuidString: stored), members.contains(where: { $0.id == id }) { return id }
         return members.first?.id

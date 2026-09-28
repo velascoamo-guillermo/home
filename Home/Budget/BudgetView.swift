@@ -99,7 +99,7 @@ struct BudgetView: View {
             Button {
                 editor = ExpenseDraft(
                     payerId: ExpenseDraft.defaultPayer(stored: lastPayerId, members: store.budgetMembers),
-                    date: .now)
+                    date: ExpenseDraft.defaultDate(viewing: month, today: .now, calendar: .current))
             } label: {
                 Image(systemName: "plus")
                     .font(.title2.weight(.bold))

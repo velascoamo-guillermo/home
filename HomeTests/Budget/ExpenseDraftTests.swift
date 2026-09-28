@@ -97,4 +97,15 @@ import Foundation
         #expect(BudgetMonth(date: d.date, calendar: F.calendar) == F.november)
         #expect(try d.makeExpense().recurringId == bill.id)
     }
+
+    @Test("a new expense defaults to today in the current month, else to the same day inside the viewed month")
+    func defaultDate() {
+        let today = F.date(2026, 11, 30, 9)
+        #expect(ExpenseDraft.defaultDate(viewing: F.november, today: today, calendar: F.calendar) == today)
+        let october = ExpenseDraft.defaultDate(viewing: F.november.previous, today: today, calendar: F.calendar)
+        #expect(october == F.date(2026, 10, 28))
+        #expect(F.november.previous.contains(october, calendar: F.calendar))
+        let early = ExpenseDraft.defaultDate(viewing: F.november.next, today: F.date(2026, 11, 3), calendar: F.calendar)
+        #expect(early == F.date(2026, 12, 3))
+    }
 }
