@@ -6,49 +6,40 @@ struct RecurringBillSheet: View {
 
     private let existing: RecurringExpense?
 
-    @State private var name: String
-    @State private var amountText: String
-    @State private var categoryId: UUID?
-    @State private var payerId: UUID?
-    @State private var dayOfMonth: Int
-    @State private var active: Bool
+    @State private var draft: RecurringBillDraft
     @State private var errorMessage: String?
+    @State private var isSaving = false
 
     init(existing: RecurringExpense?) {
         self.existing = existing
-        _name = State(initialValue: existing?.name ?? "")
-        _amountText = State(initialValue: existing.map { Money.editText(cents: $0.amountCents) } ?? "")
-        _categoryId = State(initialValue: existing?.categoryId)
-        _payerId = State(initialValue: existing?.payerId)
-        _dayOfMonth = State(initialValue: existing?.dayOfMonth ?? 1)
-        _active = State(initialValue: existing?.active ?? true)
+        _draft = State(initialValue: RecurringBillDraft(existing: existing))
     }
 
     var body: some View {
         NavigationStack {
             Form {
                 Section("Bill") {
-                    TextField("Name", text: $name)
-                    TextField("Amount", text: $amountText)
+                    TextField("Name", text: $draft.name)
+                    TextField("Amount", text: $draft.amountText)
                         .keyboardType(.decimalPad)
-                    Stepper("Day \(dayOfMonth) of each month", value: $dayOfMonth, in: 1...28)
-                    Toggle("Active", isOn: $active)
+                    Stepper("Day \(draft.dayOfMonth) of each month", value: $draft.dayOfMonth, in: 1...28)
+                    Toggle("Active", isOn: $draft.active)
                 }
                 Section("Category") {
                     ChipGroup(
                         items: ExpenseDraft.categoriesByUsage(store.budgetCategories,
                                                               expenses: store.budgetExpenses,
-                                                              keeping: categoryId),
+                                                              keeping: draft.categoryId),
                         selection: Binding(
-                            get: { store.budgetCategories.first { $0.id == categoryId } },
-                            set: { categoryId = $0?.id }
+                            get: { store.budgetCategories.first { $0.id == draft.categoryId } },
+                            set: { draft.categoryId = $0?.id }
                         ),
                         fill: Palette.budget,
                         title: \.name
                     )
                 }
                 Section("Paid by") {
-                    Picker("Paid by", selection: $payerId) {
+                    Picker("Paid by", selection: $draft.payerId) {
                         ForEach(store.budgetMembers) { member in
                             Text(member.name).tag(Optional(member.id))
                         }
@@ -57,7 +48,11 @@ struct RecurringBillSheet: View {
                 }
                 if existing != nil {
                     Section {
-                        Button("Delete bill", role: .destructive) { Task { await delete() } }
+                        Button("Delete bill", role: .destructive) {
+                            isSaving = true
+                            Task { await delete() }
+                        }
+                        .disabled(isSaving)
                     }
                 }
                 if let errorMessage {
@@ -69,41 +64,30 @@ struct RecurringBillSheet: View {
             }
             .scrollContentBackground(.hidden)
             .gradientCanvas()
-            .navigationTitle(existing == nil ? "New bill" : "Edit bill")
+            .navigationTitle(draft.isNew ? "New bill" : "Edit bill")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Save") { Task { await save() } }
+                    Button("Save") {
+                        isSaving = true
+                        Task { await save() }
+                    }
+                    .disabled(isSaving)
                 }
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { dismiss() }
                 }
             }
             .onAppear {
-                if payerId == nil { payerId = store.budgetMembers.first?.id }
+                if draft.payerId == nil { draft.payerId = store.budgetMembers.first?.id }
             }
         }
     }
 
-    static func makeBill(id: UUID, name: String, amountText: String, categoryId: UUID?,
-                         payerId: UUID?, dayOfMonth: Int, active: Bool) throws -> RecurringExpense {
-        try BudgetValidation.name(name)
-        guard let cents = Money.parseCents(amountText) else { throw BudgetValidationError.invalidAmount }
-        try BudgetValidation.amount(cents)
-        guard let categoryId else { throw BudgetValidationError.missingCategory }
-        guard let payerId else { throw BudgetValidationError.missingPayer }
-        try BudgetValidation.dayOfMonth(dayOfMonth)
-        return RecurringExpense(id: id, name: name.trimmingCharacters(in: .whitespacesAndNewlines),
-                                amountCents: cents, categoryId: categoryId, payerId: payerId,
-                                dayOfMonth: dayOfMonth, active: active)
-    }
-
     private func save() async {
+        defer { isSaving = false }
         do {
-            let bill = try Self.makeBill(id: existing?.id ?? UUID(), name: name, amountText: amountText,
-                                         categoryId: categoryId, payerId: payerId,
-                                         dayOfMonth: dayOfMonth, active: active)
-            try await store.saveRecurringExpense(bill)
+            try await store.saveRecurringExpense(try draft.makeBill())
             dismiss()
         } catch {
             errorMessage = error.localizedDescription
@@ -111,6 +95,7 @@ struct RecurringBillSheet: View {
     }
 
     private func delete() async {
+        defer { isSaving = false }
         guard let existing else { return }
         do {
             try await store.deleteRecurringExpense(existing)

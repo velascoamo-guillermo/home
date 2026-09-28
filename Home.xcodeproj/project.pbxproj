@@ -76,6 +76,7 @@
 		450FF0742101F76219337EC6 /* RecurringExpenseStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7224ED63616CA0DBCD93EE2 /* RecurringExpenseStoreTests.swift */; };
 		451201A6C5C3DB8EB6D01A54 /* AgendaBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982DB47344B8DE3C640628B7 /* AgendaBuilder.swift */; };
 		46ACB1C3208A4DAFE3EA4188 /* CalendarInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A1731DC36DDF452ED11F80 /* CalendarInfo.swift */; };
+		4803C3F071485DED81A47906 /* RecurringBillDraft.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D7B90BA2014B6BB79A0189 /* RecurringBillDraft.swift */; };
 		4830CC9362BB4A8B95B0722F /* ThemeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA4D2835E8B247759BE40C5C /* ThemeStore.swift */; };
 		4973029408D810C2675D3346 /* AgendaInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48AB7DEFA9AB6ACA5C83FAA /* AgendaInput.swift */; };
 		49DF2592DDF6227CD2718279 /* StockContextMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E17A3C0BD0C64888E5CFA0A /* StockContextMenu.swift */; };
@@ -485,6 +486,7 @@
 		9BB602702653BB94D55F5891 /* WidgetSnapshot.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetSnapshot.swift; sourceTree = "<group>"; };
 		A019554D2097390095088A80 /* HubTile.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HubTile.swift; sourceTree = "<group>"; };
 		A189AFE895DCBB25ADA61261 /* CalendarAccessState.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CalendarAccessState.swift; sourceTree = "<group>"; };
+		A3D7B90BA2014B6BB79A0189 /* RecurringBillDraft.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RecurringBillDraft.swift; sourceTree = "<group>"; };
 		A4CDCB58B9C74EE5C806160F /* HomeApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HomeApp.swift; sourceTree = "<group>"; };
 		A4DAECF6D6FF486A9930D49B /* WeekStripView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WeekStripView.swift; sourceTree = "<group>"; };
 		A560B53DA2B4061463D32C76 /* ChipGroup.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ChipGroup.swift; sourceTree = "<group>"; };
@@ -1118,6 +1120,7 @@
 				FD932ADDE44B2476C72E24C8 /* MemberIncomeRow.swift */,
 				453294FC10933CA18B4171DE /* CategoryEditSheet.swift */,
 				D490D56FDB4CDF8B24F293F6 /* RecurringBillSheet.swift */,
+				A3D7B90BA2014B6BB79A0189 /* RecurringBillDraft.swift */,
 			);
 			name = Settings;
 			path = Settings;
@@ -1653,6 +1656,7 @@
 				7CBC0CC7CF30DFF44FA40A16 /* MemberIncomeRow.swift in Sources */,
 				E98377440271E629ED798982 /* CategoryEditSheet.swift in Sources */,
 				74944C6F67668C0D22872C72 /* RecurringBillSheet.swift in Sources */,
+				4803C3F071485DED81A47906 /* RecurringBillDraft.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

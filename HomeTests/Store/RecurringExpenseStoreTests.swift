@@ -35,6 +35,22 @@ import Foundation
         #expect(store.recurringExpenses.count == 1)
     }
 
+    @Test("saving the same new bill twice writes one row")
+    func doubleSaveSingleRow() async throws {
+        let url = F.tempURL()
+        let store = try await seeded(url: url)
+        var draft = RecurringBillDraft(existing: nil)
+        draft.name = "Internet"
+        draft.amountText = "20"
+        draft.categoryId = try #require(store.budgetCategories.first).id
+        draft.payerId = try #require(store.budgetMembers.first).id
+        try await store.saveRecurringExpense(try draft.makeBill())
+        try await store.saveRecurringExpense(try draft.makeBill())
+        #expect(store.recurringExpenses.count == 1)
+        let reloaded = await F.makeStore(url: url)
+        #expect(reloaded.recurringExpenses.count == 1)
+    }
+
     @Test("confirming a due bill removes it from pending")
     func confirmClearsPending() async throws {
         let store = try await seeded()
