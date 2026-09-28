@@ -66,6 +66,18 @@ import Foundation
         #expect(pending(store).isEmpty)
     }
 
+    @Test("confirmed expenses keep their recurringId after the bill is deleted")
+    func confirmedExpenseSurvivesBillDeletion() async throws {
+        let store = try await seeded()
+        let internet = try bill(store)
+        try await store.saveRecurringExpense(internet)
+        let confirmed = try ExpenseDraft(confirming: internet, month: F.november, calendar: F.calendar).makeExpense()
+        try await store.saveBudgetExpense(confirmed)
+        try await store.deleteRecurringExpense(internet)
+        #expect(store.budgetExpenses.first?.recurringId == internet.id)
+        #expect(pending(store).isEmpty)
+    }
+
     @Test("inactive and deleted bills are never pending")
     func inactiveAndDeleted() async throws {
         let store = try await seeded()
