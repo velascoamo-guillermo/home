@@ -1,0 +1,104 @@
+import Testing
+import Foundation
+@testable import Casita
+
+@Suite("Budget sync") @MainActor struct BudgetSyncTests {
+    typealias F = BudgetFixtures
+
+    private func device(_ remote: InMemoryRemote) async throws -> (SyncEngine, LocalStore) {
+        let url = URL(fileURLWithPath: NSTemporaryDirectory())
+            .appendingPathComponent("budget-\(UUID().uuidString).sqlite")
+        let local = try await LocalStore(url: url)
+        return (SyncEngine(local: local, gateway: remote), local)
+    }
+
+    @Test("every budget table is synced")
+    func tablesListed() {
+        for table in ["budget_members", "budget_categories", "budget_incomes",
+                      "budget_recurring", "budget_expenses"] {
+            #expect(SyncEngine.syncedTables.contains(table), "\(table)")
+        }
+    }
+
+    private func roundTrip<T: SyncableEntity>(_ item: T) async throws -> [T] {
+        let remote = InMemoryRemote()
+        let (a, localA) = try await device(remote)
+        let (b, localB) = try await device(remote)
+        try await localA.upsert([item], enqueue: true)
+        try await a.push()
+        #expect(try await localA.pendingOps().isEmpty)
+        try await b.pull(table: T.tableName)
+        return try await localB.fetchAll(T.self)
+    }
+
+    @Test("members, categories, incomes, bills and expenses round-trip between devices")
+    func roundTrips() async throws {
+        #expect(try await roundTrip(F.guille).map(\.name) == ["Guille"])
+        #expect(try await roundTrip(F.rent).map(\.estimateCents) == [90_500])
+        #expect(try await roundTrip(F.income(380_000, for: F.lu)).map(\.amountCents) == [380_000])
+        let bill = RecurringExpense(name: "Internet", amountCents: 2_000, categoryId: F.rent.id,
+                                    payerId: F.lu.id, dayOfMonth: 5)
+        #expect(try await roundTrip(bill).map(\.dayOfMonth) == [5])
+        let expense = F.expense(11_037, by: F.guille)
+        let pulled = try await roundTrip(expense)
+        #expect(pulled.map(\.id) == [expense.id])
+        #expect(pulled.map(\.amountCents) == [11_037])
+    }
+
+    @Test("hasPulled is false before any pull and true after an empty pull")
+    func hasPulledAfterEmptyPull() async throws {
+        let (engine, _) = try await device(InMemoryRemote())
+        #expect(await !engine.hasPulled(BudgetMember.tableName))
+        try await engine.pull(table: BudgetMember.tableName)
+        #expect(await engine.hasPulled(BudgetMember.tableName))
+        #expect(await !engine.hasPulled(BudgetCategory.tableName))
+    }
+
+    @Test("a failed pull does not mark the table as pulled")
+    func failedPullNotMarked() async throws {
+        let remote = InMemoryRemote()
+        await remote.setFailPulls(true)
+        let (engine, _) = try await device(remote)
+        await engine.sync(tables: [BudgetMember.tableName])
+        #expect(await !engine.hasPulled(BudgetMember.tableName))
+    }
+
+    @Test("two devices writing the same member-month income converge on one row, last push wins")
+    func sameIncomeTwoDevicesConverge() async throws {
+        let remote = InMemoryRemote()
+        let (a, localA) = try await device(remote)
+        let (b, localB) = try await device(remote)
+        let id = BudgetIDs.income(memberId: F.guille.id, month: F.november)
+        try await localA.upsert([BudgetIncome(id: id, memberId: F.guille.id, month: "2026-11",
+                                              amountCents: 300_000)], enqueue: true)
+        try await localB.upsert([BudgetIncome(id: id, memberId: F.guille.id, month: "2026-11",
+                                              amountCents: 310_000)], enqueue: true)
+        try await a.push()
+        try await b.push()
+        #expect(try await localA.pendingOps().isEmpty)
+        #expect(try await localB.pendingOps().isEmpty)
+        #expect(await remote.rowCount(BudgetIncome.tableName) == 1)
+        try await a.pull(table: BudgetIncome.tableName)
+        #expect(try await localA.fetchAll(BudgetIncome.self).map(\.amountCents) == [310_000])
+    }
+
+    @Test("re-creating a tombstoned deterministic row clears deleted_at remotely")
+    func recreatedRowClearsRemoteTombstone() async throws {
+        let remote = InMemoryRemote()
+        let (a, localA) = try await device(remote)
+        let (b, localB) = try await device(remote)
+        let income = BudgetIncome(id: BudgetIDs.income(memberId: F.lu.id, month: F.november),
+                                  memberId: F.lu.id, month: "2026-11", amountCents: 100_000)
+        try await localA.upsert([income], enqueue: true)
+        try await a.push()
+        try await localA.softDelete(income, enqueue: true)
+        try await a.push()
+        var again = income
+        again.updatedAt = .now
+        try await localA.upsert([again], enqueue: true)
+        try await a.push()
+        #expect(await remote.deletedAtIsNull(BudgetIncome.tableName, id: income.id))
+        try await b.pull(table: BudgetIncome.tableName)
+        #expect(try await localB.fetchAll(BudgetIncome.self).map(\.id) == [income.id])
+    }
+}

@@ -1,4 +1,5 @@
 import Foundation
+import Supabase
 @testable import Casita
 
 enum BudgetFixtures {
@@ -42,5 +43,33 @@ enum BudgetFixtures {
                            expenses: [BudgetExpense] = []) -> BudgetCalculator {
         BudgetCalculator(members: members, categories: categories, incomes: incomes,
                          recurring: recurring, expenses: expenses, calendar: calendar)
+    }
+
+    static func tempURL() -> URL {
+        URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("budget-store-\(UUID().uuidString).sqlite")
+    }
+
+    @MainActor
+    static func makeStore(syncEnabled: Bool = false, gateway: (any RemoteGateway)? = nil,
+                          url: URL? = nil) async -> SupabaseStore {
+        let client = SupabaseClient(
+            supabaseURL: URL(string: "http://127.0.0.1")!,
+            supabaseKey: "test",
+            options: .init(auth: .init(autoRefreshToken: false, emitLocalSessionAsInitialSession: false))
+        )
+        let store = SupabaseStore(client: client, localURL: url ?? tempURL(),
+                                  syncEnabled: syncEnabled, gateway: gateway)
+        await store.loadAll()
+        return store
+    }
+
+    /// The reconnect observer can win the single-flight sync race against loadAll, so
+    /// store-level sync assertions poll briefly instead of assuming loadAll did the pull.
+    @MainActor
+    static func waitUntil(timeout: Duration = .seconds(3), _ condition: () -> Bool) async throws {
+        let deadline = ContinuousClock.now + timeout
+        while !condition(), ContinuousClock.now < deadline {
+            try await Task.sleep(for: .milliseconds(20))
+        }
     }
 }
