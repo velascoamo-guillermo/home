@@ -80,4 +80,32 @@ import Foundation
         #expect(ExpenseDraft.defaultPayer(stored: "", members: members) == F.guille.id)
         #expect(ExpenseDraft.defaultPayer(stored: "", members: []) == nil)
     }
+
+    @Test("confirming a bill pre-fills it with a deterministic id for that month")
+    func confirming() throws {
+        let bill = RecurringExpense(name: "Internet", amountCents: 5_000, categoryId: F.rent.id,
+                                    payerId: F.lu.id, dayOfMonth: 5)
+        let d = ExpenseDraft(confirming: bill, month: F.november, calendar: F.calendar)
+        #expect(d.id == BudgetIDs.recurringExpense(recurringId: bill.id, month: F.november))
+        #expect(d.isNew)
+        #expect(d.title == "Confirm bill")
+        #expect(d.amountText == "50.00")
+        #expect(d.categoryId == F.rent.id)
+        #expect(d.payerId == F.lu.id)
+        #expect(d.name == "Internet")
+        #expect(F.calendar.component(.day, from: d.date) == 5)
+        #expect(BudgetMonth(date: d.date, calendar: F.calendar) == F.november)
+        #expect(try d.makeExpense().recurringId == bill.id)
+    }
+
+    @Test("a new expense defaults to today in the current month, else to the same day inside the viewed month")
+    func defaultDate() {
+        let today = F.date(2026, 11, 30, 9)
+        #expect(ExpenseDraft.defaultDate(viewing: F.november, today: today, calendar: F.calendar) == today)
+        let october = ExpenseDraft.defaultDate(viewing: F.november.previous, today: today, calendar: F.calendar)
+        #expect(october == F.date(2026, 10, 28))
+        #expect(F.november.previous.contains(october, calendar: F.calendar))
+        let early = ExpenseDraft.defaultDate(viewing: F.november.next, today: F.date(2026, 11, 3), calendar: F.calendar)
+        #expect(early == F.date(2026, 12, 3))
+    }
 }

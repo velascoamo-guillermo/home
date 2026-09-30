@@ -101,4 +101,52 @@ import Foundation
         try await b.pull(table: BudgetIncome.tableName)
         #expect(try await localB.fetchAll(BudgetIncome.self).map(\.id) == [income.id])
     }
+
+    @Test("two devices confirming the same bill for the same month end up with one expense")
+    func sameBillTwoDevicesConverge() async throws {
+        let remote = InMemoryRemote()
+        let (a, localA) = try await device(remote)
+        let (b, localB) = try await device(remote)
+        let bill = RecurringExpense(name: "Luz", amountCents: 11_000, categoryId: F.rent.id,
+                                    payerId: F.guille.id, dayOfMonth: 10)
+        var onA = ExpenseDraft(confirming: bill, month: F.november, calendar: F.calendar)
+        onA.amountText = "108.40"
+        var onB = ExpenseDraft(confirming: bill, month: F.november, calendar: F.calendar)
+        onB.amountText = "112.15"
+        try await localA.upsert([onA.makeExpense()], enqueue: true)
+        try await localB.upsert([onB.makeExpense()], enqueue: true)
+        try await a.push()
+        try await b.push()
+        #expect(await remote.rowCount(BudgetExpense.tableName) == 1)
+        try await a.pull(table: BudgetExpense.tableName)
+        let onDeviceA = try await localA.fetchAll(BudgetExpense.self)
+        #expect(onDeviceA.count == 1)
+        #expect(onDeviceA.first?.amountCents == 11_215)
+    }
+
+    @Test("deleting then re-confirming a bill clears the remote tombstone and stays one row")
+    func reconfirmedBillClearsRemoteTombstone() async throws {
+        let remote = InMemoryRemote()
+        let (a, localA) = try await device(remote)
+        let (b, localB) = try await device(remote)
+        let bill = RecurringExpense(name: "Agua", amountCents: 3_000, categoryId: F.rent.id,
+                                    payerId: F.guille.id, dayOfMonth: 12)
+        let first = try ExpenseDraft(confirming: bill, month: F.november, calendar: F.calendar).makeExpense()
+        try await localA.upsert([first], enqueue: true)
+        try await a.push()
+        try await localA.softDelete(first, enqueue: true)
+        try await a.push()
+        #expect(await remote.deletedAtIsNull(BudgetExpense.tableName, id: first.id) == false)
+        var again = try ExpenseDraft(confirming: bill, month: F.november, calendar: F.calendar).makeExpense()
+        again.updatedAt = .now
+        try await localA.upsert([again], enqueue: true)
+        try await a.push()
+        #expect(await remote.rowCount(BudgetExpense.tableName) == 1)
+        #expect(await remote.deletedAtIsNull(BudgetExpense.tableName, id: first.id))
+        try await b.pull(table: BudgetExpense.tableName)
+        let onB = try await localB.fetchAll(BudgetExpense.self)
+        #expect(onB.count == 1)
+        #expect(onB.first?.id == first.id)
+        #expect(onB.first?.deletedAt == nil)
+    }
 }

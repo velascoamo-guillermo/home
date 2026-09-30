@@ -24,7 +24,7 @@ nonisolated struct BudgetCalculator {
             categories: categoryLines(live, expenses: monthExpenses),
             members: lines,
             settlement: Self.settle(lines),
-            pendingRecurring: pending(month: month, today: today, expenses: monthExpenses)
+            pendingRecurring: pending(month: month, today: today)
         )
     }
 
@@ -141,14 +141,17 @@ nonisolated struct BudgetCalculator {
 
     // MARK: Recurring
 
-    private func pending(month: BudgetMonth, today: Date, expenses: [BudgetExpense]) -> [RecurringExpense] {
+    /// A bill is confirmed for a month by its deterministic expense id, not by the expense
+    /// date: a bill paid late is logged in the month it was paid but still settles its own month.
+    private func pending(month: BudgetMonth, today: Date) -> [RecurringExpense] {
         let current = BudgetMonth(date: today, calendar: calendar)
         guard month <= current else { return [] }
-        let confirmed = Set(expenses.compactMap(\.recurringId))
+        let live = Set(expenses.filter { $0.deletedAt == nil }.map(\.id))
         let todayDay = calendar.component(.day, from: today)
         return recurring
             .filter { bill in
-                bill.deletedAt == nil && bill.active && !confirmed.contains(bill.id)
+                bill.deletedAt == nil && bill.active
+                    && !live.contains(BudgetIDs.recurringExpense(recurringId: bill.id, month: month))
                     && (month < current || bill.dayOfMonth <= todayDay)
             }
             .sorted { ($0.dayOfMonth, $0.name) < ($1.dayOfMonth, $1.name) }

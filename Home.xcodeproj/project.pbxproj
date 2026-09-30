@@ -73,8 +73,10 @@
 		432CC1C59252275CCB99215B /* SupabaseStoreMealTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934BB72A2A2516A2E5E46923 /* SupabaseStoreMealTests.swift */; };
 		440CB00F976D2EF275C9C05D /* BudgetMonthTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A5F47707C6E2620844397CF /* BudgetMonthTests.swift */; };
 		4437583E6EB0D9482C98DB97 /* HomeWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E65927107DA46DF3718B9ABD /* HomeWidgetBundle.swift */; };
+		450FF0742101F76219337EC6 /* RecurringExpenseStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7224ED63616CA0DBCD93EE2 /* RecurringExpenseStoreTests.swift */; };
 		451201A6C5C3DB8EB6D01A54 /* AgendaBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982DB47344B8DE3C640628B7 /* AgendaBuilder.swift */; };
 		46ACB1C3208A4DAFE3EA4188 /* CalendarInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A1731DC36DDF452ED11F80 /* CalendarInfo.swift */; };
+		4803C3F071485DED81A47906 /* RecurringBillDraft.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D7B90BA2014B6BB79A0189 /* RecurringBillDraft.swift */; };
 		4830CC9362BB4A8B95B0722F /* ThemeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA4D2835E8B247759BE40C5C /* ThemeStore.swift */; };
 		4973029408D810C2675D3346 /* AgendaInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48AB7DEFA9AB6ACA5C83FAA /* AgendaInput.swift */; };
 		49DF2592DDF6227CD2718279 /* StockContextMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E17A3C0BD0C64888E5CFA0A /* StockContextMenu.swift */; };
@@ -127,6 +129,7 @@
 		71275FBB3FE031FE58C307FA /* BudgetHeroCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED6BEB419304EAFB67EE99C /* BudgetHeroCard.swift */; };
 		7211F37A733C8BA2F40834B8 /* RecurringExpense.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30B9DA4CEB40C43F6611A49A /* RecurringExpense.swift */; };
 		7244ED2B137D93EC93BAB067 /* BudgetCategoryRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64EE3ACA3BD2B8A212967DCA /* BudgetCategoryRow.swift */; };
+		74944C6F67668C0D22872C72 /* RecurringBillSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D490D56FDB4CDF8B24F293F6 /* RecurringBillSheet.swift */; };
 		753EA085B262B26023B59335 /* PetDetailSummaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9107B4CBE436FB851680BB14 /* PetDetailSummaryTests.swift */; };
 		763092E8FCD388474A10EC90 /* Transfer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9C65F72FD13AC934698568A /* Transfer.swift */; };
 		77BF36B872A3E7F02C611A8D /* AgendaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4420B741E1801D3826AF3760 /* AgendaView.swift */; };
@@ -238,6 +241,7 @@
 		D9BFDB966DD01A8D042744EF /* CategoryLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB671F32C4C57BF2AD45DEDE /* CategoryLine.swift */; };
 		DAF92CCB6DB41B482AA51985 /* PetDetailSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1096896154915320B4734C1 /* PetDetailSummary.swift */; };
 		DB2B4724058F482D2312EF44 /* WeekMealChoice.swift in Sources */ = {isa = PBXBuildFile; fileRef = A80EE84948749894F5494007 /* WeekMealChoice.swift */; };
+		DB38C984CAC083FB31234D1B /* RecurringBillSheetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 032432EDD2F6883C3B9316D6 /* RecurringBillSheetTests.swift */; };
 		DB5E102743B6146C010260B5 /* OutOfStockAlertTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9554CEBB73DA296D96B940D /* OutOfStockAlertTests.swift */; };
 		DB9C653BEBE4EC51408B8BD7 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 239C164751EBD9737D8745C2 /* Foundation.framework */; };
 		DC170082CE7744FC4D87721C /* StockListModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49DD808308D999CBC360A75A /* StockListModelTests.swift */; };
@@ -343,6 +347,7 @@
 		01FAB3EADD463A749A657595 /* AgendaItem.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AgendaItem.swift; sourceTree = "<group>"; };
 		0299C23DD2754C41B0432E88 /* AppAppearanceTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppAppearanceTests.swift; sourceTree = "<group>"; };
 		02E555E11C53F4C544EE0CBA /* GradientCanvas.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GradientCanvas.swift; sourceTree = "<group>"; };
+		032432EDD2F6883C3B9316D6 /* RecurringBillSheetTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RecurringBillSheetTests.swift; sourceTree = "<group>"; };
 		0382880D75423251A9F84A1F /* CalendarAccessBanner.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CalendarAccessBanner.swift; sourceTree = "<group>"; };
 		03AEF71ADE6699D9C24706D5 /* BudgetCategory.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BudgetCategory.swift; sourceTree = "<group>"; };
 		045A6E110859FF57023DFD3A /* MenuDayStripView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MenuDayStripView.swift; sourceTree = "<group>"; };
@@ -481,6 +486,7 @@
 		9BB602702653BB94D55F5891 /* WidgetSnapshot.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetSnapshot.swift; sourceTree = "<group>"; };
 		A019554D2097390095088A80 /* HubTile.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HubTile.swift; sourceTree = "<group>"; };
 		A189AFE895DCBB25ADA61261 /* CalendarAccessState.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CalendarAccessState.swift; sourceTree = "<group>"; };
+		A3D7B90BA2014B6BB79A0189 /* RecurringBillDraft.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RecurringBillDraft.swift; sourceTree = "<group>"; };
 		A4CDCB58B9C74EE5C806160F /* HomeApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HomeApp.swift; sourceTree = "<group>"; };
 		A4DAECF6D6FF486A9930D49B /* WeekStripView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WeekStripView.swift; sourceTree = "<group>"; };
 		A560B53DA2B4061463D32C76 /* ChipGroup.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ChipGroup.swift; sourceTree = "<group>"; };
@@ -544,6 +550,7 @@
 		D337BEEFF45641A7A41446D8 /* PetFile.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PetFile.swift; sourceTree = "<group>"; };
 		D3D2C3CCB9AC6D0EFC0F0516 /* AddWeightEntrySheet.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AddWeightEntrySheet.swift; sourceTree = "<group>"; };
 		D417FE8A4E9C6F77B4186EE7 /* HubTileTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HubTileTests.swift; sourceTree = "<group>"; };
+		D490D56FDB4CDF8B24F293F6 /* RecurringBillSheet.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RecurringBillSheet.swift; sourceTree = "<group>"; };
 		D89EF1C5AC494C239A04F4CE /* SQLiteDatabase.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SQLiteDatabase.swift; sourceTree = "<group>"; };
 		DA8A76EE27CC411401051BD6 /* InMemoryRemote.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = InMemoryRemote.swift; sourceTree = "<group>"; };
 		DACB8785E9B997314DDA68E3 /* SearchView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
@@ -561,6 +568,7 @@
 		E61C41F4B1B06370070D1E26 /* WeekMenuView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WeekMenuView.swift; sourceTree = "<group>"; };
 		E64E9A83ECD2A46C38C80B9D /* OutOfStockAlert.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OutOfStockAlert.swift; sourceTree = "<group>"; };
 		E65927107DA46DF3718B9ABD /* HomeWidgetBundle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HomeWidgetBundle.swift; sourceTree = "<group>"; };
+		E7224ED63616CA0DBCD93EE2 /* RecurringExpenseStoreTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RecurringExpenseStoreTests.swift; sourceTree = "<group>"; };
 		E7E9C6C5EAB74373BF8B9164 /* Outbox.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Outbox.swift; sourceTree = "<group>"; };
 		E85A8B57FB327E77B3638C0E /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/WidgetKit.framework; sourceTree = DEVELOPER_DIR; };
 		E8E5AEC6B597D3DB8B703D75 /* AgendaHeaderView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AgendaHeaderView.swift; sourceTree = "<group>"; };
@@ -708,6 +716,7 @@
 				A899F2EDB42AD53F99F5FA23 /* BudgetSeedingTests.swift */,
 				56DA161FB333CB07ADCE95B0 /* BudgetExpenseStoreTests.swift */,
 				BEB29CE16CD051331E33BD1C /* BudgetSettingsStoreTests.swift */,
+				E7224ED63616CA0DBCD93EE2 /* RecurringExpenseStoreTests.swift */,
 			);
 			name = Store;
 			path = Store;
@@ -821,6 +830,7 @@
 				15DFF74D0107C1C54E7AA41E /* MoneyParsingTests.swift */,
 				456F05CE30CC88F42678CF5D /* ExpenseDraftTests.swift */,
 				FC01747BE756A7EE12FAD0E7 /* MemberIncomeRowTests.swift */,
+				032432EDD2F6883C3B9316D6 /* RecurringBillSheetTests.swift */,
 			);
 			name = Budget;
 			path = Budget;
@@ -1109,6 +1119,8 @@
 				82D7A76EC3824DF05742D7B0 /* BudgetSettingsView.swift */,
 				FD932ADDE44B2476C72E24C8 /* MemberIncomeRow.swift */,
 				453294FC10933CA18B4171DE /* CategoryEditSheet.swift */,
+				D490D56FDB4CDF8B24F293F6 /* RecurringBillSheet.swift */,
+				A3D7B90BA2014B6BB79A0189 /* RecurringBillDraft.swift */,
 			);
 			name = Settings;
 			path = Settings;
@@ -1643,6 +1655,8 @@
 				5D6F65CCBF2EF433EE8F7675 /* BudgetSettingsView.swift in Sources */,
 				7CBC0CC7CF30DFF44FA40A16 /* MemberIncomeRow.swift in Sources */,
 				E98377440271E629ED798982 /* CategoryEditSheet.swift in Sources */,
+				74944C6F67668C0D22872C72 /* RecurringBillSheet.swift in Sources */,
+				4803C3F071485DED81A47906 /* RecurringBillDraft.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1773,6 +1787,8 @@
 				ADC010D68C64911FB1FF0CA4 /* BudgetExpenseStoreTests.swift in Sources */,
 				24BD692137380CF3C5D32501 /* BudgetSettingsStoreTests.swift in Sources */,
 				A142EC7BE56E5CFBB336C339 /* MemberIncomeRowTests.swift in Sources */,
+				450FF0742101F76219337EC6 /* RecurringExpenseStoreTests.swift in Sources */,
+				DB38C984CAC083FB31234D1B /* RecurringBillSheetTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

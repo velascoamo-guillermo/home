@@ -149,6 +149,31 @@ extension SupabaseStore {
         await _sync?.sync(tables: [BudgetCategory.tableName])
     }
 
+    // MARK: - Recurring bills
+
+    func saveRecurringExpense(_ bill: RecurringExpense) async throws {
+        try BudgetValidation.name(bill.name)
+        try BudgetValidation.amount(bill.amountCents)
+        try BudgetValidation.dayOfMonth(bill.dayOfMonth)
+        var b = bill
+        b.name = bill.name.trimmingCharacters(in: .whitespacesAndNewlines)
+        b.updatedAt = .now
+        b.deletedAt = nil
+        try await _local?.upsert([b], enqueue: true)
+        if let i = recurringExpenses.firstIndex(where: { $0.id == b.id }) {
+            recurringExpenses[i] = b
+        } else {
+            recurringExpenses.append(b)
+        }
+        await _sync?.sync(tables: [RecurringExpense.tableName])
+    }
+
+    func deleteRecurringExpense(_ bill: RecurringExpense) async throws {
+        try await _local?.softDelete(bill, enqueue: true)
+        recurringExpenses.removeAll { $0.id == bill.id }
+        await _sync?.sync(tables: [RecurringExpense.tableName])
+    }
+
     /// Renumbers the FULL live category list: `ordered` first (in the given order), then any
     /// live categories not included (e.g. archived, when only the active subset was reordered)
     /// keeping their existing relative order. This avoids `sortOrder` collisions between the

@@ -8,6 +8,7 @@ nonisolated enum BudgetValidationError: LocalizedError, Equatable {
     case missingPayer
     case categoryInUse
     case lastMember
+    case dayOutOfRange
 
     var errorDescription: String? {
         switch self {
@@ -18,6 +19,7 @@ nonisolated enum BudgetValidationError: LocalizedError, Equatable {
         case .missingPayer:    "Pick who paid."
         case .categoryInUse:   "This category has expenses or bills. Archive it instead."
         case .lastMember:      "Keep at least one member."
+        case .dayOutOfRange:   "Day must be between 1 and 28."
         }
     }
 }
