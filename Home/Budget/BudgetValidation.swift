@@ -13,4 +13,9 @@ nonisolated enum BudgetValidation {
             throw BudgetValidationError.emptyName
         }
     }
+
+    static func nonNegativeAmount(_ cents: Int) throws {
+        guard cents >= 0 else { throw BudgetValidationError.invalidAmount }
+        guard cents <= maxAmountCents else { throw BudgetValidationError.amountTooLarge }
+    }
 }

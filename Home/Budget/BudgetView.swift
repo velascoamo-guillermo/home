@@ -59,6 +59,16 @@ struct BudgetView: View {
         .flatListStyle()
         .navigationTitle("Budget")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                NavigationLink {
+                    BudgetSettingsView(month: month)
+                } label: {
+                    Image(systemName: "gearshape")
+                }
+                .accessibilityLabel("Budget settings")
+            }
+        }
         .overlay(alignment: .bottomTrailing) {
             Button {
                 editor = ExpenseDraft(
