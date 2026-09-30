@@ -1,6 +1,5 @@
 import SwiftUI
 import PhotosUI
-import UIKit
 
 struct PetDetailView: View {
     let pet: Pet
@@ -11,7 +10,7 @@ struct PetDetailView: View {
     @State private var selectedSection: PetSection?
     @State private var showAddAppointment = false
     @State private var showAddEvent = false
-    @State private var heroImage: UIImage?
+    @State private var heroImage: PlatformImage?
 
     private static let heroHeight: CGFloat = 380
 
@@ -45,7 +44,7 @@ struct PetDetailView: View {
         }
         .sheet(isPresented: $showAddAppointment) { AddAppointmentSheet(petId: currentPet.id) }
         .sheet(isPresented: $showAddEvent) { AddEventSheet(petId: currentPet.id) }
-        .toolbarBackground(.hidden, for: .navigationBar)
+        .hiddenNavigationBarBackground()
         .onChange(of: photoPickerItem) { _, item in
             guard let item else { return }
             Task { await uploadPhoto(item) }
@@ -65,7 +64,7 @@ struct PetDetailView: View {
     private var hero: some View {
         Group {
             if let img = heroImage {
-                Image(uiImage: img).resizable().scaledToFill()
+                Image(platformImage: img).resizable().scaledToFill()
             } else {
                 Rectangle().fill(Palette.pets)
                     .overlay {
@@ -229,7 +228,7 @@ struct PetDetailView: View {
             return
         }
         guard let (data, _) = try? await URLSession.shared.data(from: url),
-              let img = UIImage(data: data) else { return }
+              let img = PlatformImage(data: data) else { return }
         heroImage = img
     }
 
@@ -245,8 +244,8 @@ struct PetDetailView: View {
                 return
             }
             let compressResult = await Task.detached(priority: .userInitiated) {
-                guard let uiImage = UIImage(data: data),
-                      let compressed = uiImage.resized(maxDimension: 512).jpegData(compressionQuality: 0.8)
+                guard let image = PlatformImage(data: data),
+                      let compressed = image.resized(maxDimension: 512).jpegData(compressionQuality: 0.8)
                 else { return Data?.none }
                 return compressed
             }.value
