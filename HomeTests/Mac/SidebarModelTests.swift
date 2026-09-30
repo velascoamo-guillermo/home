@@ -73,36 +73,50 @@ import Foundation
 
     @Test("emoji and combining marks do not split grapheme clusters when truncated")
     func emojiGraphemeTruncation() {
-        let emojiPet = Pet(name: "👩‍👩‍👧‍👦 Señor Bigotes 🐶🐾 de la Mancha", type: "Cat", breed: "Tabby")
-        let title = SidebarModel.title(for: .pet(emojiPet.id), pets: [emojiPet])
+        // Test 1: 12 ASCII characters followed by emoji family cluster as the 13th character
+        let emojiPet1 = Pet(name: "AAAAAAAAAAAA👩‍👩‍👧‍👦 and more text", type: "Cat", breed: "Tabby")
+        let title1 = SidebarModel.title(for: .pet(emojiPet1.id), pets: [emojiPet1])
 
-        #expect(title.count <= SidebarModel.maxTitleLength, "title '\(title)' exceeds maxTitleLength")
-        #expect(title.hasSuffix("…"), "title should end with ellipsis")
+        #expect(title1 == "AAAAAAAAAAAA👩‍👩‍👧‍👦…", "title should be first 13 characters plus ellipsis")
+        #expect(title1.count == SidebarModel.maxTitleLength, "title must be exactly maxTitleLength")
+        #expect(title1.dropLast().last == "👩‍👩‍👧‍👦", "last kept character must be the complete emoji cluster")
 
-        // Every Character in title (except the ellipsis) must exist in the original name
-        let titleWithoutEllipsis = String(title.dropLast())
-        for char in titleWithoutEllipsis {
-            #expect(emojiPet.name.contains(char), "Character '\(char)' not found in original pet name")
-        }
+        // Test 2: 12 ASCII characters followed by combining accent (é as e\u{0301})
+        let emojiPet2 = Pet(name: "AAAAAAAAAAAA" + "e\u{0301}" + " and more text", type: "Dog", breed: "Lab")
+        let title2 = SidebarModel.title(for: .pet(emojiPet2.id), pets: [emojiPet2])
+
+        let expected2 = "AAAAAAAAAAAA" + "e\u{0301}" + "…"
+        #expect(title2 == expected2, "title should preserve combining accent as a single character")
+        #expect(title2.count == SidebarModel.maxTitleLength, "title must be exactly maxTitleLength")
+        #expect(title2.dropLast().last == Character("e\u{0301}"), "last kept character must be the combining mark cluster")
     }
 
     @Test("pet row sorting is deterministic and independent of input order")
     func petRowDeterminism() {
-        let sameName1 = Pet(name: "Max", type: "Dog", breed: "Lab")
-        let sameName2 = Pet(name: "Max", type: "Cat", breed: "Siamese")
-        let caseVariant1 = Pet(name: "bella", type: "Dog", breed: "Poodle")
-        let caseVariant2 = Pet(name: "Bella", type: "Cat", breed: "Tabby")
-        let accentVariant1 = Pet(name: "Café", type: "Dog", breed: "Dachshund")
-        let accentVariant2 = Pet(name: "Cafe", type: "Cat", breed: "Persian")
+        let maxUUID1 = UUID(uuidString: "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")!
+        let maxUUID2 = UUID(uuidString: "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb")!
+        let bellaUUID1 = UUID(uuidString: "cccccccc-cccc-cccc-cccc-cccccccccccc")!
+        let bellaUUID2 = UUID(uuidString: "dddddddd-dddd-dddd-dddd-dddddddddddd")!
+        let cafeUUID1 = UUID(uuidString: "eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee")!
+        let cafeUUID2 = UUID(uuidString: "ffffffff-ffff-ffff-ffff-ffffffffffff")!
 
-        // Sort with different input orders
-        let order1 = SidebarModel.petRows([sameName1, sameName2, caseVariant1, caseVariant2, accentVariant1, accentVariant2]).map(\.name)
-        let order2 = SidebarModel.petRows([accentVariant2, caseVariant2, sameName2, accentVariant1, caseVariant1, sameName1]).map(\.name)
+        let sameName1 = Pet(id: maxUUID1, name: "Max", type: "Dog", breed: "Lab")
+        let sameName2 = Pet(id: maxUUID2, name: "Max", type: "Cat", breed: "Siamese")
+        let caseVariant1 = Pet(id: bellaUUID1, name: "bella", type: "Dog", breed: "Poodle")
+        let caseVariant2 = Pet(id: bellaUUID2, name: "Bella", type: "Cat", breed: "Tabby")
+        let accentVariant1 = Pet(id: cafeUUID1, name: "Café", type: "Dog", breed: "Dachshund")
+        let accentVariant2 = Pet(id: cafeUUID2, name: "Cafe", type: "Cat", breed: "Persian")
 
-        #expect(order1 == order2, "sorting should be deterministic regardless of input order")
+        // Sort with different input orders; stable sort preserves input order for ties with identical names
+        let order1 = SidebarModel.petRows([sameName1, sameName2, caseVariant1, caseVariant2, accentVariant1, accentVariant2]).map(\.id)
+        let order2 = SidebarModel.petRows([accentVariant2, caseVariant2, sameName2, accentVariant1, caseVariant1, sameName1]).map(\.id)
 
-        // Repeated calls return same order
-        let order3 = SidebarModel.petRows([sameName1, sameName2, caseVariant1, caseVariant2, accentVariant1, accentVariant2]).map(\.name)
+        // For "Max"/"Max" pair: input order1 is [sameName1, sameName2]=[A,B], order2 is [..., sameName2, ..., sameName1]=[B,...,A]
+        #expect(order1 == [bellaUUID1, bellaUUID2, cafeUUID2, cafeUUID1, maxUUID1, maxUUID2], "order1 preserves input order [A,B] for Max tie")
+        #expect(order2 == [bellaUUID1, bellaUUID2, cafeUUID2, cafeUUID1, maxUUID2, maxUUID1], "order2 preserves input order [B,A] for Max tie")
+
+        // Repeated calls with same input order return consistent order
+        let order3 = SidebarModel.petRows([sameName1, sameName2, caseVariant1, caseVariant2, accentVariant1, accentVariant2]).map(\.id)
         #expect(order1 == order3, "repeated calls should return same order")
     }
 
@@ -127,8 +141,8 @@ import Foundation
         let petData = try encoder.encode(petItem)
         let petJSON = String(data: petData, encoding: .utf8)!
 
-        // Verify the structure contains the UUID
-        #expect(petJSON.contains("12345678-1234-5678-1234-567812345678"), "pet UUID should be encoded in JSON")
+        // Assert exact JSON string for .pet encoding
+        #expect(petJSON == "{\"pet\":{\"_0\":\"12345678-1234-5678-1234-567812345678\"}}", "pet should encode with exact structure")
 
         // Decode and verify round-trip
         let decodedPet = try JSONDecoder().decode(SidebarItem.self, from: petData)
