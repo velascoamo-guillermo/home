@@ -136,7 +136,7 @@ final class SupabaseStore {
     private func syncAll() async {
         guard let sync = _sync else { return }
         await sync.sync(tables: SyncEngine.syncedTables)
-        lastSyncAt = .now
+        lastSyncAt = await sync.lastFullSyncAt
     }
 
     private func hydrate() async throws {

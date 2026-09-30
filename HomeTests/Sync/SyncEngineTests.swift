@@ -217,3 +217,83 @@ actor FakeGateway: RemoteGateway {
         #expect(cursor != nil)
     }
 }
+
+@Suite("SyncEngine full-sync stamp") @MainActor struct SyncEngineFullSyncStampTests {
+    // No default-argument expression here (e.g. `= InMemoryRemote()`): a synchronous
+    // actor-init default value in a function signature trips a compiler
+    // isolation-inference bug that mis-reports `InMemoryRemote`'s init as invalidly
+    // `nonisolated`. Callers pass the gateway explicitly instead.
+    private func engine(_ remote: InMemoryRemote) async throws -> SyncEngine {
+        let url = URL(fileURLWithPath: NSTemporaryDirectory())
+            .appendingPathComponent("sfs-\(UUID().uuidString).sqlite")
+        let store = try await LocalStore(url: url)
+        return SyncEngine(local: store, gateway: remote)
+    }
+
+    @Test("a successful full pass stamps lastFullSyncAt")
+    func successfulFullPassStamps() async throws {
+        let sync = try await engine(InMemoryRemote())
+        let before = Date.now
+        await sync.sync(tables: SyncEngine.syncedTables)
+        let stamped = try #require(await sync.lastFullSyncAt)
+        #expect(stamped >= before)
+    }
+
+    @Test("a partial sync(tables:) does not set lastFullSyncAt")
+    func partialSyncDoesNotStamp() async throws {
+        let sync = try await engine(InMemoryRemote())
+        await sync.sync(tables: [StockProduct.tableName])
+        #expect(await sync.lastFullSyncAt == nil)
+    }
+
+    @Test("a failed pass leaves lastFullSyncAt nil")
+    func failedPassLeavesNil() async throws {
+        let remote = InMemoryRemote()
+        await remote.setFailPulls(true)
+        let sync = try await engine(remote)
+        await sync.sync(tables: SyncEngine.syncedTables)
+        #expect(await sync.lastFullSyncAt == nil)
+    }
+
+    @Test("a failed pass after a success leaves lastFullSyncAt unchanged")
+    func failedPassAfterSuccessLeavesUnchanged() async throws {
+        let remote = InMemoryRemote()
+        let sync = try await engine(remote)
+        await sync.sync(tables: SyncEngine.syncedTables)
+        let first = try #require(await sync.lastFullSyncAt)
+
+        await remote.setFailPulls(true)
+        await sync.sync(tables: SyncEngine.syncedTables)
+        #expect(await sync.lastFullSyncAt == first)
+    }
+
+    @Test("a sync that loses the single-flight race does not advance lastFullSyncAt past the running pass")
+    func skippedOverlapDoesNotAdvance() async throws {
+        let url = URL(fileURLWithPath: NSTemporaryDirectory())
+            .appendingPathComponent("sfs-\(UUID().uuidString).sqlite")
+        let store = try await LocalStore(url: url)
+        let sync = SyncEngine(local: store, gateway: StallingGateway())
+
+        async let first: Void = sync.sync(tables: SyncEngine.syncedTables)
+        try await Task.sleep(for: .milliseconds(20))
+        // Overlaps the still-running first pass: single-flight guard skips it immediately
+        // and must not touch lastFullSyncAt.
+        await sync.sync(tables: SyncEngine.syncedTables)
+        #expect(await sync.lastFullSyncAt == nil)
+
+        await first
+        #expect(await sync.lastFullSyncAt != nil)
+    }
+}
+
+/// Minimal gateway that stalls every `pull`, so a test can hold a `SyncEngine.sync`
+/// pass open long enough to exercise the single-flight overlap path. A dedicated,
+/// small type (rather than adding a method to `InMemoryRemote`) sidesteps the same
+/// default-argument isolation-inference bug worked around above.
+actor StallingGateway: RemoteGateway {
+    func push(kind: OutboxOpKind, table: String, payload: Data) async throws {}
+    func pull(table: String, since: Date?) async throws -> [Data] {
+        try? await Task.sleep(for: .milliseconds(200))
+        return []
+    }
+}
