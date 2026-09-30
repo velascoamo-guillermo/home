@@ -48,5 +48,7 @@ enum UITestSupport {
             nextDueDate: Calendar.current.date(byAdding: .day, value: 2, to: .now) ?? .now)
         try? await store.addTask(changeFilter)
         try? await store.addTask(waterPlants)
+
+        try? await store.seedBudgetDefaults()
     }
 }
