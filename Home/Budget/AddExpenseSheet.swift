@@ -19,7 +19,7 @@ struct AddExpenseSheet: View {
             Form {
                 Section("Amount") {
                     TextField("0.00", text: $draft.amountText)
-                        .keyboardType(.decimalPad)
+                        .platformKeyboard(.decimalPad)
                         .focused($amountFocused)
                         .font(.system(size: 34, weight: .bold, design: .rounded))
                         .accessibilityLabel("Amount")
@@ -63,7 +63,7 @@ struct AddExpenseSheet: View {
             .scrollContentBackground(.hidden)
             .gradientCanvas()
             .navigationTitle(draft.title)
-            .navigationBarTitleDisplayMode(.inline)
+            .inlineNavigationTitle()
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") { Task { await save() } }
@@ -75,6 +75,7 @@ struct AddExpenseSheet: View {
             }
             .onAppear { amountFocused = true }
         }
+        .platformSheet()
     }
 
     private var categoryBinding: Binding<BudgetCategory?> {

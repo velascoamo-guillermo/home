@@ -37,7 +37,7 @@ struct WeightTabView: View {
             }
         }
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .trailingBar) {
                 Button("Add", systemImage: "plus") { showAdd = true }
             }
         }

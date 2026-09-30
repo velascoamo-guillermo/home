@@ -1,5 +1,4 @@
 import SwiftUI
-import UIKit
 
 struct CalendarAccessBanner: View {
     let state: CalendarAccessState
@@ -18,8 +17,8 @@ struct CalendarAccessBanner: View {
                 Text(state == .denied ? "Calendar access is off" : "Show your calendar events here")
                     .font(.subheadline.weight(.semibold))
                 if state == .denied {
-                    Button("Open Settings") {
-                        if let url = URL(string: UIApplication.openSettingsURLString) { openURL(url) }
+                    Button(SystemSettingsURL.openButtonTitle) {
+                        if let url = SystemSettingsURL.calendarPrivacy { openURL(url) }
                     }
                 } else {
                     Button("Allow", action: onAllow)

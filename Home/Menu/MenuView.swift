@@ -4,7 +4,7 @@ struct MenuView: View {
     var body: some View {
         WeekMenuView()
             .navigationTitle("Meals")
-            .navigationBarTitleDisplayMode(.inline)
+            .inlineNavigationTitle()
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
                     NavigationLink {

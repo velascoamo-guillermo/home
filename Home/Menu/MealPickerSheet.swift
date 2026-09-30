@@ -75,7 +75,7 @@ struct MealPickerSheet: View {
             }
             .searchable(text: $searchText, prompt: "Buscar meal")
             .navigationTitle("\(Weekday(rawValue: day)?.displayName ?? "") · \(slot.displayName)")
-            .navigationBarTitleDisplayMode(.inline)
+            .inlineNavigationTitle()
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
                     Button("Nueva meal", systemImage: "plus") { isCreating = true }
@@ -96,6 +96,7 @@ struct MealPickerSheet: View {
                 MealFormSheet(existing: meal)
             }
         }
+        .platformSheet()
     }
 
     private func mealRow(_ meal: Meal) -> some View {

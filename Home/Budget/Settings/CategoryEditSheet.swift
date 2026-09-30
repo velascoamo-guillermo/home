@@ -27,7 +27,7 @@ struct CategoryEditSheet: View {
                         Text("Monthly estimate")
                         Spacer()
                         TextField("0.00", text: $estimateText)
-                            .keyboardType(.decimalPad)
+                            .platformKeyboard(.decimalPad)
                             .multilineTextAlignment(.trailing)
                             .frame(width: 120)
                     }
@@ -49,7 +49,7 @@ struct CategoryEditSheet: View {
             .scrollContentBackground(.hidden)
             .gradientCanvas()
             .navigationTitle(isNew ? "New category" : "Edit category")
-            .navigationBarTitleDisplayMode(.inline)
+            .inlineNavigationTitle()
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") { Task { await save() } }
@@ -59,6 +59,7 @@ struct CategoryEditSheet: View {
                 }
             }
         }
+        .platformSheet()
     }
 
     private func save() async {

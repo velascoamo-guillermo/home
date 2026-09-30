@@ -58,7 +58,7 @@ struct TaskSectionPicker: View {
             }
             .gradientCanvas()
             .navigationTitle("Section")
-            .navigationBarTitleDisplayMode(.inline)
+            .inlineNavigationTitle()
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { dismiss() }
@@ -71,6 +71,7 @@ struct TaskSectionPicker: View {
                 }
             }
         }
+        .platformSheet()
     }
 
     /// Bridges the two-binding contract (`selectedSection` + `selectedSectionId`) to a single
@@ -113,7 +114,7 @@ private struct AddCustomSectionSheet: View {
             .scrollContentBackground(.hidden)
             .gradientCanvas()
             .navigationTitle("New Section")
-            .navigationBarTitleDisplayMode(.inline)
+            .inlineNavigationTitle()
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { dismiss() }
@@ -124,6 +125,7 @@ private struct AddCustomSectionSheet: View {
                 }
             }
         }
+        .platformSheet()
     }
 
     private func save() {

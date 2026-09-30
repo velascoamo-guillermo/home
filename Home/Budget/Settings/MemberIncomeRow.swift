@@ -31,7 +31,7 @@ struct MemberIncomeRow: View {
                 Text("Income")
                 Spacer()
                 TextField("0.00", text: $incomeText)
-                    .keyboardType(.decimalPad)
+                    .platformKeyboard(.decimalPad)
                     .multilineTextAlignment(.trailing)
                     .focused($focus, equals: .income)
                     .onSubmit { Task { await commitIncome() } }
