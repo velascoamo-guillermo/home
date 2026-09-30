@@ -70,5 +70,69 @@ import Foundation
         let data = try JSONEncoder().encode(item)
         #expect(try JSONDecoder().decode(SidebarItem.self, from: data) == item)
     }
+
+    @Test("emoji and combining marks do not split grapheme clusters when truncated")
+    func emojiGraphemeTruncation() {
+        let emojiPet = Pet(name: "👩‍👩‍👧‍👦 Señor Bigotes 🐶🐾 de la Mancha", type: "Cat", breed: "Tabby")
+        let title = SidebarModel.title(for: .pet(emojiPet.id), pets: [emojiPet])
+
+        #expect(title.count <= SidebarModel.maxTitleLength, "title '\(title)' exceeds maxTitleLength")
+        #expect(title.hasSuffix("…"), "title should end with ellipsis")
+
+        // Every Character in title (except the ellipsis) must exist in the original name
+        let titleWithoutEllipsis = String(title.dropLast())
+        for char in titleWithoutEllipsis {
+            #expect(emojiPet.name.contains(char), "Character '\(char)' not found in original pet name")
+        }
+    }
+
+    @Test("pet row sorting is deterministic and independent of input order")
+    func petRowDeterminism() {
+        let sameName1 = Pet(name: "Max", type: "Dog", breed: "Lab")
+        let sameName2 = Pet(name: "Max", type: "Cat", breed: "Siamese")
+        let caseVariant1 = Pet(name: "bella", type: "Dog", breed: "Poodle")
+        let caseVariant2 = Pet(name: "Bella", type: "Cat", breed: "Tabby")
+        let accentVariant1 = Pet(name: "Café", type: "Dog", breed: "Dachshund")
+        let accentVariant2 = Pet(name: "Cafe", type: "Cat", breed: "Persian")
+
+        // Sort with different input orders
+        let order1 = SidebarModel.petRows([sameName1, sameName2, caseVariant1, caseVariant2, accentVariant1, accentVariant2]).map(\.name)
+        let order2 = SidebarModel.petRows([accentVariant2, caseVariant2, sameName2, accentVariant1, caseVariant1, sameName1]).map(\.name)
+
+        #expect(order1 == order2, "sorting should be deterministic regardless of input order")
+
+        // Repeated calls return same order
+        let order3 = SidebarModel.petRows([sameName1, sameName2, caseVariant1, caseVariant2, accentVariant1, accentVariant2]).map(\.name)
+        #expect(order1 == order3, "repeated calls should return same order")
+    }
+
+    @Test("JSON encoding is stable for window state restoration")
+    func goldenEncoding() throws {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .sortedKeys
+
+        // Encode .today
+        let todayItem = SidebarItem.today
+        let todayData = try encoder.encode(todayItem)
+        let todayJSON = String(data: todayData, encoding: .utf8)!
+        #expect(todayJSON == "{\"today\":{}}", "today should encode as {\"today\":{}}")
+
+        // Decode and verify round-trip
+        let decodedToday = try JSONDecoder().decode(SidebarItem.self, from: todayData)
+        #expect(decodedToday == .today, "today should round-trip through JSON")
+
+        // Encode .pet with fixed UUID
+        let fixedUUID = UUID(uuidString: "12345678-1234-5678-1234-567812345678")!
+        let petItem = SidebarItem.pet(fixedUUID)
+        let petData = try encoder.encode(petItem)
+        let petJSON = String(data: petData, encoding: .utf8)!
+
+        // Verify the structure contains the UUID
+        #expect(petJSON.contains("12345678-1234-5678-1234-567812345678"), "pet UUID should be encoded in JSON")
+
+        // Decode and verify round-trip
+        let decodedPet = try JSONDecoder().decode(SidebarItem.self, from: petData)
+        #expect(decodedPet == petItem, "pet should round-trip through JSON")
+    }
 }
 #endif
