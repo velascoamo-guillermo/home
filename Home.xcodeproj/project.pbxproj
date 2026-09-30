@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		00B2E6DC3F934773A9D00249 /* PetAvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7176104FF64E3885D42B3C /* PetAvatarView.swift */; };
-		00B6247F0DCA581DD2769CE0 /* CasitaWidget.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = C50C7DD5D3AD5D0A4D7AF3C4 /* CasitaWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		00B6247F0DCA581DD2769CE0 /* CasitaWidget.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = C50C7DD5D3AD5D0A4D7AF3C4 /* CasitaWidget.appex */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		02045C2EE3656925C6AB7845 /* SearchMealRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6484DCD98508EEB88E30F50A /* SearchMealRow.swift */; };
 		020E36B545EDFCBD3A1735E0 /* SearchTaskRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = C15F8CFEEF44FB8979083451 /* SearchTaskRow.swift */; };
 		02180E10EF7E9E4C8C5E454E /* BudgetCalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E4F69E187939E8E8A9E004D /* BudgetCalculatorTests.swift */; };
@@ -85,6 +85,7 @@
 		4A35A9683B81824C94041330 /* MealProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DF0650AAC8C151554C098B6 /* MealProduct.swift */; };
 		4BECF8486986D50EB0657A69 /* WidgetSnapshotWriterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A42C7D06A49055F588C8624 /* WidgetSnapshotWriterTests.swift */; };
 		4C6C6B27E4CB5A1B5683457E /* WidgetEventRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96D23C24F90B25F20A01C6D1 /* WidgetEventRow.swift */; };
+		4C85A0EB4E2C8EF2F437A9EF /* PetFileImport.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE639BC772787B4AF7535C8 /* PetFileImport.swift */; };
 		4D1D0499AA48304EB0FA2FF4 /* MealProductPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932AAC9315EAFE3741709AE7 /* MealProductPicker.swift */; };
 		4D32D7A557A0ABDFFC790F89 /* WidgetSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB602702653BB94D55F5891 /* WidgetSnapshot.swift */; };
 		4D79A9B0CDFD454989FD9B1C /* CalendarEventSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45492C12EA1A6C05AE063D2A /* CalendarEventSnapshot.swift */; };
@@ -610,6 +611,7 @@
 		F92FBF3D893CCC3E6A10DDC7 /* MenuEntrySyncTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MenuEntrySyncTests.swift; sourceTree = "<group>"; };
 		F9554CEBB73DA296D96B940D /* OutOfStockAlertTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OutOfStockAlertTests.swift; sourceTree = "<group>"; };
 		F95C6EACBAED7569AFD9BBBE /* WidgetMealDetail.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetMealDetail.swift; sourceTree = "<group>"; };
+		FAE639BC772787B4AF7535C8 /* PetFileImport.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PetFileImport.swift; sourceTree = "<group>"; };
 		FC01747BE756A7EE12FAD0E7 /* MemberIncomeRowTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MemberIncomeRowTests.swift; sourceTree = "<group>"; };
 		FC9CD642EEEF0D9A5145F994 /* AgendaDay.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AgendaDay.swift; sourceTree = "<group>"; };
 		FD932ADDE44B2476C72E24C8 /* MemberIncomeRow.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MemberIncomeRow.swift; sourceTree = "<group>"; };
@@ -710,6 +712,15 @@
 			path = Sync;
 			sourceTree = "<group>";
 		};
+		0ACD436B520A70C1F62138B4 /* Mac */ = {
+			isa = PBXGroup;
+			children = (
+				11ADE3748CC799F16B7060DA /* Pets */,
+			);
+			name = Mac;
+			path = Mac;
+			sourceTree = "<group>";
+		};
 		0D1E073B845A7AD0DAA7C462 /* Pets */ = {
 			isa = PBXGroup;
 			children = (
@@ -720,6 +731,15 @@
 				CA00BB11CC22DD33EE44FF00 /* Claude */,
 				B2C3D4E5F6A7B8C9D0E1F2A3 /* Models */,
 			);
+			path = Pets;
+			sourceTree = "<group>";
+		};
+		11ADE3748CC799F16B7060DA /* Pets */ = {
+			isa = PBXGroup;
+			children = (
+				FAE639BC772787B4AF7535C8 /* PetFileImport.swift */,
+			);
+			name = Pets;
 			path = Pets;
 			sourceTree = "<group>";
 		};
@@ -779,6 +799,7 @@
 				B1148C2F93B742AD210709D9 /* Search */,
 				7D4046C15BE06104BFA3E7AF /* UITestSupport.swift */,
 				9C79F8EBA7D7E8BF5FD9A7D4 /* Budget */,
+				0ACD436B520A70C1F62138B4 /* Mac */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -1710,6 +1731,7 @@
 				C44AFFB2C7E7BB804C4137AB /* PlatformKeyboard.swift in Sources */,
 				91F6F044771F1671D6B926CD /* ToolbarItemPlacement+Platform.swift in Sources */,
 				77B69695743DAC003BD1FFA3 /* View+Platform.swift in Sources */,
+				4C85A0EB4E2C8EF2F437A9EF /* PetFileImport.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2034,14 +2056,17 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Home/Home.entitlements;
+				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = Home/HomeMac.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 523MDDHYGD;
+				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Home/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "$(PRODUCT_NAME)";
 				INFOPLIST_KEY_CFBundleName = "$(PRODUCT_NAME)";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "Show your calendar events in your agenda and add appointments to your calendar";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -2052,10 +2077,19 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.guillermovelasco.managedhome;
 				PRODUCT_NAME = Casita;
+				SDKROOT = auto;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -2072,14 +2106,17 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Home/Home.entitlements;
+				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = Home/HomeMac.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 523MDDHYGD;
+				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Home/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "$(PRODUCT_NAME)";
 				INFOPLIST_KEY_CFBundleName = "$(PRODUCT_NAME)";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "Show your calendar events in your agenda and add appointments to your calendar";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -2090,10 +2127,19 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.guillermovelasco.managedhome;
 				PRODUCT_NAME = Casita;
+				SDKROOT = auto;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -2154,9 +2200,11 @@
 				DEVELOPMENT_TEAM = 523MDDHYGD;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.guillermovelasco.homeTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_VERSION = 6.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Casita.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Casita";
 			};
@@ -2171,9 +2219,11 @@
 				DEVELOPMENT_TEAM = 523MDDHYGD;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.guillermovelasco.homeTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_VERSION = 6.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Casita.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Casita";
 			};
