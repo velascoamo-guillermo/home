@@ -9,9 +9,17 @@ import SwiftUI
 
 @main
 struct HomeApp: App {
+    #if os(macOS)
+    @State private var mac = MacAppState()
+    #endif
+
     var body: some Scene {
+        #if os(macOS)
+        MacScenes(app: mac)
+        #else
         WindowGroup {
             ContentView()
         }
+        #endif
     }
 }
