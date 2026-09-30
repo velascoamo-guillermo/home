@@ -66,6 +66,7 @@ struct MealFormSheet: View {
                 Text(errorMessage ?? "")
             }
         }
+        .platformSheet()
     }
 
     private func loadLinks() {
@@ -84,7 +85,7 @@ struct MealFormSheet: View {
             Text(label)
             Spacer()
             TextField("—", text: binding)
-                .keyboardType(.numberPad)
+                .platformKeyboard(.numberPad)
                 .multilineTextAlignment(.trailing)
                 .frame(width: 80)
         }

@@ -107,8 +107,8 @@ struct BudgetSettingsView: View {
         .scrollContentBackground(.hidden)
         .gradientCanvas()
         .navigationTitle("Budget settings")
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar { EditButton() }
+        .inlineNavigationTitle()
+        .editButtonToolbar()
         .sheet(item: $editingCategory) { category in
             CategoryEditSheet(category: category,
                               isNew: !store.budgetCategories.contains { $0.id == category.id })

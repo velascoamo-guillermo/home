@@ -86,9 +86,9 @@ struct BudgetView: View {
         .contentMargins(.bottom, 88, for: .scrollContent)
         .refreshable { await store.refreshFromLocal() }
         .navigationTitle("Budget")
-        .navigationBarTitleDisplayMode(.inline)
+        .inlineNavigationTitle()
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .trailingBar) {
                 NavigationLink {
                     BudgetSettingsView(month: month)
                 } label: {

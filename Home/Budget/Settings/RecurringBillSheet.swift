@@ -21,7 +21,7 @@ struct RecurringBillSheet: View {
                 Section("Bill") {
                     TextField("Name", text: $draft.name)
                     TextField("Amount", text: $draft.amountText)
-                        .keyboardType(.decimalPad)
+                        .platformKeyboard(.decimalPad)
                     Stepper("Day \(draft.dayOfMonth) of each month", value: $draft.dayOfMonth, in: 1...28)
                     Toggle("Active", isOn: $draft.active)
                 }
@@ -65,7 +65,7 @@ struct RecurringBillSheet: View {
             .scrollContentBackground(.hidden)
             .gradientCanvas()
             .navigationTitle(draft.isNew ? "New bill" : "Edit bill")
-            .navigationBarTitleDisplayMode(.inline)
+            .inlineNavigationTitle()
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
@@ -82,6 +82,7 @@ struct RecurringBillSheet: View {
                 if draft.payerId == nil { draft.payerId = store.budgetMembers.first?.id }
             }
         }
+        .platformSheet()
     }
 
     private func save() async {

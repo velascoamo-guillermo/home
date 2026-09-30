@@ -25,10 +25,10 @@ struct StockView: View {
             }
         }
         .navigationTitle("Stock")
-        .navigationBarTitleDisplayMode(.inline)
+        .inlineNavigationTitle()
         .searchable(text: $searchText, prompt: "Search stock")
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .trailingBar) {
                 Button("Add product", systemImage: "plus") { showAdd = true }
                     .accessibilityLabel("Add product")
             }

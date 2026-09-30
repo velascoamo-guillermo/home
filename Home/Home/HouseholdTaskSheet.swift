@@ -89,7 +89,7 @@ struct HouseholdTaskSheet: View {
             .scrollContentBackground(.hidden)
             .gradientCanvas()
             .navigationTitle(isEditing ? "Edit Task" : "New Task")
-            .navigationBarTitleDisplayMode(.inline)
+            .inlineNavigationTitle()
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { dismiss() }
@@ -110,6 +110,7 @@ struct HouseholdTaskSheet: View {
                 }
             }
         }
+        .platformSheet()
     }
 
     private var sectionLabel: String {

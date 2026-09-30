@@ -34,7 +34,7 @@ struct ExtractionResultSheet: View {
                 }
             }
             .navigationTitle("Extracted Info")
-            .navigationBarTitleDisplayMode(.inline)
+            .inlineNavigationTitle()
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
                 if result != nil {
@@ -45,6 +45,7 @@ struct ExtractionResultSheet: View {
             }
         }
         .task { await extract() }
+        .platformSheet()
     }
 
     @ViewBuilder

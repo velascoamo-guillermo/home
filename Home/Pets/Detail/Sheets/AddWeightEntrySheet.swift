@@ -14,10 +14,10 @@ struct AddWeightEntrySheet: View {
                 DatePicker("Date", selection: $date, displayedComponents: .date)
                 TextField("Weight (kg)", value: $weightKg,
                           format: .number.precision(.fractionLength(0...1)))
-                    .keyboardType(.decimalPad)
+                    .platformKeyboard(.decimalPad)
             }
             .navigationTitle("Log Weight")
-            .navigationBarTitleDisplayMode(.inline)
+            .inlineNavigationTitle()
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
                 ToolbarItem(placement: .confirmationAction) {
@@ -26,6 +26,7 @@ struct AddWeightEntrySheet: View {
                 }
             }
         }
+        .platformSheet()
     }
 
     private func save() {

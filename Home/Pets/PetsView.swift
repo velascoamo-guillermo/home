@@ -22,10 +22,10 @@ struct PetsView: View {
         .navigationTitle("My Pets")
         .navigationDestination(for: Pet.self) { pet in
             PetDetailView(pet: pet)
-                .navigationTransition(.zoom(sourceID: pet.id, in: heroNamespace))
+                .zoomNavigationTransition(sourceID: pet.id, in: heroNamespace)
         }
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .trailingBar) {
                 Button("Add Pet", systemImage: "plus") { showAddPet = true }
             }
         }
@@ -48,7 +48,7 @@ struct PetsView: View {
     }
 }
 
-private struct AddPetSheet: View {
+struct AddPetSheet: View {
     @Environment(SupabaseStore.self) private var store
     @Environment(\.dismiss) private var dismiss
     @State private var name = ""
@@ -77,7 +77,7 @@ private struct AddPetSheet: View {
                 }
             }
             .navigationTitle("Add Pet")
-            .navigationBarTitleDisplayMode(.inline)
+            .inlineNavigationTitle()
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
                 ToolbarItem(placement: .confirmationAction) {
@@ -93,6 +93,7 @@ private struct AddPetSheet: View {
                 }
             }
         }
+        .platformSheet()
     }
 }
 

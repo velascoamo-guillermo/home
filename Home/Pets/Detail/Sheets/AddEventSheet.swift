@@ -42,7 +42,7 @@ struct AddEventSheet: View {
                 }
             }
             .navigationTitle("New Event")
-            .navigationBarTitleDisplayMode(.inline)
+            .inlineNavigationTitle()
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
                 ToolbarItem(placement: .confirmationAction) {
@@ -57,6 +57,7 @@ struct AddEventSheet: View {
                 }
             }
         }
+        .platformSheet()
     }
 
     private func save() {

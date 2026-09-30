@@ -41,7 +41,7 @@ struct ClinicalEntryDetailView: View {
                 }
             }
             .navigationTitle(entry.title)
-            .navigationBarTitleDisplayMode(.inline)
+            .inlineNavigationTitle()
             .sheet(isPresented: $showFilePicker) {
                 FilePickerCoordinator { data, ext in
                     try await store.uploadFile(data: data, ext: ext, petId: pet.id,
@@ -52,5 +52,6 @@ struct ClinicalEntryDetailView: View {
                 FilePreviewView(file: file, pet: pet)
             }
         }
+        .platformSheet()
     }
 }

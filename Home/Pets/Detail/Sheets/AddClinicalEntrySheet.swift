@@ -32,7 +32,7 @@ struct AddClinicalEntrySheet: View {
                 }
             }
             .navigationTitle("New Entry")
-            .navigationBarTitleDisplayMode(.inline)
+            .inlineNavigationTitle()
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
                 ToolbarItem(placement: .confirmationAction) {
@@ -47,6 +47,7 @@ struct AddClinicalEntrySheet: View {
                 }
             }
         }
+        .platformSheet()
     }
 
     private func save() {
