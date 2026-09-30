@@ -286,14 +286,20 @@ actor FakeGateway: RemoteGateway {
     }
 }
 
-/// Minimal gateway that stalls every `pull`, so a test can hold a `SyncEngine.sync`
-/// pass open long enough to exercise the single-flight overlap path. A dedicated,
-/// small type (rather than adding a method to `InMemoryRemote`) sidesteps the same
+/// Minimal gateway that stalls only its first `pull`, so a test can hold a
+/// `SyncEngine.sync` pass open long enough to exercise the single-flight overlap path
+/// without paying the stall on every one of `syncedTables`. A dedicated, small type
+/// (rather than adding a method to `InMemoryRemote`) sidesteps the same
 /// default-argument isolation-inference bug worked around above.
 actor StallingGateway: RemoteGateway {
+    private var hasStalled = false
+
     func push(kind: OutboxOpKind, table: String, payload: Data) async throws {}
     func pull(table: String, since: Date?) async throws -> [Data] {
-        try? await Task.sleep(for: .milliseconds(200))
+        if !hasStalled {
+            hasStalled = true
+            try? await Task.sleep(for: .milliseconds(200))
+        }
         return []
     }
 }

@@ -15,6 +15,10 @@ import Foundation
     func loadStamps() async throws {
         let before = Date.now
         let store = await F.makeStore(syncEnabled: true, gateway: InMemoryRemote())
+        // `loadAll`'s own sync can lose the single-flight race to the reconnect
+        // observer's concurrent pass; either pass stamps `lastSyncAt` on success, so
+        // wait (bounded) for whichever one actually runs to finish.
+        try await F.waitUntil { store.lastSyncAt != nil }
         let stamped = try #require(store.lastSyncAt)
         #expect(stamped >= before)
     }
@@ -22,6 +26,9 @@ import Foundation
     @Test("refreshing moves the timestamp forward")
     func refreshStamps() async throws {
         let store = await F.makeStore(syncEnabled: true, gateway: InMemoryRemote())
+        // Same race as `loadStamps`: wait for whichever pass (ours or the reconnect
+        // observer's) finishes first before reading the baseline.
+        try await F.waitUntil { store.lastSyncAt != nil }
         let first = try #require(store.lastSyncAt)
         try await Task.sleep(for: .milliseconds(20))
         // `refreshFromLocal`'s own sync can lose the single-flight race to this store's
@@ -35,6 +42,21 @@ import Foundation
             stamped = store.lastSyncAt
         }
         #expect(try #require(stamped) > first)
+    }
+
+    @Test("a gateway that always fails leaves lastSyncAt nil")
+    func failingGatewayLeavesLastSyncNil() async throws {
+        let remote = InMemoryRemote()
+        await remote.setFailPulls(true)
+        let store = await F.makeStore(syncEnabled: true, gateway: remote)
+        // No pass can ever succeed against this gateway, so there is no success signal
+        // to wait on; give any in-flight/concurrent pass (loadAll's own, or the
+        // reconnect observer's) a bounded window to finish failing, then assert the
+        // wiring never stamps a failed pass. This is the regression test for the bug
+        // this round's fix addresses: reverting `syncAll()` to stamp `.now`
+        // unconditionally makes this fail while every other test still passes.
+        try await F.waitUntil(timeout: .milliseconds(300)) { false }
+        #expect(store.lastSyncAt == nil)
     }
 
     @Test("an offline change counts as pending until it is uploaded")
