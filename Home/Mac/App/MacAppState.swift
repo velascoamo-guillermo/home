@@ -10,6 +10,7 @@ final class MacAppState {
     let bootstrap: MacBootstrap
 
     init() {
+        UITestSupport.resetMacSettingsPane()
         let store = UITestSupport.isActive ? UITestSupport.makeStore() : SupabaseStore()
         let feed = UITestSupport.isActive
             ? UITestSupport.makeCalendarFeed()

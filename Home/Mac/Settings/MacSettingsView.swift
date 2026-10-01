@@ -4,7 +4,7 @@ import SwiftUI
 /// The system Settings window: noncustomizable pane toolbar, title follows the pane,
 /// last pane restored through AppStorage.
 struct MacSettingsView: View {
-    @AppStorage("mac.settings.pane") private var pane = MacSettingsPane.calendars
+    @AppStorage(UITestSupport.macSettingsPaneKey) private var pane = MacSettingsPane.calendars
 
     var body: some View {
         TabView(selection: $pane) {
