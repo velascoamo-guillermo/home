@@ -15,6 +15,7 @@
 		02D3256CAE1CFACF99338B24 /* BudgetExpenseRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF1C010812E6378C66BAB6E1 /* BudgetExpenseRow.swift */; };
 		039CB1C26E7A4DC180545F74 /* TileGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 865CC526A7C319FC85879720 /* TileGrid.swift */; };
 		04A92B504CC4530FF405AC83 /* WidgetCompleteButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409131994E21B4E334338CAD /* WidgetCompleteButton.swift */; };
+		04CEF5B84881D45414638915 /* MacToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B10EC51D4B569A329CA21DC /* MacToolbar.swift */; };
 		065301A1049341A595A68A39 /* AppAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3B777CB62C4ED981C62D2A /* AppAppearance.swift */; };
 		07CE346FA1E322E2A542CD43 /* SidebarModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC51D6996C700567D4A8FE8A /* SidebarModelTests.swift */; };
 		08083B39452744F1B9C446E5 /* RemoteGateway.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17C0B2AFA89C4121A7973BB3 /* RemoteGateway.swift */; };
@@ -28,6 +29,7 @@
 		1171E2B4B857DE142CCB9FF9 /* AddWeightEntrySheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D2C3CCB9AC6D0EFC0F0516 /* AddWeightEntrySheet.swift */; };
 		13BC5B2F5A754F9C9C0364F2 /* SupabaseStore+Meals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54D020C3C3350CD92309BE0A /* SupabaseStore+Meals.swift */; };
 		14031BEA538D69D13B14FAD5 /* MealsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7A7E16D08B512354D9C0C70 /* MealsListView.swift */; };
+		141D4A18348B62617811BD17 /* MacAppCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EC9C36F2261C1EE7AF73B3B /* MacAppCommands.swift */; };
 		1569E53A7935E539410EF76F /* BudgetSeedingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A899F2EDB42AD53F99F5FA23 /* BudgetSeedingTests.swift */; };
 		158BE058D08DE562B2EBF9E4 /* SystemSettingsURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7636DD648798E3CB3B078839 /* SystemSettingsURL.swift */; };
 		159CF32C10CC04E8AB48690F /* MacDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436D648BC861C0C34C842E05 /* MacDetailView.swift */; };
@@ -412,6 +414,7 @@
 		2A42C7D06A49055F588C8624 /* WidgetSnapshotWriterTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetSnapshotWriterTests.swift; sourceTree = "<group>"; };
 		2A77C088219913ED29CF4865 /* SearchEngine.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SearchEngine.swift; sourceTree = "<group>"; };
 		2AD63759361D79EB72516590 /* BudgetExpense.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BudgetExpense.swift; sourceTree = "<group>"; };
+		2B10EC51D4B569A329CA21DC /* MacToolbar.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MacToolbar.swift; sourceTree = "<group>"; };
 		2C2D908018579E74C4F6DE3F /* MainTabView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
 		2C6856914DFD42828E88B77E /* Veterinarian.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Veterinarian.swift; sourceTree = "<group>"; };
 		2D48AC1C572C84D369000E39 /* MealStockLevelTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MealStockLevelTests.swift; sourceTree = "<group>"; };
@@ -490,6 +493,7 @@
 		66F8548E556881C17E53D9C8 /* AgendaBuilderTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AgendaBuilderTests.swift; sourceTree = "<group>"; };
 		69881983A539D6462A7613E0 /* MealTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MealTests.swift; sourceTree = "<group>"; };
 		6AB62CA6C2E1FDA6EB697A6C /* BudgetCalculator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BudgetCalculator.swift; sourceTree = "<group>"; };
+		6EC9C36F2261C1EE7AF73B3B /* MacAppCommands.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MacAppCommands.swift; sourceTree = "<group>"; };
 		6EFD07EB72B922B3B688CC2A /* WidgetStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetStore.swift; sourceTree = "<group>"; };
 		6FCF55BBA6C63A15E2918C08 /* SupabaseStore+Budget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "SupabaseStore+Budget.swift"; sourceTree = "<group>"; };
 		71162745B168CB31CF119B23 /* PaletteTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PaletteTests.swift; sourceTree = "<group>"; };
@@ -1033,6 +1037,7 @@
 				471B7221F6DEC5F7C825D82D /* CommandRouter.swift */,
 				7E6F5F91B5768EB89367E7CB /* PeriodNavigator.swift */,
 				4D003ED8AB04AC628EFA36A8 /* FocusedValues+MacWindow.swift */,
+				6EC9C36F2261C1EE7AF73B3B /* MacAppCommands.swift */,
 			);
 			name = Commands;
 			path = Commands;
@@ -1319,6 +1324,7 @@
 				FA90631D977E959A842D607D /* MacNewShoppingItemSheet.swift */,
 				3BBEFEEC13191C96CDD16EBB /* MacNewItemSheet.swift */,
 				5ABED07538E90D156F111207 /* MacShellView.swift */,
+				2B10EC51D4B569A329CA21DC /* MacToolbar.swift */,
 			);
 			name = Shell;
 			path = Shell;
@@ -1849,6 +1855,8 @@
 				2921090BC1138BD5AE41412B /* MacNewShoppingItemSheet.swift in Sources */,
 				AB7FD0547CD0EB9C9E9BAFB9 /* MacNewItemSheet.swift in Sources */,
 				F09E1F0432C0B35EE2095BDF /* MacShellView.swift in Sources */,
+				141D4A18348B62617811BD17 /* MacAppCommands.swift in Sources */,
+				04CEF5B84881D45414638915 /* MacToolbar.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

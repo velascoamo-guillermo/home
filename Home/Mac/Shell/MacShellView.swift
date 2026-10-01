@@ -13,6 +13,7 @@ struct MacShellView: View {
             MacDetailView(model: model)
         }
         .navigationTitle(SidebarModel.title(for: model.selection, pets: store.pets))
+        .toolbar { MacToolbar(model: model) }
         .sheet(item: $model.pendingAction) { action in
             MacNewItemSheet(action: action, budgetMonth: model.budgetMonth)
         }
