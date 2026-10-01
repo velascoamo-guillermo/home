@@ -14,6 +14,14 @@ import Foundation
         #expect(model.pendingAction == .newExpense)
     }
 
+    @Test("New Task from Today stays on Today, like the iPhone +")
+    func performNewTaskFromToday() {
+        let model = MacWindowModel(selection: .today)
+        model.perform(.newTask)
+        #expect(model.selection == .today)
+        #expect(model.pendingAction == .newTask)
+    }
+
     @Test("New Pet keeps the current selection")
     func performNewPet() {
         let model = MacWindowModel(selection: .stock)

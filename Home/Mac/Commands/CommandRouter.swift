@@ -20,7 +20,7 @@ enum CommandRouter {
     /// Where a File ▸ New command shows its result; nil keeps the current selection.
     static func destination(for action: MacPendingAction, current: SidebarItem) -> SidebarItem? {
         switch action {
-        case .newTask:         .tasks
+        case .newTask:         current == .today ? nil : .tasks
         case .newExpense:      .budget
         case .newShoppingItem: .shopping
         case .newProduct:      .stock

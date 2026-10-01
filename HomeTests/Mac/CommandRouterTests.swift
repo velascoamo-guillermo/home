@@ -30,6 +30,7 @@ import Foundation
 
     @Test("File ▸ New commands switch to the feature that shows the result")
     func newItemDestinations() {
+        #expect(CommandRouter.destination(for: .newTask, current: .today) == nil)
         #expect(CommandRouter.destination(for: .newTask, current: .budget) == .tasks)
         #expect(CommandRouter.destination(for: .newExpense, current: .tasks) == .budget)
         #expect(CommandRouter.destination(for: .newShoppingItem, current: .today) == .shopping)
