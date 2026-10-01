@@ -114,6 +114,7 @@
 		5450C57D0AA154040D1BCFC7 /* ShoppingSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B521DB3D46104685DFE5300 /* ShoppingSessionTests.swift */; };
 		55265483A3B57AD7015D560E /* TaskOccurrence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489516B999BA59F5AC4A7B6A /* TaskOccurrence.swift */; };
 		5580B78A5D0A1370BED7BC61 /* LocalStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = LS00AA11BB22CC33DD44EE01 /* LocalStore.swift */; };
+		562321F257B2C50B8589BB48 /* MacSmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA22C5C42DD3B2E8DDD5B5D6 /* MacSmokeTests.swift */; };
 		571FA64A725740595C4EEF77 /* HouseholdTaskTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA71150C75F436073C4F3240 /* HouseholdTaskTests.swift */; };
 		57F29F591405AF66F3F1DAEC /* MoneyParsingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15DFF74D0107C1C54E7AA41E /* MoneyParsingTests.swift */; };
 		58217B5735F2BE9B306C2641 /* BudgetExpense.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD63759361D79EB72516590 /* BudgetExpense.swift */; };
@@ -594,6 +595,7 @@
 		B7A7E16D08B512354D9C0C70 /* MealsListView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MealsListView.swift; sourceTree = "<group>"; };
 		B9C65F72FD13AC934698568A /* Transfer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Transfer.swift; sourceTree = "<group>"; };
 		BA16804634956CC9C4B5CB26 /* SupabaseStoreRefreshFromLocalTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SupabaseStoreRefreshFromLocalTests.swift; sourceTree = "<group>"; };
+		BA22C5C42DD3B2E8DDD5B5D6 /* MacSmokeTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MacSmokeTests.swift; sourceTree = "<group>"; };
 		BA23C846E8B2D85C679E1372 /* BudgetModelCodingTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BudgetModelCodingTests.swift; sourceTree = "<group>"; };
 		BA4D2835E8B247759BE40C5C /* ThemeStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ThemeStore.swift; sourceTree = "<group>"; };
 		BA71150C75F436073C4F3240 /* HouseholdTaskTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HouseholdTaskTests.swift; sourceTree = "<group>"; };
@@ -893,6 +895,7 @@
 				4872F48DB70E3FD9AA5D159D /* AppLauncher.swift */,
 				AED99964FE6F18E557BAF04C /* SmokeTests.swift */,
 				EC262E814DA0E9986D5584F6 /* Navigation.swift */,
+				BA22C5C42DD3B2E8DDD5B5D6 /* MacSmokeTests.swift */,
 			);
 			name = HomeUITests;
 			path = HomeUITests;
@@ -1713,6 +1716,7 @@
 				D1BE7EED280642A3FA305B9E /* AppLauncher.swift in Sources */,
 				0B6619F3DA2B44485FCD7EF4 /* SmokeTests.swift in Sources */,
 				38CA1CBDB011A8C6591B15DF /* Navigation.swift in Sources */,
+				562321F257B2C50B8589BB48 /* MacSmokeTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2087,9 +2091,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.guillermovelasco.managedhome.HomeUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_VERSION = 6.0;
 				TEST_TARGET_NAME = Home;
 			};
@@ -2350,9 +2356,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.guillermovelasco.managedhome.HomeUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_VERSION = 6.0;
 				TEST_TARGET_NAME = Home;
 				VALIDATE_PRODUCT = YES;

@@ -1,3 +1,4 @@
+#if os(iOS)
 import XCTest
 
 final class SmokeTests: XCTestCase {
@@ -310,3 +311,4 @@ final class SmokeTests: XCTestCase {
         cell.tap()
     }
 }
+#endif
