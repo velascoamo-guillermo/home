@@ -5,13 +5,13 @@ struct MacScenes: Scene {
     let app: MacAppState
 
     var body: some Scene {
-        WindowGroup(for: SidebarItem.self) { $item in
-            MacRootView(item: $item)
+        WindowGroup(for: MacWindowSeed.self) { $seed in
+            MacRootView(seed: $seed)
                 .environment(app.store)
                 .environment(app.calendarFeed)
                 .environment(app.bootstrap)
         } defaultValue: {
-            .today
+            .new(.today)
         }
         .defaultSize(width: 1100, height: 720)
         .commands { MacAppCommands(store: app.store) }

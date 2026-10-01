@@ -30,7 +30,7 @@ struct MacSidebarView: View {
         .listStyle(.sidebar)
         .contextMenu(forSelectionType: SidebarItem.self) { items in
             if let item = items.first {
-                Button("Open in New Window") { openWindow(value: item) }
+                Button("Open in New Window") { openWindow(value: MacWindowSeed.new(item)) }
             }
         } primaryAction: { items in
             if let item = items.first { model.selection = item }

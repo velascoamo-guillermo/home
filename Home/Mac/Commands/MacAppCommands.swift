@@ -23,7 +23,7 @@ struct MacAppCommands: Commands {
             }
             Divider()
             Button("Open in New Window") {
-                if let window { openWindow(value: window.selection) }
+                if let window { openWindow(value: MacWindowSeed.new(window.selection)) }
             }
             .disabled(window == nil)
         }

@@ -3,14 +3,14 @@ import AppKit
 import SwiftUI
 
 struct MacRootView: View {
-    @Binding var item: SidebarItem
+    @Binding var seed: MacWindowSeed
     @Environment(SupabaseStore.self) private var store
     @Environment(MacBootstrap.self) private var bootstrap
     @State private var model: MacWindowModel
 
-    init(item: Binding<SidebarItem>) {
-        _item = item
-        _model = State(initialValue: MacWindowModel(selection: item.wrappedValue))
+    init(seed: Binding<MacWindowSeed>) {
+        _seed = seed
+        _model = State(initialValue: MacWindowModel(selection: seed.wrappedValue.item))
     }
 
     var body: some View {
@@ -36,7 +36,7 @@ struct MacRootView: View {
         .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
             Task { await bootstrap.appDidBecomeActive() }
         }
-        .onChange(of: model.selection) { _, new in item = new }
+        .onChange(of: model.selection) { _, new in seed.item = new }
         .onChange(of: bootstrap.didFinishLoading) { _, _ in resolveSelection() }
         .onChange(of: store.pets) { _, _ in resolveSelection() }
         .environment(\.openURL, OpenURLAction { url in route(url) })

@@ -1,7 +1,7 @@
 #if os(macOS)
 import Foundation
 
-enum SidebarItem: Hashable, Codable, Sendable {
+nonisolated enum SidebarItem: Hashable, Codable, Sendable {
     case today, tasks, shopping, stock, meals, budget
     case pet(UUID)
 
