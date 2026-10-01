@@ -30,6 +30,28 @@ import Foundation
         #expect(bootstrap.didFinishLoading)
     }
 
+    @Test("windows starting concurrently while the first load is in flight load and observe once")
+    func loadsOnceConcurrently() async throws {
+        let probe = BootstrapProbe()
+        let bootstrap = MacBootstrap(
+            load: {
+                probe.loads += 1
+                try? await Task.sleep(for: .milliseconds(50))
+            },
+            observe: { probe.observes += 1 },
+            refresh: { probe.refreshes += 1 },
+            now: { probe.now })
+        await withTaskGroup(of: Void.self) { group in
+            for _ in 0..<5 {
+                group.addTask { await bootstrap.start() }
+            }
+        }
+        try await Task.sleep(for: .milliseconds(50))
+        #expect(probe.loads == 1)
+        #expect(probe.observes == 1)
+        #expect(bootstrap.didFinishLoading)
+    }
+
     @Test("activation before loading finished does not refresh")
     func noRefreshBeforeLoad() async {
         let probe = BootstrapProbe()
