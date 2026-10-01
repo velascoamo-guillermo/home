@@ -59,6 +59,11 @@ struct MacAppCommands: Commands {
                 .keyboardShortcut("]")
                 .disabled(!periodAvailable)
         }
+
+        CommandGroup(replacing: .help) {
+            Button("Casita Help") { openWindow(id: MacHelpView.windowID) }
+                .keyboardShortcut("?")
+        }
     }
 
     private func newButton(_ action: MacPendingAction, _ shortcut: KeyboardShortcut?) -> some View {

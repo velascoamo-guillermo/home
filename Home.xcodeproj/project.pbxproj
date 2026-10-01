@@ -297,6 +297,7 @@
 		E98377440271E629ED798982 /* CategoryEditSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 453294FC10933CA18B4171DE /* CategoryEditSheet.swift */; };
 		EA7F33D5C14FFDA32C7C3E95 /* AgendaWeekTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4080532859C7F56ABA4D4A2B /* AgendaWeekTests.swift */; };
 		EB78549E75C30BEAC08D841C /* HouseholdTaskSnoozeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E4A502AC63099711750A1DA /* HouseholdTaskSnoozeTests.swift */; };
+		EBA43B122E6773D7FDBD0C24 /* MacHelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4B86D1923689758361F38C /* MacHelpView.swift */; };
 		EC725F23FDC167BECE7B214A /* MealSlotCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8CE7DCCCE698D22F073CE23 /* MealSlotCard.swift */; };
 		EE1E4326A90694DDC98A9514 /* ProductCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41FE432DDA91EAABD7776413 /* ProductCategory.swift */; };
 		EE55FF6600AABB22CC33DD44 /* FilesTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE55FF6600AABB22CC33DD01 /* FilesTabView.swift */; };
@@ -653,6 +654,7 @@
 		E85A8B57FB327E77B3638C0E /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/WidgetKit.framework; sourceTree = DEVELOPER_DIR; };
 		E8E5AEC6B597D3DB8B703D75 /* AgendaHeaderView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AgendaHeaderView.swift; sourceTree = "<group>"; };
 		E9125CD47912497347744376 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/SwiftUI.framework; sourceTree = DEVELOPER_DIR; };
+		EA4B86D1923689758361F38C /* MacHelpView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MacHelpView.swift; sourceTree = "<group>"; };
 		EB819B41D43A4B60B67EFC22 /* OutboxTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OutboxTests.swift; sourceTree = "<group>"; };
 		EBD05E9E51504422D866DC2D /* WeightEntryStoreTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WeightEntryStoreTests.swift; sourceTree = "<group>"; };
 		EC262E814DA0E9986D5584F6 /* Navigation.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Navigation.swift; sourceTree = "<group>"; };
@@ -789,6 +791,7 @@
 				DF16316BF6AF26DF2E75D46A /* App */,
 				8179EC2C0BC2F57FBE51115A /* Settings */,
 				C56FB3C5981A1D246CC142D3 /* Search */,
+				F5057FFF3F5126875B276B9D /* Help */,
 			);
 			name = Mac;
 			path = Mac;
@@ -1354,6 +1357,15 @@
 			path = Components;
 			sourceTree = "<group>";
 		};
+		F5057FFF3F5126875B276B9D /* Help */ = {
+			isa = PBXGroup;
+			children = (
+				EA4B86D1923689758361F38C /* MacHelpView.swift */,
+			);
+			name = Help;
+			path = Help;
+			sourceTree = "<group>";
+		};
 		F6015BBBB1E679288E541CC5 /* Shell */ = {
 			isa = PBXGroup;
 			children = (
@@ -1905,6 +1917,7 @@
 				65226867380D1E0257BD5B66 /* MacCalendarsSettingsPane.swift in Sources */,
 				7A4A9B0D2496C28BADC6A1E5 /* MacSyncSettingsPane.swift in Sources */,
 				F4C0837A1D85A0DB00CF8799 /* MacSearchResultsView.swift in Sources */,
+				EBA43B122E6773D7FDBD0C24 /* MacHelpView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

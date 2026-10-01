@@ -21,6 +21,11 @@ struct MacScenes: Scene {
                 .environment(app.store)
                 .environment(app.calendarFeed)
         }
+
+        Window("Casita Help", id: MacHelpView.windowID) {
+            MacHelpView()
+        }
+        .windowResizability(.contentSize)
     }
 }
 #endif
