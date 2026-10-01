@@ -68,5 +68,25 @@ import Foundation
         model.selection = .budget
         #expect(model.availableCommands.isEmpty)
     }
+
+    @Test("whitespace-only text does not count as searching")
+    func isSearching() {
+        let model = MacWindowModel(selection: .today)
+        #expect(!model.isSearching)
+        model.searchText = "   "
+        #expect(!model.isSearching)
+        model.searchText = " milk "
+        #expect(model.isSearching)
+    }
+
+    @Test("Edit ▸ Find's focus request is consumed exactly once")
+    func searchFocusRequestConsumedOnce() {
+        let model = MacWindowModel(selection: .today)
+        #expect(!model.consumeSearchFocusRequest())
+        model.isSearchFocused = true
+        #expect(model.consumeSearchFocusRequest())
+        #expect(!model.isSearchFocused)
+        #expect(!model.consumeSearchFocusRequest())
+    }
 }
 #endif

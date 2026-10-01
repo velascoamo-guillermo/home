@@ -22,6 +22,17 @@ final class MacWindowModel {
         self.selection = selection
     }
 
+    var isSearching: Bool {
+        !searchText.trimmingCharacters(in: .whitespaces).isEmpty
+    }
+
+    /// Edit ▸ Find raises `isSearchFocused`; the shell consumes it once so the next ⌘F fires again.
+    func consumeSearchFocusRequest() -> Bool {
+        guard isSearchFocused else { return false }
+        isSearchFocused = false
+        return true
+    }
+
     func go(_ target: GoTarget, pets: [Pet]) {
         guard let destination = CommandRouter.destination(for: target, current: selection, pets: pets) else { return }
         searchText = ""

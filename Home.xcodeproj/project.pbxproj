@@ -312,6 +312,7 @@
 		F247E04D334EAF009F94185E /* TaskOccurrenceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD59B5D71D0A33686D0B780F /* TaskOccurrenceTests.swift */; };
 		F348325491D17DF22118F67E /* WidgetSnapshotCodableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0CE6DF7B2B78D682B30375 /* WidgetSnapshotCodableTests.swift */; };
 		F3DF553238D0CFC67BDC1163 /* TaskCompletion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D40DC61A48856065B408F2 /* TaskCompletion.swift */; };
+		F4C0837A1D85A0DB00CF8799 /* MacSearchResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3A098592521FC6676444344 /* MacSearchResultsView.swift */; };
 		F590EDE5C7BE12EF7ED81623 /* Pet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73C53F1CBE01F7F807567F82 /* Pet.swift */; };
 		F6CB90A89DEF180C6DEF7A95 /* Weekday.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32930F19D9DF1811CABFFA3 /* Weekday.swift */; };
 		F7C67280788DB0522208AD75 /* ExpenseDraftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 456F05CE30CC88F42678CF5D /* ExpenseDraftTests.swift */; };
@@ -558,6 +559,7 @@
 		9BB602702653BB94D55F5891 /* WidgetSnapshot.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetSnapshot.swift; sourceTree = "<group>"; };
 		A019554D2097390095088A80 /* HubTile.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HubTile.swift; sourceTree = "<group>"; };
 		A189AFE895DCBB25ADA61261 /* CalendarAccessState.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CalendarAccessState.swift; sourceTree = "<group>"; };
+		A3A098592521FC6676444344 /* MacSearchResultsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MacSearchResultsView.swift; sourceTree = "<group>"; };
 		A3D7B90BA2014B6BB79A0189 /* RecurringBillDraft.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RecurringBillDraft.swift; sourceTree = "<group>"; };
 		A4CDCB58B9C74EE5C806160F /* HomeApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HomeApp.swift; sourceTree = "<group>"; };
 		A4DAECF6D6FF486A9930D49B /* WeekStripView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WeekStripView.swift; sourceTree = "<group>"; };
@@ -786,6 +788,7 @@
 				950D8415084C7F6932CFC090 /* Commands */,
 				DF16316BF6AF26DF2E75D46A /* App */,
 				8179EC2C0BC2F57FBE51115A /* Settings */,
+				C56FB3C5981A1D246CC142D3 /* Search */,
 			);
 			name = Mac;
 			path = Mac;
@@ -1221,6 +1224,15 @@
 				5175DAD9B53DFCE06554F92F /* WidgetMealSlotLabelTests.swift */,
 			);
 			path = Widget;
+			sourceTree = "<group>";
+		};
+		C56FB3C5981A1D246CC142D3 /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				A3A098592521FC6676444344 /* MacSearchResultsView.swift */,
+			);
+			name = Search;
+			path = Search;
 			sourceTree = "<group>";
 		};
 		CA00BB11CC22DD33EE44FF00 /* Claude */ = {
@@ -1892,6 +1904,7 @@
 				CE4641D970C74661014042A5 /* MacSettingsView.swift in Sources */,
 				65226867380D1E0257BD5B66 /* MacCalendarsSettingsPane.swift in Sources */,
 				7A4A9B0D2496C28BADC6A1E5 /* MacSyncSettingsPane.swift in Sources */,
+				F4C0837A1D85A0DB00CF8799 /* MacSearchResultsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
