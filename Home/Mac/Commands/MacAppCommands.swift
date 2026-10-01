@@ -69,7 +69,7 @@ struct MacAppCommands: Commands {
     private func newButton(_ action: MacPendingAction, _ shortcut: KeyboardShortcut?) -> some View {
         Button(action.title) { window?.perform(action) }
             .keyboardShortcut(shortcut)
-            .disabled(!shellReady)
+            .disabled(!shellReady || window?.pendingAction != nil)
     }
 
     /// The shell is published before `MacShellView` exists and before the first load finishes;
