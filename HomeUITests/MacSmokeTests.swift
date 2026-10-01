@@ -46,11 +46,24 @@ final class MacSmokeTests: XCTestCase {
     func testCommandFFocusesToolbarSearch() throws {
         let app = launchApp()
         XCTAssertTrue(app.windows.firstMatch.waitForExistence(timeout: 15))
+        // Find… stays disabled until the first load finishes; ⌘F before that just beeps.
+        XCTAssertTrue(waitForEnabled(app.menuBars.menuItems["Find…"], timeout: 10))
         app.typeKey("f", modifierFlags: .command)
         app.typeText("Fixture Milk")
         let field = app.toolbars.searchFields.firstMatch
         XCTAssertTrue(waitForValue(field, "Fixture Milk", timeout: 10))
-        XCTAssertTrue(app.staticTexts["Fixture Milk"].waitForExistence(timeout: 10))
+        // Result rows are plain buttons whose label merges the row's texts ("Fixture Milk, …").
+        XCTAssertTrue(searchResult(app, "Fixture Milk").waitForExistence(timeout: 10))
+        XCTAssertFalse(searchResult(app, "Fixture Coffee").exists)
+    }
+
+    private func searchResult(_ app: XCUIApplication, _ name: String) -> XCUIElement {
+        app.windows.firstMatch.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", name + ",")).firstMatch
+    }
+
+    private func waitForEnabled(_ element: XCUIElement, timeout: TimeInterval) -> Bool {
+        let expectation = XCTNSPredicateExpectation(predicate: NSPredicate(format: "enabled == true"), object: element)
+        return XCTWaiter().wait(for: [expectation], timeout: timeout) == .completed
     }
 
     private func window(_ app: XCUIApplication, titled title: String) -> XCUIElement {
