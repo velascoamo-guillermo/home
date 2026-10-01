@@ -26,7 +26,7 @@ struct StockView: View {
         }
         .navigationTitle("Stock")
         .inlineNavigationTitle()
-        .searchable(text: $searchText, prompt: "Search stock")
+        .iOSSearchable(text: $searchText, prompt: "Search stock")
         .toolbar {
             ToolbarItem(placement: .trailingBar) {
                 Button("Add product", systemImage: "plus") { showAdd = true }

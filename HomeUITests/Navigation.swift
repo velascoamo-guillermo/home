@@ -1,3 +1,4 @@
+#if os(iOS)
 import XCTest
 
 func openHubScreen(_ app: XCUIApplication, row: String) {
@@ -6,3 +7,4 @@ func openHubScreen(_ app: XCUIApplication, row: String) {
     XCTAssertTrue(rowButton.waitForExistence(timeout: 10))
     rowButton.tap()
 }
+#endif

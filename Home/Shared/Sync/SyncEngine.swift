@@ -11,6 +11,11 @@ actor SyncEngine {
     private let gateway: any RemoteGateway
     private var isSyncing = false
 
+    /// Time the last full pass (push + pull of every `syncedTables` entry) both
+    /// completed without error. Nil until then; a partial `sync(tables:)` call, a
+    /// skipped single-flight overlap, or a pass with a push/pull failure never sets it.
+    private(set) var lastFullSyncAt: Date?
+
     init(local: LocalStore, gateway: any RemoteGateway) {
         self.local = local
         self.gateway = gateway
@@ -21,8 +26,22 @@ actor SyncEngine {
         guard !isSyncing else { return }
         isSyncing = true
         defer { isSyncing = false }
-        try? await push()
-        for table in tables { try? await pull(table: table) }
+        var succeeded = true
+        do {
+            try await push()
+        } catch {
+            succeeded = false
+        }
+        for table in tables {
+            do {
+                try await pull(table: table)
+            } catch {
+                succeeded = false
+            }
+        }
+        if succeeded, Set(Self.syncedTables).isSubset(of: Set(tables)) {
+            lastFullSyncAt = .now
+        }
     }
 
     /// Drain the outbox in order. Each op: push to gateway; on success delete it,

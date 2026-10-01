@@ -36,6 +36,16 @@ extension View {
         #endif
     }
 
+    /// The Mac shell owns one app-wide toolbar search; a second `.searchable` from a hosted view
+    /// makes NSToolbar throw when the detail column switches to it, so hosted views skip theirs.
+    func iOSSearchable(text: Binding<String>, prompt: String) -> some View {
+        #if os(iOS)
+        searchable(text: text, prompt: prompt)
+        #else
+        self
+        #endif
+    }
+
     func zoomNavigationTransition(sourceID: some Hashable, in namespace: Namespace.ID) -> some View {
         #if os(iOS)
         navigationTransition(.zoom(sourceID: sourceID, in: namespace))

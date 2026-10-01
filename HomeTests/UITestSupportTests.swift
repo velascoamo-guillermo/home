@@ -37,6 +37,17 @@ import Foundation
         #expect(future.map { $0.nextDueDate > .now } == true)
     }
 
+    @Test func resetMacSettingsPaneClearsPersistedPaneOnlyWhenActive() {
+        let defaults = UserDefaults(suiteName: "uitests-settings-\(UUID().uuidString)")!
+        defaults.set("sync", forKey: UITestSupport.macSettingsPaneKey)
+
+        UITestSupport.resetMacSettingsPane(isActive: false, defaults: defaults)
+        #expect(defaults.string(forKey: UITestSupport.macSettingsPaneKey) == "sync")
+
+        UITestSupport.resetMacSettingsPane(isActive: true, defaults: defaults)
+        #expect(defaults.string(forKey: UITestSupport.macSettingsPaneKey) == nil)
+    }
+
     @Test func separateStoresAreIsolated() async {
         let a = UITestSupport.makeStore()
         await a.loadAll()

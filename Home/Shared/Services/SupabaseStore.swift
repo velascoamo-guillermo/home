@@ -35,6 +35,7 @@ final class SupabaseStore {
     var budgetExpenses: [BudgetExpense] = []
     var isLoading = false
     var loadError: String? = nil
+    private(set) var lastSyncAt: Date?
 
     private var localURL: URL {
         FileManager.default
@@ -109,7 +110,7 @@ final class SupabaseStore {
             try await hydrate()
             isLoading = false
             if syncEnabled {
-                await _sync?.sync(tables: SyncEngine.syncedTables)
+                await syncAll()
                 try? await hydrate()
                 await seedBudgetIfNeeded()
                 if loadError == nil { WidgetSnapshotWriter.write(from: self) }
@@ -123,9 +124,19 @@ final class SupabaseStore {
     func refreshFromLocal() async {
         guard !isLoading, _local != nil else { return }
         try? await hydrate()
-        await _sync?.sync(tables: SyncEngine.syncedTables)
+        await syncAll()
         try? await hydrate()
         await seedBudgetIfNeeded()
+    }
+
+    func pendingChangeCount() async -> Int {
+        (try? await _local?.pendingOps().count) ?? 0
+    }
+
+    private func syncAll() async {
+        guard let sync = _sync else { return }
+        await sync.sync(tables: SyncEngine.syncedTables)
+        lastSyncAt = await sync.lastFullSyncAt
     }
 
     private func hydrate() async throws {
@@ -157,7 +168,7 @@ final class SupabaseStore {
             guard let stream = self?.reachability.changes else { return }
             for await online in stream where online {
                 guard let self else { return }
-                await self._sync?.sync(tables: SyncEngine.syncedTables)
+                await self.syncAll()
                 try? await self.hydrate()
                 await self.seedBudgetIfNeeded()
             }
