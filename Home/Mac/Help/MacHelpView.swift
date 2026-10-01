@@ -7,7 +7,7 @@ struct MacHelpView: View {
     private let shortcuts: [(String, String)] = [
         ("New Task", "⌘N"), ("New Expense", "⇧⌘E"), ("New Shopping Item", "⇧⌘L"),
         ("Find", "⌘F"), ("Refresh", "⌘R"), ("Show or Hide Inspector", "⌥⌘I"),
-        ("Today … Pets", "⌘1 … ⌘7"), ("Previous or Next Month in Budget", "⌘[ ⌘]"),
+        ("Today … Pets", "⌘1 … ⌘7"), ("Previous Period / Next Period", "⌘[ ⌘]"),
         ("Settings", "⌘,"),
     ]
 
