@@ -23,10 +23,9 @@ struct MacAppCommands: Commands {
                     .disabled(!(window?.availableCommands.contains(command) ?? false))
             }
             Divider()
-            Button("Open in New Window") {
-                if let window { openWindow(value: MacWindowSeed.new(window.selection)) }
+            Button(window == nil ? "New Window" : "Open in New Window") {
+                openWindow(value: MacWindowSeed.new(window?.selection ?? .today))
             }
-            .disabled(window == nil)
         }
 
         CommandGroup(replacing: .textEditing) {
