@@ -21,7 +21,7 @@ struct MacSyncSettingsPane: View {
                 .disabled(isRefreshing)
         }
         .formStyle(.grouped)
-        .task { pending = await store.pendingChangeCount() }
+        .task(id: store.lastSyncAt) { pending = await store.pendingChangeCount() }
     }
 
     nonisolated static func pendingDescription(_ count: Int) -> String {
