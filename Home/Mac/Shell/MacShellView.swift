@@ -23,6 +23,7 @@ struct MacShellView: View {
         .onChange(of: model.isSearchFocused) {
             if model.consumeSearchFocusRequest() { searchFocused = true }
         }
+        .onAppear { if model.consumeSearchFocusRequest() { searchFocused = true } }
         .toolbar { MacToolbar(model: model) }
         .sheet(item: $model.pendingAction) { action in
             MacNewItemSheet(action: action, budgetMonth: model.budgetMonth)

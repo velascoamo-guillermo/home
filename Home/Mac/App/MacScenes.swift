@@ -14,7 +14,7 @@ struct MacScenes: Scene {
             .new(.today)
         }
         .defaultSize(width: 1100, height: 720)
-        .commands { MacAppCommands(store: app.store) }
+        .commands { MacAppCommands(store: app.store, bootstrap: app.bootstrap) }
 
         Settings {
             MacSettingsView()

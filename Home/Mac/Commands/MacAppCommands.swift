@@ -3,6 +3,7 @@ import SwiftUI
 
 struct MacAppCommands: Commands {
     let store: SupabaseStore
+    let bootstrap: MacBootstrap
     @FocusedValue(\.macWindow) private var window
     @Environment(\.openWindow) private var openWindow
 
@@ -31,7 +32,7 @@ struct MacAppCommands: Commands {
         CommandGroup(replacing: .textEditing) {
             Button("Find…") { window?.isSearchFocused = true }
                 .keyboardShortcut("f")
-                .disabled(window == nil)
+                .disabled(!shellReady)
         }
 
         CommandGroup(after: .sidebar) {
@@ -69,7 +70,13 @@ struct MacAppCommands: Commands {
     private func newButton(_ action: MacPendingAction, _ shortcut: KeyboardShortcut?) -> some View {
         Button(action.title) { window?.perform(action) }
             .keyboardShortcut(shortcut)
-            .disabled(window == nil)
+            .disabled(!shellReady)
+    }
+
+    /// The shell is published before `MacShellView` exists and before the first load finishes;
+    /// gate window-scoped commands on both so they aren't live too early.
+    private var shellReady: Bool {
+        window != nil && bootstrap.didFinishLoading
     }
 
     private func goDestination(_ target: GoTarget) -> SidebarItem? {
