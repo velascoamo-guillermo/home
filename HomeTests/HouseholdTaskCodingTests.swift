@@ -86,4 +86,11 @@ import Foundation
         let decoded = try JSONDecoder().decode(HouseholdTask.self, from: data)
         #expect(decoded == original)
     }
+
+    @Test("a live task encodes deleted_at as an explicit null")
+    func liveTaskEncodesNullTombstone() throws {
+        let task = HouseholdTask(title: "Water plants", intervalDays: 7, nextDueDate: .now)
+        let object = try #require(JSONSerialization.jsonObject(with: JSONEncoder().encode(task)) as? [String: Any])
+        #expect(object["deleted_at"] is NSNull)
+    }
 }

@@ -199,6 +199,7 @@
 		9CC2D2F1C27092D968725F0F /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 114922AE3D1410173D91B1F9 /* libsqlite3.tbd */; };
 		9D7005502BC472F897603EF6 /* SupabaseStore+Budget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FCF55BBA6C63A15E2918C08 /* SupabaseStore+Budget.swift */; };
 		A0F47E483DC0555A7EEAF879 /* CalendarSelectionStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBD5476B6BDCE190A0989DDC /* CalendarSelectionStoreTests.swift */; };
+		A13F1121B13135E97AD8FAF2 /* StoreRestoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1196BCC3F3F30A855C3F632 /* StoreRestoreTests.swift */; };
 		A142EC7BE56E5CFBB336C339 /* MemberIncomeRowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC01747BE756A7EE12FAD0E7 /* MemberIncomeRowTests.swift */; };
 		A231BBB57F7079092089DDAC /* CalendarSelectionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59E028BA20CFA5FD224172D0 /* CalendarSelectionStore.swift */; };
 		A28FB6EA7543294A93239E68 /* TaskSectionCodingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B6CF9AE1515AD0C98857877 /* TaskSectionCodingTests.swift */; };
@@ -225,7 +226,9 @@
 		B00452ECF24AC74D80571AB9 /* BudgetModelCodingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA23C846E8B2D85C679E1372 /* BudgetModelCodingTests.swift */; };
 		B02BBD2BF3020CAFEFFD8553 /* GoTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3110452CC90E7EC339A7A1A /* GoTarget.swift */; };
 		B0875935D6B45A1E74F4D6B2 /* StockLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10E1A21BC2ABF6ECC8A821E /* StockLevel.swift */; };
+		B1EBD3E5EFA26B598E18F53E /* SupabaseStore+Restore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D54B444E1A365896E30E124 /* SupabaseStore+Restore.swift */; };
 		B2A14F6741FFCF63CC0D1A8F /* HubTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = A019554D2097390095088A80 /* HubTile.swift */; };
+		B5FC72A963876766D62E38FD /* RestoreSyncTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A496A54E32CC358A02088CA9 /* RestoreSyncTests.swift */; };
 		B611D6F8A81DCC192451C3BF /* Supermarket.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD721BF9855C09D131A9116 /* Supermarket.swift */; };
 		B68A261E1EE7FA856D63DFAA /* AgendaDay.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC9CD642EEEF0D9A5145F994 /* AgendaDay.swift */; };
 		B7199B8FBC9C6E1689DA93BB /* AddExpenseSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = C902976E2E0B034648B81CDE /* AddExpenseSheet.swift */; };
@@ -559,10 +562,13 @@
 		9AE500AD395CBA5FAADB2307 /* MealChoiceTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MealChoiceTests.swift; sourceTree = "<group>"; };
 		9B70FBD20CA49086C65360F4 /* WeightEntrySyncTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WeightEntrySyncTests.swift; sourceTree = "<group>"; };
 		9BB602702653BB94D55F5891 /* WidgetSnapshot.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetSnapshot.swift; sourceTree = "<group>"; };
+		9D54B444E1A365896E30E124 /* SupabaseStore+Restore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "SupabaseStore+Restore.swift"; sourceTree = "<group>"; };
 		A019554D2097390095088A80 /* HubTile.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HubTile.swift; sourceTree = "<group>"; };
+		A1196BCC3F3F30A855C3F632 /* StoreRestoreTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StoreRestoreTests.swift; sourceTree = "<group>"; };
 		A189AFE895DCBB25ADA61261 /* CalendarAccessState.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CalendarAccessState.swift; sourceTree = "<group>"; };
 		A3A098592521FC6676444344 /* MacSearchResultsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MacSearchResultsView.swift; sourceTree = "<group>"; };
 		A3D7B90BA2014B6BB79A0189 /* RecurringBillDraft.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RecurringBillDraft.swift; sourceTree = "<group>"; };
+		A496A54E32CC358A02088CA9 /* RestoreSyncTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RestoreSyncTests.swift; sourceTree = "<group>"; };
 		A4CDCB58B9C74EE5C806160F /* HomeApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HomeApp.swift; sourceTree = "<group>"; };
 		A4DAECF6D6FF486A9930D49B /* WeekStripView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WeekStripView.swift; sourceTree = "<group>"; };
 		A560B53DA2B4061463D32C76 /* ChipGroup.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ChipGroup.swift; sourceTree = "<group>"; };
@@ -780,6 +786,7 @@
 				CE6A3D7CD9C97F586D6C56B1 /* SyncLateArrivalTests.swift */,
 				DA8A76EE27CC411401051BD6 /* InMemoryRemote.swift */,
 				1D7F074A7805630B83FE3704 /* BudgetSyncTests.swift */,
+				A496A54E32CC358A02088CA9 /* RestoreSyncTests.swift */,
 			);
 			path = Sync;
 			sourceTree = "<group>";
@@ -829,6 +836,7 @@
 				56DA161FB333CB07ADCE95B0 /* BudgetExpenseStoreTests.swift */,
 				BEB29CE16CD051331E33BD1C /* BudgetSettingsStoreTests.swift */,
 				E7224ED63616CA0DBCD93EE2 /* RecurringExpenseStoreTests.swift */,
+				A1196BCC3F3F30A855C3F632 /* StoreRestoreTests.swift */,
 			);
 			name = Store;
 			path = Store;
@@ -1444,6 +1452,7 @@
 				54D020C3C3350CD92309BE0A /* SupabaseStore+Meals.swift */,
 				84D40DC61A48856065B408F2 /* TaskCompletion.swift */,
 				6FCF55BBA6C63A15E2918C08 /* SupabaseStore+Budget.swift */,
+				9D54B444E1A365896E30E124 /* SupabaseStore+Restore.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -1922,6 +1931,7 @@
 				7A4A9B0D2496C28BADC6A1E5 /* MacSyncSettingsPane.swift in Sources */,
 				F4C0837A1D85A0DB00CF8799 /* MacSearchResultsView.swift in Sources */,
 				EBA43B122E6773D7FDBD0C24 /* MacHelpView.swift in Sources */,
+				B1EBD3E5EFA26B598E18F53E /* SupabaseStore+Restore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2064,6 +2074,8 @@
 				AC6871067D9BF3DC6BF5AFB7 /* MacWindowModelTests.swift in Sources */,
 				D96BD6AB3C1BB345D2893312 /* MacWindowSeedTests.swift in Sources */,
 				610AFD3B3C5865FD8B4F582D /* MacSettingsTests.swift in Sources */,
+				B5FC72A963876766D62E38FD /* RestoreSyncTests.swift in Sources */,
+				A13F1121B13135E97AD8FAF2 /* StoreRestoreTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
