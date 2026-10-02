@@ -17,7 +17,8 @@ extension SupabaseStore {
     }
 
     /// `deleteProduct` unlinks tasks in memory only (their rows on disk keep `productId`),
-    /// so a restore relinks the same tasks in memory.
+    /// so a restore relinks the same tasks in memory. Only tasks still unlinked are touched,
+    /// so a link the user changed between delete and restore isn't overwritten.
     func restoreProduct(_ product: StockProduct, relinking taskIDs: [UUID]) async throws {
         var restored = product
         restored.deletedAt = nil
@@ -28,7 +29,8 @@ extension SupabaseStore {
         } else {
             stockProducts.append(restored)
         }
-        for i in householdTasks.indices where taskIDs.contains(householdTasks[i].id) {
+        for i in householdTasks.indices
+        where taskIDs.contains(householdTasks[i].id) && householdTasks[i].productId == nil {
             householdTasks[i].productId = restored.id
         }
         await _sync?.sync(tables: [StockProduct.tableName])

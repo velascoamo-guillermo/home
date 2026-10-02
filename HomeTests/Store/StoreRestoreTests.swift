@@ -63,6 +63,24 @@ import Foundation
         #expect(reloaded.householdTasks.first?.productId == filters.id)
     }
 
+    @Test("restoring a product does not override a task already relinked elsewhere")
+    func restoreProductDoesNotOverrideRelink() async throws {
+        let store = await F.makeStore()
+        let filters = StockProduct(name: "Filters", level: .medium)
+        let newFilters = StockProduct(name: "New Filters", level: .full)
+        var task = HouseholdTask(title: "Change filter", intervalDays: 30, nextDueDate: .now)
+        task.productId = filters.id
+        try await store.addProduct(filters)
+        try await store.addProduct(newFilters)
+        try await store.addTask(task)
+        try await store.deleteProduct(filters)
+        var relinked = task
+        relinked.productId = newFilters.id
+        try await store.updateTask(relinked)
+        try await store.restoreProduct(filters, relinking: [task.id])
+        #expect(store.householdTasks.first?.productId == newFilters.id)
+    }
+
     @Test("saving a deleted expense again restores it")
     func expenseRestoresThroughSave() async throws {
         let url = F.tempURL()
