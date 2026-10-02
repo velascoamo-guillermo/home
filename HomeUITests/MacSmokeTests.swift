@@ -63,7 +63,7 @@ final class MacSmokeTests: XCTestCase {
         app.typeKey(",", modifierFlags: .command)
         let settings = settingsWindow(app)
         XCTAssertTrue(settings.waitForExistence(timeout: 10))
-        XCTAssertEqual(settings.title, "Calendars")
+        XCTAssertTrue(waitForTitle(settings, "Calendars", timeout: 10))
         settings.toolbars.buttons["Sync"].click()
         XCTAssertTrue(waitForTitle(settings, "Sync", timeout: 10))
     }
@@ -82,7 +82,7 @@ final class MacSmokeTests: XCTestCase {
         XCTAssertTrue(settings.waitForNonExistence(timeout: 10))
         app.typeKey(",", modifierFlags: .command)
         XCTAssertTrue(settings.waitForExistence(timeout: 10))
-        XCTAssertEqual(settings.title, "Sync")
+        XCTAssertTrue(waitForTitle(settings, "Sync", timeout: 10))
     }
 
     func testEscapeClearsSearch() throws {
@@ -101,9 +101,11 @@ final class MacSmokeTests: XCTestCase {
         XCTAssertFalse(agendaDay.exists)
 
         app.typeKey(XCUIKeyboardKey.escape, modifierFlags: [])
-        let cleared = NSPredicate(format: "value == nil OR value == '' OR value == placeholderValue")
+        // Require the field to still exist so a vanished field can't satisfy the empty-value check.
+        let cleared = NSPredicate(format: "exists == true AND (value == nil OR value == '' OR value == placeholderValue)")
         let waiter = XCTWaiter().wait(for: [XCTNSPredicateExpectation(predicate: cleared, object: field)], timeout: 10)
         XCTAssertEqual(waiter, .completed, "search field still holds \(String(describing: field.value))")
+        XCTAssertTrue(field.exists)
         XCTAssertTrue(searchResult(app, "Fixture Milk").waitForNonExistence(timeout: 10))
         XCTAssertTrue(agendaDay.waitForExistence(timeout: 10))
     }
@@ -113,7 +115,7 @@ final class MacSmokeTests: XCTestCase {
         XCTAssertTrue(app.windows.firstMatch.waitForExistence(timeout: 15))
         app.typeKey("2", modifierFlags: .command)
         XCTAssertTrue(window(app, titled: "Tasks").waitForExistence(timeout: 10))
-        XCTAssertEqual(mainWindows(app).count, 1)
+        XCTAssertTrue(waitForCount(mainWindows(app), 1, timeout: 10))
 
         app.menuBars.menuBarItems["File"].click()
         app.menuBars.menuItems["Open in New Window"].click()
