@@ -22,8 +22,8 @@ import Foundation
         let probe = UndoProbe()
         manager.beginUndoGrouping()
         DeletionUndo.register(on: manager, named: "Delete Task",
-                              undo: { probe.calls.append("restore") },
-                              redo: { probe.calls.append("delete") })
+                              undo: { probe.calls.append("restore"); return true },
+                              redo: { probe.calls.append("delete"); return true })
         manager.endUndoGrouping()
         #expect(manager.undoMenuItemTitle == "Undo Delete Task")
 
@@ -36,6 +36,22 @@ import Foundation
         try await F.waitUntil { probe.calls == ["restore", "delete"] }
         #expect(probe.calls == ["restore", "delete"])
         #expect(manager.canUndo)
+    }
+
+    @Test("a failed undo does not register redo")
+    func failedUndoDoesNotRegisterRedo() async throws {
+        let manager = manager()
+        let probe = UndoProbe()
+        manager.beginUndoGrouping()
+        DeletionUndo.register(on: manager, named: "Delete Task",
+                              undo: { probe.calls.append("restore"); return false },
+                              redo: { probe.calls.append("delete"); return true })
+        manager.endUndoGrouping()
+
+        manager.undo()
+        try await F.waitUntil { probe.calls == ["restore"] }
+        #expect(probe.calls == ["restore"])
+        #expect(!manager.canRedo)
     }
 
     @Test("deleting a task registers an undo that brings it back from disk")
@@ -69,6 +85,7 @@ import Foundation
         #expect(manager.undoMenuItemTitle == "Undo Delete Product")
         manager.undo()
         try await F.waitUntil { store.householdTasks.first?.productId == filters.id }
+        #expect(store.householdTasks.first?.productId == filters.id)
         #expect(store.stockProducts.map(\.id) == [filters.id])
     }
 

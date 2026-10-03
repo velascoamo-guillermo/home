@@ -6,8 +6,8 @@ extension SupabaseStore {
         try await deleteTask(task)
         DeletionUndo.register(
             on: undoManager, named: "Delete Task",
-            undo: { [weak self] in try? await self?.restoreTask(task) },
-            redo: { [weak self] in try? await self?.deleteTask(task) })
+            undo: { [weak self] in await self?.run { try await $0.restoreTask(task) } ?? false },
+            redo: { [weak self] in await self?.run { try await $0.deleteTask(task) } ?? false })
     }
 
     func deleteProduct(_ product: StockProduct, undoManager: UndoManager?,
@@ -16,16 +16,30 @@ extension SupabaseStore {
         try await deleteProduct(product)
         DeletionUndo.register(
             on: undoManager, named: actionName,
-            undo: { [weak self] in try? await self?.restoreProduct(product, relinking: linked) },
-            redo: { [weak self] in try? await self?.deleteProduct(product) })
+            undo: { [weak self] in
+                await self?.run { try await $0.restoreProduct(product, relinking: linked) } ?? false
+            },
+            redo: { [weak self] in await self?.run { try await $0.deleteProduct(product) } ?? false })
     }
 
     func deleteBudgetExpense(_ expense: BudgetExpense, undoManager: UndoManager?) async throws {
         try await deleteBudgetExpense(expense)
         DeletionUndo.register(
             on: undoManager, named: "Delete Expense",
-            undo: { [weak self] in try? await self?.saveBudgetExpense(expense) },
-            redo: { [weak self] in try? await self?.deleteBudgetExpense(expense) })
+            undo: { [weak self] in await self?.run { try await $0.saveBudgetExpense(expense) } ?? false },
+            redo: { [weak self] in await self?.run { try await $0.deleteBudgetExpense(expense) } ?? false })
+    }
+
+    /// Runs an undo/redo step, surfacing a failure as a dismissible `actionError` instead of
+    /// swallowing it — a failed step must not look like it succeeded to the caller.
+    private func run(_ action: (SupabaseStore) async throws -> Void) async -> Bool {
+        do {
+            try await action(self)
+            return true
+        } catch {
+            actionError = error.localizedDescription
+            return false
+        }
     }
 }
 #endif

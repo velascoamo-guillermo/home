@@ -2,9 +2,11 @@
 import Foundation
 
 /// Puts a deletion on the window's undo stack: Undo restores, Redo deletes again, and each
-/// run registers its inverse so people can toggle as often as they like.
+/// run registers its inverse so people can toggle as often as they like. The inverse is only
+/// registered when the action actually succeeds — a failed restore must not leave a stale
+/// "Redo" offered to the user.
 enum DeletionUndo {
-    typealias Action = @MainActor @Sendable () async -> Void
+    typealias Action = @MainActor @Sendable () async -> Bool
 
     static func register(on manager: UndoManager?, named actionName: String,
                          undo: @escaping Action, redo: @escaping Action) {
@@ -35,12 +37,32 @@ extension DeletionUndo {
         }
 
         func run() {
-            let wasGrouping = (manager?.groupingLevel ?? 0) > 0
-            if !wasGrouping { manager?.beginUndoGrouping() }
-            DeletionUndo.register(on: manager, named: actionName, undo: inverse, redo: perform)
-            if !wasGrouping { manager?.endUndoGrouping() }
+            guard let manager else {
+                let perform = perform
+                Task { _ = await perform() }
+                return
+            }
+
+            // Register the inverse synchronously, inside this handler's call stack: that is
+            // the only window where `UndoManager` knows whether it is currently undoing or
+            // redoing, and routes the registration to the opposite stack accordingly. Once we
+            // `await`, that context is gone and the registration would land on the wrong stack.
+            let wasGrouping = manager.groupingLevel > 0
+            if !wasGrouping { manager.beginUndoGrouping() }
+            let next = Step(manager: manager, actionName: actionName, perform: inverse, inverse: perform)
+            manager.registerUndo(withTarget: next) { _ in
+                MainActor.assumeIsolated { next.run() }
+            }
+            manager.setActionName(actionName)
+            if !wasGrouping { manager.endUndoGrouping() }
+
+            // If the action itself fails, pull the speculative registration back out so a
+            // failed restore doesn't leave a stale "Redo" (or "Undo") offered to the user.
             let perform = perform
-            Task { await perform() }
+            Task {
+                let succeeded = await perform()
+                if !succeeded { manager.removeAllActions(withTarget: next) }
+            }
         }
     }
 }
