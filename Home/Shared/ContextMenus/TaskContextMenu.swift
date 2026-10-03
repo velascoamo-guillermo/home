@@ -3,6 +3,7 @@ import SwiftUI
 struct TaskContextMenu: View {
     let task: HouseholdTask
     var onCompleted: ((SupabaseStore.CompletionResult) -> Void)? = nil
+    var onDelete: ((HouseholdTask) -> Void)? = nil
 
     @Environment(SupabaseStore.self) private var store
 
@@ -43,7 +44,11 @@ struct TaskContextMenu: View {
         } label: { Label("Add to calendar", systemImage: "calendar.badge.plus") }
 
         Button(role: .destructive) {
-            Task { try? await store.deleteTask(task) }
+            if let onDelete {
+                onDelete(task)
+            } else {
+                Task { try? await store.deleteTask(task) }
+            }
         } label: { Label("Delete", systemImage: "trash") }
     }
 

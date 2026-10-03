@@ -138,6 +138,7 @@
 		6492972B2D648FA4E8E62AEF /* CalendarsSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D9286FCE7C221771A849A5 /* CalendarsSettingsView.swift */; };
 		65226867380D1E0257BD5B66 /* MacCalendarsSettingsPane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0176F83F508F251BE69ABE77 /* MacCalendarsSettingsPane.swift */; };
 		653CA4791CBC1F01E5C270DF /* BudgetDayGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FC4E19551371B8E3FE3743F /* BudgetDayGroup.swift */; };
+		65B488699631D5DAD058E0C5 /* MacTodayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA090CB7244C7D173EEB5A5B /* MacTodayView.swift */; };
 		663606FD98F2697756FAD5E6 /* MealChoiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AE500AD395CBA5FAADB2307 /* MealChoiceTests.swift */; };
 		68AEAB43A2107550172A58AE /* HomeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4CDCB58B9C74EE5C806160F /* HomeApp.swift */; };
 		68E6FB0FE1A44696B6615646 /* SyncEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5BAB79A911B4FD3860DCA75 /* SyncEngine.swift */; };
@@ -230,6 +231,7 @@
 		B0875935D6B45A1E74F4D6B2 /* StockLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10E1A21BC2ABF6ECC8A821E /* StockLevel.swift */; };
 		B1EBD3E5EFA26B598E18F53E /* SupabaseStore+Restore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D54B444E1A365896E30E124 /* SupabaseStore+Restore.swift */; };
 		B2A14F6741FFCF63CC0D1A8F /* HubTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = A019554D2097390095088A80 /* HubTile.swift */; };
+		B4D04666C88302E3348595C1 /* MacTodayViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69AC80B7E1D3955D191A10FB /* MacTodayViewTests.swift */; };
 		B5FC72A963876766D62E38FD /* RestoreSyncTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A496A54E32CC358A02088CA9 /* RestoreSyncTests.swift */; };
 		B611D6F8A81DCC192451C3BF /* Supermarket.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD721BF9855C09D131A9116 /* Supermarket.swift */; };
 		B68A261E1EE7FA856D63DFAA /* AgendaDay.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC9CD642EEEF0D9A5145F994 /* AgendaDay.swift */; };
@@ -514,6 +516,7 @@
 		65FC9E28240A8850A25487E2 /* MacPendingAction.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MacPendingAction.swift; sourceTree = "<group>"; };
 		66F8548E556881C17E53D9C8 /* AgendaBuilderTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AgendaBuilderTests.swift; sourceTree = "<group>"; };
 		69881983A539D6462A7613E0 /* MealTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MealTests.swift; sourceTree = "<group>"; };
+		69AC80B7E1D3955D191A10FB /* MacTodayViewTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MacTodayViewTests.swift; sourceTree = "<group>"; };
 		6AB62CA6C2E1FDA6EB697A6C /* BudgetCalculator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BudgetCalculator.swift; sourceTree = "<group>"; };
 		6E2044791A89025FE7C2B633 /* MacWindowSeed.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MacWindowSeed.swift; sourceTree = "<group>"; };
 		6EC9C36F2261C1EE7AF73B3B /* MacAppCommands.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MacAppCommands.swift; sourceTree = "<group>"; };
@@ -586,6 +589,7 @@
 		A8CE7DCCCE698D22F073CE23 /* MealSlotCard.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MealSlotCard.swift; sourceTree = "<group>"; };
 		A9549B6530DAB5031B98F04F /* UUID+NameBased.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UUID+NameBased.swift"; sourceTree = "<group>"; };
 		A9EC112221ABF00FB0C64B50 /* AgendaBuilderCalendarTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AgendaBuilderCalendarTests.swift; sourceTree = "<group>"; };
+		AA090CB7244C7D173EEB5A5B /* MacTodayView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MacTodayView.swift; sourceTree = "<group>"; };
 		AA11BB22CC33DD44EE55FF01 /* VetTabView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = VetTabView.swift; sourceTree = "<group>"; };
 		AA11BB22CC33DD44EE55FF77 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		AA22BB33CC44DD55EE6600A2 /* AddAppointmentSheet.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AddAppointmentSheet.swift; sourceTree = "<group>"; };
@@ -808,6 +812,7 @@
 				C56FB3C5981A1D246CC142D3 /* Search */,
 				F5057FFF3F5126875B276B9D /* Help */,
 				27FE2C967915761A7141C339 /* Undo */,
+				56EC974CB170355D76B2B0EE /* Today */,
 			);
 			name = Mac;
 			path = Mac;
@@ -887,6 +892,7 @@
 				1E29C193B1691C48FBB41F0B /* MacWindowSeedTests.swift */,
 				27E7256A2CB96100DBAC9C47 /* MacSettingsTests.swift */,
 				56AD944A4B4C67C48C9C5D31 /* DeletionUndoTests.swift */,
+				69AC80B7E1D3955D191A10FB /* MacTodayViewTests.swift */,
 			);
 			name = Mac;
 			path = Mac;
@@ -990,6 +996,15 @@
 			);
 			name = Budget;
 			path = Budget;
+			sourceTree = "<group>";
+		};
+		56EC974CB170355D76B2B0EE /* Today */ = {
+			isa = PBXGroup;
+			children = (
+				AA090CB7244C7D173EEB5A5B /* MacTodayView.swift */,
+			);
+			name = Today;
+			path = Today;
 			sourceTree = "<group>";
 		};
 		5B39916AFAEE3C3870093AED /* Calculator */ = {
@@ -1952,6 +1967,7 @@
 				B1EBD3E5EFA26B598E18F53E /* SupabaseStore+Restore.swift in Sources */,
 				0E5BC1E2DBA71482B5219797 /* DeletionUndo.swift in Sources */,
 				25BD9252935ED64854874A5E /* SupabaseStore+UndoableDelete.swift in Sources */,
+				65B488699631D5DAD058E0C5 /* MacTodayView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2097,6 +2113,7 @@
 				B5FC72A963876766D62E38FD /* RestoreSyncTests.swift in Sources */,
 				A13F1121B13135E97AD8FAF2 /* StoreRestoreTests.swift in Sources */,
 				FFDA7B6284068DB8DEF1E2B1 /* DeletionUndoTests.swift in Sources */,
+				B4D04666C88302E3348595C1 /* MacTodayViewTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

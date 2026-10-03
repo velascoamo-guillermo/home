@@ -172,6 +172,19 @@ final class MacSmokeTests: XCTestCase {
         return XCTWaiter().wait(for: [expectation], timeout: timeout) == .completed
     }
 
+    func testReturnOnTodayTaskOpensInspectorNotSheet() throws {
+        let app = launchApp()
+        XCTAssertTrue(app.windows.firstMatch.waitForExistence(timeout: 15))
+        app.typeKey("1", modifierFlags: .command)
+        let row = app.staticTexts["Fixture Change Filter"]
+        XCTAssertTrue(row.waitForExistence(timeout: 10))
+        row.click()
+        app.typeKey(.return, modifierFlags: [])
+        let name = app.textFields.matching(NSPredicate(format: "value == %@", "Fixture Change Filter")).firstMatch
+        XCTAssertTrue(name.waitForExistence(timeout: 10))
+        XCTAssertEqual(app.sheets.count, 0)
+    }
+
     private func window(_ app: XCUIApplication, titled title: String) -> XCUIElement {
         app.windows.matching(NSPredicate(format: "title == %@", title)).firstMatch
     }
