@@ -76,11 +76,7 @@ struct MacTodayView: View {
         .onDeleteCommand {
             if case .task(let task, _)? = selected { delete(task) }
         }
-        .background(ReturnKeyCatcher {
-            guard let selected else { return false }
-            open(selected)
-            return true
-        })
+        .background(AgendaListFocusView(selection: selection))
         .inspector(isPresented: $model.isInspectorPresented) {
             inspector(for: selected)
                 .inspectorColumnWidth(min: 360, ideal: 400, max: 520)
@@ -189,40 +185,45 @@ struct MacTodayView: View {
     }
 }
 
-// `contextMenu(forSelectionType:primaryAction:)` only reaches its `primaryAction`
-// closure on a real double-click; pressing Return on a selected row never calls it
-// on this SDK because an accessibility-driven row selection (as in UI tests, and
-// seemingly also real clicks in this List) never promotes the row to first
-// responder, so no keyDown ever reaches a SwiftUI `.onKeyPress`. A local key-down
-// monitor intercepts Return at the window level instead, which only requires the
-// window to be key — already true once a row is selected.
-private struct ReturnKeyCatcher: NSViewRepresentable {
-    let onReturn: () -> Bool
+// Clicking (or AX-selecting, as in UI tests) an agenda row changes the SwiftUI
+// `selection` binding but never promotes the List's backing NSOutlineView to
+// `NSWindow.firstResponder` on this SDK — confirmed by instrumenting
+// `window.firstResponder` directly: after a row click it stays the window itself,
+// so `.onDeleteCommand`, `.onKeyPress`, and `contextMenu(forSelectionType:)`'s own
+// Return handling (which only reaches `primaryAction` once the outline view is
+// first responder) never fire. Re-asserting first responder on the outline view
+// on every render fixes all three natively, with no event interception — and the
+// guard below keeps it from ever stealing focus back from an active text editor,
+// so it can't interrupt typing in the inspector's Name/Notes fields or the
+// toolbar search field (the same instrumentation confirmed firstResponder
+// correctly becomes a clicked text field's editor and stays there).
+private struct AgendaListFocusView: NSViewRepresentable {
+    let selection: AgendaItem.ID?
 
-    final class Coordinator {
-        var onReturn: () -> Bool
-        var monitor: Any?
-
-        init(onReturn: @escaping () -> Bool) { self.onReturn = onReturn }
-    }
-
-    func makeCoordinator() -> Coordinator { Coordinator(onReturn: onReturn) }
-
-    func makeNSView(context: Context) -> NSView {
-        let view = NSView()
-        context.coordinator.monitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [coordinator = context.coordinator] event in
-            guard event.keyCode == 36, view.window?.isKeyWindow == true else { return event }
-            return coordinator.onReturn() ? nil : event
-        }
-        return view
-    }
+    func makeNSView(context: Context) -> NSView { NSView() }
 
     func updateNSView(_ nsView: NSView, context: Context) {
-        context.coordinator.onReturn = onReturn
+        guard selection != nil else { return }
+        // The outline view isn't always findable yet in this same SwiftUI commit
+        // (it can still be mid-layout right after a selection-driven re-render),
+        // so promotion is deferred one main-actor turn rather than attempted here.
+        Task { @MainActor in
+            guard let window = nsView.window,
+                  let outlineView = Self.findOutlineView(in: window.contentView),
+                  window.firstResponder !== outlineView,
+                  !(window.firstResponder is NSText)
+            else { return }
+            window.makeFirstResponder(outlineView)
+        }
     }
 
-    static func dismantleNSView(_ nsView: NSView, coordinator: Coordinator) {
-        if let monitor = coordinator.monitor { NSEvent.removeMonitor(monitor) }
+    private static func findOutlineView(in view: NSView?) -> NSOutlineView? {
+        guard let view else { return nil }
+        if let outlineView = view as? NSOutlineView { return outlineView }
+        for subview in view.subviews {
+            if let found = findOutlineView(in: subview) { return found }
+        }
+        return nil
     }
 }
 #endif

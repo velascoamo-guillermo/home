@@ -185,6 +185,41 @@ final class MacSmokeTests: XCTestCase {
         XCTAssertEqual(app.sheets.count, 0)
     }
 
+    func testReturnInSearchFieldWithTodayRowSelectedDoesNotOpenInspector() throws {
+        let app = launchApp()
+        XCTAssertTrue(app.windows.firstMatch.waitForExistence(timeout: 15))
+        app.typeKey("1", modifierFlags: .command)
+        let row = app.staticTexts["Fixture Change Filter"]
+        XCTAssertTrue(row.waitForExistence(timeout: 10))
+        row.click()
+
+        app.typeKey("f", modifierFlags: .command)
+        app.typeText("Fixture Milk")
+        let field = app.toolbars.searchFields.firstMatch
+        XCTAssertTrue(waitForValue(field, "Fixture Milk", timeout: 10))
+        app.typeKey(.return, modifierFlags: [])
+
+        XCTAssertEqual(app.sheets.count, 0)
+        let name = app.textFields.matching(NSPredicate(format: "value == %@", "Fixture Change Filter")).firstMatch
+        XCTAssertFalse(name.exists)
+        XCTAssertTrue(waitForValue(field, "Fixture Milk", timeout: 5))
+    }
+
+    func testDeleteCommandOnSelectedTaskIsUndoable() throws {
+        let app = launchApp()
+        XCTAssertTrue(app.windows.firstMatch.waitForExistence(timeout: 15))
+        app.typeKey("1", modifierFlags: .command)
+        let row = app.staticTexts["Fixture Change Filter"]
+        XCTAssertTrue(row.waitForExistence(timeout: 10))
+        row.click()
+
+        app.typeKey(.delete, modifierFlags: [])
+        XCTAssertTrue(row.waitForNonExistence(timeout: 10))
+
+        app.typeKey("z", modifierFlags: .command)
+        XCTAssertTrue(row.waitForExistence(timeout: 10))
+    }
+
     private func window(_ app: XCUIApplication, titled title: String) -> XCUIElement {
         app.windows.matching(NSPredicate(format: "title == %@", title)).firstMatch
     }
