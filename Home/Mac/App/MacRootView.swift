@@ -39,6 +39,14 @@ struct MacRootView: View {
         .onChange(of: model.selection) { _, new in seed.item = new }
         .onChange(of: bootstrap.didFinishLoading) { _, _ in resolveSelection() }
         .onChange(of: store.pets) { _, _ in resolveSelection() }
+        .alert("Something Went Wrong", isPresented: Binding(
+            get: { store.actionError != nil },
+            set: { if !$0 { store.actionError = nil } }
+        )) {
+            Button("OK") { store.actionError = nil }
+        } message: {
+            if let message = store.actionError { Text(message) }
+        }
         .environment(\.openURL, OpenURLAction { url in route(url) })
         .onOpenURL { url in _ = route(url) }
         .handlesExternalEvents(preferring: ["*"], allowing: ["*"])

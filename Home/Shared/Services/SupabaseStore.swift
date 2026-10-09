@@ -35,6 +35,9 @@ final class SupabaseStore {
     var budgetExpenses: [BudgetExpense] = []
     var isLoading = false
     var loadError: String? = nil
+    /// Transient, user-visible failure from a background action (e.g. a failed undo/redo).
+    /// Unlike `loadError`, it does not block the UI — callers surface it as a dismissible alert.
+    var actionError: String? = nil
     private(set) var lastSyncAt: Date?
 
     private var localURL: URL {

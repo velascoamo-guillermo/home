@@ -62,4 +62,15 @@ import Foundation
         #expect(decoded.name == "Milk")
         #expect(decoded.level == .medium)
     }
+
+    @Test("a live product encodes deleted_at as an explicit null and round-trips")
+    func liveProductEncodesNullTombstone() throws {
+        let product = StockProduct(name: "Rice", level: .full, supermarket: .mercadona, category: .food)
+        let data = try JSONEncoder().encode(product)
+        let object = try #require(JSONSerialization.jsonObject(with: data) as? [String: Any])
+        #expect(object["deleted_at"] is NSNull)
+        #expect(Set(object.keys) == ["id", "name", "level", "needed", "created_at", "supermarket",
+                                     "category", "updated_at", "deleted_at"])
+        #expect(try JSONDecoder().decode(StockProduct.self, from: data) == product)
+    }
 }

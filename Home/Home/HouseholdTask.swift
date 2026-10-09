@@ -90,7 +90,7 @@ nonisolated struct HouseholdTask: Codable, Identifiable, Hashable {
         try c.encodeIfPresent(productId, forKey: .productId)
         try c.encode(quantityPerCompletion, forKey: .quantityPerCompletion)
         try c.encode(updatedAt, forKey: .updatedAt)
-        try c.encodeIfPresent(deletedAt, forKey: .deletedAt)
+        try c.encode(deletedAt, forKey: .deletedAt)
     }
 }
 

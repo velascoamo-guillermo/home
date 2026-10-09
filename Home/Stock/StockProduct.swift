@@ -76,6 +76,20 @@ nonisolated struct StockProduct: Codable, Identifiable, Hashable {
         updatedAt = (try? c.decode(Date.self, forKey: .updatedAt)) ?? .now
         deletedAt = try? c.decodeIfPresent(Date.self, forKey: .deletedAt)
     }
+
+    func encode(to encoder: any Encoder) throws {
+        var c = encoder.container(keyedBy: CodingKeys.self)
+        try c.encode(id, forKey: .id)
+        try c.encode(name, forKey: .name)
+        try c.encode(level, forKey: .level)
+        try c.encode(needed, forKey: .needed)
+        try c.encode(createdAt, forKey: .createdAt)
+        try c.encodeIfPresent(supermarket, forKey: .supermarket)
+        try c.encodeIfPresent(category, forKey: .category)
+        try c.encode(updatedAt, forKey: .updatedAt)
+        // Explicit null: PostgREST upserts only the keys sent, so an omitted key never clears a tombstone.
+        try c.encode(deletedAt, forKey: .deletedAt)
+    }
 }
 
 nonisolated extension StockProduct: SyncableEntity {
