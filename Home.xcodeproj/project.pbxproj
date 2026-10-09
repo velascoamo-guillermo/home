@@ -294,6 +294,7 @@
 		DD3C82EB6A4026ECF326F57B /* StockListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 892309195D679798035F2798 /* StockListModel.swift */; };
 		DD44EE55FF6600AABB22CC33 /* EventsTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD44EE55FF6600AABB22CC01 /* EventsTabView.swift */; };
 		DF2C7702DB1B10FC905384EB /* HomeWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97BF39A8D0642A279A151CCE /* HomeWidget.swift */; };
+		DFCFEA94724FA019E506D077 /* AgendaListFocusViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C57B3EF4906FEAE2F11709D /* AgendaListFocusViewTests.swift */; };
 		E2210512E4387DF49B4D4E1C /* AgendaFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 746C4E32F13E7FE6E876B4AA /* AgendaFixtures.swift */; };
 		E24A613211F34981C2071E01 /* BudgetIDsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50152272656FAFD88F8FA453 /* BudgetIDsTests.swift */; };
 		E29FD38B6420B5EB6636F85F /* StockGauge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76388F68250036727C800A99 /* StockGauge.swift */; };
@@ -438,6 +439,7 @@
 		2AD63759361D79EB72516590 /* BudgetExpense.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BudgetExpense.swift; sourceTree = "<group>"; };
 		2B10EC51D4B569A329CA21DC /* MacToolbar.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MacToolbar.swift; sourceTree = "<group>"; };
 		2C2D908018579E74C4F6DE3F /* MainTabView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+		2C57B3EF4906FEAE2F11709D /* AgendaListFocusViewTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AgendaListFocusViewTests.swift; sourceTree = "<group>"; };
 		2C6856914DFD42828E88B77E /* Veterinarian.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Veterinarian.swift; sourceTree = "<group>"; };
 		2D48AC1C572C84D369000E39 /* MealStockLevelTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MealStockLevelTests.swift; sourceTree = "<group>"; };
 		2E6995C6A3CF4F4BB2E5B277 /* SettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -893,6 +895,7 @@
 				27E7256A2CB96100DBAC9C47 /* MacSettingsTests.swift */,
 				56AD944A4B4C67C48C9C5D31 /* DeletionUndoTests.swift */,
 				69AC80B7E1D3955D191A10FB /* MacTodayViewTests.swift */,
+				2C57B3EF4906FEAE2F11709D /* AgendaListFocusViewTests.swift */,
 			);
 			name = Mac;
 			path = Mac;
@@ -2114,6 +2117,7 @@
 				A13F1121B13135E97AD8FAF2 /* StoreRestoreTests.swift in Sources */,
 				FFDA7B6284068DB8DEF1E2B1 /* DeletionUndoTests.swift in Sources */,
 				B4D04666C88302E3348595C1 /* MacTodayViewTests.swift in Sources */,
+				DFCFEA94724FA019E506D077 /* AgendaListFocusViewTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -191,37 +191,70 @@ struct MacTodayView: View {
 // `window.firstResponder` directly: after a row click it stays the window itself,
 // so `.onDeleteCommand`, `.onKeyPress`, and `contextMenu(forSelectionType:)`'s own
 // Return handling (which only reaches `primaryAction` once the outline view is
-// first responder) never fire. Re-asserting first responder on the outline view
-// on every render fixes all three natively, with no event interception — and the
-// guard below keeps it from ever stealing focus back from an active text editor,
-// so it can't interrupt typing in the inspector's Name/Notes fields or the
-// toolbar search field (the same instrumentation confirmed firstResponder
-// correctly becomes a clicked text field's editor and stays there).
-private struct AgendaListFocusView: NSViewRepresentable {
+// first responder) never fire. Promoting the outline view to first responder
+// fixes all three natively, with no event interception — but only the ONE time
+// the selection actually changes (`shouldApplyFocus`/`Coordinator.lastAppliedSelection`):
+// `updateNSView` otherwise runs on every unrelated body re-render (a sync pull, a
+// calendar feed load, an inspector field edit), and re-grabbing focus on each of
+// those would yank it away from non-text inspector controls (DatePicker, Stepper,
+// Picker, the Save button) and the sidebar whenever nothing else currently holds
+// it (`applyFocus`'s guard: only promote when the current first responder is the
+// window itself, nil, or already the outline view).
+//
+// `nearestOutlineView` is scoped to the outline view owned by the pane this view
+// lives in: it climbs `nsView`'s own superview chain (this view sits as a
+// `.background` of the Today `List`, inside the detail pane) rather than
+// searching from `window.contentView`, which would also contain the sidebar's
+// own `NSOutlineView` and could match that one instead (see
+// `AgendaListFocusViewTests.scopesToTheOwningPane`).
+struct AgendaListFocusView: NSViewRepresentable {
     let selection: AgendaItem.ID?
+
+    final class Coordinator {
+        var lastAppliedSelection: AgendaItem.ID?
+    }
+
+    func makeCoordinator() -> Coordinator { Coordinator() }
 
     func makeNSView(context: Context) -> NSView { NSView() }
 
     func updateNSView(_ nsView: NSView, context: Context) {
-        guard selection != nil else { return }
+        guard Self.shouldApplyFocus(selection: selection, coordinator: context.coordinator) else { return }
+        context.coordinator.lastAppliedSelection = selection
         // The outline view isn't always findable yet in this same SwiftUI commit
         // (it can still be mid-layout right after a selection-driven re-render),
         // so promotion is deferred one main-actor turn rather than attempted here.
+        // This hop happens once per selection change, never once per render.
         Task { @MainActor in
-            guard let window = nsView.window,
-                  let outlineView = Self.findOutlineView(in: window.contentView),
-                  window.firstResponder !== outlineView,
-                  !(window.firstResponder is NSText)
-            else { return }
-            window.makeFirstResponder(outlineView)
+            Self.applyFocus(from: nsView)
         }
     }
 
-    private static func findOutlineView(in view: NSView?) -> NSOutlineView? {
-        guard let view else { return nil }
+    static func shouldApplyFocus(selection: AgendaItem.ID?, coordinator: Coordinator) -> Bool {
+        guard let selection else { return false }
+        return coordinator.lastAppliedSelection != selection
+    }
+
+    static func applyFocus(from view: NSView) {
+        guard let window = view.window, let outlineView = nearestOutlineView(ascendingFrom: view) else { return }
+        let responder = window.firstResponder
+        guard responder == nil || responder === window || responder === outlineView else { return }
+        window.makeFirstResponder(outlineView)
+    }
+
+    static func nearestOutlineView(ascendingFrom view: NSView) -> NSOutlineView? {
+        var ancestor = view.superview
+        while let current = ancestor {
+            if let found = outlineView(in: current) { return found }
+            ancestor = current.superview
+        }
+        return nil
+    }
+
+    private static func outlineView(in view: NSView) -> NSOutlineView? {
         if let outlineView = view as? NSOutlineView { return outlineView }
         for subview in view.subviews {
-            if let found = findOutlineView(in: subview) { return found }
+            if let found = outlineView(in: subview) { return found }
         }
         return nil
     }

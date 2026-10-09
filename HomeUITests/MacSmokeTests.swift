@@ -205,6 +205,52 @@ final class MacSmokeTests: XCTestCase {
         XCTAssertTrue(waitForValue(field, "Fixture Milk", timeout: 5))
     }
 
+    func testTypingInInspectorNameFieldIsNotInterruptedByFocusGrab() throws {
+        let app = launchApp()
+        XCTAssertTrue(app.windows.firstMatch.waitForExistence(timeout: 15))
+        app.typeKey("1", modifierFlags: .command)
+        let row = app.staticTexts["Fixture Change Filter"]
+        XCTAssertTrue(row.waitForExistence(timeout: 10))
+        row.click()
+        app.typeKey(.return, modifierFlags: [])
+
+        XCTAssertTrue(app.textFields.matching(NSPredicate(format: "value == %@", "Fixture Change Filter")).firstMatch.waitForExistence(timeout: 10))
+        // Re-query by position, not by value: the predicate above would stop
+        // matching the instant typing changes the field's value, since
+        // XCUIElement queries re-resolve lazily on every access.
+        let name = app.textFields.firstMatch
+        name.click()
+        app.typeText(" Extra")
+
+        let typedValue = NSPredicate(format: "value CONTAINS %@", "Extra")
+        XCTAssertEqual(
+            XCTWaiter().wait(for: [XCTNSPredicateExpectation(predicate: typedValue, object: name)], timeout: 10),
+            .completed, "field did not accept typed text, current value: \(String(describing: name.value))")
+
+        app.typeKey(.return, modifierFlags: [])
+
+        XCTAssertTrue(typedValue.evaluate(with: name), "Return should not discard the just-typed text")
+        XCTAssertEqual(app.sheets.count, 0)
+    }
+
+    func testArrowKeysMoveAgendaSelection() throws {
+        let app = launchApp()
+        XCTAssertTrue(app.windows.firstMatch.waitForExistence(timeout: 15))
+        app.typeKey("1", modifierFlags: .command)
+        let row = app.staticTexts["Fixture Change Filter"]
+        XCTAssertTrue(row.waitForExistence(timeout: 10))
+        row.click()
+        app.typeKey(.return, modifierFlags: [])
+
+        let name = app.textFields.matching(NSPredicate(format: "value == %@", "Fixture Change Filter")).firstMatch
+        XCTAssertTrue(name.waitForExistence(timeout: 10))
+
+        app.typeKey(.downArrow, modifierFlags: [])
+        let nameChanged = NSPredicate(format: "value != %@", "Fixture Change Filter")
+        let waiter = XCTWaiter().wait(for: [XCTNSPredicateExpectation(predicate: nameChanged, object: name)], timeout: 10)
+        XCTAssertEqual(waiter, .completed, "Down arrow did not move the agenda selection off the first row")
+    }
+
     func testDeleteCommandOnSelectedTaskIsUndoable() throws {
         let app = launchApp()
         XCTAssertTrue(app.windows.firstMatch.waitForExistence(timeout: 15))
