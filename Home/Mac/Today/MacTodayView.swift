@@ -212,6 +212,14 @@ struct AgendaListFocusView: NSViewRepresentable {
 
     final class Coordinator {
         var lastAppliedSelection: AgendaItem.ID?
+
+        /// An attempt that couldn't find its window or list (still mid-layout) is
+        /// forgotten so the next update retries it; one that found them but declined
+        /// because another control holds focus stays recorded — that refusal is correct.
+        func focusAttempt(for selection: AgendaItem.ID, resolved: Bool) {
+            guard !resolved, lastAppliedSelection == selection else { return }
+            lastAppliedSelection = nil
+        }
     }
 
     func makeCoordinator() -> Coordinator { Coordinator() }
@@ -219,27 +227,34 @@ struct AgendaListFocusView: NSViewRepresentable {
     func makeNSView(context: Context) -> NSView { NSView() }
 
     func updateNSView(_ nsView: NSView, context: Context) {
-        guard Self.shouldApplyFocus(selection: selection, coordinator: context.coordinator) else { return }
-        context.coordinator.lastAppliedSelection = selection
+        let coordinator = context.coordinator
+        guard Self.shouldApplyFocus(selection: selection, coordinator: coordinator),
+              let selection else { return }
+        coordinator.lastAppliedSelection = selection
         // The outline view isn't always findable yet in this same SwiftUI commit
         // (it can still be mid-layout right after a selection-driven re-render),
         // so promotion is deferred one main-actor turn rather than attempted here.
         // This hop happens once per selection change, never once per render.
         Task { @MainActor in
-            Self.applyFocus(from: nsView)
+            coordinator.focusAttempt(for: selection, resolved: Self.applyFocus(from: nsView))
         }
     }
 
     static func shouldApplyFocus(selection: AgendaItem.ID?, coordinator: Coordinator) -> Bool {
-        guard let selection else { return false }
+        guard let selection else {
+            coordinator.lastAppliedSelection = nil
+            return false
+        }
         return coordinator.lastAppliedSelection != selection
     }
 
-    static func applyFocus(from view: NSView) {
-        guard let window = view.window, let outlineView = nearestOutlineView(ascendingFrom: view) else { return }
+    /// Returns false only when there is no window or list to focus yet.
+    static func applyFocus(from view: NSView) -> Bool {
+        guard let window = view.window, let outlineView = nearestOutlineView(ascendingFrom: view) else { return false }
         let responder = window.firstResponder
-        guard responder == nil || responder === window || responder === outlineView else { return }
+        guard responder == nil || responder === window || responder === outlineView else { return true }
         window.makeFirstResponder(outlineView)
+        return true
     }
 
     static func nearestOutlineView(ascendingFrom view: NSView) -> NSOutlineView? {

@@ -79,12 +79,48 @@ private final class RecordingWindow: NSWindow {
         #expect(AgendaListFocusView.shouldApplyFocus(selection: "b", coordinator: coordinator) == true)
     }
 
+    @Test("clearing the selection forgets it, so reselecting the same row grabs focus again")
+    func deselectThenReselectSameRow() {
+        let coordinator = AgendaListFocusView.Coordinator()
+        coordinator.lastAppliedSelection = "a"
+        #expect(AgendaListFocusView.shouldApplyFocus(selection: nil, coordinator: coordinator) == false)
+        #expect(AgendaListFocusView.shouldApplyFocus(selection: "a", coordinator: coordinator) == true)
+    }
+
+    @Test("a focus attempt that found no window or list is retried on the next update")
+    func unresolvedAttemptIsRetried() {
+        let coordinator = AgendaListFocusView.Coordinator()
+        coordinator.lastAppliedSelection = "a"
+        coordinator.focusAttempt(for: "a", resolved: false)
+        #expect(AgendaListFocusView.shouldApplyFocus(selection: "a", coordinator: coordinator) == true)
+    }
+
+    @Test("a stale unresolved attempt does not reset a newer selection")
+    func staleUnresolvedAttemptIgnored() {
+        let coordinator = AgendaListFocusView.Coordinator()
+        coordinator.lastAppliedSelection = "b"
+        coordinator.focusAttempt(for: "a", resolved: false)
+        #expect(AgendaListFocusView.shouldApplyFocus(selection: "b", coordinator: coordinator) == false)
+    }
+
+    @Test("applyFocus reports unresolved only when there is no window or list, not when it declines")
+    func applyFocusResolution() {
+        #expect(AgendaListFocusView.applyFocus(from: NSView()) == false)
+
+        let fixture = makeFixture()
+        let button = NSButton()
+        fixture.window.contentView?.addSubview(button)
+        _ = fixture.window.makeFirstResponder(button)
+        #expect(AgendaListFocusView.applyFocus(from: fixture.background) == true)
+        #expect(fixture.window.firstResponder === button)
+    }
+
     @Test("applyFocus promotes the outline view when nothing but the window itself is focused")
     func applyFocusPromotesFromWindow() {
         let fixture = makeFixture()
         _ = fixture.window.makeFirstResponder(nil) // first responder falls back to the window itself
 
-        AgendaListFocusView.applyFocus(from: fixture.background)
+        _ = AgendaListFocusView.applyFocus(from: fixture.background)
 
         #expect(fixture.window.firstResponder === fixture.detailOutline)
     }
@@ -96,7 +132,7 @@ private final class RecordingWindow: NSWindow {
         fixture.window.contentView?.addSubview(button)
         _ = fixture.window.makeFirstResponder(button)
 
-        AgendaListFocusView.applyFocus(from: fixture.background)
+        _ = AgendaListFocusView.applyFocus(from: fixture.background)
 
         #expect(fixture.window.firstResponder === button)
     }
@@ -106,7 +142,7 @@ private final class RecordingWindow: NSWindow {
         let fixture = makeFixture()
         _ = fixture.window.makeFirstResponder(fixture.detailOutline)
 
-        AgendaListFocusView.applyFocus(from: fixture.background)
+        _ = AgendaListFocusView.applyFocus(from: fixture.background)
 
         #expect(fixture.window.firstResponder === fixture.detailOutline)
     }
