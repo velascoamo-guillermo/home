@@ -266,6 +266,23 @@ final class MacSmokeTests: XCTestCase {
         XCTAssertTrue(row.waitForExistence(timeout: 10))
     }
 
+    func testDeleteSelectedTaskThenUndoBringsItBack() throws {
+        let app = launchApp()
+        XCTAssertTrue(app.windows.firstMatch.waitForExistence(timeout: 15))
+        app.typeKey("2", modifierFlags: .command)
+        let row = app.staticTexts["Fixture Water Plants"]
+        XCTAssertTrue(row.waitForExistence(timeout: 10))
+        row.click()
+        app.typeKey(.return, modifierFlags: [])
+        XCTAssertTrue(app.textFields.matching(NSPredicate(format: "value == %@", "Fixture Water Plants")).firstMatch
+            .waitForExistence(timeout: 10))
+        app.typeKey(.delete, modifierFlags: [])
+        XCTAssertTrue(row.waitForNonExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["No Selection"].waitForExistence(timeout: 10))
+        app.typeKey("z", modifierFlags: .command)
+        XCTAssertTrue(app.staticTexts["Fixture Water Plants"].waitForExistence(timeout: 10))
+    }
+
     private func window(_ app: XCUIApplication, titled title: String) -> XCUIElement {
         app.windows.matching(NSPredicate(format: "title == %@", title)).firstMatch
     }
