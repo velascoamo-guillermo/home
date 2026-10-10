@@ -341,6 +341,25 @@ final class MacSmokeTests: XCTestCase {
         XCTAssertTrue(name.waitForExistence(timeout: 10))
     }
 
+    func testMealsShowsTheWholeWeekAsColumns() throws {
+        let app = launchApp()
+        XCTAssertTrue(app.windows.firstMatch.waitForExistence(timeout: 15))
+        app.typeKey("5", modifierFlags: .command)
+        // Plain SwiftUI `Text` on macOS keeps the AXStaticText role but exposes its
+        // content via `value`, not `label` (confirmed against `BudgetHeroCard`, whose
+        // `.accessibilityElement(children: .ignore)` + `.accessibilityLabel` combo does
+        // set `label` but reclassifies the element away from `.staticText`). So these
+        // day headers — plain `Text`, no accessibility overrides — are matched on `value`.
+        for day in ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"] {
+            XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "value BEGINSWITH %@", day)).firstMatch
+                .waitForExistence(timeout: 10), day)
+        }
+        XCTAssertTrue(app.buttons["mealSlot-7-dinner"].exists)
+        app.menuBars.menuBarItems["Go"].click()
+        XCTAssertFalse(app.menuBars.menuItems["Next Period"].isEnabled)
+        app.typeKey(.escape, modifierFlags: [])
+    }
+
     private func waitForLabel(_ element: XCUIElement, _ label: String, timeout: TimeInterval) -> Bool {
         let expectation = XCTNSPredicateExpectation(predicate: NSPredicate(format: "label == %@", label), object: element)
         return XCTWaiter().wait(for: [expectation], timeout: timeout) == .completed
