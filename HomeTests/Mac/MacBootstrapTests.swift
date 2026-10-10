@@ -4,7 +4,7 @@ import Foundation
 @testable import Casita
 
 @MainActor final class BootstrapProbe {
-    var loads = 0, observes = 0, refreshes = 0
+    var loads = 0, observes = 0, refreshes = 0, resigns = 0
     var now = Date(timeIntervalSince1970: 1_000)
 }
 
@@ -15,6 +15,7 @@ import Foundation
             load: { probe.loads += 1 },
             observe: { probe.observes += 1 },
             refresh: { probe.refreshes += 1 },
+            resign: { probe.resigns += 1 },
             now: { probe.now })
     }
 
@@ -40,6 +41,7 @@ import Foundation
             },
             observe: { probe.observes += 1 },
             refresh: { probe.refreshes += 1 },
+            resign: { probe.resigns += 1 },
             now: { probe.now })
         await withTaskGroup(of: Void.self) { group in
             for _ in 0..<5 {
@@ -71,6 +73,31 @@ import Foundation
         probe.now = probe.now.addingTimeInterval(MacBootstrap.activationDebounce)
         await bootstrap.appDidBecomeActive()
         #expect(probe.refreshes == 2)
+    }
+
+    @Test("leaving the app writes the widget snapshot only once data has loaded")
+    func resignWritesSnapshot() async {
+        let probe = BootstrapProbe()
+        let bootstrap = make(probe)
+        bootstrap.appDidResignActive()
+        #expect(probe.resigns == 0)
+        await bootstrap.start()
+        bootstrap.appDidResignActive()
+        #expect(probe.resigns == 1)
+    }
+
+    @Test("one resign reported by several windows writes the snapshot once")
+    func resignDeduplicatedAcrossWindows() async {
+        let probe = BootstrapProbe()
+        let bootstrap = make(probe)
+        await bootstrap.start()
+        bootstrap.appDidResignActive()
+        bootstrap.appDidResignActive()
+        bootstrap.appDidResignActive()
+        #expect(probe.resigns == 1)
+        probe.now = probe.now.addingTimeInterval(MacBootstrap.resignDebounce)
+        bootstrap.appDidResignActive()
+        #expect(probe.resigns == 2)
     }
 }
 #endif

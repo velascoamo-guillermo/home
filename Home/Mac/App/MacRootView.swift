@@ -36,6 +36,9 @@ struct MacRootView: View {
         .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
             Task { await bootstrap.appDidBecomeActive() }
         }
+        .onReceive(NotificationCenter.default.publisher(for: NSApplication.didResignActiveNotification)) { _ in
+            bootstrap.appDidResignActive()
+        }
         .onChange(of: model.selection) { _, new in seed.item = new }
         .onChange(of: bootstrap.didFinishLoading) { _, _ in resolveSelection() }
         .onChange(of: store.pets) { _, _ in resolveSelection() }
