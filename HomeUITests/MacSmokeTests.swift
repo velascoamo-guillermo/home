@@ -385,6 +385,26 @@ final class MacSmokeTests: XCTestCase {
         XCTAssertTrue(app.buttons["Add member"].waitForExistence(timeout: 10))
     }
 
+    func testNewPetAppearsInSidebarWithSections() throws {
+        let app = launchApp()
+        XCTAssertTrue(app.windows.firstMatch.waitForExistence(timeout: 15))
+        app.menuBars.menuBarItems["File"].click()
+        app.menuBars.menuItems["New Pet…"].click()
+        let name = app.sheets.firstMatch.textFields["Name"]
+        XCTAssertTrue(name.waitForExistence(timeout: 10))
+        name.click()
+        name.typeText("Mishi")
+        let breed = app.sheets.firstMatch.textFields["Breed"]
+        breed.click()
+        breed.typeText("Tabby")
+        app.sheets.firstMatch.buttons["Add"].click()
+        let row = app.outlines.staticTexts["Mishi"]
+        XCTAssertTrue(row.waitForExistence(timeout: 10))
+        row.click()
+        XCTAssertTrue(window(app, titled: "Mishi").waitForExistence(timeout: 10))
+        XCTAssertTrue(app.toolbars.radioButtons["Weight"].waitForExistence(timeout: 10))
+    }
+
     private func waitForLabel(_ element: XCUIElement, _ label: String, timeout: TimeInterval) -> Bool {
         let expectation = XCTNSPredicateExpectation(predicate: NSPredicate(format: "label == %@", label), object: element)
         return XCTWaiter().wait(for: [expectation], timeout: timeout) == .completed

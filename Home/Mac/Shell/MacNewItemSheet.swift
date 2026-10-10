@@ -14,6 +14,9 @@ struct MacNewItemSheet: View {
         case .newProduct:      AddStockProductSheet()
         case .newMeal:         MealFormSheet(existing: nil)
         case .newPet:          AddPetSheet()
+        case .newAppointment(let petID): AddAppointmentSheet(petId: petID)
+        case .newPetEvent(let petID):    AddEventSheet(petId: petID)
+        case .importFiles:               EmptyView()
         case .newExpense:
             AddExpenseSheet(draft: ExpenseDraft(
                 payerId: ExpenseDraft.defaultPayer(stored: lastPayerId, members: store.budgetMembers),

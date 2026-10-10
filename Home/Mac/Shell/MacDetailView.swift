@@ -15,7 +15,7 @@ struct MacDetailView: View {
         case .budget:   MacBudgetView(model: model)
         case .pet(let id):
             if let pet = store.pets.first(where: { $0.id == id }) {
-                NavigationStack { PetDetailView(pet: pet) }
+                NavigationStack { MacPetDetailView(pet: pet, model: model) }
                     .id(id)
             } else {
                 ContentUnavailableView("No Pet Selected", systemImage: "pawprint")
