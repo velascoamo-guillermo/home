@@ -244,6 +244,7 @@
 		AD4F7C9E6F9A029465653034 /* AppointmentContextMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D91483C97B771B354BFE779 /* AppointmentContextMenu.swift */; };
 		ADC010D68C64911FB1FF0CA4 /* BudgetExpenseStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56DA161FB333CB07ADCE95B0 /* BudgetExpenseStoreTests.swift */; };
 		AE03C60BF1B1EA1F780C5CCF /* BudgetIDs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132EC1A53CBCCABABAF86808 /* BudgetIDs.swift */; };
+		AE230C3DD8D2EE7BEB46E44F /* ImportFailureAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A51BE1405B8606C2BF4392 /* ImportFailureAlert.swift */; };
 		B00452ECF24AC74D80571AB9 /* BudgetModelCodingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA23C846E8B2D85C679E1372 /* BudgetModelCodingTests.swift */; };
 		B02BBD2BF3020CAFEFFD8553 /* GoTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3110452CC90E7EC339A7A1A /* GoTarget.swift */; };
 		B0875935D6B45A1E74F4D6B2 /* StockLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10E1A21BC2ABF6ECC8A821E /* StockLevel.swift */; };
@@ -592,6 +593,7 @@
 		85F532A6217D59BF58E1F52A /* SidebarModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SidebarModel.swift; sourceTree = "<group>"; };
 		865CC526A7C319FC85879720 /* TileGrid.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TileGrid.swift; sourceTree = "<group>"; };
 		86643CA212F6EAB19AF54A28 /* StockProductNeededTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StockProductNeededTests.swift; sourceTree = "<group>"; };
+		88A51BE1405B8606C2BF4392 /* ImportFailureAlert.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ImportFailureAlert.swift; sourceTree = "<group>"; };
 		892309195D679798035F2798 /* StockListModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StockListModel.swift; sourceTree = "<group>"; };
 		8A257B7E2A66CC56EE351EB8 /* BudgetView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BudgetView.swift; sourceTree = "<group>"; };
 		8A2A0C24360D9F72C3AEFB22 /* HubDestination.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HubDestination.swift; sourceTree = "<group>"; };
@@ -898,6 +900,7 @@
 				4229D54EA74194E9C681C7FB /* MacPetDetailView.swift */,
 				9E22D6A1AD660743F6AAAC85 /* PetFileImporter.swift */,
 				FDB7F39F44976B37A8F6AEA9 /* MacPetFilesView.swift */,
+				88A51BE1405B8606C2BF4392 /* ImportFailureAlert.swift */,
 			);
 			name = Pets;
 			path = Pets;
@@ -2119,6 +2122,7 @@
 				3D4F86C4C929F59552AF4F38 /* MacPetDetailView.swift in Sources */,
 				C1A2E1F07692500324C00124 /* PetFileImporter.swift in Sources */,
 				8D85860A305B42B7ACAF38E5 /* MacPetFilesView.swift in Sources */,
+				AE230C3DD8D2EE7BEB46E44F /* ImportFailureAlert.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

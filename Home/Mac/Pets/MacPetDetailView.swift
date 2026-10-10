@@ -10,6 +10,7 @@ struct MacPetDetailView: View {
     @State private var photoItem: PhotosPickerItem?
     @State private var isUploadingPhoto = false
     @State private var uploadError: String?
+    @State private var uploadTask: Task<Void, Never>?
     @State private var importFailure: String?
 
     private var currentPet: Pet { store.pets.first { $0.id == pet.id } ?? pet }
@@ -30,8 +31,10 @@ struct MacPetDetailView: View {
         .gradientCanvas()
         .onChange(of: photoItem) { _, item in
             guard let item else { return }
-            Task { await uploadPhoto(item) }
+            uploadTask?.cancel()
+            uploadTask = Task { await uploadPhoto(item) }
         }
+        .onDisappear { uploadTask?.cancel() }
         .alert("Upload Failed", isPresented: Binding(
             get: { uploadError != nil },
             set: { if !$0 { uploadError = nil } }
@@ -53,14 +56,7 @@ struct MacPetDetailView: View {
                 importFailure = Self.importFailureMessage(for: error)
             }
         }
-        .alert("Some Files Weren't Added", isPresented: Binding(
-            get: { importFailure != nil },
-            set: { if !$0 { importFailure = nil } }
-        )) {
-            Button("OK") {}
-        } message: {
-            Text(importFailure ?? "")
-        }
+        .importFailureAlert($importFailure)
     }
 
     /// Dismissing the importer in any way (pick, Cancel, Escape) must clear `pendingAction`,
@@ -135,6 +131,9 @@ struct MacPetDetailView: View {
         }
     }
 
+    /// Checked after every `await` so a cancelled upload (view disappeared, or a new pet or
+    /// photo was picked before this one finished) never writes `uploadError` or the pet photo
+    /// for a view that is no longer showing it.
     private func uploadPhoto(_ item: PhotosPickerItem) async {
         isUploadingPhoto = true
         defer {
@@ -143,17 +142,27 @@ struct MacPetDetailView: View {
         }
         do {
             guard let data = try await item.loadTransferable(type: Data.self) else {
-                uploadError = "Could not read the selected photo."
+                if Self.shouldApplyUploadResult(isCancelled: Task.isCancelled) {
+                    uploadError = "Could not read the selected photo."
+                }
                 return
             }
             guard let jpeg = await Self.thumbnail(from: data) else {
-                uploadError = "Could not process the selected photo."
+                if Self.shouldApplyUploadResult(isCancelled: Task.isCancelled) {
+                    uploadError = "Could not process the selected photo."
+                }
                 return
             }
+            guard Self.shouldApplyUploadResult(isCancelled: Task.isCancelled) else { return }
             try await store.updatePetPhoto(currentPet, imageData: jpeg)
         } catch {
-            uploadError = error.localizedDescription
+            if Self.shouldApplyUploadResult(isCancelled: Task.isCancelled) {
+                uploadError = error.localizedDescription
+            }
         }
     }
+
+    /// A cancelled task must not apply its result — pure so it's testable without a live Task.
+    static func shouldApplyUploadResult(isCancelled: Bool) -> Bool { !isCancelled }
 }
 #endif

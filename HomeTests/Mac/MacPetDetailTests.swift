@@ -60,5 +60,11 @@ import AppKit
         #expect(MacPetDetailView.importFailureMessage(for: CocoaError(.userCancelled)) == nil)
         #expect(MacPetDetailView.importFailureMessage(for: CocoaError(.fileReadNoPermission)) != nil)
     }
+
+    @Test("a cancelled photo-upload task never applies its result")
+    func cancelledUploadIsDropped() {
+        #expect(!MacPetDetailView.shouldApplyUploadResult(isCancelled: true))
+        #expect(MacPetDetailView.shouldApplyUploadResult(isCancelled: false))
+    }
 }
 #endif
