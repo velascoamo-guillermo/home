@@ -25,9 +25,15 @@ struct MacShellView: View {
         }
         .onAppear { if model.consumeSearchFocusRequest() { searchFocused = true } }
         .toolbar { MacToolbar(model: model) }
-        .sheet(item: $model.pendingAction) { action in
+        .sheet(item: sheetAction) { action in
             MacNewItemSheet(action: action, budgetMonth: model.budgetMonth)
         }
+    }
+
+    private var sheetAction: Binding<MacPendingAction?> {
+        Binding(
+            get: { model.pendingAction?.presentsSheet == true ? model.pendingAction : nil },
+            set: { model.pendingAction = $0 })
     }
 }
 #endif

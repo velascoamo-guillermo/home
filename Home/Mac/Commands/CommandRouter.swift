@@ -25,7 +25,7 @@ enum CommandRouter {
         case .newShoppingItem: .shopping
         case .newProduct:      .stock
         case .newMeal:         .meals
-        case .newPet:          nil
+        case .newPet, .newAppointment, .newPetEvent, .importFiles: nil
         }
     }
 

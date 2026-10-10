@@ -17,6 +17,9 @@ struct MacAppCommands: Commands {
             newButton(.newProduct, nil)
             newButton(.newMeal, nil)
             newButton(.newPet, nil)
+            petButton { .newAppointment(petID: $0) }
+            petButton { .newPetEvent(petID: $0) }
+            petButton { .importFiles(petID: $0) }
             Divider()
             ForEach(MacFeatureCommand.allCases, id: \.self) { command in
                 Button(command.title) { window?.request(command) }
@@ -70,6 +73,18 @@ struct MacAppCommands: Commands {
         Button(action.title) { window?.perform(action) }
             .keyboardShortcut(shortcut)
             .disabled(!shellReady || window?.pendingAction != nil)
+    }
+
+    private var currentPetID: UUID? {
+        if case .pet(let id)? = window?.selection { return id }
+        return nil
+    }
+
+    private func petButton(_ make: @escaping (UUID) -> MacPendingAction) -> some View {
+        Button(make(currentPetID ?? UUID()).title) {
+            if let id = currentPetID { window?.perform(make(id)) }
+        }
+        .disabled(currentPetID == nil)
     }
 
     /// The shell is published before `MacShellView` exists and before the first load finishes;
