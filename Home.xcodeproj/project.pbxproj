@@ -145,6 +145,7 @@
 		62C335BADB6DC20777E85718 /* AgendaWeek.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549E84836998A70D5DB298A0 /* AgendaWeek.swift */; };
 		62DAA05EACCF43C3B5E7437C /* CalendarAccessState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A189AFE895DCBB25ADA61261 /* CalendarAccessState.swift */; };
 		63F29077011470E89BC45177 /* MacBootstrapTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 117F8B6A9E074CC871B9AEA7 /* MacBootstrapTests.swift */; };
+		63F764BE9FC74CD3B31BB738 /* MacMealCatalogViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5D57B70E0A655DD5D079160 /* MacMealCatalogViewTests.swift */; };
 		645F658B0F889DA3719D5715 /* Palette.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0C7B856F01A4903BF1FFC9 /* Palette.swift */; };
 		6492972B2D648FA4E8E62AEF /* CalendarsSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D9286FCE7C221771A849A5 /* CalendarsSettingsView.swift */; };
 		65226867380D1E0257BD5B66 /* MacCalendarsSettingsPane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0176F83F508F251BE69ABE77 /* MacCalendarsSettingsPane.swift */; };
@@ -700,6 +701,7 @@
 		D3D2C3CCB9AC6D0EFC0F0516 /* AddWeightEntrySheet.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AddWeightEntrySheet.swift; sourceTree = "<group>"; };
 		D417FE8A4E9C6F77B4186EE7 /* HubTileTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HubTileTests.swift; sourceTree = "<group>"; };
 		D490D56FDB4CDF8B24F293F6 /* RecurringBillSheet.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RecurringBillSheet.swift; sourceTree = "<group>"; };
+		D5D57B70E0A655DD5D079160 /* MacMealCatalogViewTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MacMealCatalogViewTests.swift; sourceTree = "<group>"; };
 		D89EF1C5AC494C239A04F4CE /* SQLiteDatabase.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SQLiteDatabase.swift; sourceTree = "<group>"; };
 		DA8A76EE27CC411401051BD6 /* InMemoryRemote.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = InMemoryRemote.swift; sourceTree = "<group>"; };
 		DACB8785E9B997314DDA68E3 /* SearchView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
@@ -968,6 +970,7 @@
 				0D7808D081054C8CB548EF4F /* PetFileImporterTests.swift */,
 				47A350D107F84B33381570A3 /* MacRootViewTests.swift */,
 				1488FCDD38B1FD684EDD2D88 /* MacAppCommandsTests.swift */,
+				D5D57B70E0A655DD5D079160 /* MacMealCatalogViewTests.swift */,
 			);
 			name = Mac;
 			path = Mac;
@@ -2278,6 +2281,7 @@
 				20DE2497B4C7DCE4B6D9E443 /* PetFileImporterTests.swift in Sources */,
 				B5C79857DABE261A2AA000A4 /* MacRootViewTests.swift in Sources */,
 				1838DE1132BD78FF14546809 /* MacAppCommandsTests.swift in Sources */,
+				63F764BE9FC74CD3B31BB738 /* MacMealCatalogViewTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
