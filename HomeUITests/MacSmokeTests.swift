@@ -360,6 +360,31 @@ final class MacSmokeTests: XCTestCase {
         app.typeKey(.escape, modifierFlags: [])
     }
 
+    func testNextPeriodMovesBudgetToNextMonth() throws {
+        let app = launchApp()
+        XCTAssertTrue(app.windows.firstMatch.waitForExistence(timeout: 15))
+        app.typeKey("6", modifierFlags: .command)
+        let title = app.staticTexts["budgetMonthTitle"]
+        XCTAssertTrue(title.waitForExistence(timeout: 10))
+        let current = try XCTUnwrap(title.value as? String)
+        XCTAssertFalse(current.isEmpty)
+        app.typeKey("]", modifierFlags: .command)
+        let changed = XCTNSPredicateExpectation(predicate: NSPredicate(format: "value != %@", current), object: title)
+        XCTAssertEqual(XCTWaiter().wait(for: [changed], timeout: 10), .completed)
+        app.typeKey("[", modifierFlags: .command)
+        XCTAssertTrue(waitForValue(title, current, timeout: 10))
+    }
+
+    func testBudgetInspectorShowsMembers() throws {
+        let app = launchApp()
+        XCTAssertTrue(app.windows.firstMatch.waitForExistence(timeout: 15))
+        app.typeKey("6", modifierFlags: .command)
+        let showInspector = app.toolbars.buttons["Show Inspector"]
+        XCTAssertTrue(showInspector.waitForExistence(timeout: 10))
+        showInspector.click()
+        XCTAssertTrue(app.buttons["Add member"].waitForExistence(timeout: 10))
+    }
+
     private func waitForLabel(_ element: XCUIElement, _ label: String, timeout: TimeInterval) -> Bool {
         let expectation = XCTNSPredicateExpectation(predicate: NSPredicate(format: "label == %@", label), object: element)
         return XCTWaiter().wait(for: [expectation], timeout: timeout) == .completed
