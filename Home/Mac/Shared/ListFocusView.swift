@@ -18,11 +18,17 @@ import SwiftUI
 // it (`applyFocus`'s guard: only promote when the current first responder is the
 // window itself, nil, or already the outline view).
 //
-// `nearestOutlineView` is scoped to the outline view owned by the pane this view
-// lives in: it climbs `nsView`'s own superview chain (this view sits as a
-// `.background` of the feature `List`, inside the detail pane) rather than
-// searching from `window.contentView`, which would also contain the sidebar's
-// own `NSOutlineView` and could match that one instead (see
+// A SwiftUI `Table` has the identical problem but is backed by a plain
+// `NSTableView`, not an `NSOutlineView` — so the search below matches on
+// `NSTableView` (the superclass both share) rather than `NSOutlineView`
+// specifically, letting `List`- and `Table`-based Mac features (Stock's
+// `MacStockView`) reuse the exact same focus dance.
+//
+// `nearestOutlineView` is scoped to the outline/table view owned by the pane
+// this view lives in: it climbs `nsView`'s own superview chain (this view sits
+// as a `.background` of the feature `List`/`Table`, inside the detail pane)
+// rather than searching from `window.contentView`, which would also contain
+// the sidebar's own `NSOutlineView` and could match that one instead (see
 // `ListFocusViewTests.scopesToTheOwningPane`).
 //
 // Generic over the List's selection type so every Mac feature list (Today's
@@ -78,7 +84,7 @@ struct ListFocusView<Selection: Hashable>: NSViewRepresentable {
         return true
     }
 
-    static func nearestOutlineView(ascendingFrom view: NSView) -> NSOutlineView? {
+    static func nearestOutlineView(ascendingFrom view: NSView) -> NSTableView? {
         var ancestor = view.superview
         while let current = ancestor {
             if let found = outlineView(in: current) { return found }
@@ -87,8 +93,8 @@ struct ListFocusView<Selection: Hashable>: NSViewRepresentable {
         return nil
     }
 
-    private static func outlineView(in view: NSView) -> NSOutlineView? {
-        if let outlineView = view as? NSOutlineView { return outlineView }
+    private static func outlineView(in view: NSView) -> NSTableView? {
+        if let tableView = view as? NSTableView { return tableView }
         for subview in view.subviews {
             if let found = outlineView(in: subview) { return found }
         }
