@@ -6,6 +6,7 @@ struct MacRootView: View {
     @Binding var seed: MacWindowSeed
     @Environment(SupabaseStore.self) private var store
     @Environment(MacBootstrap.self) private var bootstrap
+    @Environment(\.controlActiveState) private var controlActiveState
     @State private var model: MacWindowModel
 
     init(seed: Binding<MacWindowSeed>) {
@@ -43,7 +44,7 @@ struct MacRootView: View {
         .onChange(of: bootstrap.didFinishLoading) { _, _ in resolveSelection() }
         .onChange(of: store.pets) { _, _ in resolveSelection() }
         .alert("Something Went Wrong", isPresented: Binding(
-            get: { store.actionError != nil },
+            get: { store.actionError != nil && Self.shouldPresentActionError(controlActiveState: controlActiveState) },
             set: { if !$0 { store.actionError = nil } }
         )) {
             Button("OK") { store.actionError = nil }
@@ -53,6 +54,12 @@ struct MacRootView: View {
         .environment(\.openURL, OpenURLAction { url in route(url) })
         .onOpenURL { url in _ = route(url) }
         .handlesExternalEvents(preferring: ["*"], allowing: ["*"])
+    }
+
+    /// Only the key window shows the shared `SupabaseStore.actionError` alert — otherwise
+    /// every open window presents the same alert at once.
+    static func shouldPresentActionError(controlActiveState: ControlActiveState) -> Bool {
+        controlActiveState == .key
     }
 
     private func resolveSelection() {
