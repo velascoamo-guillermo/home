@@ -20,7 +20,7 @@ struct AddAppointmentSheet: View {
                 }
             }
             .navigationTitle("New Appointment")
-            .navigationBarTitleDisplayMode(.inline)
+            .inlineNavigationTitle()
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
                 ToolbarItem(placement: .confirmationAction) {
@@ -35,5 +35,6 @@ struct AddAppointmentSheet: View {
                 }
             }
         }
+        .platformSheet()
     }
 }

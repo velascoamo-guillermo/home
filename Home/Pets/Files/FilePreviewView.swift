@@ -31,10 +31,10 @@ struct FilePreviewView: View {
                 }
             }
             .navigationTitle(file.displayName)
-            .navigationBarTitleDisplayMode(.inline)
+            .inlineNavigationTitle()
             .toolbar {
                 if canExtract {
-                    ToolbarItem(placement: .topBarTrailing) {
+                    ToolbarItem(placement: .trailingBar) {
                         Button("Extract Info", systemImage: "sparkles") {
                             showExtraction = true
                         }
@@ -45,9 +45,22 @@ struct FilePreviewView: View {
                 ExtractionResultSheet(file: file, pet: pet)
             }
         }
+        .platformSheet()
     }
 }
 
+#if os(macOS)
+struct PDFKitView: NSViewRepresentable {
+    let url: URL
+    func makeNSView(context: Context) -> PDFView {
+        let view = PDFView()
+        view.autoScales = true
+        view.document = PDFDocument(url: url)
+        return view
+    }
+    func updateNSView(_ nsView: PDFView, context: Context) {}
+}
+#else
 struct PDFKitView: UIViewRepresentable {
     let url: URL
     func makeUIView(context: Context) -> PDFView {
@@ -58,3 +71,4 @@ struct PDFKitView: UIViewRepresentable {
     }
     func updateUIView(_ uiView: PDFView, context: Context) {}
 }
+#endif

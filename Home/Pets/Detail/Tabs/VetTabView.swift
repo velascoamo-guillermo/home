@@ -30,7 +30,7 @@ struct VetTabView: View {
         }
         .flatListStyle()
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .trailingBar) {
                 Button("Add Vet", systemImage: "plus") { showAdd = true }
             }
         }

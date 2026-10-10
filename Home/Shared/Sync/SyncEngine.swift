@@ -11,6 +11,11 @@ actor SyncEngine {
     private let gateway: any RemoteGateway
     private var isSyncing = false
 
+    /// Time the last full pass (push + pull of every `syncedTables` entry) both
+    /// completed without error. Nil until then; a partial `sync(tables:)` call, a
+    /// skipped single-flight overlap, or a pass with a push/pull failure never sets it.
+    private(set) var lastFullSyncAt: Date?
+
     init(local: LocalStore, gateway: any RemoteGateway) {
         self.local = local
         self.gateway = gateway
@@ -21,8 +26,22 @@ actor SyncEngine {
         guard !isSyncing else { return }
         isSyncing = true
         defer { isSyncing = false }
-        try? await push()
-        for table in tables { try? await pull(table: table) }
+        var succeeded = true
+        do {
+            try await push()
+        } catch {
+            succeeded = false
+        }
+        for table in tables {
+            do {
+                try await pull(table: table)
+            } catch {
+                succeeded = false
+            }
+        }
+        if succeeded, Set(Self.syncedTables).isSubset(of: Set(tables)) {
+            lastFullSyncAt = .now
+        }
     }
 
     /// Drain the outbox in order. Each op: push to gateway; on success delete it,
@@ -57,6 +76,11 @@ actor SyncEngine {
         case "meal_products":    return try normalizeTyped(MealProduct.self, payload)
         case "weight_entries":   return try normalizeTyped(WeightEntry.self, payload)
         case "menu_entries":     return try normalizeTyped(MenuEntry.self, payload)
+        case "budget_members":    return try normalizeTyped(BudgetMember.self, payload)
+        case "budget_categories": return try normalizeTyped(BudgetCategory.self, payload)
+        case "budget_incomes":    return try normalizeTyped(BudgetIncome.self, payload)
+        case "budget_recurring":  return try normalizeTyped(RecurringExpense.self, payload)
+        case "budget_expenses":   return try normalizeTyped(BudgetExpense.self, payload)
         default:                 return payload
         }
     }
@@ -76,18 +100,30 @@ actor SyncEngine {
         Pet.tableName, Veterinarian.tableName, Appointment.tableName,
         ClinicalEntry.tableName, PetEvent.tableName, TaskSection.tableName,
         HouseholdTask.tableName, StockProduct.tableName, Meal.tableName,
-        MealProduct.tableName, WeightEntry.tableName, MenuEntry.tableName
+        MealProduct.tableName, WeightEntry.tableName, MenuEntry.tableName,
+        BudgetMember.tableName, BudgetCategory.tableName, BudgetIncome.tableName,
+        RecurringExpense.tableName, BudgetExpense.tableName
     ]
+
+    private var pulledTables: Set<String> = []
 
     func pull(table: String) async throws {
         let cursor = try await local.cursor(for: table)
         let since = cursor?.addingTimeInterval(-Self.pullOverlap)
         let blobs = try await gateway.pull(table: table, since: since)
-        guard !blobs.isEmpty else { return }
-        let maxUpdated = try await reconcile(table: table, blobs: blobs)
-        if let maxUpdated, maxUpdated > cursor ?? .distantPast {
-            try await local.setCursor(maxUpdated, for: table)
+        if !blobs.isEmpty {
+            let maxUpdated = try await reconcile(table: table, blobs: blobs)
+            if let maxUpdated, maxUpdated > cursor ?? .distantPast {
+                try await local.setCursor(maxUpdated, for: table)
+            }
         }
+        pulledTables.insert(table)
+    }
+
+    /// Whether a pull of `table` has completed successfully since launch. Gates one-time
+    /// local seeding so a fresh install never seeds over rows that exist remotely.
+    func hasPulled(_ table: String) -> Bool {
+        pulledTables.contains(table)
     }
 
     private func reconcile(table: String, blobs: [Data]) async throws -> Date? {
@@ -104,6 +140,11 @@ actor SyncEngine {
         case "meal_products":    return try await reconcileTyped(MealProduct.self, blobs)
         case "weight_entries":   return try await reconcileTyped(WeightEntry.self, blobs)
         case "menu_entries":     return try await reconcileTyped(MenuEntry.self, blobs)
+        case "budget_members":    return try await reconcileTyped(BudgetMember.self, blobs)
+        case "budget_categories": return try await reconcileTyped(BudgetCategory.self, blobs)
+        case "budget_incomes":    return try await reconcileTyped(BudgetIncome.self, blobs)
+        case "budget_recurring":  return try await reconcileTyped(RecurringExpense.self, blobs)
+        case "budget_expenses":   return try await reconcileTyped(BudgetExpense.self, blobs)
         default:
             assertionFailure("reconcile: unhandled table '\(table)'")
             return nil

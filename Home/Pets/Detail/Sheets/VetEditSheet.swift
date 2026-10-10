@@ -21,7 +21,7 @@ struct VetEditSheet: View {
                     TextField("Clinic", text: $clinicName)
                 }
                 Section("Contact") {
-                    TextField("Phone", text: $phone).keyboardType(.phonePad)
+                    TextField("Phone", text: $phone).platformKeyboard(.phonePad)
                     TextField("Address", text: $address)
                 }
                 Section("Schedule") {
@@ -33,7 +33,7 @@ struct VetEditSheet: View {
                 }
             }
             .navigationTitle(existing == nil ? "Add Vet" : "Edit Vet")
-            .navigationBarTitleDisplayMode(.inline)
+            .inlineNavigationTitle()
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
                 ToolbarItem(placement: .confirmationAction) {
@@ -64,5 +64,6 @@ struct VetEditSheet: View {
                 }
             }
         }
+        .platformSheet()
     }
 }

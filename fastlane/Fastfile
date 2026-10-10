@@ -18,7 +18,8 @@ platform :ios do
       code_coverage: true,
       only_testing: ["HomeTests"],
       output_directory: "fastlane/test_output",
-      output_types: "junit"
+      output_types: "junit",
+      result_bundle: true
     )
   end
 

@@ -33,7 +33,7 @@ struct FilesTabView: View {
         }
         .gradientCanvas()
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .trailingBar) {
                 Button("Add", systemImage: "plus") { showFilePicker = true }
             }
         }

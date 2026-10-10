@@ -12,7 +12,7 @@ import SwiftUI
     @Test("destination tiles keep HubDestination order, settings last")
     func order() {
         let titles = HubTile.all.map(\.title)
-        #expect(Array(titles.prefix(5)) == ["Tasks", "Pets", "Stock", "Meals", "Shopping"])
+        #expect(Array(titles.prefix(6)) == ["Tasks", "Pets", "Stock", "Meals", "Shopping", "Budget"])
         #expect(titles.last == "Settings")
     }
 

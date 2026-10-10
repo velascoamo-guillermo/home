@@ -41,6 +41,7 @@ struct MenuHubView: View {
                 case .stock:    StockView()
                 case .meals:    MenuView()
                 case .shopping: ShoppingView()
+                case .budget:   BudgetView()
                 }
             }
         }

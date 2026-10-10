@@ -8,6 +8,15 @@ enum UITestSupport {
         ProcessInfo.processInfo.arguments.contains("--uitesting")
     }
 
+    static let macSettingsPaneKey = "mac.settings.pane"
+
+    /// Clears the persisted Settings pane so UI tests see a deterministic default,
+    /// never the pane an earlier run or a developer's Mac left selected.
+    static func resetMacSettingsPane(isActive: Bool = UITestSupport.isActive, defaults: UserDefaults = .standard) {
+        guard isActive else { return }
+        defaults.removeObject(forKey: macSettingsPaneKey)
+    }
+
     static func makeStore() -> SupabaseStore {
         let dir = FileManager.default.temporaryDirectory
             .appendingPathComponent("uitests-\(UUID().uuidString)", isDirectory: true)
@@ -48,5 +57,7 @@ enum UITestSupport {
             nextDueDate: Calendar.current.date(byAdding: .day, value: 2, to: .now) ?? .now)
         try? await store.addTask(changeFilter)
         try? await store.addTask(waterPlants)
+
+        try? await store.seedBudgetDefaults()
     }
 }

@@ -39,7 +39,7 @@ struct EventDetailView: View {
                 }
             }
             .navigationTitle(event.title)
-            .navigationBarTitleDisplayMode(.inline)
+            .inlineNavigationTitle()
             .sheet(isPresented: $showFilePicker) {
                 FilePickerCoordinator { data, ext in
                     try await store.uploadFile(data: data, ext: ext, petId: pet.id,
@@ -48,5 +48,6 @@ struct EventDetailView: View {
             }
             .sheet(item: $selectedFile) { file in FilePreviewView(file: file, pet: pet) }
         }
+        .platformSheet()
     }
 }

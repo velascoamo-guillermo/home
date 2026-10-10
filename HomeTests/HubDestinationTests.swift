@@ -4,9 +4,9 @@ import SwiftUI
 
 @Suite("HubDestination") @MainActor struct HubDestinationTests {
 
-    @Test("allCases order is Tasks, Pets, Stock, Meals, Shopping")
+    @Test("allCases order is Tasks, Pets, Stock, Meals, Shopping, Budget")
     func order() {
-        #expect(HubDestination.allCases == [.tasks, .pets, .stock, .meals, .shopping])
+        #expect(HubDestination.allCases == [.tasks, .pets, .stock, .meals, .shopping, .budget])
     }
 
     @Test("titles and icons are set")
@@ -18,6 +18,8 @@ import SwiftUI
         #expect(HubDestination.shopping.title == "Shopping")
         #expect(HubDestination.tasks.systemImage == "checklist")
         #expect(HubDestination.pets.systemImage == "pawprint.fill")
+        #expect(HubDestination.budget.title == "Budget")
+        #expect(HubDestination.budget.systemImage == "eurosign.circle.fill")
     }
 
     @Test("each destination maps to its feature pastel")
@@ -27,6 +29,7 @@ import SwiftUI
         #expect(HubDestination.stock.fill == Palette.stock)
         #expect(HubDestination.meals.fill == Palette.meals)
         #expect(HubDestination.shopping.fill == Palette.shopping)
+        #expect(HubDestination.budget.fill == Palette.budget)
     }
 
     @Test("bridges to and from AppTab")
@@ -37,5 +40,7 @@ import SwiftUI
         #expect(HubDestination(appTab: .menu) == nil)
         #expect(HubDestination.tasks.appTab == .tasks)
         #expect(HubDestination.shopping.appTab == .shopping)
+        #expect(HubDestination(appTab: .budget) == .budget)
+        #expect(HubDestination.budget.appTab == .budget)
     }
 }

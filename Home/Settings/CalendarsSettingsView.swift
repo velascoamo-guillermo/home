@@ -1,5 +1,4 @@
 import SwiftUI
-import UIKit
 
 struct CalendarsSettingsView: View {
     @Environment(CalendarFeed.self) private var feed
@@ -17,8 +16,8 @@ struct CalendarsSettingsView: View {
                 case .denied:
                     Text("Calendar access is off")
                         .foregroundStyle(Palette.inkSecondary)
-                    Button("Open Settings") {
-                        if let url = URL(string: UIApplication.openSettingsURLString) { openURL(url) }
+                    Button(SystemSettingsURL.openButtonTitle) {
+                        if let url = SystemSettingsURL.calendarPrivacy { openURL(url) }
                     }
                 case .restricted:
                     Text("Calendar access is restricted on this device")

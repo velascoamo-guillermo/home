@@ -63,7 +63,7 @@ struct TasksView: View {
         }
         .navigationTitle("Tasks")
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .trailingBar) {
                 Button("Add task", systemImage: "plus") { showAdd = true }
             }
         }

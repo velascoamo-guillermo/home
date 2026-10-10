@@ -1,3 +1,4 @@
+#if os(iOS)
 import XCTest
 
 final class SmokeTests: XCTestCase {
@@ -232,6 +233,46 @@ final class SmokeTests: XCTestCase {
         XCTAssertTrue(waitForDisappearance(app.staticTexts["Fixture Standup"], timeout: 10))
     }
 
+    func testAddExpenseUpdatesSettlement() throws {
+        let app = launchApp()
+        XCTAssertTrue(app.buttons["Menu"].waitForExistence(timeout: 15))
+        openHubScreen(app, row: "Budget")
+
+        let hero = app.descendants(matching: .any)["budgetHero"]
+        XCTAssertTrue(hero.waitForExistence(timeout: 10))
+        XCTAssertEqual(hero.label, "All square")
+
+        app.buttons["Add expense"].tap()
+        let amount = app.textFields["expenseAmount"]
+        XCTAssertTrue(amount.waitForExistence(timeout: 10))
+        amount.tap()
+        amount.typeText("10")
+        app.buttons["Alquiler"].firstMatch.tap()
+        app.segmentedControls.buttons["Guille"].tap()
+        app.buttons["Save"].tap()
+
+        XCTAssertTrue(waitForLabel(hero, "Lu owes Guille 5 euros", timeout: 10))
+    }
+
+    func testOversizedExpenseShowsInlineErrorAndKeepsSheet() throws {
+        let app = launchApp()
+        XCTAssertTrue(app.buttons["Menu"].waitForExistence(timeout: 15))
+        openHubScreen(app, row: "Budget")
+        let add = app.buttons["Add expense"]
+        XCTAssertTrue(add.waitForExistence(timeout: 10))
+        add.tap()
+
+        let amount = app.textFields["expenseAmount"]
+        XCTAssertTrue(amount.waitForExistence(timeout: 10))
+        amount.tap()
+        amount.typeText("2000000")
+        app.buttons["Alquiler"].firstMatch.tap()
+        app.buttons["Save"].tap()
+
+        XCTAssertTrue(app.descendants(matching: .any)["expenseError"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.textFields["expenseAmount"].exists)
+    }
+
     private func waitForDisappearance(_ element: XCUIElement, timeout: TimeInterval) -> Bool {
         let predicate = NSPredicate(format: "exists == false")
         let expectation = XCTNSPredicateExpectation(predicate: predicate, object: element)
@@ -270,3 +311,4 @@ final class SmokeTests: XCTestCase {
         cell.tap()
     }
 }
+#endif

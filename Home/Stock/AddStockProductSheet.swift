@@ -58,7 +58,7 @@ struct AddStockProductSheet: View {
             .scrollContentBackground(.hidden)
             .gradientCanvas()
             .navigationTitle(isEditing ? "Edit Product" : "New Product")
-            .navigationBarTitleDisplayMode(.inline)
+            .inlineNavigationTitle()
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { dismiss() }
@@ -69,6 +69,7 @@ struct AddStockProductSheet: View {
                 }
             }
         }
+        .platformSheet()
     }
 
     private func save() {

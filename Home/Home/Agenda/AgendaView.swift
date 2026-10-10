@@ -58,8 +58,12 @@ struct AgendaView: View {
                 }
             }
             .flatListStyle()
+#if os(macOS)
+            .navigationTitle("Today")
+#else
             .navigationTitle("Home")
-            .navigationBarTitleDisplayMode(.inline)
+#endif
+            .inlineNavigationTitle()
             .animation(.spring(duration: 0.35), value: day)
             .sheet(item: $editingTask) { task in HouseholdTaskSheet(existing: task) }
             .outOfStockAlert($outOfStock)

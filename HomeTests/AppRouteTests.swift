@@ -10,6 +10,7 @@ import Testing
         #expect(AppRouter.route(host: "pets") == AppRoute(tab: .menu, hubDestination: .pets))
         #expect(AppRouter.route(host: "stock") == AppRoute(tab: .menu, hubDestination: .stock))
         #expect(AppRouter.route(host: "shopping") == AppRoute(tab: .menu, hubDestination: .shopping))
+        #expect(AppRouter.route(host: "budget") == AppRoute(tab: .menu, hubDestination: .budget))
     }
 
     @Test("top-level hosts select their tab with no push")
