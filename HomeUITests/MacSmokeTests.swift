@@ -410,7 +410,7 @@ final class MacSmokeTests: XCTestCase {
         XCTAssertTrue(row.waitForExistence(timeout: 10))
         row.click()
         XCTAssertTrue(window(app, titled: "Mishi").waitForExistence(timeout: 10))
-        XCTAssertTrue(app.toolbars.radioButtons["Weight"].waitForExistence(timeout: 10))
+        XCTAssertTrue(window(app, titled: "Mishi").radioButtons["Weight"].waitForExistence(timeout: 10))
     }
 
     func testImportCancelledReEnablesNewTask() throws {
