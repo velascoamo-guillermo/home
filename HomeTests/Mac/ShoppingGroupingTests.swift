@@ -23,5 +23,13 @@ import Foundation
         #expect(MacShoppingView.commands(hasSelection: false, checkedCount: 2) == [.finishShopping])
         #expect(MacShoppingView.commands(hasSelection: true, checkedCount: 1) == [.markBought, .finishShopping])
     }
+
+    @Test("Failed names accumulate across calls, keep order, and never duplicate")
+    func mergeFailedNames() {
+        #expect(MacShoppingView.mergeFailedNames([], adding: ["Milk"]) == ["Milk"])
+        #expect(MacShoppingView.mergeFailedNames(["Milk"], adding: ["Soap"]) == ["Milk", "Soap"])
+        #expect(MacShoppingView.mergeFailedNames(["Milk"], adding: ["Milk", "Soap"]) == ["Milk", "Soap"])
+        #expect(MacShoppingView.mergeFailedNames(["Milk", "Soap"], adding: []) == ["Milk", "Soap"])
+    }
 }
 #endif

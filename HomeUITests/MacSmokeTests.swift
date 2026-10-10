@@ -296,6 +296,26 @@ final class MacSmokeTests: XCTestCase {
         XCTAssertTrue(filters.waitForNonExistence(timeout: 10))
     }
 
+    func testDeleteSelectedShoppingItemThenUndoBringsItBack() throws {
+        let app = launchApp()
+        XCTAssertTrue(app.windows.firstMatch.waitForExistence(timeout: 15))
+        app.typeKey("3", modifierFlags: .command)
+        let filters = app.checkBoxes["Fixture Filters"]
+        XCTAssertTrue(filters.waitForExistence(timeout: 10))
+        let initialValue = filters.value as? String
+
+        let cell = app.outlineRows.containing(.checkBox, identifier: "Fixture Filters").firstMatch
+        XCTAssertTrue(cell.waitForExistence(timeout: 10))
+        cell.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.5)).click()
+        XCTAssertEqual(filters.value as? String, initialValue, "Clicking the row's trailing edge must select it, not toggle the checkbox")
+
+        app.typeKey(.delete, modifierFlags: [])
+        XCTAssertTrue(filters.waitForNonExistence(timeout: 10))
+
+        app.typeKey("z", modifierFlags: .command)
+        XCTAssertTrue(filters.waitForExistence(timeout: 10))
+    }
+
     private func window(_ app: XCUIApplication, titled title: String) -> XCUIElement {
         app.windows.matching(NSPredicate(format: "title == %@", title)).firstMatch
     }

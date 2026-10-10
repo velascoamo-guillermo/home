@@ -17,6 +17,14 @@ struct MacShoppingView: View {
         return commands
     }
 
+    static func mergeFailedNames(_ existing: [String], adding new: [String]) -> [String] {
+        var result = existing
+        for name in new where !result.contains(name) {
+            result.append(name)
+        }
+        return result
+    }
+
     private var selectedProduct: StockProduct? {
         selection.flatMap { id in store.shoppingList.first { $0.id == id } }
     }
@@ -98,13 +106,17 @@ struct MacShoppingView: View {
         guard let product = ShoppingSession.quickAddProduct(named: newItemName) else { return }
         newItemName = ""
         Task {
-            do { try await store.addProduct(product) } catch { failedNames = [product.name] }
+            do { try await store.addProduct(product) } catch {
+                failedNames = Self.mergeFailedNames(failedNames, adding: [product.name])
+            }
         }
     }
 
     private func markBought(_ product: StockProduct) {
         Task {
-            do { try await store.replenish(product) } catch { failedNames = [product.name] }
+            do { try await store.replenish(product) } catch {
+                failedNames = Self.mergeFailedNames(failedNames, adding: [product.name])
+            }
         }
     }
 
@@ -127,7 +139,7 @@ struct MacShoppingView: View {
                 }
             }
             session.uncheck(succeeded)
-            if !failed.isEmpty { failedNames = failed }
+            if !failed.isEmpty { failedNames = Self.mergeFailedNames(failedNames, adding: failed) }
         }
     }
 
