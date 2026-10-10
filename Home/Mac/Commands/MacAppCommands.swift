@@ -43,7 +43,7 @@ struct MacAppCommands: Commands {
                 window?.toggleInspector()
             }
             .keyboardShortcut("i", modifiers: [.option, .command])
-            .disabled(!(window.map { CommandRouter.hasInspector(on: $0.selection) } ?? false))
+            .disabled(!shellReady || !(window.map { CommandRouter.hasInspector(on: $0.selection) } ?? false))
             Divider()
             Button("Refresh") { Task { await store.refreshFromLocal() } }
                 .keyboardShortcut("r")
@@ -53,15 +53,15 @@ struct MacAppCommands: Commands {
             ForEach(GoTarget.allCases, id: \.self) { target in
                 Button(target.title) { window?.go(target, pets: store.pets) }
                     .keyboardShortcut(target.keyEquivalent)
-                    .disabled(goDestination(target) == nil)
+                    .disabled(!shellReady || goDestination(target) == nil)
             }
             Divider()
             Button("Previous Period") { window?.stepPeriod(by: -1) }
                 .keyboardShortcut("[")
-                .disabled(!periodAvailable)
+                .disabled(!shellReady || !periodAvailable)
             Button("Next Period") { window?.stepPeriod(by: 1) }
                 .keyboardShortcut("]")
-                .disabled(!periodAvailable)
+                .disabled(!shellReady || !periodAvailable)
         }
 
         CommandGroup(replacing: .help) {
@@ -89,9 +89,16 @@ struct MacAppCommands: Commands {
     }
 
     /// The shell is published before `MacShellView` exists and before the first load finishes;
-    /// gate window-scoped commands on both so they aren't live too early.
+    /// gate window-scoped commands on both so they aren't live too early. Go, the inspector
+    /// toggle and Previous/Next Period all read `window.selection` to decide availability, and
+    /// a freshly-created `MacWindowModel` defaults to `.today` before any data has loaded — so
+    /// without this gate they can render enabled during the loading spinner.
     private var shellReady: Bool {
-        window != nil && bootstrap.didFinishLoading
+        Self.shellReady(window: window, didFinishLoading: bootstrap.didFinishLoading)
+    }
+
+    static func shellReady(window: MacWindowModel?, didFinishLoading: Bool) -> Bool {
+        window != nil && didFinishLoading
     }
 
     private func goDestination(_ target: GoTarget) -> SidebarItem? {

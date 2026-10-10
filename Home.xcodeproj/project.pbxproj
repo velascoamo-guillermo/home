@@ -44,6 +44,7 @@
 		17ADD7939F46AA234899A749 /* CalendarFeedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABF9BF9DC507D0767CF5E76C /* CalendarFeedTests.swift */; };
 		17E740F40163B81A8B5290BB /* MacFeatureCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DA946432C4EAE0F5541E344 /* MacFeatureCommand.swift */; };
 		183655EE942D536918061F82 /* UUID+NameBased.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9549B6530DAB5031B98F04F /* UUID+NameBased.swift */; };
+		1838DE1132BD78FF14546809 /* MacAppCommandsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1488FCDD38B1FD684EDD2D88 /* MacAppCommandsTests.swift */; };
 		18B0322D2A7D492983EF706F /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B13C3455F594B0BA7525ADD /* Reachability.swift */; };
 		18D32D940E78676FB3B8E54C /* SQLiteDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = D89EF1C5AC494C239A04F4CE /* SQLiteDatabase.swift */; };
 		190E7180FF1D269E09ECAB70 /* WidgetSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB602702653BB94D55F5891 /* WidgetSnapshot.swift */; };
@@ -445,6 +446,7 @@
 		117F8B6A9E074CC871B9AEA7 /* MacBootstrapTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MacBootstrapTests.swift; sourceTree = "<group>"; };
 		125432270EF0514E3620C9BD /* TaskSectionGroupingTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TaskSectionGroupingTests.swift; sourceTree = "<group>"; };
 		132EC1A53CBCCABABAF86808 /* BudgetIDs.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BudgetIDs.swift; sourceTree = "<group>"; };
+		1488FCDD38B1FD684EDD2D88 /* MacAppCommandsTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MacAppCommandsTests.swift; sourceTree = "<group>"; };
 		15DFF74D0107C1C54E7AA41E /* MoneyParsingTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MoneyParsingTests.swift; sourceTree = "<group>"; };
 		167B044780DEF36B6D746BFB /* WidgetSnapshotWriter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetSnapshotWriter.swift; sourceTree = "<group>"; };
 		17C0B2AFA89C4121A7973BB3 /* RemoteGateway.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RemoteGateway.swift; sourceTree = "<group>"; };
@@ -962,6 +964,7 @@
 				71FF1AC39D975F4038681D1B /* MacPetDetailTests.swift */,
 				0D7808D081054C8CB548EF4F /* PetFileImporterTests.swift */,
 				47A350D107F84B33381570A3 /* MacRootViewTests.swift */,
+				1488FCDD38B1FD684EDD2D88 /* MacAppCommandsTests.swift */,
 			);
 			name = Mac;
 			path = Mac;
@@ -2270,6 +2273,7 @@
 				3025792552E3C52E661690E3 /* MacPetDetailTests.swift in Sources */,
 				20DE2497B4C7DCE4B6D9E443 /* PetFileImporterTests.swift in Sources */,
 				B5C79857DABE261A2AA000A4 /* MacRootViewTests.swift in Sources */,
+				1838DE1132BD78FF14546809 /* MacAppCommandsTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
