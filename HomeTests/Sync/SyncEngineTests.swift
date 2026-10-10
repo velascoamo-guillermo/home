@@ -272,10 +272,11 @@ actor FakeGateway: RemoteGateway {
         let url = URL(fileURLWithPath: NSTemporaryDirectory())
             .appendingPathComponent("sfs-\(UUID().uuidString).sqlite")
         let store = try await LocalStore(url: url)
-        let sync = SyncEngine(local: store, gateway: StallingGateway())
+        let gateway = StallingGateway()
+        let sync = SyncEngine(local: store, gateway: gateway)
 
         async let first: Void = sync.sync(tables: SyncEngine.syncedTables)
-        try await Task.sleep(for: .milliseconds(20))
+        await gateway.waitUntilStalling()
         // Overlaps the still-running first pass: single-flight guard skips it immediately
         // and must not touch lastFullSyncAt.
         await sync.sync(tables: SyncEngine.syncedTables)
@@ -291,15 +292,34 @@ actor FakeGateway: RemoteGateway {
 /// without paying the stall on every one of `syncedTables`. A dedicated, small type
 /// (rather than adding a method to `InMemoryRemote`) sidesteps the same
 /// default-argument isolation-inference bug worked around above.
+///
+/// `waitUntilStalling()` lets a test block until the first `pull` has actually begun
+/// stalling, instead of racing a fixed `Task.sleep` against the engine's own task
+/// scheduling (flaky on slow CI runners — see #88).
 actor StallingGateway: RemoteGateway {
     private var hasStalled = false
+    private let stalling: AsyncStream<Void>
+    private let stallingContinuation: AsyncStream<Void>.Continuation
+
+    init() {
+        var continuation: AsyncStream<Void>.Continuation!
+        stalling = AsyncStream { continuation = $0 }
+        stallingContinuation = continuation
+    }
 
     func push(kind: OutboxOpKind, table: String, payload: Data) async throws {}
     func pull(table: String, since: Date?) async throws -> [Data] {
         if !hasStalled {
             hasStalled = true
+            stallingContinuation.yield()
             try? await Task.sleep(for: .milliseconds(200))
         }
         return []
+    }
+
+    /// Suspends until the first `pull` call has begun stalling.
+    func waitUntilStalling() async {
+        var iterator = stalling.makeAsyncIterator()
+        _ = await iterator.next()
     }
 }
