@@ -6,7 +6,7 @@ import AppKit
 /// `NSOutlineView.acceptsFirstResponder` (and therefore real `NSWindow.makeFirstResponder`
 /// promotion) only succeeds once a window is genuinely key/on screen, which a plain unit
 /// test host doesn't guarantee. `RecordingWindow` simulates the first-responder slot itself
-/// so these tests exercise `AgendaListFocusView`'s own guard logic deterministically,
+/// so these tests exercise `ListFocusView<String>`'s own guard logic deterministically,
 /// independent of AppKit's real focus machinery.
 private final class RecordingWindow: NSWindow {
     private var simulatedFirstResponder: NSResponder?
@@ -24,7 +24,7 @@ private final class RecordingWindow: NSWindow {
     }
 }
 
-@Suite("AgendaListFocusView") @MainActor struct AgendaListFocusViewTests {
+@Suite("ListFocusView") @MainActor struct ListFocusViewTests {
     /// sidebar outline (first in the tree) + a separate detail pane outline, mirroring
     /// MacShellView's NavigationSplitView: sidebar and detail are disjoint branches.
     private struct Fixture {
@@ -64,54 +64,54 @@ private final class RecordingWindow: NSWindow {
     @Test("nearestOutlineView finds the detail pane's own outline, never the sidebar's")
     func scopesToTheOwningPane() {
         let fixture = makeFixture()
-        let found = AgendaListFocusView.nearestOutlineView(ascendingFrom: fixture.background)
+        let found = ListFocusView<String>.nearestOutlineView(ascendingFrom: fixture.background)
         #expect(found === fixture.detailOutline)
         #expect(found !== fixture.sidebarOutline)
     }
 
     @Test("shouldApplyFocus only fires once per distinct selection")
     func shouldApplyFocusTracksLastSelection() {
-        let coordinator = AgendaListFocusView.Coordinator()
-        #expect(AgendaListFocusView.shouldApplyFocus(selection: nil, coordinator: coordinator) == false)
-        #expect(AgendaListFocusView.shouldApplyFocus(selection: "a", coordinator: coordinator) == true)
+        let coordinator = ListFocusView<String>.Coordinator()
+        #expect(ListFocusView<String>.shouldApplyFocus(selection: nil, coordinator: coordinator) == false)
+        #expect(ListFocusView<String>.shouldApplyFocus(selection: "a", coordinator: coordinator) == true)
         coordinator.lastAppliedSelection = "a"
-        #expect(AgendaListFocusView.shouldApplyFocus(selection: "a", coordinator: coordinator) == false)
-        #expect(AgendaListFocusView.shouldApplyFocus(selection: "b", coordinator: coordinator) == true)
+        #expect(ListFocusView<String>.shouldApplyFocus(selection: "a", coordinator: coordinator) == false)
+        #expect(ListFocusView<String>.shouldApplyFocus(selection: "b", coordinator: coordinator) == true)
     }
 
     @Test("clearing the selection forgets it, so reselecting the same row grabs focus again")
     func deselectThenReselectSameRow() {
-        let coordinator = AgendaListFocusView.Coordinator()
+        let coordinator = ListFocusView<String>.Coordinator()
         coordinator.lastAppliedSelection = "a"
-        #expect(AgendaListFocusView.shouldApplyFocus(selection: nil, coordinator: coordinator) == false)
-        #expect(AgendaListFocusView.shouldApplyFocus(selection: "a", coordinator: coordinator) == true)
+        #expect(ListFocusView<String>.shouldApplyFocus(selection: nil, coordinator: coordinator) == false)
+        #expect(ListFocusView<String>.shouldApplyFocus(selection: "a", coordinator: coordinator) == true)
     }
 
     @Test("a focus attempt that found no window or list is retried on the next update")
     func unresolvedAttemptIsRetried() {
-        let coordinator = AgendaListFocusView.Coordinator()
+        let coordinator = ListFocusView<String>.Coordinator()
         coordinator.lastAppliedSelection = "a"
         coordinator.focusAttempt(for: "a", resolved: false)
-        #expect(AgendaListFocusView.shouldApplyFocus(selection: "a", coordinator: coordinator) == true)
+        #expect(ListFocusView<String>.shouldApplyFocus(selection: "a", coordinator: coordinator) == true)
     }
 
     @Test("a stale unresolved attempt does not reset a newer selection")
     func staleUnresolvedAttemptIgnored() {
-        let coordinator = AgendaListFocusView.Coordinator()
+        let coordinator = ListFocusView<String>.Coordinator()
         coordinator.lastAppliedSelection = "b"
         coordinator.focusAttempt(for: "a", resolved: false)
-        #expect(AgendaListFocusView.shouldApplyFocus(selection: "b", coordinator: coordinator) == false)
+        #expect(ListFocusView<String>.shouldApplyFocus(selection: "b", coordinator: coordinator) == false)
     }
 
     @Test("applyFocus reports unresolved only when there is no window or list, not when it declines")
     func applyFocusResolution() {
-        #expect(AgendaListFocusView.applyFocus(from: NSView()) == false)
+        #expect(ListFocusView<String>.applyFocus(from: NSView()) == false)
 
         let fixture = makeFixture()
         let button = NSButton()
         fixture.window.contentView?.addSubview(button)
         _ = fixture.window.makeFirstResponder(button)
-        #expect(AgendaListFocusView.applyFocus(from: fixture.background) == true)
+        #expect(ListFocusView<String>.applyFocus(from: fixture.background) == true)
         #expect(fixture.window.firstResponder === button)
     }
 
@@ -120,7 +120,7 @@ private final class RecordingWindow: NSWindow {
         let fixture = makeFixture()
         _ = fixture.window.makeFirstResponder(nil) // first responder falls back to the window itself
 
-        _ = AgendaListFocusView.applyFocus(from: fixture.background)
+        _ = ListFocusView<String>.applyFocus(from: fixture.background)
 
         #expect(fixture.window.firstResponder === fixture.detailOutline)
     }
@@ -132,7 +132,7 @@ private final class RecordingWindow: NSWindow {
         fixture.window.contentView?.addSubview(button)
         _ = fixture.window.makeFirstResponder(button)
 
-        _ = AgendaListFocusView.applyFocus(from: fixture.background)
+        _ = ListFocusView<String>.applyFocus(from: fixture.background)
 
         #expect(fixture.window.firstResponder === button)
     }
@@ -142,7 +142,7 @@ private final class RecordingWindow: NSWindow {
         let fixture = makeFixture()
         _ = fixture.window.makeFirstResponder(fixture.detailOutline)
 
-        _ = AgendaListFocusView.applyFocus(from: fixture.background)
+        _ = ListFocusView<String>.applyFocus(from: fixture.background)
 
         #expect(fixture.window.firstResponder === fixture.detailOutline)
     }
