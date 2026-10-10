@@ -33,6 +33,7 @@ struct MacRootView: View {
         }
         .frame(minWidth: 760, minHeight: 480)
         .focusedSceneValue(\.macWindow, model)
+        .focusedSceneValue(\.macAvailableCommands, model.availableCommands)
         .task { await bootstrap.start() }
         .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
             Task { await bootstrap.appDidBecomeActive() }

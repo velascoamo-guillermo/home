@@ -5,6 +5,7 @@ struct MacAppCommands: Commands {
     let store: SupabaseStore
     let bootstrap: MacBootstrap
     @FocusedValue(\.macWindow) private var window
+    @FocusedValue(\.macAvailableCommands) private var availableCommands
     @Environment(\.openWindow) private var openWindow
 
     var body: some Commands {
@@ -23,7 +24,7 @@ struct MacAppCommands: Commands {
             Divider()
             ForEach(MacFeatureCommand.allCases, id: \.self) { command in
                 Button(command.title) { window?.request(command) }
-                    .disabled(!(window?.availableCommands.contains(command) ?? false))
+                    .disabled(!(availableCommands?.contains(command) ?? false))
             }
             Divider()
             Button(window == nil ? "New Window" : "Open in New Window") {
