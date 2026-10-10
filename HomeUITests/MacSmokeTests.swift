@@ -376,10 +376,17 @@ final class MacSmokeTests: XCTestCase {
         XCTAssertTrue(title.waitForExistence(timeout: 10))
         let current = try XCTUnwrap(title.value as? String)
         XCTAssertFalse(current.isEmpty)
-        app.typeKey("]", modifierFlags: .command)
+        // ⌘] / ⌘[ are the app's real shortcuts (unchanged for end users — verified above by
+        // clicking the same menu item), but on macOS 27 a synthetic `typeKey` for the bracket
+        // keys plus ⌘ no longer reaches the menu bar's key equivalent under XCUITest (it still
+        // does on macOS 26.6 in CI). Driving the menu directly keeps this test meaningful and
+        // OS-version-independent, matching this file's other key-equivalent workarounds.
+        app.menuBars.menuBarItems["Go"].click()
+        app.menuBars.menuItems["Next Period"].click()
         let changed = XCTNSPredicateExpectation(predicate: NSPredicate(format: "value != %@", current), object: title)
         XCTAssertEqual(XCTWaiter().wait(for: [changed], timeout: 10), .completed)
-        app.typeKey("[", modifierFlags: .command)
+        app.menuBars.menuBarItems["Go"].click()
+        app.menuBars.menuItems["Previous Period"].click()
         XCTAssertTrue(waitForValue(title, current, timeout: 10))
     }
 
