@@ -9,7 +9,7 @@ struct MacDetailView: View {
         switch model.selection {
         case .today:    MacTodayView(model: model)
         case .tasks:    MacTasksView(model: model)
-        case .shopping: NavigationStack { ShoppingView() }
+        case .shopping: MacShoppingView(model: model)
         case .stock:    NavigationStack { StockView() }
         case .meals:    NavigationStack { MenuView() }
         case .budget:   NavigationStack { BudgetView() }

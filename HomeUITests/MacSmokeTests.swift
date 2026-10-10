@@ -283,6 +283,19 @@ final class MacSmokeTests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Fixture Water Plants"].waitForExistence(timeout: 10))
     }
 
+    func testShoppingCheckOffAndFinish() throws {
+        let app = launchApp()
+        XCTAssertTrue(app.windows.firstMatch.waitForExistence(timeout: 15))
+        app.typeKey("3", modifierFlags: .command)
+        let filters = app.checkBoxes["Fixture Filters"]
+        XCTAssertTrue(filters.waitForExistence(timeout: 10))
+        filters.click()
+        let finish = app.buttons["finishShopping"]
+        XCTAssertTrue(finish.waitForExistence(timeout: 10))
+        finish.click()
+        XCTAssertTrue(filters.waitForNonExistence(timeout: 10))
+    }
+
     private func window(_ app: XCUIApplication, titled title: String) -> XCUIElement {
         app.windows.matching(NSPredicate(format: "title == %@", title)).firstMatch
     }
