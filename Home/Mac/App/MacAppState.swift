@@ -29,6 +29,10 @@ final class MacAppState {
                 guard !UITestSupport.isActive else { return }
                 await store.refreshFromLocal()
                 await feed.reload()
+            },
+            resign: {
+                guard !UITestSupport.isActive, store.loadError == nil, !store.isLoading else { return }
+                WidgetSnapshotWriter.write(from: store)
             })
     }
 }

@@ -14,16 +14,19 @@ final class MacBootstrap {
     @ObservationIgnored private let load: @MainActor () async -> Void
     @ObservationIgnored private let observe: @MainActor () async -> Void
     @ObservationIgnored private let refresh: @MainActor () async -> Void
+    @ObservationIgnored private let resign: @MainActor () -> Void
     @ObservationIgnored private let now: @MainActor () -> Date
     @ObservationIgnored private var lastRefresh: Date?
 
     init(load: @escaping @MainActor () async -> Void,
          observe: @escaping @MainActor () async -> Void,
          refresh: @escaping @MainActor () async -> Void,
+         resign: @escaping @MainActor () -> Void,
          now: @escaping @MainActor () -> Date = { .now }) {
         self.load = load
         self.observe = observe
         self.refresh = refresh
+        self.resign = resign
         self.now = now
     }
 
@@ -42,6 +45,13 @@ final class MacBootstrap {
         if let lastRefresh, current.timeIntervalSince(lastRefresh) < Self.activationDebounce { return }
         lastRefresh = current
         await refresh()
+    }
+
+    /// The iPhone writes the widget snapshot when the app backgrounds; a Mac app rarely
+    /// backgrounds, so it writes whenever it stops being the active app.
+    func appDidResignActive() {
+        guard didFinishLoading else { return }
+        resign()
     }
 }
 #endif
