@@ -83,6 +83,19 @@ import Foundation
         #expect(probe.resigns == 0)
         await bootstrap.start()
         bootstrap.appDidResignActive()
+        #expect(probe.resigns == 1)
+    }
+
+    @Test("one resign reported by several windows writes the snapshot once")
+    func resignDeduplicatedAcrossWindows() async {
+        let probe = BootstrapProbe()
+        let bootstrap = make(probe)
+        await bootstrap.start()
+        bootstrap.appDidResignActive()
+        bootstrap.appDidResignActive()
+        bootstrap.appDidResignActive()
+        #expect(probe.resigns == 1)
+        probe.now = probe.now.addingTimeInterval(MacBootstrap.resignDebounce)
         bootstrap.appDidResignActive()
         #expect(probe.resigns == 2)
     }

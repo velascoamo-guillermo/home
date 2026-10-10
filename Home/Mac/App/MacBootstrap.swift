@@ -7,6 +7,8 @@ import Observation
 @Observable
 final class MacBootstrap {
     static let activationDebounce: TimeInterval = 5
+    /// Every open window reports the same resign; anything inside this window is one event.
+    static let resignDebounce: TimeInterval = 1
 
     private(set) var didStart = false
     private(set) var didFinishLoading = false
@@ -17,6 +19,7 @@ final class MacBootstrap {
     @ObservationIgnored private let resign: @MainActor () -> Void
     @ObservationIgnored private let now: @MainActor () -> Date
     @ObservationIgnored private var lastRefresh: Date?
+    @ObservationIgnored private var lastResign: Date?
 
     init(load: @escaping @MainActor () async -> Void,
          observe: @escaping @MainActor () async -> Void,
@@ -51,6 +54,9 @@ final class MacBootstrap {
     /// backgrounds, so it writes whenever it stops being the active app.
     func appDidResignActive() {
         guard didFinishLoading else { return }
+        let current = now()
+        if let lastResign, current.timeIntervalSince(lastResign) < Self.resignDebounce { return }
+        lastResign = current
         resign()
     }
 }
