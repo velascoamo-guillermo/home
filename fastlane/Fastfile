@@ -112,3 +112,28 @@ platform :ios do
   end
 
 end
+
+platform :mac do
+
+  desc "Run Mac UI smoke tests"
+  lane :mac_ui_test do
+    xcconfig_content = <<~XCCONFIG
+      SUPABASE_URL = #{ENV.fetch("SUPABASE_URL")}
+      SUPABASE_ANON_KEY = #{ENV.fetch("SUPABASE_ANON_KEY")}
+    XCCONFIG
+    File.write("../Config.xcconfig", xcconfig_content)
+
+    run_tests(
+      project: ENV["PROJECT"],
+      scheme: "Home",
+      destination: "platform=macOS",
+      clean: true,
+      only_testing: ["HomeUITests/MacSmokeTests"],
+      output_directory: "fastlane/test_output_mac_ui",
+      output_types: "junit",
+      result_bundle: true,
+      xcargs: "CODE_SIGN_IDENTITY=- CODE_SIGN_STYLE=Manual DEVELOPMENT_TEAM= PROVISIONING_PROFILE_SPECIFIER= CODE_SIGN_ENTITLEMENTS="
+    )
+  end
+
+end

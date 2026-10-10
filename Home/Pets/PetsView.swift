@@ -61,12 +61,14 @@ struct AddPetSheet: View {
         NavigationStack {
             Form {
                 TextField("Name", text: $name)
+                    .accessibilityIdentifier("petName")
                 Picker("Type", selection: $type) {
                     Text("Dog").tag("Dog")
                     Text("Cat").tag("Cat")
                     Text("Other").tag("Other")
                 }
                 TextField("Breed", text: $breed)
+                    .accessibilityIdentifier("petBreed")
                 Section {
                     Toggle("Add Birthday", isOn: $hasBirthday)
                     if hasBirthday {

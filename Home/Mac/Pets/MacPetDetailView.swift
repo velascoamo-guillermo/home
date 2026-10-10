@@ -22,22 +22,12 @@ struct MacPetDetailView: View {
     var body: some View {
         VStack(spacing: 0) {
             header
+            sectionPicker
             Divider()
             content
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .gradientCanvas()
-        .toolbar {
-            ToolbarItem(placement: .principal) {
-                Picker("Section", selection: $tab) {
-                    ForEach(PetTab.allCases) { tab in
-                        Text(tab.title).tag(tab)
-                    }
-                }
-                .pickerStyle(.segmented)
-                .labelsHidden()
-            }
-        }
         .onChange(of: photoItem) { _, item in
             guard let item else { return }
             Task { await uploadPhoto(item) }
@@ -87,6 +77,20 @@ struct MacPetDetailView: View {
     static func importFailureMessage(for error: any Error) -> String? {
         if let error = error as? CocoaError, error.code == .userCancelled { return nil }
         return error.localizedDescription
+    }
+
+    /// In the content rather than the toolbar: at narrow window widths the toolbar moves a
+    /// six-segment picker into its overflow menu, hiding the pet's main navigation.
+    private var sectionPicker: some View {
+        Picker("Section", selection: $tab) {
+            ForEach(PetTab.allCases) { tab in
+                Text(tab.title).tag(tab)
+            }
+        }
+        .pickerStyle(.segmented)
+        .labelsHidden()
+        .padding(.horizontal, 20)
+        .padding(.bottom, 12)
     }
 
     private var header: some View {

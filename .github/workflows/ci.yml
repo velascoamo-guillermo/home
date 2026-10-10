@@ -78,3 +78,41 @@ jobs:
         with:
           name: ui-test-results
           path: fastlane/test_output_ui/
+
+  mac-ui-test:
+    name: Run Mac UI Tests
+    runs-on: macos-26
+    timeout-minutes: 45
+    continue-on-error: true
+
+    env:
+      FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT: "120"
+      FASTLANE_XCODEBUILD_SETTINGS_RETRIES: "5"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+          bundler-cache: true
+
+      - name: Run Mac UI tests
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: bundle exec fastlane mac mac_ui_test
+
+      - name: Upload Mac UI test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mac-ui-test-results
+          path: fastlane/test_output_mac_ui/

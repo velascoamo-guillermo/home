@@ -144,9 +144,17 @@ final class MacSmokeTests: XCTestCase {
         XCTAssertTrue(window(app, titled: "Today").waitForExistence(timeout: 10))
     }
 
-    /// Feature windows from the WindowGroup — excludes Settings and Help.
+    /// Feature windows from `WindowGroup(for: MacWindowSeed.self)` — excludes Settings and Help.
+    ///
+    /// The accessibility identifier SwiftUI assigns to these windows is an implementation
+    /// detail that already changed once between OS/Xcode versions: it used to start with
+    /// "SwiftUI.WindowGroup", but on macOS 26.6 / Xcode 26.6 it's
+    /// "SwiftUI.PresentedWindowContent<Casita.MacWindowSeed, …>-1-AppWindow-1" instead. Matching
+    /// on the app's own `MacWindowSeed` content type is stable across that renaming and still
+    /// excludes the Settings window (`com_apple_SwiftUI_Settings_window`) and the Help window
+    /// (`Window(id: MacHelpView.windowID)`), neither of which reference that type.
     private func mainWindows(_ app: XCUIApplication) -> XCUIElementQuery {
-        app.windows.matching(NSPredicate(format: "identifier BEGINSWITH %@", "SwiftUI.WindowGroup"))
+        app.windows.matching(NSPredicate(format: "identifier CONTAINS %@", "MacWindowSeed"))
     }
 
     private func settingsWindow(_ app: XCUIApplication) -> XCUIElement {
@@ -390,11 +398,11 @@ final class MacSmokeTests: XCTestCase {
         XCTAssertTrue(app.windows.firstMatch.waitForExistence(timeout: 15))
         app.menuBars.menuBarItems["File"].click()
         app.menuBars.menuItems["New Pet…"].click()
-        let name = app.sheets.firstMatch.textFields["Name"]
+        let name = app.sheets.firstMatch.textFields["petName"]
         XCTAssertTrue(name.waitForExistence(timeout: 10))
         name.click()
         name.typeText("Mishi")
-        let breed = app.sheets.firstMatch.textFields["Breed"]
+        let breed = app.sheets.firstMatch.textFields["petBreed"]
         breed.click()
         breed.typeText("Tabby")
         app.sheets.firstMatch.buttons["Add"].click()
@@ -402,7 +410,7 @@ final class MacSmokeTests: XCTestCase {
         XCTAssertTrue(row.waitForExistence(timeout: 10))
         row.click()
         XCTAssertTrue(window(app, titled: "Mishi").waitForExistence(timeout: 10))
-        XCTAssertTrue(app.toolbars.radioButtons["Weight"].waitForExistence(timeout: 10))
+        XCTAssertTrue(window(app, titled: "Mishi").radioButtons["Weight"].waitForExistence(timeout: 10))
     }
 
     func testImportCancelledReEnablesNewTask() throws {
@@ -410,11 +418,11 @@ final class MacSmokeTests: XCTestCase {
         XCTAssertTrue(app.windows.firstMatch.waitForExistence(timeout: 15))
         app.menuBars.menuBarItems["File"].click()
         app.menuBars.menuItems["New Pet…"].click()
-        let name = app.sheets.firstMatch.textFields["Name"]
+        let name = app.sheets.firstMatch.textFields["petName"]
         XCTAssertTrue(name.waitForExistence(timeout: 10))
         name.click()
         name.typeText("Mishi")
-        let breed = app.sheets.firstMatch.textFields["Breed"]
+        let breed = app.sheets.firstMatch.textFields["petBreed"]
         breed.click()
         breed.typeText("Tabby")
         app.sheets.firstMatch.buttons["Add"].click()
