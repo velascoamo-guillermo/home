@@ -10,6 +10,7 @@ struct MacPetDetailView: View {
     @State private var photoItem: PhotosPickerItem?
     @State private var isUploadingPhoto = false
     @State private var uploadError: String?
+    @State private var importFailure: String?
 
     private var currentPet: Pet { store.pets.first { $0.id == pet.id } ?? pet }
 
@@ -49,6 +50,43 @@ struct MacPetDetailView: View {
         } message: {
             Text(uploadError ?? "")
         }
+        .fileImporter(isPresented: Self.importBinding(for: pet.id, model: model), allowedContentTypes: PetFileImport.allowedTypes,
+                      allowsMultipleSelection: true) { result in
+            switch result {
+            case .success(let urls):
+                tab = .files
+                Task {
+                    let failures = await PetFileImporter.importFiles(urls, petID: currentPet.id, into: store)
+                    importFailure = PetFileImporter.message(for: failures)
+                }
+            case .failure(let error):
+                importFailure = Self.importFailureMessage(for: error)
+            }
+        }
+        .alert("Some Files Weren't Added", isPresented: Binding(
+            get: { importFailure != nil },
+            set: { if !$0 { importFailure = nil } }
+        )) {
+            Button("OK") {}
+        } message: {
+            Text(importFailure ?? "")
+        }
+    }
+
+    /// Dismissing the importer in any way (pick, Cancel, Escape) must clear `pendingAction`,
+    /// or every New-item menu command stays disabled.
+    static func importBinding(for petID: UUID, model: MacWindowModel) -> Binding<Bool> {
+        Binding(
+            get: {
+                if case .importFiles(let id)? = model.pendingAction { return id == petID }
+                return false
+            },
+            set: { if !$0 { model.pendingAction = nil } })
+    }
+
+    static func importFailureMessage(for error: any Error) -> String? {
+        if let error = error as? CocoaError, error.code == .userCancelled { return nil }
+        return error.localizedDescription
     }
 
     private var header: some View {
@@ -89,7 +127,7 @@ struct MacPetDetailView: View {
         case .history:      ClinicalHistoryTabView(pet: currentPet)
         case .events:       EventsTabView(pet: currentPet)
         case .weight:       WeightTabView(pet: currentPet)
-        case .files:        FilesTabView(pet: currentPet)
+        case .files:        MacPetFilesView(pet: currentPet)
         }
     }
 

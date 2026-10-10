@@ -41,5 +41,24 @@ import AppKit
         #expect(!MacPendingAction.importFiles(petID: id).presentsSheet)
         #expect(MacPendingAction.importFiles(petID: id).title == "Import…")
     }
+
+    @Test("the importer shows only for its own pet, and dismissing it clears pendingAction")
+    func importBindingClearsPendingAction() {
+        let id = UUID()
+        let model = MacWindowModel(selection: .pet(id))
+        model.perform(.importFiles(petID: id))
+        #expect(MacPetDetailView.importBinding(for: UUID(), model: model).wrappedValue == false)
+
+        let binding = MacPetDetailView.importBinding(for: id, model: model)
+        #expect(binding.wrappedValue)
+        binding.wrappedValue = false
+        #expect(model.pendingAction == nil)
+    }
+
+    @Test("cancelling the importer shows no alert; real errors do")
+    func importFailureMessage() {
+        #expect(MacPetDetailView.importFailureMessage(for: CocoaError(.userCancelled)) == nil)
+        #expect(MacPetDetailView.importFailureMessage(for: CocoaError(.fileReadNoPermission)) != nil)
+    }
 }
 #endif
