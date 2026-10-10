@@ -24,5 +24,13 @@ import Foundation
         let appointment = Appointment(petId: pet.id, date: .now, reason: "Checkup", notes: "", status: .upcoming)
         #expect(MacTodayView.commands(for: .appointment(appointment, pet)).isEmpty)
     }
+
+    @Test("⌫ deletes a real or overdue task occurrence but does nothing on a projected one")
+    func deletableTask() {
+        #expect(MacTodayView.deletableTask(for: .task(task, .real)) == task)
+        #expect(MacTodayView.deletableTask(for: .task(task, .overdue(days: 2))) == task)
+        #expect(MacTodayView.deletableTask(for: .task(task, .projected)) == nil)
+        #expect(MacTodayView.deletableTask(for: nil) == nil)
+    }
 }
 #endif

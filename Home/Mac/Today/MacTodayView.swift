@@ -21,6 +21,14 @@ struct MacTodayView: View {
         return [.markDone, .snoozeOneDay]
     }
 
+    /// `⌫` on a projected (not-yet-real) task occurrence must do nothing — there is no
+    /// `HouseholdTask` row for it to delete yet, matching the context menu's own
+    /// `occurrence != .projected` guard.
+    static func deletableTask(for item: AgendaItem?) -> HouseholdTask? {
+        guard case .task(let task, let occurrence)? = item, occurrence != .projected else { return nil }
+        return task
+    }
+
     var body: some View {
         let input = agendaInput
         let day = AgendaBuilder.build(day: selectedDay, today: today, calendar: calendar, input: input)
@@ -74,7 +82,7 @@ struct MacTodayView: View {
             open(item)
         }
         .onDeleteCommand {
-            if case .task(let task, _)? = selected { delete(task) }
+            if let task = Self.deletableTask(for: selected) { delete(task) }
         }
         .background(ListFocusView(selection: selection))
         .inspector(isPresented: $model.isInspectorPresented) {
