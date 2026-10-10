@@ -69,6 +69,33 @@ private final class RecordingWindow: NSWindow {
         #expect(found !== fixture.sidebarOutline)
     }
 
+    @Test("a Table's plain NSTableView is found, never a table-backed control in a sibling inspector pane")
+    func findsOwnTableNotInspectorTable() {
+        let root = NSView()
+        let detailPane = NSView()
+        let container = NSView()
+        let background = NSView()
+        let featureScroll = NSScrollView()
+        let featureTable = NSTableView()
+        featureScroll.documentView = featureTable
+        container.addSubview(background)
+        container.addSubview(featureScroll)
+        detailPane.addSubview(container)
+
+        let inspectorPane = NSView()
+        let inspectorScroll = NSScrollView()
+        let inspectorTable = NSTableView()
+        inspectorScroll.documentView = inspectorTable
+        inspectorPane.addSubview(inspectorScroll)
+
+        root.addSubview(inspectorPane)
+        root.addSubview(detailPane)
+
+        let found = ListFocusView<String>.nearestOutlineView(ascendingFrom: background)
+        #expect(found === featureTable)
+        #expect(found !== inspectorTable)
+    }
+
     @Test("shouldApplyFocus only fires once per distinct selection")
     func shouldApplyFocusTracksLastSelection() {
         let coordinator = ListFocusView<String>.Coordinator()

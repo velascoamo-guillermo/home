@@ -25,5 +25,15 @@ import Foundation
         #expect([apple, banana, cherry].sorted(using: KeyPathComparator(\StockProduct.categorySortKey)).map(\.name) == ["cherry", "Banana", "apple"])
         #expect([apple, banana, cherry].sorted(using: KeyPathComparator(\StockProduct.supermarketSortKey)).map(\.name) == ["Banana", "cherry", "apple"])
     }
+
+    @Test("sorting by raw value matches the visible display-name order")
+    func rawValueOrderMatchesDisplayName() {
+        let categoriesByRaw = ProductCategory.allCases.sorted { $0.rawValue < $1.rawValue }
+        let categoriesByName = ProductCategory.allCases.sorted { $0.displayName.localizedStandardCompare($1.displayName) == .orderedAscending }
+        #expect(categoriesByRaw == categoriesByName)
+        let supermarketsByRaw = Supermarket.allCases.sorted { $0.rawValue < $1.rawValue }
+        let supermarketsByName = Supermarket.allCases.sorted { $0.displayName.localizedStandardCompare($1.displayName) == .orderedAscending }
+        #expect(supermarketsByRaw == supermarketsByName)
+    }
 }
 #endif
