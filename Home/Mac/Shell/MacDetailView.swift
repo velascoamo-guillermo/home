@@ -12,7 +12,7 @@ struct MacDetailView: View {
         case .shopping: MacShoppingView(model: model)
         case .stock:    MacStockView(model: model)
         case .meals:    MacMealsView(model: model)
-        case .budget:   NavigationStack { BudgetView() }
+        case .budget:   MacBudgetView(model: model)
         case .pet(let id):
             if let pet = store.pets.first(where: { $0.id == id }) {
                 NavigationStack { PetDetailView(pet: pet) }
