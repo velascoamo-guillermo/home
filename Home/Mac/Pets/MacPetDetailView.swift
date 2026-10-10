@@ -50,7 +50,7 @@ struct MacPetDetailView: View {
         } message: {
             Text(uploadError ?? "")
         }
-        .fileImporter(isPresented: importBinding, allowedContentTypes: PetFileImport.allowedTypes,
+        .fileImporter(isPresented: Self.importBinding(for: pet.id, model: model), allowedContentTypes: PetFileImport.allowedTypes,
                       allowsMultipleSelection: true) { result in
             switch result {
             case .success(let urls):
@@ -60,7 +60,7 @@ struct MacPetDetailView: View {
                     importFailure = PetFileImporter.message(for: failures)
                 }
             case .failure(let error):
-                importFailure = error.localizedDescription
+                importFailure = Self.importFailureMessage(for: error)
             }
         }
         .alert("Some Files Weren't Added", isPresented: Binding(
@@ -73,13 +73,20 @@ struct MacPetDetailView: View {
         }
     }
 
-    private var importBinding: Binding<Bool> {
+    /// Dismissing the importer in any way (pick, Cancel, Escape) must clear `pendingAction`,
+    /// or every New-item menu command stays disabled.
+    static func importBinding(for petID: UUID, model: MacWindowModel) -> Binding<Bool> {
         Binding(
             get: {
-                if case .importFiles(let id)? = model.pendingAction { return id == pet.id }
+                if case .importFiles(let id)? = model.pendingAction { return id == petID }
                 return false
             },
             set: { if !$0 { model.pendingAction = nil } })
+    }
+
+    static func importFailureMessage(for error: any Error) -> String? {
+        if let error = error as? CocoaError, error.code == .userCancelled { return nil }
+        return error.localizedDescription
     }
 
     private var header: some View {
