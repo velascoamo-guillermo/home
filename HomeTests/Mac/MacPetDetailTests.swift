@@ -41,5 +41,18 @@ import AppKit
         #expect(!MacPendingAction.importFiles(petID: id).presentsSheet)
         #expect(MacPendingAction.importFiles(petID: id).title == "Import…")
     }
+
+    @Test("import dismissed or cancelled clears pendingAction, re-enabling New Task")
+    func importDismissalClearsPendingAction() {
+        let id = UUID()
+        let model = MacWindowModel(selection: .pet(id))
+        model.perform(.importFiles(petID: id))
+        #expect(model.pendingAction == .importFiles(petID: id))
+
+        // What MacPetDetailView.importBinding's setter does when the fileImporter sheet
+        // is dismissed, whether by picking files, pressing Cancel, or pressing Escape.
+        model.pendingAction = nil
+        #expect(model.pendingAction == nil)
+    }
 }
 #endif

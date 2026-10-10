@@ -19,6 +19,7 @@ struct MacAppCommands: Commands {
             newButton(.newPet, nil)
             petButton { .newAppointment(petID: $0) }
             petButton { .newPetEvent(petID: $0) }
+            petButton { .importFiles(petID: $0) }
             Divider()
             ForEach(MacFeatureCommand.allCases, id: \.self) { command in
                 Button(command.title) { window?.request(command) }

@@ -405,6 +405,35 @@ final class MacSmokeTests: XCTestCase {
         XCTAssertTrue(app.toolbars.radioButtons["Weight"].waitForExistence(timeout: 10))
     }
 
+    func testImportCancelledReEnablesNewTask() throws {
+        let app = launchApp()
+        XCTAssertTrue(app.windows.firstMatch.waitForExistence(timeout: 15))
+        app.menuBars.menuBarItems["File"].click()
+        app.menuBars.menuItems["New Pet…"].click()
+        let name = app.sheets.firstMatch.textFields["Name"]
+        XCTAssertTrue(name.waitForExistence(timeout: 10))
+        name.click()
+        name.typeText("Mishi")
+        let breed = app.sheets.firstMatch.textFields["Breed"]
+        breed.click()
+        breed.typeText("Tabby")
+        app.sheets.firstMatch.buttons["Add"].click()
+        let row = app.outlines.staticTexts["Mishi"]
+        XCTAssertTrue(row.waitForExistence(timeout: 10))
+        row.click()
+        XCTAssertTrue(window(app, titled: "Mishi").waitForExistence(timeout: 10))
+
+        app.menuBars.menuBarItems["File"].click()
+        app.menuBars.menuItems["Import…"].click()
+        let cancel = app.sheets.firstMatch.buttons["Cancel"]
+        XCTAssertTrue(cancel.waitForExistence(timeout: 10))
+        cancel.click()
+
+        app.menuBars.menuBarItems["File"].click()
+        XCTAssertTrue(app.menuBars.menuItems["New Task"].isEnabled)
+        app.typeKey(.escape, modifierFlags: [])
+    }
+
     private func waitForLabel(_ element: XCUIElement, _ label: String, timeout: TimeInterval) -> Bool {
         let expectation = XCTNSPredicateExpectation(predicate: NSPredicate(format: "label == %@", label), object: element)
         return XCTWaiter().wait(for: [expectation], timeout: timeout) == .completed

@@ -10,6 +10,7 @@ struct MacPetDetailView: View {
     @State private var photoItem: PhotosPickerItem?
     @State private var isUploadingPhoto = false
     @State private var uploadError: String?
+    @State private var importFailure: String?
 
     private var currentPet: Pet { store.pets.first { $0.id == pet.id } ?? pet }
 
@@ -49,6 +50,36 @@ struct MacPetDetailView: View {
         } message: {
             Text(uploadError ?? "")
         }
+        .fileImporter(isPresented: importBinding, allowedContentTypes: PetFileImport.allowedTypes,
+                      allowsMultipleSelection: true) { result in
+            switch result {
+            case .success(let urls):
+                tab = .files
+                Task {
+                    let failures = await PetFileImporter.importFiles(urls, petID: currentPet.id, into: store)
+                    importFailure = PetFileImporter.message(for: failures)
+                }
+            case .failure(let error):
+                importFailure = error.localizedDescription
+            }
+        }
+        .alert("Some Files Weren't Added", isPresented: Binding(
+            get: { importFailure != nil },
+            set: { if !$0 { importFailure = nil } }
+        )) {
+            Button("OK") {}
+        } message: {
+            Text(importFailure ?? "")
+        }
+    }
+
+    private var importBinding: Binding<Bool> {
+        Binding(
+            get: {
+                if case .importFiles(let id)? = model.pendingAction { return id == pet.id }
+                return false
+            },
+            set: { if !$0 { model.pendingAction = nil } })
     }
 
     private var header: some View {
@@ -89,7 +120,7 @@ struct MacPetDetailView: View {
         case .history:      ClinicalHistoryTabView(pet: currentPet)
         case .events:       EventsTabView(pet: currentPet)
         case .weight:       WeightTabView(pet: currentPet)
-        case .files:        FilesTabView(pet: currentPet)
+        case .files:        MacPetFilesView(pet: currentPet)
         }
     }
 
