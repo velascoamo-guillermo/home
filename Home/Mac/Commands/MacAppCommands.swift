@@ -19,7 +19,6 @@ struct MacAppCommands: Commands {
             newButton(.newPet, nil)
             petButton { .newAppointment(petID: $0) }
             petButton { .newPetEvent(petID: $0) }
-            petButton { .importFiles(petID: $0) }
             Divider()
             ForEach(MacFeatureCommand.allCases, id: \.self) { command in
                 Button(command.title) { window?.request(command) }
@@ -84,7 +83,7 @@ struct MacAppCommands: Commands {
         Button(make(currentPetID ?? UUID()).title) {
             if let id = currentPetID { window?.perform(make(id)) }
         }
-        .disabled(currentPetID == nil)
+        .disabled(!shellReady || currentPetID == nil || window?.pendingAction != nil)
     }
 
     /// The shell is published before `MacShellView` exists and before the first load finishes;
