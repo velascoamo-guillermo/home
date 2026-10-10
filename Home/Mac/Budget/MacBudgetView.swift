@@ -115,6 +115,7 @@ struct MacBudgetView: View {
             Text(month.title(locale: .current, calendar: .current))
                 .font(.headline)
                 .frame(minWidth: 140)
+                .accessibilityIdentifier("budgetMonthTitle")
             Button { model.stepPeriod(by: 1) } label: {
                 Label("Next Month", systemImage: "chevron.right")
             }

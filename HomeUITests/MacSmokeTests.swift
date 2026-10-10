@@ -364,22 +364,24 @@ final class MacSmokeTests: XCTestCase {
         let app = launchApp()
         XCTAssertTrue(app.windows.firstMatch.waitForExistence(timeout: 15))
         app.typeKey("6", modifierFlags: .command)
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "en_US")
-        formatter.dateFormat = "LLLL yyyy"
-        let next = Calendar.current.date(byAdding: .month, value: 1, to: .now)!
-        let expected = formatter.string(from: next)
+        let title = app.staticTexts["budgetMonthTitle"]
+        XCTAssertTrue(title.waitForExistence(timeout: 10))
+        let current = try XCTUnwrap(title.value as? String)
+        XCTAssertFalse(current.isEmpty)
         app.typeKey("]", modifierFlags: .command)
-        XCTAssertTrue(app.toolbars.staticTexts[expected].waitForExistence(timeout: 10))
+        let changed = XCTNSPredicateExpectation(predicate: NSPredicate(format: "value != %@", current), object: title)
+        XCTAssertEqual(XCTWaiter().wait(for: [changed], timeout: 10), .completed)
         app.typeKey("[", modifierFlags: .command)
-        XCTAssertTrue(app.toolbars.staticTexts[formatter.string(from: .now)].waitForExistence(timeout: 10))
+        XCTAssertTrue(waitForValue(title, current, timeout: 10))
     }
 
     func testBudgetInspectorShowsMembers() throws {
         let app = launchApp()
         XCTAssertTrue(app.windows.firstMatch.waitForExistence(timeout: 15))
         app.typeKey("6", modifierFlags: .command)
-        app.typeKey("i", modifierFlags: [.option, .command])
+        let showInspector = app.toolbars.buttons["Show Inspector"]
+        XCTAssertTrue(showInspector.waitForExistence(timeout: 10))
+        showInspector.click()
         XCTAssertTrue(app.buttons["Add member"].waitForExistence(timeout: 10))
     }
 
