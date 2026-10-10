@@ -320,6 +320,27 @@ final class MacSmokeTests: XCTestCase {
         app.windows.matching(NSPredicate(format: "title == %@", title)).firstMatch
     }
 
+    func testDeleteSelectedStockProductThenUndoBringsItBack() throws {
+        let app = launchApp()
+        XCTAssertTrue(app.windows.firstMatch.waitForExistence(timeout: 15))
+        app.typeKey("4", modifierFlags: .command)
+        let name = app.staticTexts["Fixture Milk"]
+        XCTAssertTrue(name.waitForExistence(timeout: 10))
+
+        // Rows show up as `outlineRows` even though Stock uses a `Table`, same as List
+        // (see #67); clicking the row's trailing edge selects it without hitting an
+        // inner control.
+        let cell = app.outlineRows.containing(.staticText, identifier: "Fixture Milk").firstMatch
+        XCTAssertTrue(cell.waitForExistence(timeout: 10))
+        cell.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.5)).click()
+
+        app.typeKey(.delete, modifierFlags: [])
+        XCTAssertTrue(name.waitForNonExistence(timeout: 10))
+
+        app.typeKey("z", modifierFlags: .command)
+        XCTAssertTrue(name.waitForExistence(timeout: 10))
+    }
+
     private func waitForLabel(_ element: XCUIElement, _ label: String, timeout: TimeInterval) -> Bool {
         let expectation = XCTNSPredicateExpectation(predicate: NSPredicate(format: "label == %@", label), object: element)
         return XCTWaiter().wait(for: [expectation], timeout: timeout) == .completed

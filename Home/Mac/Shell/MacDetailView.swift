@@ -10,7 +10,7 @@ struct MacDetailView: View {
         case .today:    MacTodayView(model: model)
         case .tasks:    MacTasksView(model: model)
         case .shopping: MacShoppingView(model: model)
-        case .stock:    NavigationStack { StockView() }
+        case .stock:    MacStockView(model: model)
         case .meals:    NavigationStack { MenuView() }
         case .budget:   NavigationStack { BudgetView() }
         case .pet(let id):
