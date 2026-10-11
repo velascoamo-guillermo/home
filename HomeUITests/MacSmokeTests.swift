@@ -397,7 +397,8 @@ final class MacSmokeTests: XCTestCase {
 
         // ⌫ on the still-selected row opens the (non-undoable) delete confirmation; confirming removes it.
         app.typeKey(.delete, modifierFlags: [])
-        let confirmDelete = app.buttons["Delete Meal"].firstMatch
+        // Scoped to the alert sheet: the Touch Bar mirrors the same button and isn't clickable.
+        let confirmDelete = app.sheets.buttons["Delete Meal"].firstMatch
         XCTAssertTrue(confirmDelete.waitForExistence(timeout: 10))
         confirmDelete.click()
         XCTAssertTrue(name.waitForNonExistence(timeout: 10))
