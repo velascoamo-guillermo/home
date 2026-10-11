@@ -58,6 +58,9 @@ enum UITestSupport {
         try? await store.addTask(changeFilter)
         try? await store.addTask(waterPlants)
 
+        let lentejas = Meal(title: "Lentejas")
+        try? await store.addMeal(lentejas)
+
         try? await store.seedBudgetDefaults()
     }
 }
