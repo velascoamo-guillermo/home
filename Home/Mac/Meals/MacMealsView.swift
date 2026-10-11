@@ -32,6 +32,7 @@ struct MacMealsView: View {
                         Text(day == today ? "\(day.displayName) · Hoy" : day.displayName)
                             .font(.headline)
                             .foregroundStyle(Palette.ink)
+                            .accessibilityIdentifier("mealDayHeader-\(day.rawValue)")
                     }
                 }
                 ForEach(MealSlot.allCases, id: \.self) { slot in
