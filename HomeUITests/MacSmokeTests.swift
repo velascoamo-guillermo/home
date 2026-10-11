@@ -370,6 +370,38 @@ final class MacSmokeTests: XCTestCase {
         app.typeKey(.escape, modifierFlags: [])
     }
 
+    func testMealsCatalogKeyboardPath() throws {
+        let app = launchApp()
+        XCTAssertTrue(app.windows.firstMatch.waitForExistence(timeout: 15))
+        app.typeKey("5", modifierFlags: .command)
+        let showInspector = app.toolbars.buttons["Show Inspector"]
+        XCTAssertTrue(showInspector.waitForExistence(timeout: 10))
+        showInspector.click()
+
+        let name = app.staticTexts["Lentejas"]
+        XCTAssertTrue(name.waitForExistence(timeout: 10))
+
+        // Same trailing-edge click trick as the other Mac lists: select the row without
+        // triggering the row's own Button (which opens the edit sheet as the primary action).
+        let cell = app.outlineRows.containing(.staticText, identifier: "Lentejas").firstMatch
+        XCTAssertTrue(cell.waitForExistence(timeout: 10))
+        cell.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.5)).click()
+
+        // Return opens the edit sheet for the selected meal (contextMenu(forSelectionType:) primaryAction).
+        app.typeKey(.enter, modifierFlags: [])
+        let cancel = app.sheets.firstMatch.buttons["Cancelar"]
+        XCTAssertTrue(cancel.waitForExistence(timeout: 10))
+        cancel.click()
+        XCTAssertTrue(name.waitForExistence(timeout: 10))
+
+        // ⌫ on the still-selected row opens the (non-undoable) delete confirmation; confirming removes it.
+        app.typeKey(.delete, modifierFlags: [])
+        let confirmDelete = app.sheets.firstMatch.buttons["Delete Meal"]
+        XCTAssertTrue(confirmDelete.waitForExistence(timeout: 10))
+        confirmDelete.click()
+        XCTAssertTrue(name.waitForNonExistence(timeout: 10))
+    }
+
     func testNextPeriodMovesBudgetToNextMonth() throws {
         let app = launchApp()
         XCTAssertTrue(app.windows.firstMatch.waitForExistence(timeout: 15))
