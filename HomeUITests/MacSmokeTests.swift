@@ -521,6 +521,8 @@ final class MacSmokeTests: XCTestCase {
     ]
 
     private func runAccessibilityAudit(on app: XCUIApplication, appearance: String) throws {
+        // Resolved up front: the audit handler must be Sendable, so it can't capture `app`.
+        let toolbarExclusions = Self.toolbarHitRegionExclusions.filter { app.toolbars.buttons[$0].exists }
         try app.performAccessibilityAudit { issue in
             // The toolbar's circular "Suggest Week" / "New Expense" / "Show Inspector"
             // glyph buttons are 24x24pt by design (matching every other Mac toolbar icon in
@@ -531,8 +533,7 @@ final class MacSmokeTests: XCTestCase {
             if issue.auditType == .hitRegion, issue.element?.elementType == .button,
                issue.element?.frame.width ?? 0 < 44, issue.element?.frame.height ?? 0 < 44,
                let label = issue.element?.label,
-               Self.toolbarHitRegionExclusions.contains(label),
-               app.toolbars.buttons[label].exists {
+               toolbarExclusions.contains(label) {
                 return false
             }
             return true
