@@ -30,8 +30,8 @@ struct MacPetDetailView: View {
         }
         .gradientCanvas()
         .onChange(of: photoItem) { _, item in
-            guard let item else { return }
             uploadTask?.cancel()
+            guard let item else { return }
             uploadTask = Task { await uploadPhoto(item) }
         }
         .onDisappear { uploadTask?.cancel() }
@@ -139,6 +139,7 @@ struct MacPetDetailView: View {
         defer {
             isUploadingPhoto = false
             photoItem = nil
+            uploadTask = nil
         }
         do {
             guard let data = try await item.loadTransferable(type: Data.self) else {
