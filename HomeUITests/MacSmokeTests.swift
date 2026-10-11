@@ -353,19 +353,55 @@ final class MacSmokeTests: XCTestCase {
         let app = launchApp()
         XCTAssertTrue(app.windows.firstMatch.waitForExistence(timeout: 15))
         app.typeKey("5", modifierFlags: .command)
-        // Plain SwiftUI `Text` on macOS keeps the AXStaticText role but exposes its
-        // content via `value`, not `label` (confirmed against `BudgetHeroCard`, whose
-        // `.accessibilityElement(children: .ignore)` + `.accessibilityLabel` combo does
-        // set `label` but reclassifies the element away from `.staticText`). So these
-        // day headers — plain `Text`, no accessibility overrides — are matched on `value`.
-        for day in ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"] {
-            XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "value BEGINSWITH %@", day)).firstMatch
-                .waitForExistence(timeout: 10), day)
+        // Day headers carry their own `mealDayHeader-<Weekday.rawValue>` identifier (added
+        // instead of matching on `value BEGINSWITH <day name>`, which could also match an
+        // unrelated row whose text happens to start with the same Spanish day name).
+        for (day, rawValue) in [
+            ("Lunes", 1), ("Martes", 2), ("Miércoles", 3), ("Jueves", 4),
+            ("Viernes", 5), ("Sábado", 6), ("Domingo", 7)
+        ] {
+            let header = app.staticTexts["mealDayHeader-\(rawValue)"]
+            XCTAssertTrue(header.waitForExistence(timeout: 10), day)
+            XCTAssertTrue((header.value as? String)?.hasPrefix(day) ?? false, day)
         }
         XCTAssertTrue(app.buttons["mealSlot-7-dinner"].exists)
         app.menuBars.menuBarItems["Go"].click()
         XCTAssertFalse(app.menuBars.menuItems["Next Period"].isEnabled)
         app.typeKey(.escape, modifierFlags: [])
+    }
+
+    func testMealsCatalogKeyboardPath() throws {
+        let app = launchApp()
+        XCTAssertTrue(app.windows.firstMatch.waitForExistence(timeout: 15))
+        app.typeKey("5", modifierFlags: .command)
+        let showInspector = app.toolbars.buttons["Show Inspector"]
+        XCTAssertTrue(showInspector.waitForExistence(timeout: 10))
+        showInspector.click()
+
+        // The catalog row's title lives inside a plain Button, so AX exposes it as a button, not static text.
+        let name = app.outlines.buttons["Lentejas"]
+        XCTAssertTrue(name.waitForExistence(timeout: 10))
+
+        // Same trailing-edge click trick as the other Mac lists: select the row without
+        // triggering the row's own Button (which opens the edit sheet as the primary action).
+        let cell = app.outlineRows.containing(.button, identifier: "Lentejas").firstMatch
+        XCTAssertTrue(cell.waitForExistence(timeout: 10))
+        cell.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.5)).click()
+
+        // Return opens the edit sheet for the selected meal (contextMenu(forSelectionType:) primaryAction).
+        app.typeKey(.enter, modifierFlags: [])
+        let cancel = app.buttons["Cancelar"].firstMatch
+        XCTAssertTrue(cancel.waitForExistence(timeout: 10))
+        cancel.click()
+        XCTAssertTrue(name.waitForExistence(timeout: 10))
+
+        // ⌫ on the still-selected row opens the (non-undoable) delete confirmation; confirming removes it.
+        app.typeKey(.delete, modifierFlags: [])
+        // Scoped to the alert sheet: the Touch Bar mirrors the same button and isn't clickable.
+        let confirmDelete = app.sheets.buttons["Delete Meal"].firstMatch
+        XCTAssertTrue(confirmDelete.waitForExistence(timeout: 10))
+        confirmDelete.click()
+        XCTAssertTrue(name.waitForNonExistence(timeout: 10))
     }
 
     func testNextPeriodMovesBudgetToNextMonth() throws {
@@ -376,10 +412,17 @@ final class MacSmokeTests: XCTestCase {
         XCTAssertTrue(title.waitForExistence(timeout: 10))
         let current = try XCTUnwrap(title.value as? String)
         XCTAssertFalse(current.isEmpty)
-        app.typeKey("]", modifierFlags: .command)
+        // ⌘] / ⌘[ are the app's real shortcuts (unchanged for end users — verified above by
+        // clicking the same menu item), but on macOS 27 a synthetic `typeKey` for the bracket
+        // keys plus ⌘ no longer reaches the menu bar's key equivalent under XCUITest (it still
+        // does on macOS 26.6 in CI). Driving the menu directly keeps this test meaningful and
+        // OS-version-independent, matching this file's other key-equivalent workarounds.
+        app.menuBars.menuBarItems["Go"].click()
+        app.menuBars.menuItems["Next Period"].click()
         let changed = XCTNSPredicateExpectation(predicate: NSPredicate(format: "value != %@", current), object: title)
         XCTAssertEqual(XCTWaiter().wait(for: [changed], timeout: 10), .completed)
-        app.typeKey("[", modifierFlags: .command)
+        app.menuBars.menuBarItems["Go"].click()
+        app.menuBars.menuItems["Previous Period"].click()
         XCTAssertTrue(waitForValue(title, current, timeout: 10))
     }
 
@@ -439,6 +482,102 @@ final class MacSmokeTests: XCTestCase {
 
         app.menuBars.menuBarItems["File"].click()
         XCTAssertTrue(app.menuBars.menuItems["New Task"].isEnabled)
+        app.typeKey(.escape, modifierFlags: [])
+    }
+
+    func testAccessibilityAuditAcrossFeaturesLightAndDark() throws {
+        for appearance in ["Light", "Dark"] {
+            let app = launchApp(appearance: appearance)
+            XCTAssertTrue(app.windows.firstMatch.waitForExistence(timeout: 15))
+            for shortcut in ["1", "2", "3", "4", "5", "6"] {
+                app.typeKey(shortcut, modifierFlags: .command)
+                XCTAssertTrue(app.windows.firstMatch.waitForExistence(timeout: 10))
+                try runAccessibilityAudit(on: app, appearance: appearance)
+            }
+
+            app.menuBars.menuBarItems["File"].click()
+            app.menuBars.menuItems["New Pet…"].click()
+            let name = app.sheets.firstMatch.textFields["petName"]
+            XCTAssertTrue(name.waitForExistence(timeout: 10))
+            name.click()
+            name.typeText("Mishi")
+            app.sheets.firstMatch.textFields["petBreed"].click()
+            app.sheets.firstMatch.typeText("Tabby")
+            app.sheets.firstMatch.buttons["Add"].click()
+            let row = app.outlines.staticTexts["Mishi"]
+            XCTAssertTrue(row.waitForExistence(timeout: 10))
+            row.click()
+            XCTAssertTrue(window(app, titled: "Mishi").waitForExistence(timeout: 10))
+            try runAccessibilityAudit(on: app, appearance: appearance)
+
+            app.terminate()
+        }
+    }
+
+    /// Toolbar glyph buttons whose 24x24pt hit region is excluded from the audit below —
+    /// identified by the exact label SwiftUI's `Label` gives them, matched only against
+    /// buttons that actually live in a toolbar (never a sheet/row/list button that happens
+    /// to share a name).
+    private static let toolbarHitRegionExclusions: Set<String> = [
+        "Suggest Week", "New Expense", "Show Inspector", "Hide Inspector",
+    ]
+
+    private func runAccessibilityAudit(on app: XCUIApplication, appearance: String) throws {
+        // Resolved up front: the audit handler must be Sendable, so it can't capture `app`.
+        let toolbarExclusions = Self.toolbarHitRegionExclusions.filter { app.toolbars.buttons[$0].exists }
+        try app.performAccessibilityAudit { issue in
+            // The toolbar's circular "Suggest Week" / "New Expense" / "Show Inspector"
+            // glyph buttons are 24x24pt by design (matching every other Mac toolbar icon in
+            // this app) — smaller than the audit's 44x44pt touch-target guidance, which is an
+            // iOS/trackpad-touch rule, not a macOS pointer-driven HIG requirement. Scoped to
+            // exactly those toolbar buttons (by label, and only if they're really inside a
+            // toolbar) so a same-sized icon button elsewhere (sheet/row/list) is never masked.
+            if issue.auditType == .hitRegion, issue.element?.elementType == .button,
+               issue.element?.frame.width ?? 0 < 44, issue.element?.frame.height ?? 0 < 44,
+               let label = issue.element?.label,
+               toolbarExclusions.contains(label) {
+                return false
+            }
+            return true
+        }
+    }
+
+    func testGoMenuItemTitleCaseAndDisabledNotHidden() throws {
+        let app = launchApp()
+        XCTAssertTrue(app.windows.firstMatch.waitForExistence(timeout: 15))
+        app.typeKey("1", modifierFlags: .command)
+        XCTAssertTrue(app.windows.firstMatch.waitForExistence(timeout: 10))
+
+        app.menuBars.menuBarItems["Go"].click()
+        // Title Case throughout, as shipped: no item is all-lowercase or ALL-CAPS.
+        let goTitles = ["Today", "Tasks", "Shopping", "Stock", "Meals", "Budget",
+                         "Previous Period", "Next Period"]
+        for title in goTitles {
+            let item = app.menuBars.menuItems[title]
+            XCTAssertTrue(item.exists, title)
+            // Exact-case lookup above already proves the title; also rule out a lowercase or
+            // ALL-CAPS first word slipping back in on a future rename.
+            let firstWord = title.split(separator: " ").first.map(String.init) ?? title
+            XCTAssertEqual(firstWord, firstWord.prefix(1).uppercased() + firstWord.dropFirst(), title)
+        }
+        // Today's own window has no period to navigate: the item must stay in the menu,
+        // disabled, not vanish (HIG: unavailable commands are disabled, never hidden).
+        let next = app.menuBars.menuItems["Next Period"]
+        XCTAssertTrue(next.exists)
+        XCTAssertFalse(next.isEnabled)
+        app.typeKey(.escape, modifierFlags: [])
+    }
+
+    func testTodayTaskRowContextMenuItems() throws {
+        let app = launchApp()
+        XCTAssertTrue(app.windows.firstMatch.waitForExistence(timeout: 15))
+        app.typeKey("1", modifierFlags: .command)
+        let row = app.staticTexts["Fixture Change Filter"]
+        XCTAssertTrue(row.waitForExistence(timeout: 10))
+        row.rightClick()
+        for title in ["Done", "Snooze", "Section", "Add to calendar", "Delete"] {
+            XCTAssertTrue(app.menuItems[title].waitForExistence(timeout: 5), title)
+        }
         app.typeKey(.escape, modifierFlags: [])
     }
 

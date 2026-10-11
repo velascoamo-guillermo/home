@@ -32,6 +32,17 @@ extension SupabaseStore {
 
     /// Runs an undo/redo step, surfacing a failure as a dismissible `actionError` instead of
     /// swallowing it — a failed step must not look like it succeeded to the caller.
+    ///
+    /// HIG decision (minimal, documented rather than a full retry affordance): a failed Undo
+    /// or Redo already has no system-standard retry UI on macOS — `UndoManager` offers no way
+    /// to re-arm a stack entry that already ran. Re-registering the same step for a one-tap
+    /// retry would risk a stale, silently-stacking Undo/Redo entry if the underlying failure is
+    /// persistent (e.g. offline). Instead: (1) the alert's message names the failure so the
+    /// person can act (retry their connection, etc.), and (2) `DeletionUndo.Step.run` removes
+    /// the speculative inverse registration on failure so the opposite stack never offers a
+    /// stale "Undo"/"Redo" for a change that never actually happened — see
+    /// `DeletionUndoTests.failedUndoDoesNotRegisterRedo`. The person can re-trigger the same
+    /// delete/restore from the feature UI itself, which re-enters this same undo-aware path.
     private func run(_ action: (SupabaseStore) async throws -> Void) async -> Bool {
         do {
             try await action(self)

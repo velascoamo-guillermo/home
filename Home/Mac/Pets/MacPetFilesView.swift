@@ -30,17 +30,10 @@ struct MacPetFilesView: View {
                 Task { await importFiles(urls) }
                 return true
             } isTargeted: { isTargeted = $0 }
-            .alert("Some Files Weren't Added", isPresented: Binding(
-                get: { failureMessage != nil },
-                set: { if !$0 { failureMessage = nil } }
-            )) {
-                Button("OK") {}
-            } message: {
-                Text(failureMessage ?? "")
-            }
+            .importFailureAlert($failureMessage)
     }
 
-    func importFiles(_ urls: [URL]) async {
+    private func importFiles(_ urls: [URL]) async {
         isImporting = true
         let failures = await PetFileImporter.importFiles(urls, petID: pet.id, into: store)
         isImporting = false
