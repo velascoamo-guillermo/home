@@ -512,14 +512,27 @@ final class MacSmokeTests: XCTestCase {
         }
     }
 
+    /// Toolbar glyph buttons whose 24x24pt hit region is excluded from the audit below —
+    /// identified by the exact label SwiftUI's `Label` gives them, matched only against
+    /// buttons that actually live in a toolbar (never a sheet/row/list button that happens
+    /// to share a name).
+    private static let toolbarHitRegionExclusions: Set<String> = [
+        "Suggest Week", "New Expense", "Show Inspector", "Hide Inspector",
+    ]
+
     private func runAccessibilityAudit(on app: XCUIApplication, appearance: String) throws {
         try app.performAccessibilityAudit { issue in
             // The toolbar's circular "Suggest Week" / "New Expense" / "Show Inspector"
             // glyph buttons are 24x24pt by design (matching every other Mac toolbar icon in
             // this app) — smaller than the audit's 44x44pt touch-target guidance, which is an
-            // iOS/trackpad-touch rule, not a macOS pointer-driven HIG requirement.
+            // iOS/trackpad-touch rule, not a macOS pointer-driven HIG requirement. Scoped to
+            // exactly those toolbar buttons (by label, and only if they're really inside a
+            // toolbar) so a same-sized icon button elsewhere (sheet/row/list) is never masked.
             if issue.auditType == .hitRegion, issue.element?.elementType == .button,
-               issue.element?.frame.width ?? 0 < 44, issue.element?.frame.height ?? 0 < 44 {
+               issue.element?.frame.width ?? 0 < 44, issue.element?.frame.height ?? 0 < 44,
+               let label = issue.element?.label,
+               Self.toolbarHitRegionExclusions.contains(label),
+               app.toolbars.buttons[label].exists {
                 return false
             }
             return true
