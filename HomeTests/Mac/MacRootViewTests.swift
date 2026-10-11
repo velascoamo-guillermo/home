@@ -11,23 +11,26 @@ import SwiftUI
         #expect(!MacRootView.shouldPresentActionError(controlActiveState: .inactive))
     }
 
-    @Test("a feature change leaves nothing for a stale availableCommands snapshot to request")
+    @Test("menu enablement must read the live availableCommands value, not a stale pre-change snapshot")
     func featureChangeClearsRequestableCommands() {
         // `macWindow` holds a stable `MacWindowModel` reference across a feature/selection
         // change, so a `Commands` menu keyed only on that reference (mutated in place) can go
-        // stale until some unrelated focus change forces SwiftUI to re-evaluate it. `MacAppCommands`
-        // now also reads a dedicated `FocusedValues.macAvailableCommands` entry, mirrored by
-        // `MacRootView` from `model.availableCommands` on every render, so the menu always sees
-        // the current value. At the model layer, this is the invariant that mirror must preserve:
-        // a stale snapshot taken just before a feature change must never still satisfy `request`.
+        // stale until some unrelated focus change forces SwiftUI to re-evaluate it. The fix
+        // (`FocusedValues.macAvailableCommands`, mirrored by `MacRootView` from
+        // `model.availableCommands` on every render) means `MacAppCommands` must always be fed
+        // the *current* value, never a snapshot taken before the change. `isCommandEnabled` is
+        // the pure decision `MacAppCommands` makes from whatever `Set` it is handed — this test
+        // feeds it both the live, post-change value and the stale pre-change snapshot to prove
+        // the two disagree, so swapping the fresh feed back for a stale one (i.e. reverting to
+        // reading `window?.availableCommands` directly) would flip these assertions.
         let model = MacWindowModel(selection: .tasks)
         model.availableCommands = [.markDone]
         let staleSnapshot = model.availableCommands
 
         model.selection = .budget
 
-        #expect(model.availableCommands.isEmpty)
-        #expect(!model.availableCommands.contains(where: staleSnapshot.contains))
+        #expect(!MacAppCommands.isCommandEnabled(.markDone, availableCommands: model.availableCommands))
+        #expect(MacAppCommands.isCommandEnabled(.markDone, availableCommands: staleSnapshot))
     }
 }
 #endif

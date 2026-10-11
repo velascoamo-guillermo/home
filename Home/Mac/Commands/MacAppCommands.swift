@@ -24,7 +24,7 @@ struct MacAppCommands: Commands {
             Divider()
             ForEach(MacFeatureCommand.allCases, id: \.self) { command in
                 Button(command.title) { window?.request(command) }
-                    .disabled(!(availableCommands?.contains(command) ?? false))
+                    .disabled(!Self.isCommandEnabled(command, availableCommands: availableCommands))
             }
             Divider()
             Button(window == nil ? "New Window" : "Open in New Window") {
@@ -95,6 +95,14 @@ struct MacAppCommands: Commands {
     /// without this gate they can render enabled during the loading spinner.
     private var shellReady: Bool {
         Self.shellReady(window: window, didFinishLoading: bootstrap.didFinishLoading)
+    }
+
+    /// Reads the dedicated `\.macAvailableCommands` focused value (mirrored by `MacRootView`
+    /// from `model.availableCommands` on every render) — never `window?.availableCommands`,
+    /// which stays keyed to the unchanged `MacWindowModel` reference and can go stale after a
+    /// feature/selection change until some unrelated focus change forces a re-render.
+    static func isCommandEnabled(_ command: MacFeatureCommand, availableCommands: Set<MacFeatureCommand>?) -> Bool {
+        availableCommands?.contains(command) ?? false
     }
 
     static func shellReady(window: MacWindowModel?, didFinishLoading: Bool) -> Bool {
