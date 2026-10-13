@@ -151,6 +151,7 @@ platform :mac do
       only_testing: ["HomeTests"],
       output_directory: "fastlane/test_output_mac",
       output_types: "junit",
+      result_bundle: true,
       xcargs: "CODE_SIGN_IDENTITY=- CODE_SIGN_STYLE=Manual DEVELOPMENT_TEAM= PROVISIONING_PROFILE_SPECIFIER= CODE_SIGN_ENTITLEMENTS= ENABLE_HARDENED_RUNTIME=NO"
     )
   end
