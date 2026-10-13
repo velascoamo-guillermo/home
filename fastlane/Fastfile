@@ -209,8 +209,10 @@ platform :mac do
     build_mac_app(
       project: ENV["PROJECT"],
       scheme: ENV["SCHEME"],
-      # The multiplatform scheme defaults to an iOS destination; archive for macOS explicitly.
+      # The multiplatform scheme defaults to iOS; gym only packages a .pkg (not an .ipa)
+      # for multiplatform projects when sdk is macosx.
       destination: "generic/platform=macOS",
+      sdk: "macosx",
       export_method: "app-store",
       output_directory: "fastlane/build_output_mac",
       output_name: "Casita",
