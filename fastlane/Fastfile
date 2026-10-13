@@ -209,6 +209,8 @@ platform :mac do
     build_mac_app(
       project: ENV["PROJECT"],
       scheme: ENV["SCHEME"],
+      # The multiplatform scheme defaults to an iOS destination; archive for macOS explicitly.
+      destination: "generic/platform=macOS",
       export_method: "app-store",
       output_directory: "fastlane/build_output_mac",
       output_name: "Casita",
