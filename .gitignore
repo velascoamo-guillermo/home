@@ -7,6 +7,8 @@ fastlane/test_output_ui/
 fastlane/report.xml
 Config.xcconfig
 fastlane/build_output/
+fastlane/test_output_mac/
+fastlane/build_output_mac/
 .claude/worktrees/
 .claude/
 .codegraph/
