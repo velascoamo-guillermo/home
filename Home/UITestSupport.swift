@@ -61,6 +61,13 @@ enum UITestSupport {
         let lentejas = Meal(title: "Lentejas")
         try? await store.addMeal(lentejas)
 
+        let toby = Pet(name: "Toby", type: "Dog", breed: "Beagle")
+        try? await store.addPet(toby)
+        let vacuna = PetEvent(
+            petId: toby.id, date: .now, title: "Vacuna", category: .vaccine, notes: ""
+        )
+        try? await store.addEvent(vacuna)
+
         try? await store.seedBudgetDefaults()
     }
 }

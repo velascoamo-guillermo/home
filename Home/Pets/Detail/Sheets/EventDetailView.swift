@@ -4,7 +4,11 @@ import SwiftUI
 struct EventDetailView: View {
     let event: PetEvent
     let pet: Pet
+    /// Mac sheets need a visible dismiss button (Escape alone isn't discoverable); the Today
+    /// inspector embeds this view without one.
+    var showsDoneButton = false
     @Environment(SupabaseStore.self) private var store
+    @Environment(\.dismiss) private var dismiss
     @State private var showFilePicker = false
     @State private var selectedFile: PetFile? = nil
 
@@ -40,6 +44,11 @@ struct EventDetailView: View {
             }
             .navigationTitle(event.title)
             .inlineNavigationTitle()
+            .toolbar {
+                if showsDoneButton {
+                    ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } }
+                }
+            }
             .sheet(isPresented: $showFilePicker) {
                 FilePickerCoordinator { data, ext in
                     try await store.uploadFile(data: data, ext: ext, petId: pet.id,

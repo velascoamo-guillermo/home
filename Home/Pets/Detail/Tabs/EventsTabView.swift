@@ -31,6 +31,12 @@ struct EventsTabView: View {
             }
         }
         .sheet(isPresented: $showAdd) { AddEventSheet(petId: pet.id) }
-        .sheet(item: $selectedEvent) { event in EventDetailView(event: event, pet: pet) }
+        .sheet(item: $selectedEvent) { event in
+            #if os(macOS)
+            EventDetailView(event: event, pet: pet, showsDoneButton: true)
+            #else
+            EventDetailView(event: event, pet: pet)
+            #endif
+        }
     }
 }

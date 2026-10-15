@@ -22,5 +22,6 @@ struct EventRow: View {
                 .foregroundStyle(Palette.inkSecondary)
                 .accessibilityHidden(true)
         }
+        .contentShape(.rect)
     }
 }
