@@ -436,6 +436,24 @@ final class MacSmokeTests: XCTestCase {
         XCTAssertTrue(app.buttons["Add member"].waitForExistence(timeout: 10))
     }
 
+    func testEventDetailSheetHasDoneButton() throws {
+        let app = launchApp()
+        XCTAssertTrue(app.windows.firstMatch.waitForExistence(timeout: 15))
+        let row = app.outlines.staticTexts["Toby"]
+        XCTAssertTrue(row.waitForExistence(timeout: 10))
+        row.click()
+        let pet = window(app, titled: "Toby")
+        XCTAssertTrue(pet.waitForExistence(timeout: 10))
+        pet.radioButtons["Events"].click()
+        let event = pet.buttons.matching(NSPredicate(format: "label CONTAINS %@", "Vacuna")).firstMatch
+        XCTAssertTrue(event.waitForExistence(timeout: 10))
+        event.click()
+        let done = app.sheets.firstMatch.buttons["Done"]
+        XCTAssertTrue(done.waitForExistence(timeout: 10))
+        done.click()
+        XCTAssertTrue(waitForCount(app.sheets, 0, timeout: 10))
+    }
+
     func testNewPetAppearsInSidebarWithSections() throws {
         let app = launchApp()
         XCTAssertTrue(app.windows.firstMatch.waitForExistence(timeout: 15))
