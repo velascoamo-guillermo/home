@@ -75,7 +75,7 @@ struct MacTasksView: View {
         }
         .sheet(item: $selectedEvent) { event in
             if let pet = store.pets.first(where: { $0.id == event.petId }) {
-                EventDetailView(event: event, pet: pet)
+                EventDetailView(event: event, pet: pet, showsDoneButton: true)
             }
         }
         .onChange(of: selectedTask?.id, initial: true) { _, id in
