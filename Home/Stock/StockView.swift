@@ -94,7 +94,12 @@ struct StockView: View {
         .contextMenu { StockContextMenu(product: product, onDeleteRequest: { productToDelete = $0 }) }
         .swipeActions(edge: .leading, allowsFullSwipe: true) {
             Button {
-                Task { try? await store.replenish(product) }
+                Task {
+                    // The full-swipe dismiss runs ~0.4s; mutating before it ends leaves an empty slot for
+                    // the whole dismiss. Withholding the change until it settles roughly halves the gap.
+                    try? await Task.sleep(for: .milliseconds(450))
+                    try? await store.replenish(product)
+                }
             } label: { Label("Bought", systemImage: "cart.fill") }
             .tint(.green)
         }
