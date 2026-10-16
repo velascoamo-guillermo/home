@@ -40,7 +40,8 @@ extension View {
     /// makes NSToolbar throw when the detail column switches to it, so hosted views skip theirs.
     func iOSSearchable(text: Binding<String>, prompt: String) -> some View {
         #if os(iOS)
-        searchable(text: text, prompt: prompt)
+        searchable(text: text, placement: .toolbar, prompt: prompt)
+            .searchToolbarBehavior(.minimize)
         #else
         self
         #endif

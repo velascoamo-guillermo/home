@@ -106,6 +106,24 @@ final class SmokeTests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Fixture Milk"].waitForExistence(timeout: 10))
     }
 
+    func testStockSearchLivesInToolbar() throws {
+        let app = launchApp()
+        XCTAssertTrue(app.buttons["Menu"].waitForExistence(timeout: 15))
+        openHubScreen(app, row: "Stock")
+        XCTAssertTrue(app.staticTexts["Fixture Milk"].waitForExistence(timeout: 10))
+        XCTAssertFalse(app.searchFields["Search stock"].exists)
+
+        let searchButton = app.navigationBars["Stock"].buttons["Search"]
+        XCTAssertTrue(searchButton.waitForExistence(timeout: 5))
+        searchButton.tap()
+
+        let field = app.searchFields["Search stock"]
+        XCTAssertTrue(field.waitForExistence(timeout: 5))
+        field.typeText("Coffee")
+        XCTAssertTrue(app.staticTexts["Fixture Coffee"].waitForExistence(timeout: 5))
+        XCTAssertTrue(waitForDisappearance(app.staticTexts["Fixture Milk"], timeout: 10))
+    }
+
     func testAddProductWithLevel() throws {
         let app = launchApp()
         XCTAssertTrue(app.buttons["Menu"].waitForExistence(timeout: 15))
