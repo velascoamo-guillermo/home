@@ -103,5 +103,29 @@ import Foundation
         try await F.waitUntil { store.budgetExpenses.count == 1 }
         #expect(store.budgetExpenses.first?.amountCents == 2_000)
     }
+
+    @Test("undoing a meal deletion restores links and slots, redo deletes again")
+    func mealUndoRedo() async throws {
+        let store = await F.makeStore()
+        let meal = Meal(title: "Lentils")
+        let product = StockProduct(name: "Lentils", level: .full)
+        try await store.addProduct(product)
+        try await store.addMeal(meal)
+        try await store.setMealProducts(for: meal, links: [MealEntry.Link(product: product)])
+        try await store.assign(mealId: meal.id, day: 3, slot: .dinner)
+        let manager = manager()
+        manager.beginUndoGrouping()
+        try await store.deleteMeal(meal, undoManager: manager)
+        manager.endUndoGrouping()
+        #expect(manager.undoMenuItemTitle == "Undo Delete Meal")
+        #expect(store.meals.isEmpty && store.mealProducts.isEmpty && store.menuEntries.isEmpty)
+        manager.undo()
+        try await F.waitUntil { store.meals.count == 1 }
+        #expect(store.mealProducts.count == 1)
+        #expect(store.menuEntries.count == 1)
+        manager.redo()
+        try await F.waitUntil { store.meals.isEmpty }
+        #expect(store.mealProducts.isEmpty && store.menuEntries.isEmpty)
+    }
 }
 #endif

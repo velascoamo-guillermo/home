@@ -22,6 +22,18 @@ extension SupabaseStore {
             redo: { [weak self] in await self?.run { try await $0.deleteProduct(product) } ?? false })
     }
 
+    func deleteMeal(_ meal: Meal, undoManager: UndoManager?) async throws {
+        let links = mealProducts.filter { $0.mealId == meal.id }
+        let entries = menuEntries.filter { $0.mealId == meal.id }
+        try await deleteMeal(meal)
+        DeletionUndo.register(
+            on: undoManager, named: "Delete Meal",
+            undo: { [weak self] in
+                await self?.run { try await $0.restoreMeal(meal, products: links, entries: entries) } ?? false
+            },
+            redo: { [weak self] in await self?.run { try await $0.deleteMeal(meal) } ?? false })
+    }
+
     func deleteBudgetExpense(_ expense: BudgetExpense, undoManager: UndoManager?) async throws {
         try await deleteBudgetExpense(expense)
         DeletionUndo.register(
