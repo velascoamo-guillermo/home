@@ -83,11 +83,20 @@ struct BudgetView: View {
             }
         }
         .flatListStyle()
-        .contentMargins(.bottom, 88, for: .scrollContent)
         .refreshable { await store.refreshFromLocal() }
         .navigationTitle("Budget")
         .inlineNavigationTitle()
         .toolbar {
+            ToolbarItem(placement: .trailingBar) {
+                Button {
+                    editor = ExpenseDraft(
+                        payerId: ExpenseDraft.defaultPayer(stored: lastPayerId, members: store.budgetMembers),
+                        date: ExpenseDraft.defaultDate(viewing: month, today: .now, calendar: .current))
+                } label: {
+                    Image(systemName: "plus")
+                }
+                .accessibilityLabel("Add expense")
+            }
             ToolbarItem(placement: .trailingBar) {
                 NavigationLink {
                     BudgetSettingsView(month: month)
@@ -96,21 +105,6 @@ struct BudgetView: View {
                 }
                 .accessibilityLabel("Budget settings")
             }
-        }
-        .overlay(alignment: .bottomTrailing) {
-            Button {
-                editor = ExpenseDraft(
-                    payerId: ExpenseDraft.defaultPayer(stored: lastPayerId, members: store.budgetMembers),
-                    date: ExpenseDraft.defaultDate(viewing: month, today: .now, calendar: .current))
-            } label: {
-                Image(systemName: "plus")
-                    .font(.title2.weight(.bold))
-                    .foregroundStyle(Palette.onAccent)
-                    .frame(width: 56, height: 56)
-                    .background(Palette.accent, in: .circle)
-            }
-            .accessibilityLabel("Add expense")
-            .padding(20)
         }
         .sheet(item: $editor) { draft in
             AddExpenseSheet(draft: draft)
