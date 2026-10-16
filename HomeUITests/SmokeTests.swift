@@ -254,6 +254,13 @@ final class SmokeTests: XCTestCase {
         XCTAssertTrue(waitForLabel(hero, "Lu owes Guille 5 euros", timeout: 10))
     }
 
+    func testAddExpenseButtonLivesInNavigationBar() throws {
+        let app = launchApp()
+        XCTAssertTrue(app.buttons["Menu"].waitForExistence(timeout: 15))
+        openHubScreen(app, row: "Budget")
+        XCTAssertTrue(app.navigationBars.buttons["Add expense"].waitForExistence(timeout: 10))
+    }
+
     func testOversizedExpenseShowsInlineErrorAndKeepsSheet() throws {
         let app = launchApp()
         XCTAssertTrue(app.buttons["Menu"].waitForExistence(timeout: 15))
