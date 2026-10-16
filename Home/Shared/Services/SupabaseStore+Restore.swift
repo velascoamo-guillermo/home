@@ -35,4 +35,55 @@ extension SupabaseStore {
         }
         await _sync?.sync(tables: [StockProduct.tableName])
     }
+
+    /// Reverses `deleteMeal`'s cascade. A week slot taken by another meal since the delete stays
+    /// with that newer choice, and a link whose product is gone is dropped rather than dangling.
+    func restoreMeal(_ meal: Meal, products: [MealProduct], entries: [MenuEntry]) async throws {
+        var restoredMeal = meal
+        restoredMeal.deletedAt = nil
+        restoredMeal.updatedAt = .now
+        try await _local?.upsert([restoredMeal], enqueue: true)
+        if let i = meals.firstIndex(where: { $0.id == restoredMeal.id }) {
+            meals[i] = restoredMeal
+        } else {
+            meals.append(restoredMeal)
+        }
+
+        let liveProductIDs = Set(stockProducts.map(\.id))
+        let links: [MealProduct] = products
+            .filter { liveProductIDs.contains($0.productId) }
+            .map { var l = $0; l.deletedAt = nil; l.updatedAt = .now; return l }
+        if !links.isEmpty {
+            try await _local?.upsert(links, enqueue: true)
+            for link in links {
+                if let i = mealProducts.firstIndex(where: { $0.id == link.id }) {
+                    mealProducts[i] = link
+                } else {
+                    mealProducts.append(link)
+                }
+            }
+        }
+
+        var restoredEntries: [MenuEntry] = []
+        for var entry in entries {
+            let taken = menuEntries.contains {
+                $0.id != entry.id && $0.dayOfWeek == entry.dayOfWeek && $0.slot == entry.slot
+            }
+            if taken { continue }
+            entry.deletedAt = nil
+            entry.updatedAt = .now
+            restoredEntries.append(entry)
+        }
+        if !restoredEntries.isEmpty {
+            try await _local?.upsert(restoredEntries, enqueue: true)
+            for entry in restoredEntries {
+                if let i = menuEntries.firstIndex(where: { $0.id == entry.id }) {
+                    menuEntries[i] = entry
+                } else {
+                    menuEntries.append(entry)
+                }
+            }
+        }
+        await _sync?.sync(tables: [Meal.tableName, MealProduct.tableName, MenuEntry.tableName])
+    }
 }

@@ -103,5 +103,69 @@ import Foundation
         try await F.waitUntil { store.budgetExpenses.count == 1 }
         #expect(store.budgetExpenses.first?.amountCents == 2_000)
     }
+
+    @Test("undoing a meal deletion restores links and slots, redo deletes again")
+    func mealUndoRedo() async throws {
+        let store = await F.makeStore()
+        let meal = Meal(title: "Lentils")
+        let product = StockProduct(name: "Lentils", level: .full)
+        try await store.addProduct(product)
+        try await store.addMeal(meal)
+        try await store.setMealProducts(for: meal, links: [MealEntry.Link(product: product)])
+        try await store.assign(mealId: meal.id, day: 3, slot: .dinner)
+        let manager = manager()
+        manager.beginUndoGrouping()
+        try await store.deleteMeal(meal, undoManager: manager)
+        manager.endUndoGrouping()
+        #expect(manager.undoMenuItemTitle == "Undo Delete Meal")
+        #expect(store.meals.isEmpty && store.mealProducts.isEmpty && store.menuEntries.isEmpty)
+        manager.undo()
+        try await F.waitUntil { store.meals.count == 1 }
+        #expect(store.mealProducts.count == 1)
+        #expect(store.mealProducts.first?.productId == product.id)
+        #expect(store.menuEntries.count == 1)
+        #expect(store.menuEntries.first?.dayOfWeek == 3)
+        #expect(store.menuEntries.first?.slot == .dinner)
+        manager.redo()
+        try await F.waitUntil { store.meals.isEmpty }
+        #expect(store.mealProducts.isEmpty && store.menuEntries.isEmpty)
+        manager.undo()
+        try await F.waitUntil { store.meals.count == 1 }
+        #expect(store.mealProducts.count == 1 && store.menuEntries.count == 1)
+    }
+
+    @Test("redo re-snapshots the meal, so edits made after an undo survive the next undo")
+    func mealRedoResnapshots() async throws {
+        let url = F.tempURL()
+        let store = await F.makeStore(url: url)
+        let meal = Meal(title: "Lentils")
+        let oldProduct = StockProduct(name: "Lentils", level: .full)
+        let newProduct = StockProduct(name: "Rice", level: .full)
+        try await store.addProduct(oldProduct)
+        try await store.addProduct(newProduct)
+        try await store.addMeal(meal)
+        try await store.setMealProducts(for: meal, links: [MealEntry.Link(product: oldProduct)])
+        let manager = manager()
+        manager.beginUndoGrouping()
+        try await store.deleteMeal(meal, undoManager: manager)
+        manager.endUndoGrouping()
+        manager.undo()
+        try await F.waitUntil { store.meals.count == 1 }
+
+        var edited = try #require(store.meals.first)
+        edited.title = "Rice and lentils"
+        try await store.updateMeal(edited)
+        try await store.setMealProducts(for: edited, links: [MealEntry.Link(product: newProduct)])
+
+        manager.redo()
+        try await F.waitUntil { store.meals.isEmpty }
+        manager.undo()
+        try await F.waitUntil { store.meals.count == 1 }
+        #expect(store.meals.first?.title == "Rice and lentils")
+        #expect(store.mealProducts.map(\.productId) == [newProduct.id])
+        let reloaded = await F.makeStore(url: url)
+        #expect(reloaded.meals.first?.title == "Rice and lentils")
+        #expect(reloaded.mealProducts.map(\.productId) == [newProduct.id])
+    }
 }
 #endif

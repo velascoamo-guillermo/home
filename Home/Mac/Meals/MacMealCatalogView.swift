@@ -3,6 +3,7 @@ import SwiftUI
 
 struct MacMealCatalogView: View {
     @Environment(SupabaseStore.self) private var store
+    @Environment(\.undoManager) private var undoManager
     @State private var editing: Meal?
     @State private var mealToDelete: Meal?
     @State private var selection: Meal.ID?
@@ -57,7 +58,7 @@ struct MacMealCatalogView: View {
             titleVisibility: .visible,
             presenting: mealToDelete
         ) { meal in
-            Button("Delete Meal", role: .destructive) { Task { try? await store.deleteMeal(meal) } }
+            Button("Delete Meal", role: .destructive) { Task { try? await store.deleteMeal(meal, undoManager: undoManager) } }
         } message: { _ in
             Text("It is also removed from every day of the week.")
         }
