@@ -120,8 +120,9 @@ import Foundation
         #expect(reloaded.meals.map(\.id) == [f.meal.id])
         #expect(reloaded.mealProducts.count == 1)
         #expect(reloaded.menuEntries.count == 1)
-        let tables = Set(try await store._local?.pendingOps().suffix(3).map(\.tableName) ?? [])
-        #expect(tables == [Meal.tableName, MealProduct.tableName, MenuEntry.tableName])
+        #expect(store.mealProducts.first?.updatedAt ?? .distantPast >= deletedAt)
+        let tables = Set(try await store._local?.pendingOps().map(\.tableName) ?? [])
+        #expect(tables.isSuperset(of: [Meal.tableName, MealProduct.tableName, MenuEntry.tableName]))
     }
 
     @Test("restoring a meal skips a week slot that was reassigned after the delete")

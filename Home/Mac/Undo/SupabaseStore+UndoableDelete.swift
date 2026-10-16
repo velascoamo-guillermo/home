@@ -1,6 +1,26 @@
 #if os(macOS)
 import Foundation
 
+/// Meal plus its cascade rows, shared by the undo and redo closures. Redo re-takes it from the
+/// live store so edits made between an undo and the next redo are not lost on the following undo.
+@MainActor final class MealSnapshot {
+    private(set) var meal: Meal
+    private(set) var links: [MealProduct]
+    private(set) var entries: [MenuEntry]
+
+    init(meal: Meal, links: [MealProduct], entries: [MenuEntry]) {
+        self.meal = meal
+        self.links = links
+        self.entries = entries
+    }
+
+    func capture(from store: SupabaseStore) {
+        meal = store.meals.first { $0.id == meal.id } ?? meal
+        links = store.mealProducts.filter { $0.mealId == meal.id }
+        entries = store.menuEntries.filter { $0.mealId == meal.id }
+    }
+}
+
 extension SupabaseStore {
     func deleteTask(_ task: HouseholdTask, undoManager: UndoManager?) async throws {
         try await deleteTask(task)
@@ -23,15 +43,22 @@ extension SupabaseStore {
     }
 
     func deleteMeal(_ meal: Meal, undoManager: UndoManager?) async throws {
-        let links = mealProducts.filter { $0.mealId == meal.id }
-        let entries = menuEntries.filter { $0.mealId == meal.id }
+        let snapshot = MealSnapshot(meal: meal, links: [], entries: [])
+        snapshot.capture(from: self)
         try await deleteMeal(meal)
         DeletionUndo.register(
             on: undoManager, named: "Delete Meal",
             undo: { [weak self] in
-                await self?.run { try await $0.restoreMeal(meal, products: links, entries: entries) } ?? false
+                await self?.run {
+                    try await $0.restoreMeal(snapshot.meal, products: snapshot.links, entries: snapshot.entries)
+                } ?? false
             },
-            redo: { [weak self] in await self?.run { try await $0.deleteMeal(meal) } ?? false })
+            redo: { [weak self] in
+                await self?.run {
+                    snapshot.capture(from: $0)
+                    try await $0.deleteMeal(snapshot.meal)
+                } ?? false
+            })
     }
 
     func deleteBudgetExpense(_ expense: BudgetExpense, undoManager: UndoManager?) async throws {
