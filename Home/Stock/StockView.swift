@@ -48,12 +48,14 @@ struct StockView: View {
                         ForEach(model.visibleFilters, id: \.self) { option in
                             Chip(title: model.title(for: option), fill: fill(for: option),
                                  isSelected: model.effectiveFilter == option) {
-                                filter = StockListModel.toggled(model.effectiveFilter, tapped: option)
+                                withAnimation(.spring(duration: 0.35)) {
+                                    filter = StockListModel.toggled(model.effectiveFilter, tapped: option)
+                                }
                             }
                         }
                     }
                     ChipGroup(items: model.visibleCategories,
-                              selection: $category,
+                              selection: $category.animation(.spring(duration: 0.35)),
                               fill: Palette.tasks,
                               title: { model.title(for: $0) },
                               systemImage: { $0.icon })
@@ -80,7 +82,6 @@ struct StockView: View {
             }
         }
         .flatListStyle()
-        .animation(.spring(duration: 0.35), value: model.groups)
     }
 
     private func row(_ product: StockProduct) -> some View {
