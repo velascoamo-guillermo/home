@@ -124,6 +124,37 @@ final class SmokeTests: XCTestCase {
         XCTAssertTrue(waitForDisappearance(app.staticTexts["Fixture Milk"], timeout: 10))
     }
 
+    func testStockSearchStaysDismissedAfterClose() throws {
+        let app = launchApp()
+        XCTAssertTrue(app.buttons["Menu"].waitForExistence(timeout: 15))
+        openHubScreen(app, row: "Stock")
+        XCTAssertTrue(app.staticTexts["Fixture Milk"].waitForExistence(timeout: 10))
+
+        for cycle in 1...3 {
+            let searchButton = app.navigationBars["Stock"].buttons["Search"]
+            XCTAssertTrue(searchButton.waitForExistence(timeout: 5), "cycle \(cycle): minimized search missing")
+            searchButton.tap()
+
+            let field = app.searchFields["Search stock"]
+            XCTAssertTrue(field.waitForExistence(timeout: 5), "cycle \(cycle): field did not open")
+            field.typeText("Coffee")
+            XCTAssertTrue(waitForDisappearance(app.staticTexts["Fixture Milk"], timeout: 10))
+
+            let clear = field.buttons["Clear text"]
+            XCTAssertTrue(clear.waitForExistence(timeout: 5))
+            clear.tap()
+            XCTAssertTrue(app.staticTexts["Fixture Milk"].waitForExistence(timeout: 10))
+
+            let close = app.navigationBars["Stock"].buttons.matching(NSPredicate(format: "label ==[c] %@", "close")).firstMatch
+            XCTAssertTrue(close.waitForExistence(timeout: 5), "cycle \(cycle): close button missing")
+            close.tap()
+
+            Thread.sleep(forTimeInterval: 2)
+            XCTAssertFalse(app.searchFields["Search stock"].exists, "cycle \(cycle): search re-expanded by itself")
+            XCTAssertTrue(app.navigationBars["Stock"].buttons["Search"].exists, "cycle \(cycle): nav bar not restored")
+        }
+    }
+
     func testAddProductWithLevel() throws {
         let app = launchApp()
         XCTAssertTrue(app.buttons["Menu"].waitForExistence(timeout: 15))
