@@ -38,10 +38,16 @@ extension View {
 
     /// The Mac shell owns one app-wide toolbar search; a second `.searchable` from a hosted view
     /// makes NSToolbar throw when the detail column switches to it, so hosted views skip theirs.
+    @ViewBuilder
     func iOSSearchable(text: Binding<String>, prompt: String) -> some View {
         #if os(iOS)
-        searchable(text: text, placement: .toolbar, prompt: prompt)
-            .searchToolbarBehavior(.minimize)
+        // #110: iOS 27 toolbar `.minimize` reopen breaks and `.toolbar`/`.automatic` render nothing, so use the always-visible drawer.
+        if #available(iOS 27, *) {
+            searchable(text: text, placement: .navigationBarDrawer(displayMode: .always), prompt: prompt)
+        } else {
+            searchable(text: text, placement: .toolbar, prompt: prompt)
+                .searchToolbarBehavior(.minimize)
+        }
         #else
         self
         #endif

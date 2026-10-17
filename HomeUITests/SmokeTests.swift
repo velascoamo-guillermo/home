@@ -111,14 +111,17 @@ final class SmokeTests: XCTestCase {
         XCTAssertTrue(app.buttons["Menu"].waitForExistence(timeout: 15))
         openHubScreen(app, row: "Stock")
         XCTAssertTrue(app.staticTexts["Fixture Milk"].waitForExistence(timeout: 10))
-        XCTAssertFalse(app.searchFields["Search stock"].exists)
-
-        let searchButton = app.navigationBars["Stock"].buttons["Search"]
-        XCTAssertTrue(searchButton.waitForExistence(timeout: 5))
-        searchButton.tap()
-
         let field = app.searchFields["Search stock"]
-        XCTAssertTrue(field.waitForExistence(timeout: 5))
+        if Self.searchIsAlwaysVisible {
+            XCTAssertTrue(field.waitForExistence(timeout: 5))
+            field.tap()
+        } else {
+            XCTAssertFalse(field.exists)
+            let searchButton = app.navigationBars["Stock"].buttons["Search"]
+            XCTAssertTrue(searchButton.waitForExistence(timeout: 5))
+            searchButton.tap()
+            XCTAssertTrue(field.waitForExistence(timeout: 5))
+        }
         field.typeText("Coffee")
         XCTAssertTrue(app.staticTexts["Fixture Coffee"].waitForExistence(timeout: 5))
         XCTAssertTrue(waitForDisappearance(app.staticTexts["Fixture Milk"], timeout: 10))
@@ -146,33 +149,53 @@ final class SmokeTests: XCTestCase {
                                    typed: "zzz", visibleBefore: row)
     }
 
-    /// Regression for #110: on iOS 27 the minimized toolbar search re-expanded by itself after close.
+    /// iOS 27 drops `.minimize` (#110), so the search field is always on screen there.
+    private static var searchIsAlwaysVisible: Bool {
+        ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 27
+    }
+
+    /// Regression for #110: dismissing toolbar search must stay dismissed, and reopening must give a
+    /// working field (placeholder, clear/close button and rendered text), 3 times in a row.
     private func assertSearchStaysDismissed(_ app: XCUIApplication, navTitle: String, field fieldName: String,
                                             typed: String, visibleBefore: XCUIElement) {
+        let alwaysVisible = Self.searchIsAlwaysVisible
         for cycle in 1...3 {
             let bar = app.navigationBars[navTitle]
-            let searchButton = bar.buttons["Search"]
-            XCTAssertTrue(searchButton.waitForExistence(timeout: 5), "cycle \(cycle): minimized search missing")
-            searchButton.tap()
-
             let field = app.searchFields[fieldName]
-            
-            XCTAssertTrue(field.waitForExistence(timeout: 5), "cycle \(cycle): field did not open")
+            if alwaysVisible {
+                XCTAssertTrue(field.waitForExistence(timeout: 5), "cycle \(cycle): field missing")
+                field.tap()
+            } else {
+                let searchButton = bar.buttons["Search"]
+                XCTAssertTrue(searchButton.waitForExistence(timeout: 5), "cycle \(cycle): minimized search missing")
+                searchButton.tap()
+                XCTAssertTrue(field.waitForExistence(timeout: 5), "cycle \(cycle): field did not open")
+            }
+            XCTAssertTrue(app.keyboards.firstMatch.waitForExistence(timeout: 5), "cycle \(cycle): keyboard missing")
+            XCTAssertEqual(field.placeholderValue, fieldName, "cycle \(cycle): placeholder missing")
             field.typeText(typed)
+            XCTAssertEqual(field.value as? String, typed, "cycle \(cycle): typed text not rendered")
             XCTAssertTrue(waitForDisappearance(visibleBefore, timeout: 10))
 
             let clear = field.buttons["Clear text"]
-            XCTAssertTrue(clear.waitForExistence(timeout: 5))
+            XCTAssertTrue(clear.waitForExistence(timeout: 5), "cycle \(cycle): clear button missing")
             clear.tap()
             XCTAssertTrue(visibleBefore.waitForExistence(timeout: 10))
 
-            let close = bar.buttons.matching(NSPredicate(format: "label ==[c] %@", "close")).firstMatch
+            let close = app.buttons.matching(NSPredicate(format: "label IN %@", ["Close", "close", "Cancel", "Cancelar"])).firstMatch
             XCTAssertTrue(close.waitForExistence(timeout: 5), "cycle \(cycle): close button missing")
             close.tap()
 
             Thread.sleep(forTimeInterval: 2)
-            XCTAssertFalse(app.searchFields[fieldName].exists, "cycle \(cycle): search re-expanded by itself")
-            XCTAssertTrue(app.navigationBars[navTitle].buttons["Search"].exists, "cycle \(cycle): nav bar not restored")
+            XCTAssertTrue(app.navigationBars[navTitle].exists, "cycle \(cycle): nav bar missing")
+            XCTAssertFalse(app.keyboards.firstMatch.exists, "cycle \(cycle): keyboard still up")
+            if alwaysVisible {
+                XCTAssertTrue(app.searchFields[fieldName].exists, "cycle \(cycle): field missing after dismiss")
+                XCTAssertTrue(visibleBefore.exists, "cycle \(cycle): list lost")
+            } else {
+                XCTAssertFalse(app.searchFields[fieldName].exists, "cycle \(cycle): search re-expanded by itself")
+                XCTAssertTrue(app.navigationBars[navTitle].buttons["Search"].exists, "cycle \(cycle): nav bar not restored")
+            }
         }
     }
 
