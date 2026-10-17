@@ -28,7 +28,7 @@ struct StockView: View {
         .inlineNavigationTitle()
         .iOSSearchable(text: $searchText, prompt: "Search stock")
         .toolbar {
-            ToolbarItem(placement: .addActionBesideSearch) {
+            ToolbarItem(placement: .trailingBar) {
                 Button("Add product", systemImage: "plus") { showAdd = true }
                     .accessibilityLabel("Add product")
             }
