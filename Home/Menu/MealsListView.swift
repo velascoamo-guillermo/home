@@ -54,7 +54,7 @@ struct MealsListView: View {
         .gradientCanvas()
         .iOSSearchable(text: $searchText, prompt: "Buscar meal")
         .toolbar {
-            ToolbarItem(placement: .primaryAction) {
+            ToolbarItem(placement: .addActionBesideSearch) {
                 Button("Nueva meal", systemImage: "plus") { isCreating = true }
             }
         }
