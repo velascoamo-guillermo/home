@@ -42,7 +42,7 @@ struct ChipButtonStyle: ButtonStyle {
             .background(fill, in: .capsule)
             .overlay {
                 if isSelected {
-                    Capsule().stroke(Palette.accent, lineWidth: 2)
+                    Capsule().strokeBorder(Palette.accent, lineWidth: 2)
                 }
             }
             .scaleEffect(configuration.isPressed ? 0.96 : 1)
