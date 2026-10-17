@@ -41,7 +41,7 @@ extension View {
     @ViewBuilder
     func iOSSearchable(text: Binding<String>, prompt: String) -> some View {
         #if os(iOS)
-        // #110: iOS 27 toolbar `.minimize` reopen breaks and `.toolbar`/`.automatic` render nothing, so use the always-visible drawer.
+        // #110: iOS 27 toolbar `.minimize` reopen breaks, and `.toolbar`/`.automatic` render nothing on screens pushed inside a tab's NavigationStack (root-of-tab and sheets are fine), so use the always-visible drawer.
         if #available(iOS 27, *) {
             searchable(text: text, placement: .navigationBarDrawer(displayMode: .always), prompt: prompt)
         } else {

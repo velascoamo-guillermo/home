@@ -106,7 +106,7 @@ final class SmokeTests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Fixture Milk"].waitForExistence(timeout: 10))
     }
 
-    func testStockSearchLivesInToolbar() throws {
+    func testStockSearchOpensFromToolbarOrDrawer() throws {
         let app = launchApp()
         XCTAssertTrue(app.buttons["Menu"].waitForExistence(timeout: 15))
         openHubScreen(app, row: "Stock")
@@ -127,13 +127,39 @@ final class SmokeTests: XCTestCase {
         XCTAssertTrue(waitForDisappearance(app.staticTexts["Fixture Milk"], timeout: 10))
     }
 
+    func testStockSearchCancelWithTextStillTypedResetsFilter() throws {
+        let app = launchApp()
+        XCTAssertTrue(app.buttons["Menu"].waitForExistence(timeout: 15))
+        openHubScreen(app, row: "Stock")
+        let milk = app.staticTexts["Fixture Milk"]
+        XCTAssertTrue(milk.waitForExistence(timeout: 10))
+        let field = app.searchFields["Search stock"]
+        if Self.searchIsAlwaysVisible {
+            XCTAssertTrue(field.waitForExistence(timeout: 5))
+        } else {
+            let searchButton = app.navigationBars["Stock"].buttons["Search"]
+            XCTAssertTrue(searchButton.waitForExistence(timeout: 5))
+            searchButton.tap()
+            XCTAssertTrue(field.waitForExistence(timeout: 5))
+        }
+        field.tap()
+        field.typeText("Coffee")
+        XCTAssertTrue(waitForDisappearance(milk, timeout: 10))
+
+        searchCloseButton(app, navTitle: "Stock").tap()
+        XCTAssertTrue(milk.waitForExistence(timeout: 10), "list still filtered after cancel")
+        // An empty search field reports its placeholder as value; a missing field (minimized) is also fine.
+        XCTAssertTrue(waitForValue(app.searchFields["Search stock"], "Search stock", timeout: 5, orMissing: true),
+                      "field kept text after cancel")
+    }
+
     func testStockSearchStaysDismissedAfterClose() throws {
         let app = launchApp()
         XCTAssertTrue(app.buttons["Menu"].waitForExistence(timeout: 15))
         openHubScreen(app, row: "Stock")
         XCTAssertTrue(app.staticTexts["Fixture Milk"].waitForExistence(timeout: 10))
         assertSearchStaysDismissed(app, navTitle: "Stock", field: "Search stock",
-                                   typed: "Coffee", visibleBefore: app.staticTexts["Fixture Milk"])
+                                   typed: "Coffee", addButton: "Add product", visibleBefore: app.staticTexts["Fixture Milk"])
     }
 
     func testMealsCatalogSearchStaysDismissedAfterClose() throws {
@@ -146,7 +172,23 @@ final class SmokeTests: XCTestCase {
         let row = app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "Lentejas")).firstMatch
         XCTAssertTrue(row.waitForExistence(timeout: 10))
         assertSearchStaysDismissed(app, navTitle: "Catálogo", field: "Buscar meal",
-                                   typed: "zzz", visibleBefore: row)
+                                   typed: "zzz", addButton: "Nueva meal", visibleBefore: row)
+    }
+
+    /// Close (iOS 27 drawer) or Cancel (26.x) button, scoped to the nav bar first so keyboard keys never match.
+    private func searchCloseButton(_ app: XCUIApplication, navTitle: String) -> XCUIElement {
+        let labels = ["Close", "close", "Cancel", "Cancelar"]
+        let inBar = app.navigationBars[navTitle].buttons.matching(NSPredicate(format: "label IN %@", labels)).firstMatch
+        if inBar.waitForExistence(timeout: 3) { return inBar }
+        let anywhere = app.buttons.matching(NSPredicate(format: "label IN %@", labels)).firstMatch
+        XCTAssertTrue(anywhere.waitForExistence(timeout: 5), "search close button missing")
+        return anywhere
+    }
+
+    private func appears(_ element: XCUIElement, within seconds: TimeInterval) -> Bool {
+        let predicate = NSPredicate(format: "exists == true")
+        let expectation = XCTNSPredicateExpectation(predicate: predicate, object: element)
+        return XCTWaiter().wait(for: [expectation], timeout: seconds) == .completed
     }
 
     /// iOS 27 drops `.minimize` (#110), so the search field is always on screen there.
@@ -157,7 +199,7 @@ final class SmokeTests: XCTestCase {
     /// Regression for #110: dismissing toolbar search must stay dismissed, and reopening must give a
     /// working field (placeholder, clear/close button and rendered text), 3 times in a row.
     private func assertSearchStaysDismissed(_ app: XCUIApplication, navTitle: String, field fieldName: String,
-                                            typed: String, visibleBefore: XCUIElement) {
+                                            typed: String, addButton: String, visibleBefore: XCUIElement) {
         let alwaysVisible = Self.searchIsAlwaysVisible
         for cycle in 1...3 {
             let bar = app.navigationBars[navTitle]
@@ -182,19 +224,18 @@ final class SmokeTests: XCTestCase {
             clear.tap()
             XCTAssertTrue(visibleBefore.waitForExistence(timeout: 10))
 
-            let close = app.buttons.matching(NSPredicate(format: "label IN %@", ["Close", "close", "Cancel", "Cancelar"])).firstMatch
-            XCTAssertTrue(close.waitForExistence(timeout: 5), "cycle \(cycle): close button missing")
-            close.tap()
+            searchCloseButton(app, navTitle: navTitle).tap()
 
-            Thread.sleep(forTimeInterval: 2)
-            XCTAssertTrue(app.navigationBars[navTitle].exists, "cycle \(cycle): nav bar missing")
-            XCTAssertFalse(app.keyboards.firstMatch.exists, "cycle \(cycle): keyboard still up")
+            XCTAssertTrue(app.navigationBars[navTitle].waitForExistence(timeout: 5), "cycle \(cycle): nav bar missing")
+            XCTAssertTrue(waitForDisappearance(app.keyboards.firstMatch, timeout: 5), "cycle \(cycle): keyboard still up")
+            XCTAssertTrue(app.buttons[addButton].waitForExistence(timeout: 5), "cycle \(cycle): add button missing after dismiss")
             if alwaysVisible {
-                XCTAssertTrue(app.searchFields[fieldName].exists, "cycle \(cycle): field missing after dismiss")
-                XCTAssertTrue(visibleBefore.exists, "cycle \(cycle): list lost")
+                XCTAssertTrue(app.searchFields[fieldName].waitForExistence(timeout: 5), "cycle \(cycle): field missing after dismiss")
+                XCTAssertTrue(visibleBefore.waitForExistence(timeout: 5), "cycle \(cycle): list lost")
             } else {
-                XCTAssertFalse(app.searchFields[fieldName].exists, "cycle \(cycle): search re-expanded by itself")
-                XCTAssertTrue(app.navigationBars[navTitle].buttons["Search"].exists, "cycle \(cycle): nav bar not restored")
+                XCTAssertTrue(app.navigationBars[navTitle].buttons["Search"].waitForExistence(timeout: 5), "cycle \(cycle): nav bar not restored")
+                // Polling window: a re-expansion shows up some time after the close animation, so the field must stay absent for 2s.
+                XCTAssertFalse(appears(app.searchFields[fieldName], within: 2), "cycle \(cycle): search re-expanded by itself")
             }
         }
     }
@@ -379,8 +420,10 @@ final class SmokeTests: XCTestCase {
         return XCTWaiter().wait(for: [expectation], timeout: timeout) == .completed
     }
 
-    private func waitForValue(_ element: XCUIElement, _ value: String, timeout: TimeInterval) -> Bool {
-        let predicate = NSPredicate(format: "value == %@", value)
+    private func waitForValue(_ element: XCUIElement, _ value: String, timeout: TimeInterval, orMissing: Bool = false) -> Bool {
+        let predicate = orMissing
+            ? NSPredicate(format: "exists == false OR value == %@ OR value == nil OR value == ''", value)
+            : NSPredicate(format: "value == %@", value)
         let expectation = XCTNSPredicateExpectation(predicate: predicate, object: element)
         return XCTWaiter().wait(for: [expectation], timeout: timeout) == .completed
     }
