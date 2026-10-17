@@ -169,6 +169,8 @@ final class SmokeTests: XCTestCase {
         let catalog = app.buttons["Catálogo"].firstMatch
         XCTAssertTrue(catalog.waitForExistence(timeout: 10))
         catalog.tap()
+        // Navigation must have completed before looking up the seeded row.
+        XCTAssertTrue(app.navigationBars["Catálogo"].waitForExistence(timeout: 10), "catalog screen did not open")
         let row = app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "Lentejas")).firstMatch
         XCTAssertTrue(row.waitForExistence(timeout: 10))
         assertSearchStaysDismissed(app, navTitle: "Catálogo", field: "Buscar meal",
@@ -180,9 +182,14 @@ final class SmokeTests: XCTestCase {
         let labels = ["Close", "close", "Cancel", "Cancelar"]
         let inBar = app.navigationBars[navTitle].buttons.matching(NSPredicate(format: "label IN %@", labels)).firstMatch
         if inBar.waitForExistence(timeout: 3) { return inBar }
-        let anywhere = app.buttons.matching(NSPredicate(format: "label IN %@", labels)).firstMatch
-        XCTAssertTrue(anywhere.waitForExistence(timeout: 5), "search close button missing")
-        return anywhere
+        // No unscoped fallback: on iOS 27 the drawer close button lives in the nav bar, so a miss is a real failure.
+        XCTFail("search close/cancel button not found in the \(navTitle) nav bar")
+        return inBar
+    }
+
+    private func waitFor(_ element: XCUIElement, _ format: String, within seconds: TimeInterval) -> Bool {
+        let expectation = XCTNSPredicateExpectation(predicate: NSPredicate(format: format), object: element)
+        return XCTWaiter().wait(for: [expectation], timeout: seconds) == .completed
     }
 
     private func appears(_ element: XCUIElement, within seconds: TimeInterval) -> Bool {
@@ -228,12 +235,20 @@ final class SmokeTests: XCTestCase {
 
             XCTAssertTrue(app.navigationBars[navTitle].waitForExistence(timeout: 5), "cycle \(cycle): nav bar missing")
             XCTAssertTrue(waitForDisappearance(app.keyboards.firstMatch, timeout: 5), "cycle \(cycle): keyboard still up")
-            XCTAssertTrue(app.buttons[addButton].waitForExistence(timeout: 5), "cycle \(cycle): add button missing after dismiss")
+            let add = app.buttons[addButton]
+            XCTAssertTrue(add.waitForExistence(timeout: 5), "cycle \(cycle): add button missing after dismiss")
+            XCTAssertTrue(add.isHittable, "cycle \(cycle): add button not hittable after dismiss")
             if alwaysVisible {
                 XCTAssertTrue(app.searchFields[fieldName].waitForExistence(timeout: 5), "cycle \(cycle): field missing after dismiss")
                 XCTAssertTrue(visibleBefore.waitForExistence(timeout: 5), "cycle \(cycle): list lost")
+                // Settle window: a self re-focus shows up shortly after the close animation, so watch for 2s.
+                XCTAssertFalse(waitFor(app.keyboards.firstMatch, "exists == true", within: 2), "cycle \(cycle): keyboard reappeared by itself")
+                XCTAssertFalse(waitFor(app.searchFields[fieldName], "hasKeyboardFocus == true", within: 0.1), "cycle \(cycle): search field re-focused by itself")
             } else {
-                XCTAssertTrue(app.navigationBars[navTitle].buttons["Search"].waitForExistence(timeout: 5), "cycle \(cycle): nav bar not restored")
+                let restored = app.navigationBars[navTitle].buttons["Search"]
+                XCTAssertTrue(restored.waitForExistence(timeout: 5), "cycle \(cycle): nav bar not restored")
+                XCTAssertTrue(restored.isHittable, "cycle \(cycle): Search button not hittable")
+                Thread.sleep(forTimeInterval: 0.5)
                 // Polling window: a re-expansion shows up some time after the close animation, so the field must stay absent for 2s.
                 XCTAssertFalse(appears(app.searchFields[fieldName], within: 2), "cycle \(cycle): search re-expanded by itself")
             }
