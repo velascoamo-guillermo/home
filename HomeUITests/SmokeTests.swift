@@ -167,7 +167,7 @@ final class SmokeTests: XCTestCase {
         let labels = ["Close", "close", "Cancel", "Cancelar"]
         let inBar = app.navigationBars[navTitle].buttons.matching(NSPredicate(format: "label IN %@", labels)).firstMatch
         if inBar.waitForExistence(timeout: 3) { return inBar }
-        // No unscoped fallback: on iOS 27 the close button lives in the nav bar, so a miss is a real failure.
+        // No unscoped fallback: the drawer close button lives in the nav bar, so a miss is a real failure.
         XCTFail("search close/cancel button not found in the \(navTitle) nav bar")
         return inBar
     }
