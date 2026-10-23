@@ -40,8 +40,8 @@ extension View {
     /// makes NSToolbar throw when the detail column switches to it, so hosted views skip theirs.
     func iOSSearchable(text: Binding<String>, prompt: String) -> some View {
         #if os(iOS)
-        searchable(text: text, placement: .toolbar, prompt: prompt)
-            .searchToolbarBehavior(.minimize)
+        // #110: toolbar `.minimize` reopen breaks on iOS 26.0 and 27, and toolbar without minimize renders nothing on pushed screens on 27.
+        searchable(text: text, placement: .navigationBarDrawer(displayMode: .always), prompt: prompt)
         #else
         self
         #endif
