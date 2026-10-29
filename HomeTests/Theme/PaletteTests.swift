@@ -94,6 +94,57 @@ import AppKit
         }
     }
 
+    @Test("dark feature fills share one lightness band")
+    func darkFillLightnessBand() {
+        let features: [(String, Color)] = [
+            ("tasks", Palette.tasks), ("shopping", Palette.shopping), ("meals", Palette.meals),
+            ("pets", Palette.pets), ("stock", Palette.stock), ("budget", Palette.budget),
+        ]
+        let lums = features.map { Self.luminance(Palette.components($0.1, dark: true)) }
+        let spread = (lums.max() ?? 0) - (lums.min() ?? 0)
+        #expect(spread <= 0.004, "dark fill luminance spread \(spread)")
+        for (i, (name, _)) in features.enumerated() {
+            #expect(lums[i] >= 0.025 && lums[i] <= 0.045, "\(name) luminance \(lums[i])")
+        }
+    }
+
+    @Test("accent holds 4.5:1 on every dark feature fill")
+    func darkAccentOnFills() {
+        let accent = Palette.components(Palette.accent, dark: true)
+        for (name, color) in Self.fills.prefix(6) {
+            let ratio = Self.contrastRatio(accent, Palette.components(color, dark: true))
+            #expect(ratio >= 4.5, "\(name) ratio \(ratio)")
+        }
+    }
+
+    @Test("inkSecondary is AA over every dark fill")
+    func darkInkSecondary() {
+        let ink2 = Palette.components(Palette.inkSecondary, dark: true)
+        for (name, color) in Self.fills {
+            let bg = Palette.components(color, dark: true)
+            let ratio = Self.contrastRatio(Self.composite(ink2, over: SIMD4(bg.x, bg.y, bg.z, 1)), bg)
+            #expect(ratio >= 4.5, "\(name) ratio \(ratio)")
+        }
+    }
+
+    @Test("light values are unchanged")
+    func lightValuesPinned() {
+        let expected: [(String, Color, UInt32)] = [
+            ("tasks", Palette.tasks, 0xD6E4F5), ("shopping", Palette.shopping, 0xD9EBD9),
+            ("meals", Palette.meals, 0xFBE3CF), ("pets", Palette.pets, 0xF6D9E0),
+            ("stock", Palette.stock, 0xE4DCF3), ("budget", Palette.budget, 0xF7EDC4),
+            ("accent", Palette.accent, 0xF0607A), ("accentSoft", Palette.accentSoft, 0xE8A090),
+            ("canvasTop", Palette.canvasTop, 0xF3E6F6), ("canvasMid", Palette.canvasMid, 0xFDE3E3),
+            ("canvasBottom", Palette.canvasBottom, 0xFFF8F3),
+        ]
+        for (name, color, hex) in expected {
+            let c = Palette.components(color, dark: false)
+            #expect(abs(c.x - Double((hex >> 16) & 0xFF) / 255) < 0.003
+                    && abs(c.y - Double((hex >> 8) & 0xFF) / 255) < 0.003
+                    && abs(c.z - Double(hex & 0xFF) / 255) < 0.003, "\(name) light changed")
+        }
+    }
+
     #if os(macOS)
     @Test("Increased Contrast appearances resolve to the same passing light and dark values")
     func increasedContrastAppearances() throws {
