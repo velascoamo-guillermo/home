@@ -281,6 +281,32 @@ final class SmokeTests: XCTestCase {
         XCTAssertTrue(waitForDisappearance(sponge, timeout: 10))
     }
 
+    func testShoppingDeleteQuickAddedItemDoesNotCrash() throws {
+        let app = launchApp()
+        XCTAssertTrue(app.buttons["Menu"].waitForExistence(timeout: 15))
+        openHubScreen(app, row: "Shopping")
+
+        let field = app.textFields["quickAddField"].firstMatch
+        XCTAssertTrue(field.waitForExistence(timeout: 10))
+        field.tap()
+        field.typeText("Fixture Eggs\n")
+
+        let eggs = app.staticTexts["Fixture Eggs"].firstMatch
+        XCTAssertTrue(eggs.waitForExistence(timeout: 10))
+        eggs.swipeLeft()
+        let deleteAction = app.buttons["Delete"].firstMatch
+        XCTAssertTrue(deleteAction.waitForExistence(timeout: 10))
+        deleteAction.tap()
+
+        let confirm = app.buttons["Delete"].firstMatch
+        XCTAssertTrue(app.staticTexts["Delete Fixture Eggs?"].waitForExistence(timeout: 10))
+        confirm.tap()
+
+        XCTAssertTrue(waitForDisappearance(eggs, timeout: 10))
+        XCTAssertEqual(app.state, .runningForeground)
+        XCTAssertTrue(app.textFields["quickAddField"].exists)
+    }
+
     func testHeaderChipsOpenTheirOwnScreens() throws {
         // The two header Chips share one List row; a hit-testing/row-tap conflict
         // could make a single tap fire both buttons. Verify each chip opens only

@@ -112,9 +112,12 @@ struct ShoppingView: View {
         .accessibilityLabel(product.name)
         .accessibilityHint(checked ? "Unchecks this item" : "Checks this item off the list")
         .swipeActions(edge: .trailing) {
-            Button(role: .destructive) {
+            // No .destructive role: that makes the List optimistically collapse the row on tap,
+            // but removal is deferred until the confirmation dialog, which corrupts the batch update.
+            Button {
                 productToDelete = product
             } label: { Label("Delete", systemImage: "trash") }
+            .tint(.red)
         }
     }
 
