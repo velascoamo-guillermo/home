@@ -134,7 +134,7 @@ import AppKit
         for i in labs.indices {
             for j in labs.indices where j > i {
                 let d = Self.deltaE(labs[i], labs[j])
-                #expect(d >= 0.02, "\(Self.darkFeatures[i].0) vs \(Self.darkFeatures[j].0) deltaE \(d)")
+                #expect(d >= 0.03, "\(Self.darkFeatures[i].0) vs \(Self.darkFeatures[j].0) deltaE \(d)")
             }
         }
     }
