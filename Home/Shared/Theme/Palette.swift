@@ -14,7 +14,7 @@ nonisolated enum Palette {
     static let meals    = dynamic(light: 0xFBE3CF, dark: 0x44202C)
     static let pets     = dynamic(light: 0xF6D9E0, dark: 0x44223E)
     static let stock    = dynamic(light: 0xE4DCF3, dark: 0x362446)
-    static let budget   = dynamic(light: 0xF7EDC4, dark: 0x382C28)
+    static let budget   = dynamic(light: 0xF7EDC4, dark: 0x3A2C36)
     static let canvas   = dynamic(light: 0xFAF8F5, dark: 0x1C111E)
     static let canvasTop    = dynamic(light: 0xF3E6F6, dark: 0x1C111E)
     static let canvasMid    = dynamic(light: 0xFDE3E3, dark: 0x241622)
