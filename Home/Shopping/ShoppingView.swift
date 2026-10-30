@@ -6,6 +6,11 @@ struct ShoppingView: View {
     @State private var newItemName = ""
     @State private var failedNames: [String] = []
     @State private var productToDelete: StockProduct? = nil
+    @State private var finishedCount = 0
+
+    private var finishAction: FinishShoppingAction {
+        FinishShoppingAction(count: session.checkedIds.count)
+    }
 
     private struct MarketGroup: Identifiable {
         let id: String
@@ -57,18 +62,14 @@ struct ShoppingView: View {
         .flatListStyle()
         .navigationTitle("Shopping")
         .safeAreaInset(edge: .bottom) {
-            if !session.checkedIds.isEmpty {
-                Button(action: finishShopping) {
-                    Text("Finish shopping (\(session.checkedIds.count))")
-                        .font(.headline)
-                        .frame(maxWidth: .infinity)
-                }
-                .buttonStyle(.borderedProminent)
-                .accessibilityIdentifier("finishShopping")
-                .padding(.horizontal)
-                .padding(.bottom, 8)
+            if finishAction.isVisible {
+                FinishShoppingButton(action: finishAction, perform: finishShopping)
+                    .padding(.bottom, 8)
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
             }
         }
+        .animation(.spring(duration: 0.35, bounce: 0.25), value: finishAction.isVisible)
+        .sensoryFeedback(.success, trigger: finishedCount)
         .onAppear { pruneChecked() }
         .onChange(of: store.shoppingList.map(\.id)) { pruneChecked() }
         .alert("Could Not Update", isPresented: Binding(
@@ -129,6 +130,7 @@ struct ShoppingView: View {
             do {
                 try await store.replenish(products)
                 session.uncheck(Set(products.map(\.id)))
+                finishedCount += 1
             } catch {
                 let failed = products.map(\.name)
                 failedNames = failed
