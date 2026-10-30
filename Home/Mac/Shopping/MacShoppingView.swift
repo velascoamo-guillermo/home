@@ -127,19 +127,15 @@ struct MacShoppingView: View {
     private func finishShopping() {
         let ids = session.checkedIds
         let products = store.shoppingList.filter { ids.contains($0.id) }
+        guard !products.isEmpty else { return }
         Task {
-            var succeeded = Set<UUID>()
-            var failed: [String] = []
-            for product in products {
-                do {
-                    try await store.replenish(product)
-                    succeeded.insert(product.id)
-                } catch {
-                    failed.append(product.name)
-                }
+            do {
+                try await store.replenish(products)
+                session.uncheck(Set(products.map(\.id)))
+            } catch {
+                let failed = products.map(\.name)
+                failedNames = Self.mergeFailedNames(failedNames, adding: failed)
             }
-            session.uncheck(succeeded)
-            if !failed.isEmpty { failedNames = Self.mergeFailedNames(failedNames, adding: failed) }
         }
     }
 
