@@ -9,6 +9,12 @@ struct MacShoppingView: View {
     @State private var selection: UUID?
     @State private var newItemName = ""
     @State private var failedNames: [String] = []
+    @State private var finishPhase = FinishShoppingAction.Phase.idle
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    private var finishAction: FinishShoppingAction {
+        FinishShoppingAction(count: session.checkedIds.count, phase: finishPhase)
+    }
 
     static func commands(hasSelection: Bool, checkedCount: Int) -> Set<MacFeatureCommand> {
         var commands: Set<MacFeatureCommand> = []
@@ -32,15 +38,9 @@ struct MacShoppingView: View {
     var body: some View {
         List(selection: $selection) {
             Section {
-                HStack(spacing: 12) {
-                    TextField("Add Item", text: $newItemName)
-                        .onSubmit(quickAdd)
-                        .accessibilityIdentifier("quickAddField")
-                    if !session.checkedIds.isEmpty {
-                        Button("Finish Shopping (\(session.checkedIds.count))", action: finishShopping)
-                            .accessibilityIdentifier("finishShopping")
-                    }
-                }
+                TextField("Add Item", text: $newItemName)
+                    .onSubmit(quickAdd)
+                    .accessibilityIdentifier("quickAddField")
             }
             .selectionDisabled()
             .listRowBackground(Color.clear)
@@ -66,6 +66,17 @@ struct MacShoppingView: View {
             }
         }
         .flatListStyle()
+        .safeAreaInset(edge: .bottom) {
+            ZStack {
+                if finishAction.isVisible {
+                    FinishShoppingButton(action: finishAction, perform: finishShopping)
+                        .padding(.bottom, 12)
+                        .transition(reduceMotion ? .opacity : .move(edge: .bottom).combined(with: .opacity))
+                }
+            }
+            .animation(reduceMotion ? .easeInOut(duration: 0.2) : .spring(duration: 0.35, bounce: 0.25),
+                       value: finishAction.isVisible)
+        }
         .contextMenu(forSelectionType: UUID.self) { ids in
             if let product = store.shoppingList.first(where: { $0.id == ids.first }) {
                 Button("Mark as Bought") { markBought(product) }
@@ -127,12 +138,16 @@ struct MacShoppingView: View {
     private func finishShopping() {
         let ids = session.checkedIds
         let products = store.shoppingList.filter { ids.contains($0.id) }
-        guard !products.isEmpty else { return }
+        guard !products.isEmpty, finishPhase.begin() else { return }
         Task {
             do {
                 try await store.replenish(products)
                 session.uncheck(Set(products.map(\.id)))
+                finishPhase.succeed()
+                try? await Task.sleep(for: .milliseconds(1200))
+                finishPhase.dismissConfirmation()
             } catch {
+                finishPhase.fail()
                 let failed = products.map(\.name)
                 failedNames = Self.mergeFailedNames(failedNames, adding: failed)
             }

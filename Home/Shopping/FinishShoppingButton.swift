@@ -13,10 +13,11 @@ struct FinishShoppingButton: View {
                 .padding(.vertical, 14)
                 .background(Palette.accent, in: .capsule)
                 .shadow(color: Palette.accent.opacity(0.35), radius: 10, y: 4)
-                .contentTransition(.numericText())
         }
         .buttonStyle(FinishPressStyle())
+        .disabled(!action.isEnabled)
         .accessibilityLabel(action.accessibilityLabel)
+        .accessibilityInputLabels(action.inputLabels)
         .accessibilityIdentifier("finishShopping")
     }
 }
