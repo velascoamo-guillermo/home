@@ -20,9 +20,14 @@ final class MacSmokeTests: XCTestCase {
     /// result bundle (export with `xcrun xcresulttool export attachments`). Uses the shared
     /// `--uitesting` fixtures only.
     func testCaptureFeatureScreenshotsLightAndDark() throws {
-        let features: [(name: String, key: String, title: String)] = [
-            ("today", "1", "Today"), ("tasks", "2", "Tasks"), ("shopping", "3", "Shopping"),
-            ("stock", "4", "Stock"), ("meals", "5", "Meals"), ("budget", "6", "Budget"),
+        // `content` is an element that only renders once the screen's list is populated.
+        let features: [(name: String, key: String, title: String, content: (XCUIApplication) -> XCUIElement)] = [
+            ("today", "1", "Today", { $0.staticTexts["Fixture Change Filter"] }),
+            ("tasks", "2", "Tasks", { $0.staticTexts["Fixture Water Plants"] }),
+            ("shopping", "3", "Shopping", { $0.checkBoxes["Fixture Filters"] }),
+            ("stock", "4", "Stock", { $0.staticTexts["Fixture Milk"] }),
+            ("meals", "5", "Meals", { $0.outlines.buttons["Lentejas"] }),
+            ("budget", "6", "Budget", { $0.descendants(matching: .any)["budgetHero"] }),
         ]
         for appearance in ["Light", "Dark"] {
             let suffix = appearance.lowercased()
@@ -33,24 +38,25 @@ final class MacSmokeTests: XCTestCase {
                 app.typeKey(feature.key, modifierFlags: .command)
                 let win = window(app, titled: feature.title)
                 XCTAssertTrue(win.waitForExistence(timeout: 10), "\(feature.name) window missing")
+                XCTAssertTrue(feature.content(app).waitForExistence(timeout: 10), "\(feature.name) content missing")
                 attachScreenshot(of: win, named: "\(feature.name)-\(suffix)")
             }
 
-            // "e" matches fixture stock, task and meal titles, so results show mixed sections.
+            // "e" matches fixture stock, task and meal titles, so results show all three sections.
             app.typeKey("f", modifierFlags: .command)
             app.typeText("e")
             let field = app.toolbars.searchFields.firstMatch
             XCTAssertTrue(waitForValue(field, "e", timeout: 10))
             XCTAssertTrue(searchResult(app, "Fixture Milk").waitForExistence(timeout: 10))
-            XCTAssertTrue(searchResult(app, "Lentejas").waitForExistence(timeout: 10))
+            XCTAssertTrue(searchResult(app, "Fixture Change Filter").waitForExistence(timeout: 10))
+            // The meal row has no calories, so its button label is exactly the title (no comma).
+            XCTAssertTrue(app.windows.firstMatch.buttons["Lentejas"].waitForExistence(timeout: 10))
             attachScreenshot(of: app.windows.firstMatch, named: "search-\(suffix)")
             app.terminate()
         }
     }
 
     private func attachScreenshot(of window: XCUIElement, named name: String) {
-        // Let toolbar/selection animations finish before capturing.
-        Thread.sleep(forTimeInterval: 1)
         let attachment = XCTAttachment(screenshot: window.screenshot())
         attachment.name = name
         attachment.lifetime = .keepAlways
