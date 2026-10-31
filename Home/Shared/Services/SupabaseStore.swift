@@ -561,7 +561,7 @@ final class SupabaseStore {
         try await updateProduct(product.replenished())
     }
 
-    /// Replenishes all products in one transaction, one in-memory mutation and one sync,
+    /// Replenishes all products in one transaction, one in-memory mutation and one background sync,
     /// so list rows leave together. All-or-nothing: on throw nothing has changed.
     func replenish(_ products: [StockProduct]) async throws {
         guard !products.isEmpty else { return }
@@ -573,7 +573,10 @@ final class SupabaseStore {
         try await _local?.upsert(updated, enqueue: true)
         let byId = Dictionary(updated.map { ($0.id, $0) }, uniquingKeysWith: { $1 })
         stockProducts = stockProducts.map { byId[$0.id] ?? $0 }
-        await _sync?.sync(tables: [StockProduct.tableName])
+        // Success is the local commit; sync is not awaited so feedback never waits on the network.
+        if let sync = _sync {
+            Task { await sync.sync(tables: [StockProduct.tableName]) }
+        }
     }
 
     func deleteProduct(_ product: StockProduct) async throws {

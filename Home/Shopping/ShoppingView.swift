@@ -6,6 +6,13 @@ struct ShoppingView: View {
     @State private var newItemName = ""
     @State private var failedNames: [String] = []
     @State private var productToDelete: StockProduct? = nil
+    @State private var finishedCount = 0
+    @State private var finishPhase = FinishShoppingAction.Phase.idle
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    private var finishAction: FinishShoppingAction {
+        FinishShoppingAction(count: session.checkedIds.count, phase: finishPhase)
+    }
 
     private struct MarketGroup: Identifiable {
         let id: String
@@ -56,19 +63,8 @@ struct ShoppingView: View {
         }
         .flatListStyle()
         .navigationTitle("Shopping")
-        .safeAreaInset(edge: .bottom) {
-            if !session.checkedIds.isEmpty {
-                Button(action: finishShopping) {
-                    Text("Finish shopping (\(session.checkedIds.count))")
-                        .font(.headline)
-                        .frame(maxWidth: .infinity)
-                }
-                .buttonStyle(.borderedProminent)
-                .accessibilityIdentifier("finishShopping")
-                .padding(.horizontal)
-                .padding(.bottom, 8)
-            }
-        }
+        .safeAreaInset(edge: .bottom) { finishCapsule }
+        .sensoryFeedback(.success, trigger: finishedCount)
         .onAppear { pruneChecked() }
         .onChange(of: store.shoppingList.map(\.id)) { pruneChecked() }
         .alert("Could Not Update", isPresented: Binding(
@@ -80,6 +76,19 @@ struct ShoppingView: View {
             Text("Failed for: \(failedNames.joined(separator: ", ")). Try again.")
         }
         .productDeleteDialog($productToDelete)
+    }
+
+    /// Animation is scoped to this container so it never touches the List's row updates.
+    private var finishCapsule: some View {
+        ZStack {
+            if finishAction.isVisible {
+                FinishShoppingButton(action: finishAction, perform: finishShopping)
+                    .padding(.bottom, 8)
+                    .transition(reduceMotion ? .opacity : .move(edge: .bottom).combined(with: .opacity))
+            }
+        }
+        .animation(reduceMotion ? .easeInOut(duration: 0.2) : .spring(duration: 0.35, bounce: 0.25),
+                   value: finishAction.isVisible)
     }
 
     private func row(for product: StockProduct) -> some View {
@@ -103,9 +112,12 @@ struct ShoppingView: View {
         .accessibilityLabel(product.name)
         .accessibilityHint(checked ? "Unchecks this item" : "Checks this item off the list")
         .swipeActions(edge: .trailing) {
-            Button(role: .destructive) {
+            // No .destructive role: that makes the List optimistically collapse the row on tap,
+            // but removal is deferred until the confirmation dialog, which corrupts the batch update.
+            Button {
                 productToDelete = product
             } label: { Label("Delete", systemImage: "trash") }
+            .tint(.red)
         }
     }
 
@@ -124,14 +136,18 @@ struct ShoppingView: View {
     private func finishShopping() {
         let ids = session.checkedIds
         let products = store.shoppingList.filter { ids.contains($0.id) }
-        guard !products.isEmpty else { return }
+        guard !products.isEmpty, finishPhase.begin() else { return }
         Task {
             do {
                 try await store.replenish(products)
                 session.uncheck(Set(products.map(\.id)))
+                finishedCount += 1
+                finishPhase.succeed()
+                try? await Task.sleep(for: .milliseconds(1200))
+                finishPhase.dismissConfirmation()
             } catch {
-                let failed = products.map(\.name)
-                failedNames = failed
+                finishPhase.fail()
+                failedNames = products.map(\.name)
             }
         }
     }

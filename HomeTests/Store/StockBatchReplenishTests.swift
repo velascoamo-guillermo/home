@@ -91,3 +91,41 @@ import SQLite3
         }
     }
 }
+
+@MainActor struct StockBatchReplenishSyncTests {
+    @Test("replenish returns after the local commit without waiting for a slow sync")
+    func returnsBeforeSyncCompletes() async throws {
+        let gateway = SlowPushGateway(delay: .seconds(4))
+        let store = await BudgetFixtures.makeStore(syncEnabled: true, gateway: gateway)
+        let a = StockProduct(name: "Milk", level: .out)
+        let b = StockProduct(name: "Eggs", level: .low)
+        try await store.addProduct(a)
+        try await store.addProduct(b)
+        // Let the initial sync passes drain the outbox so the next sync is not skipped as single-flight.
+        for _ in 0..<150 {
+            if try await store._local?.pendingOps().isEmpty == true { break }
+            try await Task.sleep(for: .milliseconds(20))
+        }
+        try await Task.sleep(for: .milliseconds(200))
+        await gateway.arm()
+
+        let started = ContinuousClock.now
+        try await store.replenish([a, b])
+        let elapsed = ContinuousClock.now - started
+
+        #expect(elapsed < .seconds(2))
+        #expect(store.stockProducts.allSatisfy { $0.level == .full })
+        #expect(try await store._local?.pendingOps().count == 2)
+    }
+}
+
+private actor SlowPushGateway: RemoteGateway {
+    let delay: Duration
+    private var armed = false
+    init(delay: Duration) { self.delay = delay }
+    func arm() { armed = true }
+    func push(kind: OutboxOpKind, table: String, payload: Data) async throws {
+        if armed { try await Task.sleep(for: delay) }
+    }
+    func pull(table: String, since: Date?) async throws -> [Data] { [] }
+}
