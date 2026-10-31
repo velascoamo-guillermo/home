@@ -68,8 +68,6 @@ private struct VetRow: View {
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(10)
-                .background(Palette.surface, in: .rect(cornerRadius: 12))
             }
         }
         .padding(.vertical, 4)
