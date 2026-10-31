@@ -26,7 +26,7 @@ final class MacSmokeTests: XCTestCase {
             ("tasks", "2", "Tasks", { $0.staticTexts["Fixture Water Plants"] }),
             ("shopping", "3", "Shopping", { $0.checkBoxes["Fixture Filters"] }),
             ("stock", "4", "Stock", { $0.staticTexts["Fixture Milk"] }),
-            ("meals", "5", "Meals", { $0.outlines.buttons["Lentejas"] }),
+            ("meals", "5", "Meals", { $0.staticTexts["mealDayHeader-7"] }),
             ("budget", "6", "Budget", { $0.descendants(matching: .any)["budgetHero"] }),
         ]
         for appearance in ["Light", "Dark"] {
