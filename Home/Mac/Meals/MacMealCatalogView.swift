@@ -50,7 +50,6 @@ struct MacMealCatalogView: View {
             if let meal = selectedMeal { mealToDelete = meal }
         }
         .background(ListFocusView(selection: selection))
-        .navigationTitle("Catalog")
         .sheet(item: $editing) { meal in MealFormSheet(existing: meal) }
         .confirmationDialog(
             "Delete \(mealToDelete?.title ?? "")?",
