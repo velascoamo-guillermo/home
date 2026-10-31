@@ -68,6 +68,9 @@ private struct VetRow: View {
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
+                // Borderless keeps each Link's hit area to its label; otherwise
+                // the List row forwards every tap to the first Link.
+                .buttonStyle(.borderless)
             }
         }
         .padding(.vertical, 4)
