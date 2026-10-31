@@ -74,6 +74,7 @@ private struct VetRow: View {
             }
         }
         .padding(.vertical, 4)
+        .contentShape(.rect)
     }
 
     private func contactLabel(_ text: String, systemImage: String,

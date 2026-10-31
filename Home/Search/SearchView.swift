@@ -34,7 +34,7 @@ struct SearchView: View {
                             Section("Stock") {
                                 ForEach(results.stock) { product in
                                     Button { selection = .stock(product) } label: {
-                                        StockProductRow(product: product)
+                                        HStack(spacing: 12) { CategoryGlyph(.stock); StockProductRow(product: product) }
                                     }
                                     .buttonStyle(.plain)
                                     .surfaceRow()
@@ -46,7 +46,7 @@ struct SearchView: View {
                             Section("Tasks") {
                                 ForEach(results.tasks) { task in
                                     Button { selection = .task(task) } label: {
-                                        SearchTaskRow(task: task)
+                                        HStack(spacing: 12) { CategoryGlyph(.tasks); SearchTaskRow(task: task) }
                                     }
                                     .buttonStyle(.plain)
                                     .surfaceRow()
@@ -58,7 +58,7 @@ struct SearchView: View {
                             Section("Meals") {
                                 ForEach(results.meals) { meal in
                                     Button { selection = .meal(meal) } label: {
-                                        SearchMealRow(meal: meal)
+                                        HStack(spacing: 12) { CategoryGlyph(.meals); SearchMealRow(meal: meal) }
                                     }
                                     .buttonStyle(.plain)
                                     .surfaceRow()
