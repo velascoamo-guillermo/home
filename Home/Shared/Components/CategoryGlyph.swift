@@ -5,11 +5,6 @@ struct CategoryGlyph: View {
     let systemImage: String
     let fill: Color
 
-    init(_ destination: HubDestination) {
-        systemImage = destination.systemImage
-        fill = destination.fill
-    }
-
     var body: some View {
         Circle()
             .fill(fill)

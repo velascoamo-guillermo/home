@@ -21,29 +21,47 @@ struct MacSearchResultsView: View {
                     if !results.stock.isEmpty {
                         Section("Stock") {
                             ForEach(results.stock) { product in
-                                Button { selection = .stock(product) } label: { HStack(spacing: 12) { CategoryGlyph(.stock); StockProductRow(product: product) } }
-                                    .buttonStyle(.plain)
-                                    .surfaceRow()
-                                    .contextMenu { StockContextMenu(product: product, onDeleteRequest: { productToDelete = $0 }) }
+                                Button { selection = .stock(product) } label: {
+                                    HStack(spacing: 12) {
+                                        CategoryGlyph(systemImage: HubDestination.stock.systemImage, fill: HubDestination.stock.fill)
+                                        StockProductRow(product: product)
+                                    }
+                                    .contentShape(.rect)
+                                }
+                                .buttonStyle(.plain)
+                                .surfaceRow()
+                                .contextMenu { StockContextMenu(product: product, onDeleteRequest: { productToDelete = $0 }) }
                             }
                         }
                     }
                     if !results.tasks.isEmpty {
                         Section("Tasks") {
                             ForEach(results.tasks) { task in
-                                Button { selection = .task(task) } label: { HStack(spacing: 12) { CategoryGlyph(.tasks); SearchTaskRow(task: task) } }
-                                    .buttonStyle(.plain)
-                                    .surfaceRow()
-                                    .contextMenu { TaskContextMenu(task: task) }
+                                Button { selection = .task(task) } label: {
+                                    HStack(spacing: 12) {
+                                        CategoryGlyph(systemImage: HubDestination.tasks.systemImage, fill: HubDestination.tasks.fill)
+                                        SearchTaskRow(task: task)
+                                    }
+                                    .contentShape(.rect)
+                                }
+                                .buttonStyle(.plain)
+                                .surfaceRow()
+                                .contextMenu { TaskContextMenu(task: task) }
                             }
                         }
                     }
                     if !results.meals.isEmpty {
                         Section("Meals") {
                             ForEach(results.meals) { meal in
-                                Button { selection = .meal(meal) } label: { HStack(spacing: 12) { CategoryGlyph(.meals); SearchMealRow(meal: meal) } }
-                                    .buttonStyle(.plain)
-                                    .surfaceRow()
+                                Button { selection = .meal(meal) } label: {
+                                    HStack(spacing: 12) {
+                                        CategoryGlyph(systemImage: HubDestination.meals.systemImage, fill: HubDestination.meals.fill)
+                                        SearchMealRow(meal: meal)
+                                    }
+                                    .contentShape(.rect)
+                                }
+                                .buttonStyle(.plain)
+                                .surfaceRow()
                             }
                         }
                     }

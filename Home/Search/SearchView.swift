@@ -34,7 +34,11 @@ struct SearchView: View {
                             Section("Stock") {
                                 ForEach(results.stock) { product in
                                     Button { selection = .stock(product) } label: {
-                                        HStack(spacing: 12) { CategoryGlyph(.stock); StockProductRow(product: product) }
+                                        HStack(spacing: 12) {
+                                            CategoryGlyph(systemImage: HubDestination.stock.systemImage, fill: HubDestination.stock.fill)
+                                            StockProductRow(product: product)
+                                        }
+                                        .contentShape(.rect)
                                     }
                                     .buttonStyle(.plain)
                                     .surfaceRow()
@@ -46,7 +50,11 @@ struct SearchView: View {
                             Section("Tasks") {
                                 ForEach(results.tasks) { task in
                                     Button { selection = .task(task) } label: {
-                                        HStack(spacing: 12) { CategoryGlyph(.tasks); SearchTaskRow(task: task) }
+                                        HStack(spacing: 12) {
+                                            CategoryGlyph(systemImage: HubDestination.tasks.systemImage, fill: HubDestination.tasks.fill)
+                                            SearchTaskRow(task: task)
+                                        }
+                                        .contentShape(.rect)
                                     }
                                     .buttonStyle(.plain)
                                     .surfaceRow()
@@ -58,7 +66,11 @@ struct SearchView: View {
                             Section("Meals") {
                                 ForEach(results.meals) { meal in
                                     Button { selection = .meal(meal) } label: {
-                                        HStack(spacing: 12) { CategoryGlyph(.meals); SearchMealRow(meal: meal) }
+                                        HStack(spacing: 12) {
+                                            CategoryGlyph(systemImage: HubDestination.meals.systemImage, fill: HubDestination.meals.fill)
+                                            SearchMealRow(meal: meal)
+                                        }
+                                        .contentShape(.rect)
                                     }
                                     .buttonStyle(.plain)
                                     .surfaceRow()
