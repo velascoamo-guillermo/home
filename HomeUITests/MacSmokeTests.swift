@@ -16,6 +16,47 @@ final class MacSmokeTests: XCTestCase {
         XCTAssertTrue(window(app, titled: "Stock").waitForExistence(timeout: 10))
     }
 
+    /// Visual evidence for PRs: attaches one window screenshot per feature and appearance to the
+    /// result bundle (export with `xcrun xcresulttool export attachments`). Uses the shared
+    /// `--uitesting` fixtures only.
+    func testCaptureFeatureScreenshotsLightAndDark() throws {
+        let features: [(name: String, key: String, title: String)] = [
+            ("today", "1", "Today"), ("tasks", "2", "Tasks"), ("shopping", "3", "Shopping"),
+            ("stock", "4", "Stock"), ("meals", "5", "Meals"), ("budget", "6", "Budget"),
+        ]
+        for appearance in ["Light", "Dark"] {
+            let suffix = appearance.lowercased()
+            let app = launchApp(appearance: appearance)
+            XCTAssertTrue(app.windows.firstMatch.waitForExistence(timeout: 15))
+            XCTAssertTrue(waitForEnabled(app.menuBars.menuItems["Find…"], timeout: 10))
+            for feature in features {
+                app.typeKey(feature.key, modifierFlags: .command)
+                let win = window(app, titled: feature.title)
+                XCTAssertTrue(win.waitForExistence(timeout: 10), "\(feature.name) window missing")
+                attachScreenshot(of: win, named: "\(feature.name)-\(suffix)")
+            }
+
+            // "e" matches fixture stock, task and meal titles, so results show mixed sections.
+            app.typeKey("f", modifierFlags: .command)
+            app.typeText("e")
+            let field = app.toolbars.searchFields.firstMatch
+            XCTAssertTrue(waitForValue(field, "e", timeout: 10))
+            XCTAssertTrue(searchResult(app, "Fixture Milk").waitForExistence(timeout: 10))
+            XCTAssertTrue(searchResult(app, "Lentejas").waitForExistence(timeout: 10))
+            attachScreenshot(of: app.windows.firstMatch, named: "search-\(suffix)")
+            app.terminate()
+        }
+    }
+
+    private func attachScreenshot(of window: XCUIElement, named name: String) {
+        // Let toolbar/selection animations finish before capturing.
+        Thread.sleep(forTimeInterval: 1)
+        let attachment = XCTAttachment(screenshot: window.screenshot())
+        attachment.name = name
+        attachment.lifetime = .keepAlways
+        add(attachment)
+    }
+
     func testCommandCommaOpensSettings() throws {
         let app = launchApp()
         XCTAssertTrue(app.windows.firstMatch.waitForExistence(timeout: 15))
