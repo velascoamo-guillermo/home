@@ -23,7 +23,7 @@ struct TasksView: View {
                         HomeItemRow(item: item, onComplete: completeAction(for: item))
                             .contentShape(Rectangle())
                             .onTapGesture { handleTap(item) }
-                            .pastelRow(Palette.tasks)
+                            .surfaceRow()
                             .contextMenu {
                                 switch item {
                                 case .task(let t):

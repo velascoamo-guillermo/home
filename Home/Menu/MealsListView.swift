@@ -40,7 +40,7 @@ struct MealsListView: View {
                             .contentShape(.rect)
                         }
                         .buttonStyle(.plain)
-                        .pastelRow(Palette.meals)
+                        .surfaceRow()
                         .swipeActions(edge: .trailing) {
                             Button(role: .destructive) { mealToDelete = meal } label: {
                                 Label("Eliminar", systemImage: "trash")

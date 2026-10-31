@@ -95,32 +95,31 @@ struct AgendaView: View {
 
     @ViewBuilder
     private func row(_ item: AgendaItem) -> some View {
-        let fill = AgendaRow.fill(for: item)
         switch item {
         case .task(_, .projected):
             AgendaRow(item: item)
-                .pastelRow(fill)
+                .surfaceRow()
         case .task(let task, _):
             AgendaRow(item: item, onComplete: { complete(task) })
                 .contentShape(Rectangle())
                 .onTapGesture { editingTask = task }
                 .contextMenu { TaskContextMenu(task: task) { handle($0) } }
-                .pastelRow(fill)
+                .surfaceRow()
         case .appointment(let appt, let pet):
             AgendaRow(item: item)
                 .contextMenu { AppointmentContextMenu(appointment: appt, petName: pet.name) }
-                .pastelRow(fill)
+                .surfaceRow()
         case .petEvent(let event, let pet):
             AgendaRow(item: item)
                 .contextMenu { EventContextMenu(event: event, petName: pet.name) }
-                .pastelRow(fill)
+                .surfaceRow()
         case .meal:
             AgendaRow(item: item)
-                .pastelRow(fill)
+                .surfaceRow()
         case .calendarEvent(let event, _):
             Button { openInCalendar(event) } label: { AgendaRow(item: item) }
                 .buttonStyle(.plain)
-                .pastelRow(fill)
+                .surfaceRow()
         }
     }
 

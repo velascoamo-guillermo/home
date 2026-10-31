@@ -49,15 +49,6 @@ struct AgendaRow: View {
         }
     }
 
-    static func fill(for item: AgendaItem) -> Color {
-        switch item {
-        case .task:                    Palette.tasks
-        case .appointment, .petEvent:  Palette.pets
-        case .meal:                    Palette.meals
-        case .calendarEvent:           Palette.surface
-        }
-    }
-
     @ViewBuilder
     private var leading: some View {
         switch item {

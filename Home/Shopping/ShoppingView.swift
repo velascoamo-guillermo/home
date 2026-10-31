@@ -42,7 +42,7 @@ struct ShoppingView: View {
                     .submitLabel(.done)
                     .autocorrectionDisabled()
                     .accessibilityIdentifier("quickAddField")
-                    .pastelRow(Palette.surface)
+                    .surfaceRow()
             }
             if store.shoppingList.isEmpty {
                 ContentUnavailableView(
@@ -108,7 +108,7 @@ struct ShoppingView: View {
             .contentShape(.rect)
         }
         .buttonStyle(.plain)
-        .pastelRow(Palette.shopping)
+        .surfaceRow()
         .accessibilityLabel(product.name)
         .accessibilityHint(checked ? "Unchecks this item" : "Checks this item off the list")
         .swipeActions(edge: .trailing) {

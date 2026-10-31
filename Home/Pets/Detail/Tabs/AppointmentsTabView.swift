@@ -25,7 +25,7 @@ struct AppointmentsTabView: View {
                 Section("Upcoming") {
                     ForEach(upcoming) { appt in
                         AppointmentRow(appointment: appt)
-                            .pastelRow(Palette.pets)
+                            .surfaceRow()
                             .contextMenu {
                                 AppointmentContextMenu(appointment: appt, petName: pet.name)
                             }
@@ -36,7 +36,7 @@ struct AppointmentsTabView: View {
                 Section("Past") {
                     ForEach(past) { appt in
                         AppointmentRow(appointment: appt)
-                            .pastelRow(Palette.pets)
+                            .surfaceRow()
                             .contextMenu {
                                 AppointmentContextMenu(appointment: appt, petName: pet.name)
                             }

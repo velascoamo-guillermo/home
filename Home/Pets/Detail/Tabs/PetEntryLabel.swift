@@ -31,9 +31,9 @@ struct PetEntryLabel: View {
         PetEntryLabel(title: "Hipoglucemia prolongada (posible sobredosis)",
                       meta: "12 Sep 2025",
                       detail: "Fructosamina por debajo del rango de monitorización")
-            .pastelRow(Palette.pets)
+            .surfaceRow()
         PetEntryLabel(title: "Asma", meta: "21 Apr 2026")
-            .pastelRow(Palette.pets)
+            .surfaceRow()
     }
     .flatListStyle()
 }

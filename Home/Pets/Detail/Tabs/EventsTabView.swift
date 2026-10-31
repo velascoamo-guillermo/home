@@ -20,7 +20,7 @@ struct EventsTabView: View {
             ForEach(events) { event in
                 Button { selectedEvent = event } label: { EventRow(event: event) }
                     .buttonStyle(.plain)
-                    .pastelRow(Palette.pets)
+                    .surfaceRow()
                     .contextMenu { EventContextMenu(event: event, petName: pet.name) }
             }
         }

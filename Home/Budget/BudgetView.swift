@@ -40,7 +40,7 @@ struct BudgetView: View {
                         }
                         .buttonStyle(.plain)
                         .accessibilityHint("Opens the bill to confirm this month's amount")
-                        .pastelRow(Palette.budget)
+                        .surfaceRow()
                     }
                 }
             }
@@ -49,7 +49,7 @@ struct BudgetView: View {
                 Text(hero.remainingLine)
                     .font(.headline)
                     .foregroundStyle(summary.remainingCents < 0 ? Color.red : Palette.ink)
-                    .pastelRow(Palette.budget)
+                    .surfaceRow()
             }
 
             categorySection("Categories", lines: summary.categories.filter { !$0.isArchived })
@@ -64,7 +64,7 @@ struct BudgetView: View {
                                              payerName: summary.memberName(expense.payerId))
                         }
                         .buttonStyle(.plain)
-                        .pastelRow(Palette.surface)
+                        .surfaceRow()
                         .swipeActions(edge: .trailing) {
                             Button(role: .destructive) {
                                 Task {
@@ -149,7 +149,7 @@ struct BudgetView: View {
             Section(title) {
                 ForEach(lines) { line in
                     BudgetCategoryRow(line: line)
-                        .pastelRow(Palette.surface)
+                        .surfaceRow()
                 }
             }
         }

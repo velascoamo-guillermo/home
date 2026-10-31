@@ -66,7 +66,7 @@ struct MacTodayView: View {
                         ForEach(group.items) { item in
                             AgendaRow(item: item, onComplete: completion(for: item))
                                 .tag(item.id)
-                                .pastelRow(AgendaRow.fill(for: item))
+                                .surfaceRow()
                         }
                     }
                 }

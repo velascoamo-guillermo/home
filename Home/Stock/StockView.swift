@@ -90,7 +90,7 @@ struct StockView: View {
         }
         .buttonStyle(.plain)
         .accessibilityIdentifier("stockRow-\(product.name)")
-        .pastelRow(Palette.stock)
+        .surfaceRow()
         .contextMenu { StockContextMenu(product: product, onDeleteRequest: { productToDelete = $0 }) }
         .swipeActions(edge: .leading, allowsFullSwipe: true) {
             Button {

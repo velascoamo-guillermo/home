@@ -37,7 +37,7 @@ struct SearchView: View {
                                         StockProductRow(product: product)
                                     }
                                     .buttonStyle(.plain)
-                                    .pastelRow(Palette.stock)
+                                    .surfaceRow()
                                     .contextMenu { StockContextMenu(product: product, onDeleteRequest: { productToDelete = $0 }) }
                                 }
                             }
@@ -49,7 +49,7 @@ struct SearchView: View {
                                         SearchTaskRow(task: task)
                                     }
                                     .buttonStyle(.plain)
-                                    .pastelRow(Palette.tasks)
+                                    .surfaceRow()
                                     .contextMenu { TaskContextMenu(task: task) }
                                 }
                             }
@@ -61,7 +61,7 @@ struct SearchView: View {
                                         SearchMealRow(meal: meal)
                                     }
                                     .buttonStyle(.plain)
-                                    .pastelRow(Palette.meals)
+                                    .surfaceRow()
                                     .contextMenu { mealMenu(meal) }
                                 }
                             }
@@ -72,7 +72,7 @@ struct SearchView: View {
                                     NavigationLink(value: pet) {
                                         PetRow(pet: pet)
                                     }
-                                    .pastelRow(Palette.pets)
+                                    .surfaceRow()
                                     .contextMenu { petMenu(pet) }
                                 }
                             }
