@@ -31,7 +31,7 @@ struct MacTasksView: View {
                             ForEach(group.tasks) { task in
                                 HomeItemRow(item: .task(task), onComplete: { complete(task) })
                                     .tag(task.id)
-                                    .pastelRow(Palette.tasks)
+                                    .surfaceRow()
                             }
                         }
                     }
@@ -40,7 +40,7 @@ struct MacTasksView: View {
                             ForEach(petItems) { item in
                                 HomeItemRow(item: item)
                                     .selectionDisabled()
-                                    .pastelRow(Palette.pets)
+                                    .surfaceRow()
                                     .contextMenu { petMenu(item) }
                             }
                         }

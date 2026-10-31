@@ -59,7 +59,7 @@ struct MacShoppingView: View {
                                 set: { _ in session.toggle(product.id) }))
                                 .toggleStyle(.checkbox)
                                 .tag(product.id)
-                                .pastelRow(Palette.shopping)
+                                .surfaceRow()
                         }
                     }
                 }

@@ -110,7 +110,7 @@ struct WeekMenuView: View {
         }
         .buttonStyle(.plain)
         .accessibilityIdentifier("mealSlot-\(slot.rawValue)")
-        .pastelRow(entry == nil ? Palette.surface : Palette.meals)
+        .surfaceRow()
     }
 
     private func dayHeader(isToday: Bool, hasEntries: Bool) -> some View {

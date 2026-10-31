@@ -22,7 +22,7 @@ struct ClinicalHistoryTabView: View {
                     ClinicalEntryRow(entry: entry, fileCount: fileCount)
                 }
                 .buttonStyle(.plain)
-                .pastelRow(Palette.pets)
+                .surfaceRow()
                 .contextMenu {
                     Button(role: .destructive) {
                         Task { try? await store.deleteClinicalEntry(entry) }

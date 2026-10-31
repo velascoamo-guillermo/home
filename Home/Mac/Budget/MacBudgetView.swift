@@ -45,7 +45,7 @@ struct MacBudgetView: View {
                         .buttonStyle(.plain)
                         .accessibilityHint("Opens the bill to confirm this month's amount")
                         .selectionDisabled()
-                        .pastelRow(Palette.budget)
+                        .surfaceRow()
                     }
                 }
             }
@@ -67,7 +67,7 @@ struct MacBudgetView: View {
                                          categoryName: categoryName(expense.categoryId),
                                          payerName: summary.memberName(expense.payerId))
                             .tag(expense.id)
-                            .pastelRow(Palette.surface)
+                            .surfaceRow()
                     }
                 } header: {
                     Text(group.day, format: .dateTime.weekday(.wide).day().month(.wide))
@@ -131,7 +131,7 @@ struct MacBudgetView: View {
                 ForEach(lines) { line in
                     BudgetCategoryRow(line: line)
                         .selectionDisabled()
-                        .pastelRow(Palette.surface)
+                        .surfaceRow()
                 }
             }
         }

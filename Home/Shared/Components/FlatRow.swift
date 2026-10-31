@@ -1,8 +1,8 @@
 import SwiftUI
 
 extension View {
-    /// Inset-grouped list over the app canvas with inter-row spacing so rows
-    /// read as separate flat cards.
+    /// Inset-grouped list over the app canvas; each section is the rounded
+    /// container and rows are separated by system separators.
     func flatListStyle() -> some View {
         #if os(macOS)
         self
@@ -13,17 +13,17 @@ extension View {
         self
             .listStyle(.insetGrouped)
             .scrollContentBackground(.hidden)
-            .listRowSpacing(10)
             .gradientCanvas()
         #endif
     }
 
-    /// Flat pastel backing for a list row, matching the dashboard card look.
-    func pastelRow(_ fill: Color) -> some View {
+    /// Native list row on the pastel canvas: `surface` cell inside an
+    /// inset-grouped section on iOS; transparent system row on macOS.
+    func surfaceRow() -> some View {
+        #if os(macOS)
         self
-            .listRowSeparator(.hidden)
-            .listRowBackground(
-                RoundedRectangle(cornerRadius: 16).fill(fill)
-            )
+        #else
+        self.listRowBackground(Palette.surface)
+        #endif
     }
 }

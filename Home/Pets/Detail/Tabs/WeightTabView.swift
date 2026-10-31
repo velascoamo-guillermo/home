@@ -20,7 +20,7 @@ struct WeightTabView: View {
                     chart
                         .frame(height: 220)
                         .padding(.vertical, 8)
-                        .pastelRow(Palette.pets)
+                        .surfaceRow()
                 }
             }
             ForEach(entries) { entry in
@@ -33,7 +33,7 @@ struct WeightTabView: View {
                         .font(.system(.headline, design: .rounded, weight: .semibold))
                         .foregroundStyle(Palette.ink)
                 }
-                .pastelRow(Palette.pets)
+                .surfaceRow()
                 .contextMenu {
                     Button(role: .destructive) {
                         Task { try? await store.deleteWeightEntry(entry) }

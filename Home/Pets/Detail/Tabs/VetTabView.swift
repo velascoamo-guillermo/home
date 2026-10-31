@@ -20,7 +20,7 @@ struct VetTabView: View {
             ForEach(store.veterinarians) { vet in
                 VetRow(vet: vet)
                     .onTapGesture { editingVet = vet }
-                    .pastelRow(Palette.pets)
+                    .surfaceRow()
                     .contextMenu {
                         Button(role: .destructive) {
                             Task { try? await store.deleteVet(vet) }

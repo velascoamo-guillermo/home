@@ -23,7 +23,7 @@ struct MacSearchResultsView: View {
                             ForEach(results.stock) { product in
                                 Button { selection = .stock(product) } label: { StockProductRow(product: product) }
                                     .buttonStyle(.plain)
-                                    .pastelRow(Palette.stock)
+                                    .surfaceRow()
                                     .contextMenu { StockContextMenu(product: product, onDeleteRequest: { productToDelete = $0 }) }
                             }
                         }
@@ -33,7 +33,7 @@ struct MacSearchResultsView: View {
                             ForEach(results.tasks) { task in
                                 Button { selection = .task(task) } label: { SearchTaskRow(task: task) }
                                     .buttonStyle(.plain)
-                                    .pastelRow(Palette.tasks)
+                                    .surfaceRow()
                                     .contextMenu { TaskContextMenu(task: task) }
                             }
                         }
@@ -43,7 +43,7 @@ struct MacSearchResultsView: View {
                             ForEach(results.meals) { meal in
                                 Button { selection = .meal(meal) } label: { SearchMealRow(meal: meal) }
                                     .buttonStyle(.plain)
-                                    .pastelRow(Palette.meals)
+                                    .surfaceRow()
                             }
                         }
                     }
@@ -55,7 +55,7 @@ struct MacSearchResultsView: View {
                                     model.selection = .pet(pet.id)
                                 } label: { PetRow(pet: pet) }
                                 .buttonStyle(.plain)
-                                .pastelRow(Palette.pets)
+                                .surfaceRow()
                             }
                         }
                     }
