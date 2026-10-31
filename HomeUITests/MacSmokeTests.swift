@@ -353,6 +353,8 @@ final class MacSmokeTests: XCTestCase {
         let app = launchApp()
         XCTAssertTrue(app.windows.firstMatch.waitForExistence(timeout: 15))
         app.typeKey("5", modifierFlags: .command)
+        // The inspector's content must not override the shell-provided window title.
+        XCTAssertTrue(window(app, titled: "Meals").waitForExistence(timeout: 10))
         // Day headers carry their own `mealDayHeader-<Weekday.rawValue>` identifier (added
         // instead of matching on `value BEGINSWITH <day name>`, which could also match an
         // unrelated row whose text happens to start with the same Spanish day name).
@@ -368,6 +370,12 @@ final class MacSmokeTests: XCTestCase {
         app.menuBars.menuBarItems["Go"].click()
         XCTAssertFalse(app.menuBars.menuItems["Next Period"].isEnabled)
         app.typeKey(.escape, modifierFlags: [])
+
+        let showInspector = app.toolbars.buttons["Show Inspector"]
+        XCTAssertTrue(showInspector.waitForExistence(timeout: 10))
+        showInspector.click()
+        XCTAssertTrue(app.outlines.buttons["Lentejas"].waitForExistence(timeout: 10))
+        XCTAssertTrue(window(app, titled: "Meals").exists)
     }
 
     func testMealsCatalogKeyboardPath() throws {
