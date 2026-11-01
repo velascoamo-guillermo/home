@@ -9,10 +9,9 @@ func launchApp(appearance: String? = nil) -> XCUIApplication {
     // Ignoring saved state also keeps windows from an earlier run out of the next test.
     app.launchArguments += ["-NSTreatUnknownArgumentsAsOpen", "NO", "-ApplePersistenceIgnoreState", "YES"]
     if let appearance {
-        // The app resolves its scheme from its own `theme.appearance` default (preferredColorScheme),
-        // so the system style alone never darkens it. The argument domain overrides that default
-        // for this launch only.
-        app.launchArguments += ["-AppleInterfaceStyle", appearance, "-theme.appearance", appearance.lowercased()]
+        // The Mac app follows the system appearance, which `-AppleInterfaceStyle` doesn't reliably change
+        // under XCUITest, so `UITestSupport.forcedColorScheme` reads `-uitest.appearance` instead.
+        app.launchArguments += ["-AppleInterfaceStyle", appearance, "-uitest.appearance", appearance.lowercased()]
     }
     #endif
     app.launch()

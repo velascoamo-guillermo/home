@@ -629,7 +629,10 @@ final class MacSmokeTests: XCTestCase {
             ctx.draw(crop, in: CGRect(x: 0, y: 0, width: 1, height: 1))
             return true
         }
-        _ = try XCTUnwrap(drawn ? true : nil, "Could not draw window crop for luminance sampling")
+        guard drawn else {
+            XCTFail("Could not draw window crop for luminance sampling")
+            throw CancellationError()
+        }
         let r = Double(pixel[0]) / 255, g = Double(pixel[1]) / 255, b = Double(pixel[2]) / 255
         return 0.2126 * r + 0.7152 * g + 0.0722 * b
     }

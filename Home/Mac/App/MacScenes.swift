@@ -26,6 +26,7 @@ struct MacScenes: Scene {
 
         Window("Casita Help", id: MacHelpView.windowID) {
             MacHelpView()
+                .preferredColorScheme(UITestSupport.forcedColorScheme())
         }
         .windowResizability(.contentSize)
     }
