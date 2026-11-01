@@ -10,6 +10,7 @@ struct MacScenes: Scene {
                 .environment(app.store)
                 .environment(app.calendarFeed)
                 .environment(app.bootstrap)
+                .preferredColorScheme(UITestSupport.forcedColorScheme())
         } defaultValue: {
             .new(.today)
         }
@@ -20,10 +21,12 @@ struct MacScenes: Scene {
             MacSettingsView()
                 .environment(app.store)
                 .environment(app.calendarFeed)
+                .preferredColorScheme(UITestSupport.forcedColorScheme())
         }
 
         Window("Casita Help", id: MacHelpView.windowID) {
             MacHelpView()
+                .preferredColorScheme(UITestSupport.forcedColorScheme())
         }
         .windowResizability(.contentSize)
     }

@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 import Supabase
 
 // Drives the app in an isolated, network-free mode for XCUITest runs:
@@ -15,6 +16,20 @@ enum UITestSupport {
     static func resetMacSettingsPane(isActive: Bool = UITestSupport.isActive, defaults: UserDefaults = .standard) {
         guard isActive else { return }
         defaults.removeObject(forKey: macSettingsPaneKey)
+    }
+
+    static let appearanceKey = "uitest.appearance"
+
+    /// Colour scheme forced by the `-uitest.appearance light|dark` launch argument. The Mac app
+    /// otherwise follows the system appearance, which `-AppleInterfaceStyle` does not reliably
+    /// change under XCUITest. Always nil outside UI-test runs, so real users are unaffected.
+    static func forcedColorScheme(isActive: Bool = UITestSupport.isActive, defaults: UserDefaults = .standard) -> ColorScheme? {
+        guard isActive else { return nil }
+        switch defaults.string(forKey: appearanceKey)?.lowercased() {
+        case "dark": return .dark
+        case "light": return .light
+        default: return nil
+        }
     }
 
     static func makeStore() -> SupabaseStore {
