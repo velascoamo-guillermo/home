@@ -88,7 +88,7 @@ struct HouseholdTaskSheet: View {
             }
             .scrollContentBackground(.hidden)
             .gradientCanvas()
-            .navigationTitle(isEditing ? "Edit Task" : "New Task")
+            .inspectorAwareNavigationTitle(isEditing ? "Edit Task" : "New Task")
             .inlineNavigationTitle()
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {

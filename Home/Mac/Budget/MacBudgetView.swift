@@ -92,6 +92,7 @@ struct MacBudgetView: View {
         }
         .inspector(isPresented: $model.isInspectorPresented) {
             NavigationStack { BudgetSettingsView(month: month) }
+                .environment(\.suppressesNavigationTitle, true)
                 .inspectorColumnWidth(min: 360, ideal: 400, max: 520)
         }
         .sheet(item: $editor) { draft in AddExpenseSheet(draft: draft) }

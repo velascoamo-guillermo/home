@@ -87,6 +87,7 @@ struct MacTodayView: View {
         .background(ListFocusView(selection: selection))
         .inspector(isPresented: $model.isInspectorPresented) {
             inspector(for: selected)
+                .environment(\.suppressesNavigationTitle, true)
                 .inspectorColumnWidth(min: 360, ideal: 400, max: 520)
         }
         .task(id: AgendaWeek.fetchInterval(containing: selectedDay, calendar: calendar)) {
