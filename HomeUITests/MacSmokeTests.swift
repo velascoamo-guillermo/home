@@ -324,6 +324,39 @@ final class MacSmokeTests: XCTestCase {
         XCTAssertTrue(filters.waitForExistence(timeout: 10))
     }
 
+    func testInspectorsNeverOverrideTheSidebarWindowTitle() throws {
+        let app = launchApp()
+        XCTAssertTrue(app.windows.firstMatch.waitForExistence(timeout: 15))
+
+        let features: [(key: String, title: String, row: XCUIElement?)] = [
+            ("1", "Today", app.staticTexts["Fixture Change Filter"]),
+            ("2", "Tasks", app.staticTexts["Fixture Water Plants"]),
+            ("4", "Stock", app.staticTexts["Fixture Milk"]),
+            ("5", "Meals", nil),
+            ("6", "Budget", nil)
+        ]
+        for feature in features {
+            app.typeKey(feature.key, modifierFlags: .command)
+            XCTAssertTrue(window(app, titled: feature.title).waitForExistence(timeout: 10), "\(feature.title) closed")
+
+            if let row = feature.row {
+                XCTAssertTrue(row.waitForExistence(timeout: 10), feature.title)
+                row.click()
+            }
+
+            let show = app.toolbars.buttons["Show Inspector"]
+            XCTAssertTrue(show.waitForExistence(timeout: 10), feature.title)
+            show.click()
+            let hide = app.toolbars.buttons["Hide Inspector"]
+            XCTAssertTrue(hide.waitForExistence(timeout: 10), feature.title)
+            XCTAssertTrue(window(app, titled: feature.title).waitForExistence(timeout: 10), "\(feature.title) open")
+
+            hide.click()
+            XCTAssertTrue(app.toolbars.buttons["Show Inspector"].waitForExistence(timeout: 10), feature.title)
+            XCTAssertTrue(window(app, titled: feature.title).waitForExistence(timeout: 10), "\(feature.title) reclosed")
+        }
+    }
+
     private func window(_ app: XCUIApplication, titled title: String) -> XCUIElement {
         app.windows.matching(NSPredicate(format: "title == %@", title)).firstMatch
     }
