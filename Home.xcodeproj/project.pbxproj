@@ -274,6 +274,7 @@
 		C1A823780AE3489A95BE163E /* PetDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55D97A7920684FC9B46E5FCE /* PetDetailView.swift */; };
 		C2F95DE0B73154D945A9AA7B /* BudgetCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03AEF71ADE6699D9C24706D5 /* BudgetCategory.swift */; };
 		C36BA13D0DDE4CF899B20C99 /* Outbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7E9C6C5EAB74373BF8B9164 /* Outbox.swift */; };
+		B1C2D3E4F5061728394A5B6C /* SuppressesNavigationTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60718293A4B5C /* SuppressesNavigationTitle.swift */; };
 		C44AFFB2C7E7BB804C4137AB /* PlatformKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF384A91C7433AFE8D80808A /* PlatformKeyboard.swift */; };
 		C463AF969E5CA773A779B96E /* MealTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69881983A539D6462A7613E0 /* MealTests.swift */; };
 		C56ED483CCF9B7CB57B3D73B /* MacAppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC80430A25511DDF2C5853FD /* MacAppState.swift */; };
@@ -704,6 +705,7 @@
 		CED6BEB419304EAFB67EE99C /* BudgetHeroCard.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BudgetHeroCard.swift; sourceTree = "<group>"; };
 		CF1C010812E6378C66BAB6E1 /* BudgetExpenseRow.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BudgetExpenseRow.swift; sourceTree = "<group>"; };
 		CF21E00DCCBEF18421A267A3 /* AppTab.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppTab.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F60718293A4B5C /* SuppressesNavigationTitle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SuppressesNavigationTitle.swift; sourceTree = "<group>"; };
 		CF384A91C7433AFE8D80808A /* PlatformKeyboard.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PlatformKeyboard.swift; sourceTree = "<group>"; };
 		CFEEEAAA06C82715FF19FAD9 /* MenuEntry.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MenuEntry.swift; sourceTree = "<group>"; };
 		D0894A58F3E0471E870AA5A4 /* ClinicalEntry.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ClinicalEntry.swift; sourceTree = "<group>"; };
@@ -1177,6 +1179,7 @@
 			children = (
 				7636DD648798E3CB3B078839 /* SystemSettingsURL.swift */,
 				CF384A91C7433AFE8D80808A /* PlatformKeyboard.swift */,
+				A1B2C3D4E5F60718293A4B5C /* SuppressesNavigationTitle.swift */,
 				DE0F3C3806B7464527251009 /* ToolbarItemPlacement+Platform.swift */,
 				479FB8D3FE34D381EEE6E23E /* View+Platform.swift */,
 			);
@@ -2090,6 +2093,7 @@
 				16BECB712DA0F2EE540F4A39 /* PlatformImage.swift in Sources */,
 				158BE058D08DE562B2EBF9E4 /* SystemSettingsURL.swift in Sources */,
 				C44AFFB2C7E7BB804C4137AB /* PlatformKeyboard.swift in Sources */,
+				B1C2D3E4F5061728394A5B6C /* SuppressesNavigationTitle.swift in Sources */,
 				91F6F044771F1671D6B926CD /* ToolbarItemPlacement+Platform.swift in Sources */,
 				77B69695743DAC003BD1FFA3 /* View+Platform.swift in Sources */,
 				4C85A0EB4E2C8EF2F437A9EF /* PetFileImport.swift in Sources */,

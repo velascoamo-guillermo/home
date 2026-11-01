@@ -106,7 +106,7 @@ struct BudgetSettingsView: View {
         }
         .scrollContentBackground(.hidden)
         .gradientCanvas()
-        .navigationTitle("Budget settings")
+        .inspectorAwareNavigationTitle("Budget settings")
         .inlineNavigationTitle()
         .editButtonToolbar()
         .sheet(item: $editingCategory) { category in

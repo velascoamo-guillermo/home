@@ -63,6 +63,7 @@ struct MacStockView: View {
                                            description: Text("Select a product to edit it."))
                 }
             }
+            .environment(\.suppressesNavigationTitle, true)
             .inspectorColumnWidth(min: 360, ideal: 400, max: 520)
         }
         .onChange(of: selectedProduct?.id, initial: true) { _, id in
