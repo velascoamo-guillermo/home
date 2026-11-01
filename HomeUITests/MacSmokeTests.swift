@@ -585,8 +585,8 @@ final class MacSmokeTests: XCTestCase {
         }
     }
 
-    /// Guards the launcher: the app picks its scheme from its own `theme.appearance` default,
-    /// so a launch that only sets the system style silently renders light. Pixels are the
+    /// Guards the launcher: the Mac app only changes scheme through `-uitest.appearance`
+    /// (UITestSupport.forcedColorScheme); `-AppleInterfaceStyle` alone silently renders light. Pixels are the
     /// signal because that is the actual regression (a light window labelled "dark"); no
     /// accessibility attribute exposes the effective scheme. Mean luminance of the right 60%
     /// of the window (detail pane, away from the sidebar): light pastel canvas is ~0.9+, the
@@ -611,25 +611,25 @@ final class MacSmokeTests: XCTestCase {
     }
 
     private func detailPaneLuminance(of app: XCUIApplication) throws -> Double {
-        let image = app.windows.firstMatch.screenshot().image
+        let image = window(app, titled: "Tasks").screenshot().image
         var rect = CGRect(origin: .zero, size: image.size)
-        guard let cg = image.cgImage(forProposedRect: &rect, context: nil, hints: nil) else {
-            throw XCTSkip("No CGImage for window screenshot")
-        }
+        let cg = try XCTUnwrap(image.cgImage(forProposedRect: &rect, context: nil, hints: nil),
+                               "No CGImage for window screenshot")
         let region = CGRect(x: Double(cg.width) * 0.4, y: 0,
                             width: Double(cg.width) * 0.6, height: Double(cg.height))
-        guard let crop = cg.cropping(to: region) else { throw XCTSkip("Crop failed") }
+        let crop = try XCTUnwrap(cg.cropping(to: region), "Crop failed")
+        let space = try XCTUnwrap(CGColorSpace(name: CGColorSpace.sRGB), "No sRGB colour space")
         // Downscale to 1x1 in sRGB: the draw averages every pixel in the region.
         var pixel = [UInt8](repeating: 0, count: 4)
         let drawn = pixel.withUnsafeMutableBytes { buf -> Bool in
             guard let ctx = CGContext(data: buf.baseAddress, width: 1, height: 1, bitsPerComponent: 8,
-                                      bytesPerRow: 4, space: CGColorSpace(name: CGColorSpace.sRGB)!,
+                                      bytesPerRow: 4, space: space,
                                       bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue) else { return false }
             ctx.interpolationQuality = .high
             ctx.draw(crop, in: CGRect(x: 0, y: 0, width: 1, height: 1))
             return true
         }
-        XCTAssertTrue(drawn)
+        _ = try XCTUnwrap(drawn ? true : nil, "Could not draw window crop for luminance sampling")
         let r = Double(pixel[0]) / 255, g = Double(pixel[1]) / 255, b = Double(pixel[2]) / 255
         return 0.2126 * r + 0.7152 * g + 0.0722 * b
     }

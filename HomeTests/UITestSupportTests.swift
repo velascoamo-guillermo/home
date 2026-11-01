@@ -1,5 +1,6 @@
 import Testing
 import Foundation
+import SwiftUI
 @testable import Casita
 
 @Suite @MainActor struct UITestSupportTests {
@@ -46,6 +47,25 @@ import Foundation
 
         UITestSupport.resetMacSettingsPane(isActive: true, defaults: defaults)
         #expect(defaults.string(forKey: UITestSupport.macSettingsPaneKey) == nil)
+    }
+
+    @Test func forcedColorSchemeParsesLaunchArgumentOnlyWhenActive() {
+        let defaults = UserDefaults(suiteName: "uitests-scheme-\(UUID().uuidString)") ?? .standard
+        defaults.removeObject(forKey: UITestSupport.appearanceKey)
+        #expect(UITestSupport.forcedColorScheme(isActive: true, defaults: defaults) == nil)
+
+        defaults.set("dark", forKey: UITestSupport.appearanceKey)
+        #expect(UITestSupport.forcedColorScheme(isActive: true, defaults: defaults) == .dark)
+        #expect(UITestSupport.forcedColorScheme(isActive: false, defaults: defaults) == nil)
+
+        defaults.set("light", forKey: UITestSupport.appearanceKey)
+        #expect(UITestSupport.forcedColorScheme(isActive: true, defaults: defaults) == .light)
+
+        defaults.set("Dark", forKey: UITestSupport.appearanceKey)
+        #expect(UITestSupport.forcedColorScheme(isActive: true, defaults: defaults) == .dark)
+
+        defaults.set("sepia", forKey: UITestSupport.appearanceKey)
+        #expect(UITestSupport.forcedColorScheme(isActive: true, defaults: defaults) == nil)
     }
 
     @Test func separateStoresAreIsolated() async {
