@@ -632,6 +632,58 @@ final class MacSmokeTests: XCTestCase {
         }
     }
 
+    /// Guards the launcher: the Mac app only changes scheme through `-uitest.appearance`
+    /// (UITestSupport.forcedColorScheme); `-AppleInterfaceStyle` alone silently renders light. Pixels are the
+    /// signal because that is the actual regression (a light window labelled "dark"); no
+    /// accessibility attribute exposes the effective scheme. Mean luminance of the right 60%
+    /// of the window (detail pane, away from the sidebar): light pastel canvas is ~0.9+, the
+    /// dark plum canvas ~0.1-0.2. Thresholds 0.6 / 0.4 leave a wide margin for text and chrome.
+    func testLaunchAppearanceDarkAndLightAreActuallyApplied() throws {
+        let light = launchApp(appearance: "Light")
+        XCTAssertTrue(light.windows.firstMatch.waitForExistence(timeout: 15))
+        light.typeKey("2", modifierFlags: .command)
+        XCTAssertTrue(window(light, titled: "Tasks").waitForExistence(timeout: 10))
+        let lightLuminance = try detailPaneLuminance(of: light)
+        light.terminate()
+
+        let dark = launchApp(appearance: "Dark")
+        XCTAssertTrue(dark.windows.firstMatch.waitForExistence(timeout: 15))
+        dark.typeKey("2", modifierFlags: .command)
+        XCTAssertTrue(window(dark, titled: "Tasks").waitForExistence(timeout: 10))
+        let darkLuminance = try detailPaneLuminance(of: dark)
+        dark.terminate()
+
+        XCTAssertGreaterThan(lightLuminance, 0.6, "Light launch should render a light canvas")
+        XCTAssertLessThan(darkLuminance, 0.4, "Dark launch should render the dark plum canvas")
+    }
+
+    private func detailPaneLuminance(of app: XCUIApplication) throws -> Double {
+        let image = window(app, titled: "Tasks").screenshot().image
+        var rect = CGRect(origin: .zero, size: image.size)
+        let cg = try XCTUnwrap(image.cgImage(forProposedRect: &rect, context: nil, hints: nil),
+                               "No CGImage for window screenshot")
+        let region = CGRect(x: Double(cg.width) * 0.4, y: 0,
+                            width: Double(cg.width) * 0.6, height: Double(cg.height))
+        let crop = try XCTUnwrap(cg.cropping(to: region), "Crop failed")
+        let space = try XCTUnwrap(CGColorSpace(name: CGColorSpace.sRGB), "No sRGB colour space")
+        // Downscale to 1x1 in sRGB: the draw averages every pixel in the region.
+        var pixel = [UInt8](repeating: 0, count: 4)
+        let drawn = pixel.withUnsafeMutableBytes { buf -> Bool in
+            guard let ctx = CGContext(data: buf.baseAddress, width: 1, height: 1, bitsPerComponent: 8,
+                                      bytesPerRow: 4, space: space,
+                                      bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue) else { return false }
+            ctx.interpolationQuality = .high
+            ctx.draw(crop, in: CGRect(x: 0, y: 0, width: 1, height: 1))
+            return true
+        }
+        guard drawn else {
+            XCTFail("Could not draw window crop for luminance sampling")
+            throw CancellationError()
+        }
+        let r = Double(pixel[0]) / 255, g = Double(pixel[1]) / 255, b = Double(pixel[2]) / 255
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b
+    }
+
     /// Toolbar glyph buttons whose 24x24pt hit region is excluded from the audit below —
     /// identified by the exact label SwiftUI's `Label` gives them, matched only against
     /// buttons that actually live in a toolbar (never a sheet/row/list button that happens
