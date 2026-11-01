@@ -1,6 +1,17 @@
 import SwiftUI
 
 extension View {
+    /// Shared sheets and inspector content keep their title on iOS only. On macOS a
+    /// `.navigationTitle` inside an `.inspector` reaches the window and overrides the
+    /// sidebar-driven title (see MacShellView), so it must not be set there.
+    func iOSNavigationTitle(_ title: String) -> some View {
+        #if os(iOS)
+        navigationTitle(title)
+        #else
+        self
+        #endif
+    }
+
     /// macOS has no navigation bar, so the inline title mode only exists on iOS.
     func inlineNavigationTitle() -> some View {
         #if os(iOS)
