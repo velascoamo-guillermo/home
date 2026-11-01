@@ -42,7 +42,7 @@ struct EventDetailView: View {
                     }
                 }
             }
-            .iOSNavigationTitle(event.title)
+            .inspectorAwareNavigationTitle(event.title)
             .inlineNavigationTitle()
             .toolbar {
                 if showsDoneButton {

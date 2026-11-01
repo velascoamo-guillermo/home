@@ -71,6 +71,7 @@ struct MacTasksView: View {
                                            description: Text("Select a task to edit it."))
                 }
             }
+            .environment(\.suppressesNavigationTitle, true)
             .inspectorColumnWidth(min: 360, ideal: 400, max: 520)
         }
         .sheet(item: $selectedEvent) { event in

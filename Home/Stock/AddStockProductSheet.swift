@@ -57,7 +57,7 @@ struct AddStockProductSheet: View {
             }
             .scrollContentBackground(.hidden)
             .gradientCanvas()
-            .iOSNavigationTitle(isEditing ? "Edit Product" : "New Product")
+            .inspectorAwareNavigationTitle(isEditing ? "Edit Product" : "New Product")
             .inlineNavigationTitle()
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {

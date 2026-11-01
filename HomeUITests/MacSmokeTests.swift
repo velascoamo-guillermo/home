@@ -328,20 +328,27 @@ final class MacSmokeTests: XCTestCase {
         let app = launchApp()
         XCTAssertTrue(app.windows.firstMatch.waitForExistence(timeout: 15))
 
-        let features: [(key: String, title: String, row: XCUIElement?)] = [
-            ("1", "Today", app.staticTexts["Fixture Change Filter"]),
-            ("2", "Tasks", app.staticTexts["Fixture Water Plants"]),
-            ("4", "Stock", app.staticTexts["Fixture Milk"]),
-            ("5", "Meals", nil),
-            ("6", "Budget", nil)
+        let features: [(key: String, title: String, rowName: String?, inspectsName: Bool)] = [
+            ("1", "Today", "Fixture Change Filter", false),
+            ("2", "Tasks", "Fixture Water Plants", true),
+            ("4", "Stock", "Fixture Milk", true),
+            ("5", "Meals", nil, false),
+            ("6", "Budget", nil, false)
         ]
         for feature in features {
             app.typeKey(feature.key, modifierFlags: .command)
             XCTAssertTrue(window(app, titled: feature.title).waitForExistence(timeout: 10), "\(feature.title) closed")
 
-            if let row = feature.row {
+            if let rowName = feature.rowName {
+                let row = app.staticTexts[rowName]
                 XCTAssertTrue(row.waitForExistence(timeout: 10), feature.title)
-                row.click()
+                // Trailing edge selects the row without hitting an inner control (see #67).
+                let cell = app.outlineRows.containing(.staticText, identifier: rowName).firstMatch
+                if cell.exists {
+                    cell.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.5)).click()
+                } else {
+                    row.click()
+                }
             }
 
             let show = app.toolbars.buttons["Show Inspector"]
@@ -349,6 +356,11 @@ final class MacSmokeTests: XCTestCase {
             show.click()
             let hide = app.toolbars.buttons["Hide Inspector"]
             XCTAssertTrue(hide.waitForExistence(timeout: 10), feature.title)
+            if feature.inspectsName, let name = feature.rowName {
+                // The inspector must really show the selection, or the title check below is vacuous.
+                XCTAssertTrue(app.textFields.matching(NSPredicate(format: "value == %@", name)).firstMatch
+                    .waitForExistence(timeout: 10), "\(feature.title) inspector content")
+            }
             XCTAssertTrue(window(app, titled: feature.title).waitForExistence(timeout: 10), "\(feature.title) open")
 
             hide.click()
